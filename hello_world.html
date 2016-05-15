@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.18.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.18.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+    </style>
+</head>
+<body>
+
+<div id='map'></div>
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
+var map = new mapboxgl.Map({
+    container: 'map', // container id
+    style: 'mapbox://styles/mapbox/outdoors-v9', //stylesheet location
+    center: [-121.69, 45.37], // starting position
+    zoom: 12 // starting zoom
+});
+
+map.on('load', function() {
+  map.addSource('trails-data', {
+    'type': 'vector',
+    'tiles': ["https://vector.mapzen.com/osm/roads/{z}/{x}/{y}.mvt?api_key=vector-tiles-b17suvM"]
+  })
+
+  map.addLayer({
+    'id': 'trails-fill',
+    'source': 'trails-data',
+    'source-layer': 'roads',
+    'type': 'line',
+    'paint': {
+      'line-color': '#f80',
+      'line-width': 2
+    }
+  })
+})
+</script>
+
+</body>
+</html>
