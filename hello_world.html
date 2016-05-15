@@ -10,11 +10,14 @@
     <style>
         body { margin:0; padding:0; }
         #map { position:absolute; top:0; bottom:0; width:100%; }
+        #overlay { position: absolute; z-index: 1; padding: 1em; background: white; border: 2px solid #ddd; display: none; }
+        #overlay.visible { display: block; }
     </style>
 </head>
 <body>
 
 <div id='map'></div>
+<div id='overlay'></div>
 <script>
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
@@ -33,15 +36,32 @@ map.on('load', function() {
     })
 
     map.addLayer({
-      'id': 'trails-fill',
+      'id': 'trails',
       'source': 'trails-data',
       'source-layer': 'roads',
       'type': 'line',
       'paint': {
         'line-color': '#f80',
-        'line-width': 2
+        'line-width': 4
       }
     })
+})
+
+map.on('click', function(event){
+  var features = map.queryRenderedFeatures(event.point, { layers: ['trails'] });
+  let overlay = document.getElementById('overlay')
+
+  if (features.length) {
+    overlay.innerHTML = `
+      name: ${features[0].properties.name}<br/>
+      source: ${features[0].properties.source}
+      `
+    overlay.style.top = `${event.point.y + 5}px`
+    overlay.style.left = `${event.point.x + 5}px`
+    overlay.classList.add("visible")
+  } else {
+    overlay.classList.remove("visible")
+  }
 })
 </script>
 
