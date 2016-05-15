@@ -38,36 +38,52 @@ map.on('load', function() {
     map.addLayer({
       'id': 'trails',
       'source': 'trails-data',
-      'source-layer': 'roads',
       'type': 'line',
       'paint': {
         'line-color': '#47B05A',
         'line-width': 4
       }
     })
+
+    map.addLayer({
+      'id': 'trails-active',
+      'source': 'trails-data',
+      'type': 'line',
+      'paint': {
+        'line-color': '#FF9100',
+        'line-width': 4
+      },
+      "filter": ["==", "name", ""]
+    })
+
+    // map.on('click', function(event){
+    //   var features = map.queryRenderedFeatures(event.point, { layers: ['trails'] });
+    //   let overlay = document.getElementById('overlay')
+    //
+    //   if (features.length) {
+    //   } else {
+    //   }
+    // })
+
+    map.on('mousemove', function (event) {
+        var features = map.queryRenderedFeatures(event.point, { layers: ['trails'] });
+        if (features.length) {
+          map.getCanvas().style.cursor = 'pointer'
+          map.setFilter("trails-active", ["==", "name", features[0].properties.name]);
+          overlay.innerHTML = `
+            name: ${features[0].properties.name}<br/>
+            source: ${features[0].properties.source}
+            `
+          overlay.style.top = `${event.point.y + 5}px`
+          overlay.style.left = `${event.point.x + 5}px`
+          overlay.classList.add("visible")
+        } else {
+          map.getCanvas().style.cursor = 'default'
+          map.setFilter("trails-active", ["==", "name", ""]);
+          overlay.classList.remove("visible")
+        }
+    });
 })
-
-map.on('click', function(event){
-  var features = map.queryRenderedFeatures(event.point, { layers: ['trails'] });
-  let overlay = document.getElementById('overlay')
-
-  if (features.length) {
-    overlay.innerHTML = `
-      name: ${features[0].properties.name}<br/>
-      source: ${features[0].properties.source}
-      `
-    overlay.style.top = `${event.point.y + 5}px`
-    overlay.style.left = `${event.point.x + 5}px`
-    overlay.classList.add("visible")
-  } else {
-    overlay.classList.remove("visible")
-  }
-})
-
-map.on('mousemove', function (event) {
-    var features = map.queryRenderedFeatures(event.point, { layers: ['trails'] });
-    map.getCanvas().style.cursor = features.length ? 'pointer' : '';
-});
 </script>
 
 </body>
