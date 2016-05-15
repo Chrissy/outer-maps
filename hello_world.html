@@ -41,7 +41,7 @@ map.on('load', function() {
       'source-layer': 'roads',
       'type': 'line',
       'paint': {
-        'line-color': '#f80',
+        'line-color': '#47B05A',
         'line-width': 4
       }
     })
@@ -63,6 +63,11 @@ map.on('click', function(event){
     overlay.classList.remove("visible")
   }
 })
+
+map.on('mousemove', function (event) {
+    var features = map.queryRenderedFeatures(event.point, { layers: ['trails'] });
+    map.getCanvas().style.cursor = features.length ? 'pointer' : '';
+});
 </script>
 
 </body>
