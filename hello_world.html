@@ -5,7 +5,7 @@
     <title></title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.18.0/mapbox-gl.js'></script>
-    <script src='osmtogeojson.js'></script>
+    <script src='underscore.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.18.0/mapbox-gl.css' rel='stylesheet' />
     <style>
         body { margin:0; padding:0; }
@@ -27,6 +27,8 @@ var map = new mapboxgl.Map({
     center: [-121.69, 45.37], // starting position
     zoom: 11 // starting zoom
 });
+
+var clickedTrailNames = []
 
 map.on('load', function() {
 
@@ -56,20 +58,24 @@ map.on('load', function() {
       "filter": ["==", "name", ""]
     })
 
-    // map.on('click', function(event){
-    //   var features = map.queryRenderedFeatures(event.point, { layers: ['trails'] });
-    //   let overlay = document.getElementById('overlay')
-    //
-    //   if (features.length) {
-    //   } else {
-    //   }
-    // })
+    map.on('click', function(event){
+      var features = map.queryRenderedFeatures(event.point, { layers: ['trails'] });
+
+      if (features.length) {
+        clickedTrailNames.push(features[0].properties.name)
+      } else {
+        clickedTrailNames = []
+      }
+      map.setFilter("trails-active", _.flatten(["in", "name", clickedTrailNames]))
+    })
 
     map.on('mousemove', function (event) {
         var features = map.queryRenderedFeatures(event.point, { layers: ['trails'] });
         if (features.length) {
+          var flatArray = _.flatten(["in", "name", features[0].properties.name, clickedTrailNames])
+
           map.getCanvas().style.cursor = 'pointer'
-          map.setFilter("trails-active", ["==", "name", features[0].properties.name]);
+          map.setFilter("trails-active", flatArray)
           overlay.innerHTML = `
             name: ${features[0].properties.name}<br/>
             source: ${features[0].properties.source}
@@ -79,7 +85,7 @@ map.on('load', function() {
           overlay.classList.add("visible")
         } else {
           map.getCanvas().style.cursor = 'default'
-          map.setFilter("trails-active", ["==", "name", ""]);
+          map.setFilter("trails-active", _.flatten(["in", "name", clickedTrailNames]));
           overlay.classList.remove("visible")
         }
     });
