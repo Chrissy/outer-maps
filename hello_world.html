@@ -80,7 +80,17 @@ map.on('load', function() {
 
       request.onreadystatechange = function(){
         if (request.readyState == XMLHttpRequest.DONE) {
-          if (request.status == 200) { console.log(JSON.parse(request.responseText).height) }
+          if (request.status == 200) {
+            var heights = JSON.parse(request.responseText).height
+            var elevationGain = 0
+            var elevationLoss = 0
+            _.each(heights, function(el, i) {
+              if (heights[i] < heights[i + 1]) elevationGain += heights[i + 1] - heights[i]
+              if (heights[i] > heights[i + 1]) elevationLoss += heights[i] - heights[i - 1]
+            })
+
+            console.log(`elevation gain: ${elevationGain*3.28084}ft. elevation loss: ${elevationLoss*3.28084}ft.`)
+          }
           if (request.status == 400) { 'womp womp' }
         }
       }
