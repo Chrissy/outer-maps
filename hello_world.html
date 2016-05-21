@@ -66,7 +66,29 @@ map.on('load', function() {
       } else {
         clickedTrailNames = []
       }
+
+      var altitudeQueryString = ""
+
       map.setFilter("trails-active", _.flatten(["in", "name", clickedTrailNames]))
+
+      _.each(features[0].geometry.coordinates, function(el, i){
+        var c = (i == 0) ? "" : ","
+        altitudeQueryString = altitudeQueryString + `${c}{"lat":${el[1]},"lon":${el[0]}}`
+      })
+
+      var request = new XMLHttpRequest();
+
+      request.onreadystatechange = function(){
+        if (request.readyState == XMLHttpRequest.DONE) {
+          if (request.status == 200) { console.log(JSON.parse(request.responseText).height) }
+          if (request.status == 400) { 'womp womp' }
+        }
+      }
+
+      altitudeQueryString = `http://elevation.mapzen.com/height?json={"shape":[${altitudeQueryString}]}&api_key=elevation-cWuTyBg`
+
+      request.open("GET", altitudeQueryString)
+      request.send()
     })
 
     map.on('mousemove', function (event) {
