@@ -86,9 +86,10 @@ map.on('load', function() {
             var elevationLoss = 0
             _.each(heights, function(el, i) {
               if (heights[i] < heights[i + 1]) elevationGain += heights[i + 1] - heights[i]
-              if (heights[i] > heights[i + 1]) elevationLoss += heights[i] - heights[i - 1]
+              if (heights[i] > heights[i + 1]) elevationLoss += heights[i] - heights[i + 1]
             })
 
+            console.log(heights)
             console.log(`elevation gain: ${elevationGain*3.28084}ft. elevation loss: ${elevationLoss*3.28084}ft.`)
           }
           if (request.status == 400) { 'womp womp' }
