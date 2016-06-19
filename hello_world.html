@@ -24,7 +24,7 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUyb
 var map = new mapboxgl.Map({
     container: 'map', // container id
     style: 'mapbox://styles/mapbox/outdoors-v9', //stylesheet location
-    center: [-121.69, 45.37], // starting position
+    center: [-121.677953721342,45.4474166520573], // starting position
     zoom: 11 // starting zoom
 });
 
@@ -34,7 +34,7 @@ map.on('load', function() {
 
     map.addSource('trails-data', {
       'type': 'geojson',
-      'data': "mount_hood.geojson"
+      'data': "lib/mount_hood.geojson"
     })
 
     map.addLayer({
@@ -71,7 +71,9 @@ map.on('load', function() {
 
       map.setFilter("trails-active", _.flatten(["in", "name", clickedTrailNames]))
 
-      _.each(features[0].geometry.coordinates, function(el, i){
+      var coordinates = features[0].geometry.coordinates
+
+      _.each(coordinates, function(el, i){
         var c = (i == 0) ? "" : ","
         altitudeQueryString = altitudeQueryString + `${c}{"lat":${el[1]},"lon":${el[0]}}`
       })
@@ -81,22 +83,23 @@ map.on('load', function() {
       request.onreadystatechange = function(){
         if (request.readyState == XMLHttpRequest.DONE) {
           if (request.status == 200) {
-            var heights = JSON.parse(request.responseText).height
+            var heights = JSON.parse(request.responseText).range_height
             var elevationGain = 0
             var elevationLoss = 0
             _.each(heights, function(el, i) {
-              if (heights[i] < heights[i + 1]) elevationGain += heights[i + 1] - heights[i]
-              if (heights[i] > heights[i + 1]) elevationLoss += heights[i] - heights[i + 1]
+              if (!heights[i] || !heights[i + 1]) return
+              if (heights[i][1] < heights[i + 1][1]) elevationGain += heights[i + 1][1] - heights[i][1]
+              if (heights[i][1] > heights[i + 1][1]) elevationLoss += heights[i][1] - heights[i + 1][1]
             })
 
             console.log(heights)
-            console.log(`elevation gain: ${elevationGain*3.28084}ft. elevation loss: ${elevationLoss*3.28084}ft.`)
+            console.log(`elevation gain: ${elevationGain*3.28084}ft. elevation loss: ${elevationLoss*3.28084}ft. distance: ${_.last(heights)[0]*0.000621371}miles`)
           }
           if (request.status == 400) { 'womp womp' }
         }
       }
 
-      altitudeQueryString = `http://elevation.mapzen.com/height?json={"shape":[${altitudeQueryString}]}&api_key=elevation-cWuTyBg`
+      altitudeQueryString = `http://elevation.mapzen.com/height?json={"range":true, "shape":[${altitudeQueryString}]}&api_key=elevation-cWuTyBg`
 
       request.open("GET", altitudeQueryString)
       request.send()
