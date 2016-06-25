@@ -13,7 +13,7 @@ var pool = new pg.Pool({database: 'mountains_2'});
 app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
 
   var query = `
-    SELECT name, ref, ST_AsGeoJson(the_geog) AS the_geog
+    SELECT name, ogc_fid, ST_AsGeoJson(the_geog) AS the_geog
     FROM osm_trails
     WHERE ST_Intersects(the_geog,
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
@@ -29,11 +29,10 @@ app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
       for (var row of result.rows) {
         features.push({
           "type": "Feature",
-          "id": "way/5303764",
           "properties": {
             "name": row.name || "needs name",
-            "ref": row.ref || "needs ref",
-            "source": "osm"
+            "source": "osm",
+            "id": row.ogc_fid
           },
           "geometry": JSON.parse(row.the_geog)
         });

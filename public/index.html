@@ -28,7 +28,7 @@ var map = new mapboxgl.Map({
     zoom: 10 // starting zoom
 });
 
-var clickedTrailNames = []
+var clickedTrailIds = []
 
 var loadTrailsWithinBox = function(){
   var bounds = map.getBounds();
@@ -56,7 +56,7 @@ var loadTrailsWithinBox = function(){
       'line-color': '#FF9100',
       'line-width': 4
     },
-    "filter": ["==", "name", ""]
+    "filter": ["==", "id", ""]
   })
 }
 
@@ -65,8 +65,6 @@ map.on('load', function() {
 })
 
 map.on('moveend', function() {
-  console.log('moveend')
-
   map.removeSource('trails-data');
   map.removeLayer('trails');
   map.removeLayer('trails-active');
@@ -80,14 +78,14 @@ map.on('click', function(event){
   var features = map.queryRenderedFeatures(event.point, { layers: ['trails'] });
 
   if (features.length) {
-    clickedTrailNames.push(features[0].properties.name)
+    clickedTrailIds.push(features[0].properties.id)
   } else {
-    clickedTrailNames = []
+    clickedTrailIds = []
   }
 
   var altitudeQueryString = ""
 
-  map.setFilter("trails-active", _.flatten(["in", "name", clickedTrailNames]))
+  map.setFilter("trails-active", _.flatten(["in", "id", clickedTrailIds]))
 
   var coordinates = features[0].geometry.coordinates
 
@@ -128,7 +126,7 @@ map.on('mousemove', function (event) {
 
     var features = map.queryRenderedFeatures(event.point, { layers: ['trails'] });
     if (features.length) {
-      var flatArray = _.flatten(["in", "name", features[0].properties.name, clickedTrailNames])
+      var flatArray = _.flatten(["in", "id", features[0].properties.id, clickedTrailIds])
 
       map.getCanvas().style.cursor = 'pointer'
       map.setFilter("trails-active", flatArray)
@@ -141,7 +139,7 @@ map.on('mousemove', function (event) {
       overlay.classList.add("visible")
     } else {
       map.getCanvas().style.cursor = 'default'
-      map.setFilter("trails-active", _.flatten(["in", "name", clickedTrailNames]));
+      map.setFilter("trails-active", _.flatten(["in", "id", clickedTrailIds]));
       overlay.classList.remove("visible")
     }
 });
