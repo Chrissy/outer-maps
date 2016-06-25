@@ -5,10 +5,11 @@ const app = express();
 
 app.use(express.static('public'))
 
-const hostname = '0.0.0.0';
-const port = 5000;
-
-var pool = new pg.Pool({database: 'mountains_2'});
+var pool = new pg.Pool({
+  database: 'mountains_2',
+  max: 10,
+  idleTimeoutMillis: 3000
+});
 
 app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
 
@@ -22,6 +23,8 @@ app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
 
   pool.connect(function(err, client, done){
     client.query(query, function(err, result){
+      done();
+
       if (err) throw err;
 
       var features = []
@@ -42,7 +45,6 @@ app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
         "type": "FeatureCollection",
         "features": features
       });
-      client.end();
     })
   })
 })
