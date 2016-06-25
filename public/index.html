@@ -32,43 +32,31 @@ var clickedTrailNames = []
 
 map.on('load', function() {
 
-  var request_map_data = new XMLHttpRequest();
+  map.addSource('trails-data', {
+    'type': 'geojson',
+    'data': '/api'
+  })
 
-  request_map_data.onreadystatechange = function(){
-    if (request_map_data.readyState == XMLHttpRequest.DONE) {
-      if (request_map_data.status == 200) {
-        map.addSource('trails-data', {
-          'type': 'geojson',
-          'data': JSON.parse(request_map_data.responseText)
-        })
-
-        map.addLayer({
-          'id': 'trails',
-          'source': 'trails-data',
-          'type': 'line',
-          'paint': {
-            'line-color': '#47B05A',
-            'line-width': 4
-          }
-        })
-
-        map.addLayer({
-          'id': 'trails-active',
-          'source': 'trails-data',
-          'type': 'line',
-          'paint': {
-            'line-color': '#FF9100',
-            'line-width': 4
-          },
-          "filter": ["==", "name", ""]
-        })
-      }
-      if (request_map_data.status == 400) { 'womp womp' }
+  map.addLayer({
+    'id': 'trails',
+    'source': 'trails-data',
+    'type': 'line',
+    'paint': {
+      'line-color': '#47B05A',
+      'line-width': 4
     }
-  }
+  })
 
-  request_map_data.open("GET", '/lib/sierra-nevada-footways.geojson')
-  request_map_data.send()
+  map.addLayer({
+    'id': 'trails-active',
+    'source': 'trails-data',
+    'type': 'line',
+    'paint': {
+      'line-color': '#FF9100',
+      'line-width': 4
+    },
+    "filter": ["==", "name", ""]
+  })
 
   map.on('click', function(event){
     var features = map.queryRenderedFeatures(event.point, { layers: ['trails'] });

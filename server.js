@@ -12,10 +12,24 @@ var pool = new pg.Pool({database: 'mountains_2'});
 
 app.get('/api', function(request, response) {
   pool.connect(function(err, client, done){
-    client.query('SELECT the_geog FROM osm_trails limit 1', function(err, result){
+    client.query('SELECT name, ref, ST_AsGeoJson(the_geog) AS the_geog FROM osm_trails limit 5', function(err, result){
       if (err) throw err;
 
-      response.send(result.rows[0].the_geog);
+      response.json({
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "id": "way/5303764",
+            "properties": {
+              "name": result.rows[0].name || "needs name",
+              "ref": result.rows[0].ref || "needs ref",
+              "source": "osm"
+            },
+            "geometry": JSON.parse(result.rows[0].the_geog)
+          }
+        ]
+      });
       client.end();
     })
   })
