@@ -15,20 +15,24 @@ app.get('/api', function(request, response) {
     client.query('SELECT name, ref, ST_AsGeoJson(the_geog) AS the_geog FROM osm_trails limit 5', function(err, result){
       if (err) throw err;
 
+      var features = []
+
+      for (var row of result.rows) {
+        features.push({
+          "type": "Feature",
+          "id": "way/5303764",
+          "properties": {
+            "name": row.name || "needs name",
+            "ref": row.ref || "needs ref",
+            "source": "osm"
+          },
+          "geometry": JSON.parse(row.the_geog)
+        });
+      }
+
       response.json({
         "type": "FeatureCollection",
-        "features": [
-          {
-            "type": "Feature",
-            "id": "way/5303764",
-            "properties": {
-              "name": result.rows[0].name || "needs name",
-              "ref": result.rows[0].ref || "needs ref",
-              "source": "osm"
-            },
-            "geometry": JSON.parse(result.rows[0].the_geog)
-          }
-        ]
+        "features": features
       });
       client.end();
     })
