@@ -10,12 +10,14 @@ const port = 5000;
 
 var pool = new pg.Pool({database: 'mountains_2'});
 
-app.get('/api', function(request, response) {
+app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
 
   var query = `
     SELECT name, ref, ST_AsGeoJson(the_geog) AS the_geog
     FROM osm_trails
-    WHERE ST_Intersects(the_geog, ST_MakeEnvelope(-118.6686774, 36.7933829, -118.5686774, 36.6933829))
+    WHERE ST_Intersects(the_geog,
+      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
+    )
   `
 
   pool.connect(function(err, client, done){

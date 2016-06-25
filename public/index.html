@@ -25,16 +25,18 @@ var map = new mapboxgl.Map({
     container: 'map', // container id
     style: 'mapbox://styles/mapbox/outdoors-v9', //stylesheet location
     center: [-118.6686774, 36.7933829], // starting position
-    zoom: 11 // starting zoom
+    zoom: 10 // starting zoom
 });
 
 var clickedTrailNames = []
 
 map.on('load', function() {
 
+  var bounds = map.getBounds();
+
   map.addSource('trails-data', {
     'type': 'geojson',
-    'data': '/api'
+    'data': `/api/${bounds._sw.lng}/${bounds._sw.lat}/${bounds._ne.lng}/${bounds._ne.lat}`
   })
 
   map.addLayer({
