@@ -24,7 +24,7 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUyb
 var map = new mapboxgl.Map({
     container: 'map', // container id
     style: 'mapbox://styles/mapbox/outdoors-v9', //stylesheet location
-    center: [-121.677953721342,45.4474166520573], // starting position
+    center: [-118.6686774, 36.7933829], // starting position
     zoom: 11 // starting zoom
 });
 
@@ -67,7 +67,7 @@ map.on('load', function() {
     }
   }
 
-  request_map_data.open("GET", '/lib/mount_hood.geojson')
+  request_map_data.open("GET", '/lib/sierra-nevada-footways.geojson')
   request_map_data.send()
 
   map.on('click', function(event){
