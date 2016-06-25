@@ -30,8 +30,7 @@ var map = new mapboxgl.Map({
 
 var clickedTrailNames = []
 
-map.on('load', function() {
-
+var loadTrailsWithinBox = function(){
   var bounds = map.getBounds();
 
   map.addSource('trails-data', {
@@ -59,76 +58,93 @@ map.on('load', function() {
     },
     "filter": ["==", "name", ""]
   })
+}
 
-  map.on('click', function(event){
-    var features = map.queryRenderedFeatures(event.point, { layers: ['trails'] });
+map.on('load', function() {
+  loadTrailsWithinBox();
+})
 
-    if (features.length) {
-      clickedTrailNames.push(features[0].properties.name)
-    } else {
-      clickedTrailNames = []
-    }
+map.on('moveend', function() {
+  console.log('moveend')
 
-    var altitudeQueryString = ""
+  map.removeSource('trails-data');
+  map.removeLayer('trails');
+  map.removeLayer('trails-active');
 
-    map.setFilter("trails-active", _.flatten(["in", "name", clickedTrailNames]))
+  loadTrailsWithinBox()
+})
 
-    var coordinates = features[0].geometry.coordinates
+map.on('click', function(event){
+  if (!map.loaded()) return;
 
-    _.each(coordinates, function(el, i){
-      var c = (i == 0) ? "" : ","
-      altitudeQueryString = altitudeQueryString + `${c}{"lat":${el[1]},"lon":${el[0]}}`
-    })
+  var features = map.queryRenderedFeatures(event.point, { layers: ['trails'] });
 
-    var request = new XMLHttpRequest();
+  if (features.length) {
+    clickedTrailNames.push(features[0].properties.name)
+  } else {
+    clickedTrailNames = []
+  }
 
-    request.onreadystatechange = function(){
-      if (request.readyState == XMLHttpRequest.DONE) {
-        if (request.status == 200) {
-          var heights = JSON.parse(request.responseText).range_height
-          var elevationGain = 0
-          var elevationLoss = 0
-          _.each(heights, function(el, i) {
-            if (!heights[i] || !heights[i + 1]) return
-            if (heights[i][1] < heights[i + 1][1]) elevationGain += heights[i + 1][1] - heights[i][1]
-            if (heights[i][1] > heights[i + 1][1]) elevationLoss += heights[i][1] - heights[i + 1][1]
-          })
+  var altitudeQueryString = ""
 
-          console.log(heights)
-          console.log(`elevation gain: ${elevationGain*3.28084}ft. elevation loss: ${elevationLoss*3.28084}ft. distance: ${_.last(heights)[0]*0.000621371}miles`)
-        }
-        if (request.status == 400) { 'womp womp' }
-      }
-    }
+  map.setFilter("trails-active", _.flatten(["in", "name", clickedTrailNames]))
 
-    altitudeQueryString = `http://elevation.mapzen.com/height?json={"range":true, "shape":[${altitudeQueryString}]}&api_key=elevation-cWuTyBg`
+  var coordinates = features[0].geometry.coordinates
 
-    request.open("GET", altitudeQueryString)
-    request.send()
+  _.each(coordinates, function(el, i){
+    var c = (i == 0) ? "" : ","
+    altitudeQueryString = altitudeQueryString + `${c}{"lat":${el[1]},"lon":${el[0]}}`
   })
 
+  var request = new XMLHttpRequest();
 
-  map.on('mousemove', function (event) {
-      var features = map.queryRenderedFeatures(event.point, { layers: ['trails'] });
-      if (features.length) {
-        var flatArray = _.flatten(["in", "name", features[0].properties.name, clickedTrailNames])
+  request.onreadystatechange = function(){
+    if (request.readyState == XMLHttpRequest.DONE) {
+      if (request.status == 200) {
+        var heights = JSON.parse(request.responseText).range_height
+        var elevationGain = 0
+        var elevationLoss = 0
+        _.each(heights, function(el, i) {
+          if (!heights[i] || !heights[i + 1]) return
+          if (heights[i][1] < heights[i + 1][1]) elevationGain += heights[i + 1][1] - heights[i][1]
+          if (heights[i][1] > heights[i + 1][1]) elevationLoss += heights[i][1] - heights[i + 1][1]
+        })
 
-        map.getCanvas().style.cursor = 'pointer'
-        map.setFilter("trails-active", flatArray)
-        overlay.innerHTML = `
-          name: ${features[0].properties.name}<br/>
-          source: ${features[0].properties.source}
-          `
-        overlay.style.top = `${event.point.y + 5}px`
-        overlay.style.left = `${event.point.x + 5}px`
-        overlay.classList.add("visible")
-      } else {
-        map.getCanvas().style.cursor = 'default'
-        map.setFilter("trails-active", _.flatten(["in", "name", clickedTrailNames]));
-        overlay.classList.remove("visible")
+        console.log(heights)
+        console.log(`elevation gain: ${elevationGain*3.28084}ft. elevation loss: ${elevationLoss*3.28084}ft. distance: ${_.last(heights)[0]*0.000621371}miles`)
       }
-  });
+      if (request.status == 400) { 'womp womp' }
+    }
+  }
+
+  altitudeQueryString = `http://elevation.mapzen.com/height?json={"range":true, "shape":[${altitudeQueryString}]}&api_key=elevation-cWuTyBg`
+
+  request.open("GET", altitudeQueryString)
+  request.send()
 })
+
+map.on('mousemove', function (event) {
+    if (!map.loaded()) return;
+
+    var features = map.queryRenderedFeatures(event.point, { layers: ['trails'] });
+    if (features.length) {
+      var flatArray = _.flatten(["in", "name", features[0].properties.name, clickedTrailNames])
+
+      map.getCanvas().style.cursor = 'pointer'
+      map.setFilter("trails-active", flatArray)
+      overlay.innerHTML = `
+        name: ${features[0].properties.name}<br/>
+        source: ${features[0].properties.source}
+        `
+      overlay.style.top = `${event.point.y + 5}px`
+      overlay.style.left = `${event.point.x + 5}px`
+      overlay.classList.add("visible")
+    } else {
+      map.getCanvas().style.cursor = 'default'
+      map.setFilter("trails-active", _.flatten(["in", "name", clickedTrailNames]));
+      overlay.classList.remove("visible")
+    }
+});
 </script>
 
 </body>
