@@ -1,0 +1,28 @@
+{
+  "name": "mountains",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "supervisor server.js",
+    "bundle": "webpack main.js public/bundle.js --module-bind 'js=babel-loader'"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "webpack": "^1.13.1",
+    "pg": "^6.0.1",
+    "express": "^4.14.0",
+
+    "react": "^15.2.0",
+    "react-dom": "^15.2.0",
+    "babel-preset-react": "^6.11.1",
+    "babel-loader": "^6.2.4",
+    "babel-core": "^6.10.4"
+  },
+  "devDependencies": {
+    "concurrently": "^2.0.0",
+    "lite-server": "^2.2.0",
+    "typescript": "^1.8.10",
+    "typings":"^1.0.4",
+    "node-inspector": "^0.12.8",
+    "supervisor": "^0.11.0"
+  }
+}
