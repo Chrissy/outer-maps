@@ -1,7 +1,12 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+var MapGL = require('react-map-gl');
 
 ReactDOM.render(
-  <h1>Hello, world!</h1>,
-  document.getElementById('example')
+  <MapGL latitude={36.7933829} longitude={-118.6686774} zoom={11}
+    onChangeViewport={(viewport) => {
+      var {latitude, longitude, zoom} = viewport;
+    }}
+  />,
+  document.getElementById("map")
 );

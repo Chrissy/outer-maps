@@ -16,135 +16,134 @@
 </head>
 <body>
 
-<div id='example'></div>
 <div id='map'></div>
 <div id='overlay'></div>
 
 <script>
 
-mapboxgl.accessToken = 'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
-var map = new mapboxgl.Map({
-    container: 'map', // container id
-    style: 'mapbox://styles/mapbox/outdoors-v9', //stylesheet location
-    center: [-118.6686774, 36.7933829], // starting position
-    zoom: 10 // starting zoom
-});
-
-var clickedTrailIds = []
-
-var loadTrailsWithinBox = function(){
-  var bounds = map.getBounds();
-
-  map.addSource('trails-data', {
-    'type': 'geojson',
-    'data': `/api/${bounds._sw.lng}/${bounds._sw.lat}/${bounds._ne.lng}/${bounds._ne.lat}`
-  })
-
-  map.addLayer({
-    'id': 'trails',
-    'source': 'trails-data',
-    'type': 'line',
-    'paint': {
-      'line-color': '#47B05A',
-      'line-width': 4
-    }
-  })
-
-  map.addLayer({
-    'id': 'trails-active',
-    'source': 'trails-data',
-    'type': 'line',
-    'paint': {
-      'line-color': '#FF9100',
-      'line-width': 4
-    },
-    "filter": ["==", "id", ""]
-  })
-}
-
-map.on('load', function() {
-  loadTrailsWithinBox();
-})
-
-map.on('moveend', function() {
-  map.removeSource('trails-data');
-  map.removeLayer('trails');
-  map.removeLayer('trails-active');
-
-  loadTrailsWithinBox()
-})
-
-map.on('click', function(event){
-  if (!map.loaded()) return;
-
-  var features = map.queryRenderedFeatures(event.point, { layers: ['trails'] });
-
-  if (features.length) {
-    clickedTrailIds.push(features[0].properties.id)
-  } else {
-    clickedTrailIds = []
-  }
-
-  var altitudeQueryString = ""
-
-  map.setFilter("trails-active", _.flatten(["in", "id", clickedTrailIds]))
-
-  var coordinates = features[0].geometry.coordinates
-
-  _.each(coordinates, function(el, i){
-    var c = (i == 0) ? "" : ","
-    altitudeQueryString = altitudeQueryString + `${c}{"lat":${el[1]},"lon":${el[0]}}`
-  })
-
-  var request = new XMLHttpRequest();
-
-  request.onreadystatechange = function(){
-    if (request.readyState == XMLHttpRequest.DONE) {
-      if (request.status == 200) {
-        var heights = JSON.parse(request.responseText).range_height
-        var elevationGain = 0
-        var elevationLoss = 0
-        _.each(heights, function(el, i) {
-          if (!heights[i] || !heights[i + 1]) return
-          if (heights[i][1] < heights[i + 1][1]) elevationGain += heights[i + 1][1] - heights[i][1]
-          if (heights[i][1] > heights[i + 1][1]) elevationLoss += heights[i][1] - heights[i + 1][1]
-        })
-
-        console.log(heights)
-        console.log(`elevation gain: ${elevationGain*3.28084}ft. elevation loss: ${elevationLoss*3.28084}ft. distance: ${_.last(heights)[0]*0.000621371}miles`)
-      }
-      if (request.status == 400) { 'womp womp' }
-    }
-  }
-
-  altitudeQueryString = `http://elevation.mapzen.com/height?json={"range":true, "shape":[${altitudeQueryString}]}&api_key=elevation-cWuTyBg`
-
-  request.open("GET", altitudeQueryString)
-  request.send()
-})
-
-map.on('mousemove', function (event) {
-    if (!map.loaded()) return;
-
-    var features = map.queryRenderedFeatures(event.point, { layers: ['trails'] });
-    if (features.length) {
-      var flatArray = _.flatten(["in", "id", features[0].properties.id, clickedTrailIds])
-
-      map.getCanvas().style.cursor = 'pointer'
-      map.setFilter("trails-active", flatArray)
-      overlay.innerHTML = `
-        name: ${features[0].properties.name}<br/>
-        source: ${features[0].properties.source}
-        `
-      overlay.style.top = `${event.point.y + 5}px`
-      overlay.style.left = `${event.point.x + 5}px`
-      overlay.classList.add("visible")
-    } else {
-      map.getCanvas().style.cursor = 'default'
-      map.setFilter("trails-active", _.flatten(["in", "id", clickedTrailIds]));
-      overlay.classList.remove("visible")
-    }
-});
+// mapboxgl.accessToken = 'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
+// var map = new mapboxgl.Map({
+//     container: 'map', // container id
+//     style: 'mapbox://styles/mapbox/outdoors-v9', //stylesheet location
+//     center: [-118.6686774, 36.7933829], // starting position
+//     zoom: 10 // starting zoom
+// });
+//
+// var clickedTrailIds = []
+//
+// var loadTrailsWithinBox = function(){
+//   var bounds = map.getBounds();
+//
+//   map.addSource('trails-data', {
+//     'type': 'geojson',
+//     'data': `/api/${bounds._sw.lng}/${bounds._sw.lat}/${bounds._ne.lng}/${bounds._ne.lat}`
+//   })
+//
+//   map.addLayer({
+//     'id': 'trails',
+//     'source': 'trails-data',
+//     'type': 'line',
+//     'paint': {
+//       'line-color': '#47B05A',
+//       'line-width': 4
+//     }
+//   })
+//
+//   map.addLayer({
+//     'id': 'trails-active',
+//     'source': 'trails-data',
+//     'type': 'line',
+//     'paint': {
+//       'line-color': '#FF9100',
+//       'line-width': 4
+//     },
+//     "filter": ["==", "id", ""]
+//   })
+// }
+//
+// map.on('load', function() {
+//   loadTrailsWithinBox();
+// })
+//
+// map.on('moveend', function() {
+//   map.removeSource('trails-data');
+//   map.removeLayer('trails');
+//   map.removeLayer('trails-active');
+//
+//   loadTrailsWithinBox()
+// })
+//
+// map.on('click', function(event){
+//   if (!map.loaded()) return;
+//
+//   var features = map.queryRenderedFeatures(event.point, { layers: ['trails'] });
+//
+//   if (features.length) {
+//     clickedTrailIds.push(features[0].properties.id)
+//   } else {
+//     clickedTrailIds = []
+//   }
+//
+//   var altitudeQueryString = ""
+//
+//   map.setFilter("trails-active", _.flatten(["in", "id", clickedTrailIds]))
+//
+//   var coordinates = features[0].geometry.coordinates
+//
+//   _.each(coordinates, function(el, i){
+//     var c = (i == 0) ? "" : ","
+//     altitudeQueryString = altitudeQueryString + `${c}{"lat":${el[1]},"lon":${el[0]}}`
+//   })
+//
+//   var request = new XMLHttpRequest();
+//
+//   request.onreadystatechange = function(){
+//     if (request.readyState == XMLHttpRequest.DONE) {
+//       if (request.status == 200) {
+//         var heights = JSON.parse(request.responseText).range_height
+//         var elevationGain = 0
+//         var elevationLoss = 0
+//         _.each(heights, function(el, i) {
+//           if (!heights[i] || !heights[i + 1]) return
+//           if (heights[i][1] < heights[i + 1][1]) elevationGain += heights[i + 1][1] - heights[i][1]
+//           if (heights[i][1] > heights[i + 1][1]) elevationLoss += heights[i][1] - heights[i + 1][1]
+//         })
+//
+//         console.log(heights)
+//         console.log(`elevation gain: ${elevationGain*3.28084}ft. elevation loss: ${elevationLoss*3.28084}ft. distance: ${_.last(heights)[0]*0.000621371}miles`)
+//       }
+//       if (request.status == 400) { 'womp womp' }
+//     }
+//   }
+//
+//   altitudeQueryString = `http://elevation.mapzen.com/height?json={"range":true, "shape":[${altitudeQueryString}]}&api_key=elevation-cWuTyBg`
+//
+//   request.open("GET", altitudeQueryString)
+//   request.send()
+// })
+//
+// map.on('mousemove', function (event) {
+//     if (!map.loaded()) return;
+//
+//     var features = map.queryRenderedFeatures(event.point, { layers: ['trails'] });
+//     if (features.length) {
+//       var flatArray = _.flatten(["in", "id", features[0].properties.id, clickedTrailIds])
+//
+//       map.getCanvas().style.cursor = 'pointer'
+//       map.setFilter("trails-active", flatArray)
+//       overlay.innerHTML = `
+//         name: ${features[0].properties.name}<br/>
+//         source: ${features[0].properties.source}
+//         `
+//       overlay.style.top = `${event.point.y + 5}px`
+//       overlay.style.left = `${event.point.x + 5}px`
+//       overlay.classList.add("visible")
+//     } else {
+//       map.getCanvas().style.cursor = 'default'
+//       map.setFilter("trails-active", _.flatten(["in", "id", clickedTrailIds]));
+//       overlay.classList.remove("visible")
+//     }
+// });
 </script>
 
 <script src='bundle.js'></script>
