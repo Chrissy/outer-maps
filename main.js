@@ -31,9 +31,15 @@ var Map = React.createClass({
     }.bind(this));
   },
 
+  _onChangeViewport: function(viewport) {
+    this.setState({
+      viewport: Object.assign({}, this.state.viewport, viewport)
+    })
+  },
+
   render: function() {
     return (
-      <MapGL {...this.state.viewport}/>
+      <MapGL {...Object.assign({}, this.state.viewport, {onChangeViewport: this._onChangeViewport})} />
     );
   }
 })
