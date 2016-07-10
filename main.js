@@ -35,6 +35,21 @@ var Map = React.createClass({
     this.mapboxed.addLayer(defaultLayerObject).addLayer(activeLayerObject)
   },
 
+  removeTrails: function() {
+    this.mapboxed.removeSource('trails-data');
+    this.mapboxed.removeLayer('trails');
+    this.mapboxed.removeLayer('trails-active');
+  },
+
+  onMapLoad: function() {
+    this.loadTrailsWithinBox();
+  },
+
+  onMapMove: function() {
+    this.removeTrails();
+    this.loadTrailsWithinBox();
+  },
+
   getInitialState: function() {
     return {}
   },
@@ -47,9 +62,9 @@ var Map = React.createClass({
       zoom: 10
     });
 
-    this.mapboxed.on('load', function(){
-      this.loadTrailsWithinBox()
-    }.bind(this))
+    if (this.onMapLoad) this.mapboxed.on('load', this.onMapLoad)
+    if (this.onMapMove) this.mapboxed.on('moveend', this.onMapMove)
+    if (this.onMapClick) this.mapboxed.on('click', this.onMapClick)
   },
 
   render: function() {
