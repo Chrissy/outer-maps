@@ -7,7 +7,7 @@
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.18.0/mapbox-gl.css' rel='stylesheet' />
     <style>
         body { margin:0; padding:0; }
-        #map { position:absolute; top:0; bottom:0; width:100%; }
+        #map, #mapbox-gl-element { position:absolute; top:0; bottom:0; width:100%; }
         #overlay { position: absolute; z-index: 1; padding: 1em; background: white; border: 2px solid #ddd; display: none; }
         #overlay.visible { display: block; }
     </style>
@@ -18,6 +18,14 @@
 <div id='overlay'></div>
 
 <script>
+
+// mapboxgl.accessToken = 'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
+// var map = new mapboxgl.Map({
+//     container: 'map', // container id
+//     style: 'mapbox://styles/mapbox/outdoors-v9', //stylesheet location
+//     center: [-118.6686774, 36.7933829], // starting position
+//     zoom: 10 // starting zoom
+// });
 //
 // var clickedTrailIds = []
 //
