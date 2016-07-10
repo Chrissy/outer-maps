@@ -20,6 +20,17 @@ var Map = React.createClass({
     }
   },
 
+  componentDidMount: function() {
+    window.addEventListener('resize', function() {
+      this.setState({
+        viewport: Object.assign({}, this.state.viewport, {
+          width: window.innerWidth,
+          height: window.innerHeight
+        })
+      });
+    }.bind(this));
+  },
+
   render: function() {
     return (
       <MapGL {...this.state.viewport}/>
