@@ -1,12 +1,30 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var MapGL = require('react-map-gl');
+var window = require('global/window');
+var document = require('global/document');
 
-ReactDOM.render(
-  <MapGL latitude={36.7933829} longitude={-118.6686774} zoom={11}
-    onChangeViewport={(viewport) => {
-      var {latitude, longitude, zoom} = viewport;
-    }}
-  />,
-  document.getElementById("map")
-);
+var Map = React.createClass({
+  getInitialState: function() {
+    return {
+      viewport: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        latitude: 36.7933829,
+        longitude: -118.6686774,
+        mapStyle: 'mapbox://styles/mapbox/outdoors-v9',
+        zoom: 10,
+        isDragging: false,
+        mapboxApiAccessToken: 'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg'
+      }
+    }
+  },
+
+  render: function() {
+    return (
+      <MapGL {...this.state.viewport}/>
+    );
+  }
+})
+
+ReactDOM.render(<Map />, document.getElementById("map"));
