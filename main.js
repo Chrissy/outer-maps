@@ -6,9 +6,12 @@ MapboxGL.accessToken = 'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUyb
 
 var Map = React.createClass({
 
-  loadTrailsWithinBox: function(){
-    if (!this.mapboxed) return;
+  watchEvents: {
+    'onMapLoad': 'load',
+    'onMapMoveEnd': 'moveend'
+  },
 
+  loadTrailsWithinBox: function(){
     var bounds = this.mapboxed.getBounds();
 
     this.mapboxed.addSource('trails-data', {
@@ -45,7 +48,7 @@ var Map = React.createClass({
     this.loadTrailsWithinBox();
   },
 
-  onMapMove: function() {
+  onMapMoveEnd: function() {
     this.removeTrails();
     this.loadTrailsWithinBox();
   },
@@ -62,9 +65,15 @@ var Map = React.createClass({
       zoom: 10
     });
 
-    if (this.onMapLoad) this.mapboxed.on('load', this.onMapLoad)
-    if (this.onMapMove) this.mapboxed.on('moveend', this.onMapMove)
-    if (this.onMapClick) this.mapboxed.on('click', this.onMapClick)
+    this._mapEvents()
+  },
+
+  _mapEvents: function() {
+    Object.keys(this.watchEvents).forEach(function(functionName){
+      this.mapboxed.on(this.watchEvents[functionName], function(){
+        if (this.mapboxed.loaded()) this[functionName].call()
+      }.bind(this))
+    }.bind(this))
   },
 
   render: function() {
