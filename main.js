@@ -16,7 +16,7 @@ var Map = React.createClass({
       'data': `/api/${bounds._sw.lng}/${bounds._sw.lat}/${bounds._ne.lng}/${bounds._ne.lat}`
     })
 
-    this.mapboxed.addLayer({
+    var defaultLayerObject = {
       'id': 'trails',
       'source': 'trails-data',
       'type': 'line',
@@ -24,18 +24,15 @@ var Map = React.createClass({
         'line-color': '#47B05A',
         'line-width': 4
       }
-    })
+    }
 
-    this.mapboxed.addLayer({
+    var activeLayerObject = Object.assign({}, defaultLayerObject, {
       'id': 'trails-active',
-      'source': 'trails-data',
-      'type': 'line',
-      'paint': {
-        'line-color': '#FF9100',
-        'line-width': 4
-      },
+      'paint': { 'line-color': '#FF9100'},
       "filter": ["==", "id", ""]
     })
+
+    this.mapboxed.addLayer(defaultLayerObject).addLayer(activeLayerObject)
   },
 
   getInitialState: function() {
