@@ -2,21 +2,21 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var MapboxGL = require('mapbox-gl');
 var _ = require('underscore');
-var Tooltip = require('./tooltip');
+import Tooltip from './tooltip';
 
 MapboxGL.accessToken = 'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg'
 
-var Map = React.createClass({
+const watchEvents = {
+  'onMapLoad': 'load',
+  'onMapMoveEnd': 'moveend',
+  'onMapMouseMove': 'mousemove'
+}
 
-  watchEvents: {
-    'onMapLoad': 'load',
-    'onMapMoveEnd': 'moveend',
-    'onMapMouseMove': 'mousemove'
-  },
+var clickedTrailIds = []
 
-  clickedTrailIds: [],
+class Map extends React.Component {
 
-  loadTrailsWithinBox: function(){
+  loadTrailsWithinBox() {
     var bounds = this.mapboxed.getBounds();
 
     this.mapboxed.addSource('trails-data', {
@@ -41,24 +41,24 @@ var Map = React.createClass({
     })
 
     this.mapboxed.addLayer(defaultLayerObject).addLayer(activeLayerObject)
-  },
+  }
 
-  removeTrails: function() {
+  removeTrails() {
     this.mapboxed.removeSource('trails-data');
     this.mapboxed.removeLayer('trails');
     this.mapboxed.removeLayer('trails-active');
-  },
+  }
 
-  onMapLoad: function() {
+  onMapLoad() {
     this.loadTrailsWithinBox();
-  },
+  }
 
-  onMapMoveEnd: function() {
+  onMapMoveEnd() {
     this.removeTrails();
     this.loadTrailsWithinBox();
-  },
+  }
 
-  onMapMouseMove: function(event) {
+  onMapMouseMove(event) {
     var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails'] });
 
     if (features.length) {
@@ -72,13 +72,13 @@ var Map = React.createClass({
       this.mapboxed.setFilter("trails-active", _.flatten(["in", "id", this.clickedTrailIds]));
       overlay.classList.remove("visible")
     }
-  },
+  }
 
-  getInitialState: function() {
-    return {}
-  },
+  constructor() {
+    super()
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     this.mapboxed = new MapboxGL.Map({
       container: 'mapbox-gl-element',
       style: 'mapbox://styles/mapbox/outdoors-v9',
@@ -87,17 +87,17 @@ var Map = React.createClass({
     });
 
     this._mapEvents()
-  },
+  }
 
-  _mapEvents: function() {
-    Object.keys(this.watchEvents).forEach(function(functionName){
-      this.mapboxed.on(this.watchEvents[functionName], function(event){
+  _mapEvents() {
+    Object.keys(watchEvents).forEach(function(functionName){
+      this.mapboxed.on(watchEvents[functionName], function(event){
         if (this.mapboxed.loaded()) this[functionName](event)
       }.bind(this))
     }.bind(this))
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div id="the-map">
         <div id="mapbox-gl-element"></div>
@@ -105,6 +105,6 @@ var Map = React.createClass({
       </div>
     );
   }
-})
+}
 
 ReactDOM.render(<Map />, document.getElementById("map"));

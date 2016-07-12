@@ -1,7 +1,7 @@
 var React = require('react');
 
-module.exports = React.createClass({
-  render: function() {
+export default class Tooltip extends React.Component {
+  render() {
     return (
       <div>
         name: {this.props.name}<br/>
@@ -9,4 +9,4 @@ module.exports = React.createClass({
       </div>
     )
   }
-});
+};
