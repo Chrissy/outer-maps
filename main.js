@@ -7,7 +7,7 @@ import Tooltip from './tooltip';
 MapboxGL.accessToken = 'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg'
 
 class Map extends React.Component {
-  watchEvents = {
+  static watchEvents = {
     'onMapLoad': 'load',
     'onMapMoveEnd': 'moveend',
     'onMapMouseMove': 'mousemove'
@@ -87,8 +87,8 @@ class Map extends React.Component {
   }
 
   _mapEvents() {
-    Object.keys(this.watchEvents).forEach(function(functionName){
-      this.mapboxed.on(this.watchEvents[functionName], function(event){
+    Object.keys(Map.watchEvents).forEach(function(functionName){
+      this.mapboxed.on(Map.watchEvents[functionName], function(event){
         if (this.mapboxed.loaded()) this[functionName](event)
       }.bind(this))
     }.bind(this))
