@@ -1,7 +1,8 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-var MapboxGL = require('mapbox-gl');
-var _ = require('underscore');
+import React, { Proptypes } from 'react';
+import ReactDOM from 'react-dom'
+import MapboxGL from 'mapbox-gl';
+import _ from 'underscore';
+
 import Tooltip from './tooltip';
 
 MapboxGL.accessToken = 'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg'

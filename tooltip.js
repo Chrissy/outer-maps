@@ -1,4 +1,4 @@
-var React = require('react');
+import React from 'react'
 
 export default class Tooltip extends React.Component {
   render() {
