@@ -2,6 +2,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var MapboxGL = require('mapbox-gl');
 var _ = require('underscore');
+var Tooltip = require('./tooltip');
 
 MapboxGL.accessToken = 'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg'
 
@@ -65,13 +66,7 @@ var Map = React.createClass({
 
       this.mapboxed.getCanvas().style.cursor = 'pointer'
       this.mapboxed.setFilter("trails-active", flatArray)
-      overlay.innerHTML = `
-        name: ${features[0].properties.name}<br/>
-        source: ${features[0].properties.source}
-        `
-      overlay.style.top = `${event.point.y + 5}px`
-      overlay.style.left = `${event.point.x + 5}px`
-      overlay.classList.add("visible")
+
     } else {
       this.mapboxed.getCanvas().style.cursor = 'default'
       this.mapboxed.setFilter("trails-active", _.flatten(["in", "id", this.clickedTrailIds]));
@@ -104,7 +99,10 @@ var Map = React.createClass({
 
   render: function() {
     return (
-      <div id="mapbox-gl-element"></div>
+      <div id="the-map">
+        <div id="mapbox-gl-element"></div>
+        <Tooltip />
+      </div>
     );
   }
 })
