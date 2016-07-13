@@ -20,7 +20,9 @@ class Map extends React.Component {
     this.state = {
       clickedTrailIds: [],
       hoveredTrailName: '',
-      hoveredTrailSource: ''
+      hoveredTrailSource: '',
+      mouseX: 0,
+      mouseY: 0
     }
   }
 
@@ -77,7 +79,9 @@ class Map extends React.Component {
 
       this.setState({
         hoveredTrailName: features[0].properties.name,
-        hoveredTrailSource: features[0].properties.source
+        hoveredTrailSource: features[0].properties.source,
+        mouseX: event.point.x,
+        mouseY: event.point.y
       });
 
 //      overlay.classList.add("visible")
@@ -112,9 +116,7 @@ class Map extends React.Component {
     return (
       <div id="the-map">
         <div id="mapbox-gl-element"></div>
-        <div id="overlay">
-          <Tooltip name={this.state.hoveredTrailName} source={this.state.hoveredTrailSource}/>
-        </div>
+        <Tooltip name={this.state.hoveredTrailName} source={this.state.hoveredTrailSource} x={this.state.mouseX} y={this.state.mouseY}/>
       </div>
     );
   }
