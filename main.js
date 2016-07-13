@@ -74,7 +74,6 @@ class Map extends React.Component {
 
     if (features.length) {
       var flatArray = _.flatten(["in", "id", features[0].properties.id, this.state.clickedTrailIds])
-      this.mapboxed.getCanvas().style.cursor = 'pointer'
       this.mapboxed.setFilter("trails-active", flatArray)
       this.setState({
         hoveredTrailName: features[0].properties.name,
@@ -84,7 +83,6 @@ class Map extends React.Component {
         showTooltip: true
       });
     } else {
-      this.mapboxed.getCanvas().style.cursor = 'default'
       this.mapboxed.setFilter("trails-active", _.flatten(["in", "id", this.state.clickedTrailIds]));
       this.setState({showTooltip: false})
     }
@@ -111,7 +109,7 @@ class Map extends React.Component {
 
   render() {
     return (
-      <div id="the-map">
+      <div id="the-map" className={this.state.showTooltip ? 'clickable' : ''}>
         <div id="mapbox-gl-element"></div>
         <Tooltip
         name={this.state.hoveredTrailName}
