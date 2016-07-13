@@ -22,7 +22,8 @@ class Map extends React.Component {
       hoveredTrailName: '',
       hoveredTrailSource: '',
       mouseX: 0,
-      mouseY: 0
+      mouseY: 0,
+      showTooltip: false
     }
   }
 
@@ -73,23 +74,19 @@ class Map extends React.Component {
 
     if (features.length) {
       var flatArray = _.flatten(["in", "id", features[0].properties.id, this.state.clickedTrailIds])
-
       this.mapboxed.getCanvas().style.cursor = 'pointer'
       this.mapboxed.setFilter("trails-active", flatArray)
-
       this.setState({
         hoveredTrailName: features[0].properties.name,
         hoveredTrailSource: features[0].properties.source,
         mouseX: event.point.x,
-        mouseY: event.point.y
+        mouseY: event.point.y,
+        showTooltip: true
       });
-
-//      overlay.classList.add("visible")
-
     } else {
       this.mapboxed.getCanvas().style.cursor = 'default'
       this.mapboxed.setFilter("trails-active", _.flatten(["in", "id", this.state.clickedTrailIds]));
-//      overlay.classList.remove("visible")
+      this.setState({showTooltip: false})
     }
   }
 
@@ -116,7 +113,12 @@ class Map extends React.Component {
     return (
       <div id="the-map">
         <div id="mapbox-gl-element"></div>
-        <Tooltip name={this.state.hoveredTrailName} source={this.state.hoveredTrailSource} x={this.state.mouseX} y={this.state.mouseY}/>
+        <Tooltip
+        name={this.state.hoveredTrailName}
+        source={this.state.hoveredTrailSource}
+        x={this.state.mouseX}
+        y={this.state.mouseY}
+        hidden={!this.state.showTooltip}/>
       </div>
     );
   }
