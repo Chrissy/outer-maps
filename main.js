@@ -14,6 +14,16 @@ class Map extends React.Component {
     'onMapMouseMove': 'mousemove'
   }
 
+  constructor() {
+    super()
+
+    this.state = {
+      clickedTrailIds: [],
+      hoveredTrailName: '',
+      hoveredTrailSource: ''
+    }
+  }
+
   loadTrailsWithinBox() {
     var bounds = this.mapboxed.getBounds();
 
@@ -60,20 +70,23 @@ class Map extends React.Component {
     var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails'] });
 
     if (features.length) {
-      var flatArray = _.flatten(["in", "id", features[0].properties.id, this.clickedTrailIds])
+      var flatArray = _.flatten(["in", "id", features[0].properties.id, this.state.clickedTrailIds])
 
       this.mapboxed.getCanvas().style.cursor = 'pointer'
       this.mapboxed.setFilter("trails-active", flatArray)
 
+      this.setState({
+        hoveredTrailName: features[0].properties.name,
+        hoveredTrailSource: features[0].properties.source
+      });
+
+//      overlay.classList.add("visible")
+
     } else {
       this.mapboxed.getCanvas().style.cursor = 'default'
-      this.mapboxed.setFilter("trails-active", _.flatten(["in", "id", this.clickedTrailIds]));
-      overlay.classList.remove("visible")
+      this.mapboxed.setFilter("trails-active", _.flatten(["in", "id", this.state.clickedTrailIds]));
+//      overlay.classList.remove("visible")
     }
-  }
-
-  constructor() {
-    super()
   }
 
   componentDidMount() {
@@ -99,7 +112,9 @@ class Map extends React.Component {
     return (
       <div id="the-map">
         <div id="mapbox-gl-element"></div>
-        <Tooltip />
+        <div id="overlay">
+          <Tooltip name={this.state.hoveredTrailName} source={this.state.hoveredTrailSource}/>
+        </div>
       </div>
     );
   }
