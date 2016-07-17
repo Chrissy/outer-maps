@@ -1,11 +1,16 @@
 import React, { Proptypes } from 'react';
 import ReactDOM from 'react-dom'
 import MapboxGL from 'mapbox-gl';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
 import _ from 'underscore';
 
-import Tooltip from './tooltip';
+import lastHoveredTrail from './lastHoveredTrail'
+import TooltipContainer from './tooltipContainer';
 
 MapboxGL.accessToken = 'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg'
+
+let store = createStore(lastHoveredTrail);
 
 class Map extends React.Component {
   static watchEvents = {
@@ -16,18 +21,10 @@ class Map extends React.Component {
 
   constructor() {
     super()
-
-    this.state = {
-      clickedTrailIds: [],
-      hoveredTrailName: '',
-      hoveredTrailSource: '',
-      mouseX: 0,
-      mouseY: 0,
-      showTooltip: false
-    }
   }
 
   loadTrailsWithinBox() {
+
     var bounds = this.mapboxed.getBounds();
 
     this.mapboxed.addSource('trails-data', {
@@ -109,17 +106,16 @@ class Map extends React.Component {
 
   render() {
     return (
-      <div id="the-map" className={this.state.showTooltip ? 'clickable' : ''}>
-        <div id="mapbox-gl-element"></div>
-        <Tooltip
-        name={this.state.hoveredTrailName}
-        source={this.state.hoveredTrailSource}
-        x={this.state.mouseX}
-        y={this.state.mouseY}
-        hidden={!this.state.showTooltip}/>
-      </div>
+        <div id="the-map" className={false ? 'clickable' : ''}>
+          <div id="mapbox-gl-element"></div>
+          <TooltipContainer/>
+        </div>
     );
   }
 }
 
-ReactDOM.render(<Map />, document.getElementById("map"));
+ReactDOM.render(
+  <Provider store={store}>
+    <Map />
+  </Provider>,
+  document.getElementById("map"));
