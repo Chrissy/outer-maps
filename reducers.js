@@ -1,4 +1,6 @@
-const initialState = [
+import { combineReducers } from 'redux';
+
+const lastHoveredTrailInitialState = [
   {
     name: '',
     source: '',
@@ -6,9 +8,9 @@ const initialState = [
     contactY: 0,
     visible: true
   }
-]
+];
 
-const lastHoveredTrail = (state = initialState, action) => {
+const lastHoveredTrail = (state = lastHoveredTrailInitialState, action) => {
   switch (action.type) {
     case 'SWAP_IN_TRAIL':
       return {
@@ -20,6 +22,6 @@ const lastHoveredTrail = (state = initialState, action) => {
       };
     default: return state;
   }
-}
+};
 
 export default lastHoveredTrail;

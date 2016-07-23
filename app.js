@@ -2,12 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
-import lastHoveredTrail from './lastHoveredTrail'
+import reducers from './reducers'
 import Map from './map'
 
-let store = createStore(lastHoveredTrail);
-
-console.log(store.getState());
+let store = createStore(reducers);
 
 ReactDOM.render(
   <Provider store={store}>
