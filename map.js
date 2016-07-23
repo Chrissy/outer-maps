@@ -2,10 +2,12 @@ import React, { Proptypes } from 'react';
 import MapboxGL from 'mapbox-gl';
 import _ from 'underscore';
 import TooltipContainer from './tooltipContainer';
+import {trailsLayerStatic, trailsLayerActive} from './mapboxStaticData';
 
 MapboxGL.accessToken = 'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg'
 
 export default class Map extends React.Component {
+
   static watchEvents = {
     'onMapLoad': 'load',
     'onMapMoveEnd': 'moveend',
@@ -25,23 +27,7 @@ export default class Map extends React.Component {
       'data': `/api/${bounds._sw.lng}/${bounds._sw.lat}/${bounds._ne.lng}/${bounds._ne.lat}`
     })
 
-    var defaultLayerObject = {
-      'id': 'trails',
-      'source': 'trails-data',
-      'type': 'line',
-      'paint': {
-        'line-color': '#47B05A',
-        'line-width': 4
-      }
-    }
-
-    var activeLayerObject = Object.assign({}, defaultLayerObject, {
-      'id': 'trails-active',
-      'paint': { 'line-color': '#FF9100'},
-      "filter": ["==", "id", ""]
-    })
-
-    this.mapboxed.addLayer(defaultLayerObject).addLayer(activeLayerObject)
+    this.mapboxed.addLayer(trailsLayerStatic).addLayer(trailsLayerActive)
   }
 
   removeTrails() {
@@ -99,7 +85,7 @@ export default class Map extends React.Component {
 
   render() {
     return (
-        <div id="the-map" className={false ? 'clickable' : ''}>
+        <div id="the-map">
           <div id="mapbox-gl-element"></div>
           <TooltipContainer/>
         </div>
