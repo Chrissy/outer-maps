@@ -2,9 +2,7 @@ import React, { Proptypes } from 'react';
 import MapboxGL from 'mapbox-gl';
 import _ from 'underscore';
 import TooltipContainer from './tooltipContainer';
-import {trailsLayerStatic, trailsLayerActive} from './mapboxStaticData';
-
-MapboxGL.accessToken = 'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg'
+import {trailsLayerStatic, trailsLayerActive, accessToken} from './mapboxStaticData';
 
 export default class Map extends React.Component {
 
