@@ -8,7 +8,7 @@ const initialState = [
   }
 ]
 
-export default function lastHoveredTrail(state = initialState, action) {
+const lastHoveredTrail = (state = initialState, action) => {
   switch (action.type) {
     case 'SWAP_IN_TRAIL':
       return {
@@ -17,6 +17,9 @@ export default function lastHoveredTrail(state = initialState, action) {
         contactX: action.contactX,
         contactY: action.contactY,
         visible: true
-      }
+      };
+    default: return state;
   }
 }
+
+export default lastHoveredTrail;

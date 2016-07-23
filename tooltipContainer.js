@@ -1,13 +1,12 @@
 import { connect } from 'react-redux';
-import { swapHoveredTrail } from './actions';
 import Tooltip from './tooltip';
 
-const mapStateToProps = (store) => {
+const mapStateToProps = (state) => {
   return {
-    name: store.lastHoveredTrail.name,
-    source: store.lastHoveredTrail.source,
-    x: store.lastHoveredTrail.contactX,
-    y: store.lastHoveredTrail.contactY
+    name: state.name,
+    source: state.source,
+    x: state.contactX,
+    y: state.contactY
   }
 };
 

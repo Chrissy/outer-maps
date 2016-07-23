@@ -2,7 +2,7 @@
   "name": "mountains",
   "version": "0.0.1",
   "scripts": {
-    "start": "watchify -t [ babelify ] main.js -o public/static/bundle.js"
+    "start": "watchify -t [ babelify ] app.js -o public/static/bundle.js"
   },
   "license": "ISC",
   "dependencies": {
