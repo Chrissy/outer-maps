@@ -3,7 +3,7 @@ import Tooltip from './tooltip';
 
 const mapStateToProps = (state) => {
   return {
-    trailID: state.lastHoveredTrailID,
+    trail: state.lastHoveredTrail,
     visibility: state.tooltipVisibility
   }
 };

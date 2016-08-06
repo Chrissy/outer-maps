@@ -13,7 +13,7 @@ var pool = new pg.Pool({
 
 app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
 
-  var query = `
+  let query = `
     SELECT ogc_fid, ST_AsGeoJson(the_geog) AS the_geog
     FROM osm_trails
     WHERE ST_Intersects(the_geog,
@@ -42,6 +42,33 @@ app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
       response.json({
         "type": "FeatureCollection",
         "features": features
+      });
+    })
+  })
+})
+
+app.get('/api/trails/:id', function(request, response) {
+  let query = `
+    SELECT name, surface, maxlength
+    FROM osm_trails
+    WHERE ogc_fid = ${request.params.id}
+    LIMIT 1
+  `
+
+  pool.connect(function(err, client, done){
+    client.query(query, function(err, result){
+      done();
+
+      if (err) throw err;
+
+      let r = result.rows[0]
+
+      response.json({
+        "name": r.name,
+        "id": request.params.id,
+        "surface": r.surface,
+        "maxLength": r.maxlength,
+        "information": r.information
       });
     })
   })
