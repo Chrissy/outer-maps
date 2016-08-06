@@ -24,9 +24,8 @@ const activeTrails = (state = [], action) => {
   switch (action.type) {
     case 'ADD_TRAIL':
       return [...state, action.trail]
-    case 'REMOVE_TRAIL':
-      return [...state.slice(0, action.trail),
-              ...state.slice(action.trail + 1)]
+    case 'CLEAR_ACTIVE_TRAILS':
+      return []
     default: return state;
   }
 }
