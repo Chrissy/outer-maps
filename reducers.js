@@ -11,8 +11,7 @@ const lastHoveredTrail = (state = lastHoveredTrailInitialState, action) => {
   switch (action.type) {
     case 'SWAP_HOVERED_TRAIL':
       return {
-        name: action.name,
-        source: action.source,
+        trailID: action.trailID,
         contactX: action.contactX,
         contactY: action.contactY
       };
