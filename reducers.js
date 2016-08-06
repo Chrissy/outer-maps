@@ -25,9 +25,9 @@ const tooltipVisibilityInitialState = { visibility: false };
 const tooltipVisibility = (state = tooltipVisibilityInitialState, action) => {
   switch (action.type) {
     case 'HIDE_TOOLTIP':
-      return { visiblity: false };
+      return { visibility: false };
     case 'SHOW_TOOLTIP':
-      return { visiblity: true };
+      return { visibility: true };
     default: return state;
   }
 }
