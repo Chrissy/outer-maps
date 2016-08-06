@@ -19,6 +19,7 @@ export default class Tooltip extends React.Component {
       style={{top: this.y + 5 + 'px', left: this.x + 5 + 'px'}}>
          name: {this.props.trail.name}<br/>
          surface: {this.props.trail.surface}<br/>
+         id: {this.props.trail.id}
       </div>
     )
   }

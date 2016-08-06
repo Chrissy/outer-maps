@@ -23,9 +23,9 @@ export default class Map extends React.Component {
     this.mapboxed.addSource('trails-data', {
       'type': 'geojson',
       'data': `/api/${bounds._sw.lng}/${bounds._sw.lat}/${bounds._ne.lng}/${bounds._ne.lat}`
-    })
+    });
 
-    this.mapboxed.addLayer(trailsLayerStatic).addLayer(trailsLayerActive)
+    this.mapboxed.addLayer(trailsLayerStatic).addLayer(trailsLayerActive);
   }
 
   removeTrails() {
@@ -47,13 +47,15 @@ export default class Map extends React.Component {
     var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails'] });
 
     if (features.length) {
-      //var flatArray = _.flatten(["in", "id", features[0].properties.id, this.state.clickedTrailIds])
-      //this.mapboxed.setFilter("trails-active", flatArray)
       this.props.onTrailMouseIn(features[0].properties.id);
     } else {
-      //this.mapboxed.setFilter("trails-active", _.flatten(["in", "id", this.state.clickedTrailIds]));
       this.props.onTrailMouseOut();
     }
+  }
+
+  componentDidUpdate() {
+    let flattenedTrails = _.flatten(["in", "id", parseInt(this.props.activeTrails.id)]);
+    this.mapboxed.setFilter("trails-active", flattenedTrails);
   }
 
   componentDidMount() {
