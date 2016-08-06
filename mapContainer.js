@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { fetchTrail } from './actions'
+import { swapTrail } from './actions'
 import Map from './map';
 
 const mapStateToProps = (state) => {
@@ -9,7 +9,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onTrailMouseIn: (trailID) => {
-      dispatch(fetchTrail(trailID));
+      dispatch(swapTrail(trailID));
       dispatch({type: 'SHOW_TOOLTIP'});
     },
 
