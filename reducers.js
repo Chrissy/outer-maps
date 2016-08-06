@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 
 const lastHoveredTrail = (state = {}, action) => {
   switch (action.type) {
-    case 'SWAP_IN_TRAIL':
+    case 'ADD_HOVERED_TRAIL':
       return action.trail;
     case 'REMOVE_HOVERED_TRAIL':
       return {};

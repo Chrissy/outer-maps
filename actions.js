@@ -4,7 +4,7 @@ export function setHoveredTrail(id) {
   return dispatch => {
     return fetch(`/api/trails/${id}`)
       .then(response => response.json())
-      .then(trail => { dispatch({type: 'SWAP_IN_TRAIL', trail}); })
+      .then(trail => { dispatch({type: 'ADD_HOVERED_TRAIL', trail}); })
   }
 }
 
