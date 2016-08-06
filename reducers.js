@@ -20,14 +20,12 @@ const lastHoveredTrail = (state = lastHoveredTrailInitialState, action) => {
   }
 };
 
-const tooltipVisibilityInitialState = { visibility: false };
-
-const tooltipVisibility = (state = tooltipVisibilityInitialState, action) => {
+const tooltipVisibility = (state = false, action) => {
   switch (action.type) {
     case 'HIDE_TOOLTIP':
-      return { visibility: false };
+      return false;
     case 'SHOW_TOOLTIP':
-      return { visibility: true };
+      return true;
     default: return state;
   }
 }

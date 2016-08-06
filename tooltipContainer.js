@@ -7,7 +7,7 @@ const mapStateToProps = (state) => {
     source: state.lastHoveredTrail.source,
     x: state.lastHoveredTrail.contactX,
     y: state.lastHoveredTrail.contactY,
-    visibility: state.tooltipVisibility.visibility
+    visibility: state.tooltipVisibility
   }
 };
 
