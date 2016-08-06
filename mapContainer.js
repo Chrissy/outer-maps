@@ -1,4 +1,4 @@
-import {swapHoveredTrail, hideTooltio, showTooltip} from './actions'
+import {swapHoveredTrail, hideTooltip, showTooltip} from './actions'
 import { connect } from 'react-redux';
 import Map from './map';
 

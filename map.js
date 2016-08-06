@@ -49,10 +49,10 @@ export default class Map extends React.Component {
     if (features.length) {
       //var flatArray = _.flatten(["in", "id", features[0].properties.id, this.state.clickedTrailIds])
       //this.mapboxed.setFilter("trails-active", flatArray)
-      this.onTrailMouseIn(swapHoveredTrail(features[0].properties.name, features[0].properties.source, event.point.x, event.point.y));
+      this.props.onTrailMouseIn(features[0].properties.name, features[0].properties.source, event.point.x, event.point.y);
     } else {
       //this.mapboxed.setFilter("trails-active", _.flatten(["in", "id", this.state.clickedTrailIds]));
-      this.onTrailMouseOut();
+      this.props.onTrailMouseOut();
     }
   }
 
