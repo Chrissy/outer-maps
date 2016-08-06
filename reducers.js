@@ -1,20 +1,9 @@
 import { combineReducers } from 'redux';
 
-const lastHoveredTrailInitialState = {
-  name: '',
-  source: '',
-  contactX: 0,
-  contactY: 0
-};
-
-const lastHoveredTrail = (state = lastHoveredTrailInitialState, action) => {
+const lastHoveredTrailID = (state = 0, action) => {
   switch (action.type) {
     case 'SWAP_HOVERED_TRAIL':
-      return {
-        trailID: action.trailID,
-        contactX: action.contactX,
-        contactY: action.contactY
-      };
+      return action.trailID
     default: return state;
   }
 };
@@ -29,4 +18,4 @@ const tooltipVisibility = (state = false, action) => {
   }
 }
 
-export default combineReducers({lastHoveredTrail, tooltipVisibility});
+export default combineReducers({lastHoveredTrailID, tooltipVisibility});

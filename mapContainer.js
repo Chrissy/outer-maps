@@ -7,8 +7,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onTrailMouseIn: (trailID, contactX, contactY) => {
-      dispatch({type: 'SWAP_HOVERED_TRAIL', trailID, contactX, contactY});
+    onTrailMouseIn: (trailID) => {
+      dispatch({type: 'SWAP_HOVERED_TRAIL', trailID});
       dispatch({type: 'SHOW_TOOLTIP'});
     },
 
