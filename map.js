@@ -9,7 +9,8 @@ export default class Map extends React.Component {
   static watchEvents = {
     'onMapLoad': 'load',
     'onMapMoveEnd': 'moveend',
-    'onMapMouseMove': 'mousemove'
+    'onMapMouseMove': 'mousemove',
+    'onMapClick': 'click'
   }
 
   constructor() {
@@ -53,9 +54,23 @@ export default class Map extends React.Component {
     }
   }
 
+  onMapClick(event) {
+    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails'] });
+
+    if (features.length) {
+      this.props.onTrailClick(features[0].properties.id);
+    } else {
+      this.props.onNonTrailMapClick();
+    }
+  }
+
   componentDidUpdate() {
-    let flattenedTrails = _.flatten(["in", "id", parseInt(this.props.activeTrails.id)]);
-    this.mapboxed.setFilter("trails-active", flattenedTrails);
+    let trailIDs = _.map(this.props.activeTrails, (e) => {
+      return parseInt(e.id);
+    });
+
+    let flattenedTrails = _.flatten(["in", "id", trailIDs, parseInt(this.props.lastHoveredTrail.id)]);
+    this.mapboxed.setFilter("trails-active", _.compact(flattenedTrails));
   }
 
   componentDidMount() {
