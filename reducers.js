@@ -6,7 +6,6 @@ const lastHoveredTrailInitialState = [
     source: '',
     contactX: 0,
     contactY: 0,
-    visible: true
   }
 ];
 
@@ -24,4 +23,18 @@ const lastHoveredTrail = (state = lastHoveredTrailInitialState, action) => {
   }
 };
 
-export default lastHoveredTrail;
+const tooltipVisibilityInitialState = [
+  { visibility: false }
+]
+
+const tooltipVisibility = (state = tooltipVisibilityInitialState, action) => {
+  switch (action.type) {
+    case 'HIDE_TOOLTIP':
+      return { visiblity: false };
+    case 'SHOW_TOOLTIP':
+      return { visiblity: true };
+    default: return state;
+  }
+}
+
+export default combineReducers({lastHoveredTrail, tooltipVisibility});

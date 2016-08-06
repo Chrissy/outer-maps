@@ -47,22 +47,18 @@ export default class Map extends React.Component {
     var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails'] });
 
     if (features.length) {
-      var flatArray = _.flatten(["in", "id", features[0].properties.id, this.state.clickedTrailIds])
-      this.mapboxed.setFilter("trails-active", flatArray)
-      this.setState({
-        hoveredTrailName: features[0].properties.name,
-        hoveredTrailSource: features[0].properties.source,
-        mouseX: event.point.x,
-        mouseY: event.point.y,
-        showTooltip: true
-      });
+      //var flatArray = _.flatten(["in", "id", features[0].properties.id, this.state.clickedTrailIds])
+      //this.mapboxed.setFilter("trails-active", flatArray)
+      this.onTrailMouseIn(swapHoveredTrail(features[0].properties.name, features[0].properties.source, event.point.x, event.point.y));
     } else {
-      this.mapboxed.setFilter("trails-active", _.flatten(["in", "id", this.state.clickedTrailIds]));
-      this.setState({showTooltip: false})
+      //this.mapboxed.setFilter("trails-active", _.flatten(["in", "id", this.state.clickedTrailIds]));
+      this.onTrailMouseOut();
     }
   }
 
   componentDidMount() {
+    MapboxGL.accessToken = accessToken;
+
     this.mapboxed = new MapboxGL.Map({
       container: 'mapbox-gl-element',
       style: 'mapbox://styles/mapbox/outdoors-v9',
