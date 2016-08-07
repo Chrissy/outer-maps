@@ -13,6 +13,8 @@ export default class Tooltip extends React.Component {
   }
 
   render() {
+    if (!this.props.trail) return null;
+
     return (
       <div
       className={'tooltip' + (this.props.visibility ? '' : ' hidden')}

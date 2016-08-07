@@ -65,12 +65,11 @@ export default class Map extends React.Component {
   }
 
   componentDidUpdate() {
-    let trailIDs = _.map(this.props.activeTrails, (e) => {
-      return parseInt(e.id);
-    });
+    var combinedTrailIds = [...this.props.activeTrails, this.props.lastHoveredTrail]
+      .filter(trail => trail && trail.id)
+      .map(trail => parseInt(trail.id));
 
-    let flattenedTrails = _.flatten(["in", "id", trailIDs, parseInt(this.props.lastHoveredTrail.id)]);
-    this.mapboxed.setFilter("trails-active", _.compact(flattenedTrails));
+    this.mapboxed.setFilter("trails-active", ["in", "id", ...combinedTrailIds]);
   }
 
   componentDidMount() {
