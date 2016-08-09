@@ -7,7 +7,7 @@ const lastHoveredTrail = (state = null, action) => {
     case 'REMOVE_HOVERED_TRAIL':
       return {};
     default: return state;
-  }
+  };
 };
 
 const tooltipVisibility = (state = false, action) => {
@@ -17,17 +17,17 @@ const tooltipVisibility = (state = false, action) => {
     case 'SHOW_TOOLTIP':
       return true;
     default: return state;
-  }
-}
+  };
+};
 
 const activeTrails = (state = [], action) => {
   switch (action.type) {
     case 'ADD_TRAIL':
-      return [...state, action.trail]
+      return [...state, action.trail];
     case 'CLEAR_ACTIVE_TRAILS':
-      return []
+      return [];
     default: return state;
-  }
-}
+  };
+};
 
 export default combineReducers({lastHoveredTrail, tooltipVisibility, activeTrails});

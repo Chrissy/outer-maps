@@ -17,7 +17,7 @@ const mapDispatchToProps = (dispatch) => {
     },
 
     onTrailMouseOut: () => {
-      dispatch({type: 'REMOVE_HOVERED_TRAIL'})
+      dispatch({type: 'REMOVE_HOVERED_TRAIL'});
       dispatch({type: 'HIDE_TOOLTIP'});
     },
 
