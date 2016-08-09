@@ -7,7 +7,7 @@ export default class Map extends React.Component {
   onMapMouseMove(event) {
     if (event.features.length) {
       this.props.onTrailMouseIn(event.features[0].properties.id);
-    } else {
+    } else if (this.props.lastHoveredTrail) {
       this.props.onTrailMouseOut();
     }
   }
@@ -15,7 +15,7 @@ export default class Map extends React.Component {
   onMapClick(event) {
     if (event.features.length) {
       this.props.onTrailClick(event.features[0].properties.id);
-    } else {
+    } else if (this.props.activeTrails.length){
       this.props.onNonTrailMapClick();
     }
   }
