@@ -10,12 +10,12 @@ export default class MapBox extends React.Component {
     this.mapboxed.removeLayer('trails-active');
   }
 
-  drawMap() {
-    let bounds = this.mapboxed.getBounds();
+  drawMap(dataUrl) {
+    if (!dataUrl) return;
 
     this.mapboxed.addSource('trails-data', {
       'type': 'geojson',
-      'data': `/api/${bounds._sw.lng}/${bounds._sw.lat}/${bounds._ne.lng}/${bounds._ne.lat}`
+      'data': dataUrl
     });
 
     this.mapboxed.addLayer(trailsLayerStatic).addLayer(trailsLayerActive);
@@ -42,17 +42,12 @@ export default class MapBox extends React.Component {
     this.props.onDrag(Object.assign({}, event, {
       bounds: this.mapboxed.getBounds()
     }));
-
-    this.clearMap();
-    this.drawMap();
   }
 
   handleLoad(event) {
     this.props.onLoad(Object.assign({}, event, {
       bounds: this.mapboxed.getBounds()
     }));
-
-    this.drawMap();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -74,6 +69,13 @@ export default class MapBox extends React.Component {
     this.mapEvents()
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.trailsDataUrl !== this.props.trailsDataUrl) {
+      if (this.props.trailsDataUrl) this.clearMap();
+      this.drawMap(nextProps.trailsDataUrl);
+    }
+  }
+
   mapEvents() {
     let watchEvents = {
       'handleLoad': 'load',
@@ -83,8 +85,10 @@ export default class MapBox extends React.Component {
     }
 
     Object.keys(watchEvents).forEach(function(functionName){
+      if (!this[functionName]) return;
+
       this.mapboxed.on(watchEvents[functionName], function(event){
-        if (this.mapboxed.loaded()) this[functionName](event)
+        if (this.mapboxed.loaded()) this[functionName].call(this, event);
       }.bind(this))
     }.bind(this))
   }
