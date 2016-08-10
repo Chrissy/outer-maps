@@ -4,23 +4,6 @@ import {trailsLayerStatic, trailsLayerActive, accessToken} from './mapboxStaticD
 
 export default class MapBox extends React.Component {
 
-  clearMap() {
-    this.mapboxed.removeSource('trails-data');
-    this.mapboxed.removeLayer('trails');
-    this.mapboxed.removeLayer('trails-active');
-  }
-
-  drawMap(dataUrl) {
-    if (!dataUrl) return;
-
-    this.mapboxed.addSource('trails-data', {
-      'type': 'geojson',
-      'data': dataUrl
-    });
-
-    this.mapboxed.addLayer(trailsLayerStatic).addLayer(trailsLayerActive);
-  }
-
   handleMouseMove(event) {
     var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails'] });
 
@@ -46,6 +29,23 @@ export default class MapBox extends React.Component {
     this.props.onLoad(Object.assign({}, event, {
       bounds: this.mapboxed.getBounds()
     }));
+  }
+
+  clearMap() {
+    this.mapboxed.removeSource('trails-data');
+    this.mapboxed.removeLayer('trails');
+    this.mapboxed.removeLayer('trails-active');
+  }
+
+  drawMap(dataUrl) {
+    if (!dataUrl) return;
+
+    this.mapboxed.addSource('trails-data', {
+      'type': 'geojson',
+      'data': dataUrl
+    });
+
+    this.mapboxed.addLayer(trailsLayerStatic).addLayer(trailsLayerActive);
   }
 
   componentDidMount() {
@@ -81,8 +81,6 @@ export default class MapBox extends React.Component {
     }
 
     Object.keys(watchEvents).forEach(function(functionName){
-      if (!this[functionName]) return;
-
       this.mapboxed.on(watchEvents[functionName], function(event){
         if (this.mapboxed.loaded()) this[functionName](event);
       }.bind(this))
