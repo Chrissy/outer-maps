@@ -29,9 +29,7 @@ export default class Map extends React.Component {
   onMapDrag(event) {}
 
   onMapLoad(event) {
-    window.setTimeout(function(){
-      this.setState({cat:`/api/${event.bounds._sw.lng}/${event.bounds._sw.lat}/${event.bounds._ne.lng}/${event.bounds._ne.lat}`});
-    }.bind(this),1);
+    this.setState({cat:`/api/${event.bounds._sw.lng}/${event.bounds._sw.lat}/${event.bounds._ne.lng}/${event.bounds._ne.lat}`});
   }
 
   combinedActiveTrailIds() {
