@@ -50,12 +50,6 @@ export default class MapBox extends React.Component {
     }));
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.activeTrailIDs) {
-      this.mapboxed.setFilter("trails-active", ["in", "id", ...this.props.activeTrailIDs]);
-    }
-  }
-
   componentDidMount() {
     MapboxGL.accessToken = accessToken;
 
@@ -73,6 +67,10 @@ export default class MapBox extends React.Component {
     if (nextProps.trailsDataUrl !== this.props.trailsDataUrl) {
       if (this.props.trailsDataUrl) this.clearMap();
       this.drawMap(nextProps.trailsDataUrl);
+    }
+
+    if (nextProps.activeTrailIDs && nextProps.activeTrailIDs !== this.props.activeTrailIDs) {
+      this.mapboxed.setFilter("trails-active", ["in", "id", ...this.props.activeTrailIDs]);
     }
   }
 
