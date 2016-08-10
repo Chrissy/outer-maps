@@ -5,7 +5,8 @@ import Map from './map';
 const mapStateToProps = (state) => {
   return {
     lastHoveredTrail: state.lastHoveredTrail,
-    activeTrails: state.activeTrails
+    activeTrails: state.activeTrails,
+    trailsDataUrl: state.trailsDataUrl
   }
 }
 
@@ -27,6 +28,10 @@ const mapDispatchToProps = (dispatch) => {
 
     onNonTrailMapClick: () => {
       dispatch({type: 'CLEAR_ACTIVE_TRAILS'});
+    },
+
+    setTrailsBox: (bounds) => {
+      dispatch({type: 'SET_TRAILS_DATA_URL_BOUNDS', bounds});
     }
   }
 };

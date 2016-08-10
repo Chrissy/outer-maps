@@ -30,4 +30,12 @@ const activeTrails = (state = [], action) => {
   };
 };
 
-export default combineReducers({lastHoveredTrail, tooltipVisibility, activeTrails});
+const trailsDataUrl = (state = false, action) => {
+  switch (action.type) {
+    case 'SET_TRAILS_DATA_URL_BOUNDS':
+      return `/api/${action.bounds._sw.lng}/${action.bounds._sw.lat}/${action.bounds._ne.lng}/${action.bounds._ne.lat}`;
+    default: return state;
+  };
+};
+
+export default combineReducers({lastHoveredTrail, tooltipVisibility, activeTrails, trailsDataUrl});

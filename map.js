@@ -4,12 +4,6 @@ import MapBox from './mapBox';
 
 export default class Map extends React.Component {
 
-  constructor() {
-    super()
-
-    this.state = {cat:false}
-  }
-
   onMapMouseMove(event) {
     if (event.features.length) {
       this.props.onTrailMouseIn(event.features[0].properties.id);
@@ -27,11 +21,11 @@ export default class Map extends React.Component {
   }
 
   onMapDrag(event) {
-    this.setState({cat:`/api/${event.bounds._sw.lng}/${event.bounds._sw.lat}/${event.bounds._ne.lng}/${event.bounds._ne.lat}`});
+    this.props.setTrailsBox(event.bounds);
   }
 
   onMapLoad(event) {
-    this.setState({cat:`/api/${event.bounds._sw.lng}/${event.bounds._sw.lat}/${event.bounds._ne.lng}/${event.bounds._ne.lat}`});
+    this.props.setTrailsBox(event.bounds);
   }
 
   combinedActiveTrailIds() {
@@ -45,7 +39,7 @@ export default class Map extends React.Component {
         <div id="the-map">
           <MapBox
           activeTrailIDs={this.combinedActiveTrailIds()}
-          trailsDataUrl={this.state.cat}
+          trailsDataUrl={this.props.trailsDataUrl}
           onClick={this.onMapClick.bind(this)}
           onLoad={this.onMapLoad.bind(this)}
           onMouseMove={this.onMapMouseMove.bind(this)}
