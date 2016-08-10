@@ -26,7 +26,6 @@ export default class MapBox extends React.Component {
 
     this.props.onMouseMove(Object.assign({}, event, {
       features: features,
-      bounds: this.mapboxed.getBounds()
     }));
   }
 
@@ -34,7 +33,6 @@ export default class MapBox extends React.Component {
     var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails'] });
     this.props.onClick(Object.assign({}, event, {
       features: features,
-      bounds: this.mapboxed.getBounds()
     }));
   }
 
@@ -86,7 +84,7 @@ export default class MapBox extends React.Component {
       if (!this[functionName]) return;
 
       this.mapboxed.on(watchEvents[functionName], function(event){
-        if (this.mapboxed.loaded()) this[functionName].call(this, event);
+        if (this.mapboxed.loaded()) this[functionName](event);
       }.bind(this))
     }.bind(this))
   }
