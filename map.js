@@ -26,7 +26,9 @@ export default class Map extends React.Component {
     }
   }
 
-  onMapDrag(event) {}
+  onMapDrag(event) {
+    this.setState({cat:`/api/${event.bounds._sw.lng}/${event.bounds._sw.lat}/${event.bounds._ne.lng}/${event.bounds._ne.lat}`});
+  }
 
   onMapLoad(event) {
     this.setState({cat:`/api/${event.bounds._sw.lng}/${event.bounds._sw.lat}/${event.bounds._ne.lng}/${event.bounds._ne.lat}`});
