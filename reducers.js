@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import {cumulativeElevationChanges} from './cumulativeElevationChanges'
 
 const lastHoveredTrail = (state = null, action) => {
   switch (action.type) {
@@ -30,6 +31,22 @@ const activeTrails = (state = [], action) => {
   };
 };
 
+const activeTrailsElevationChanges = (state = {elevationGain: 0, elevationLoss: 0}, action) => {
+  switch (action.type) {
+    case 'SET_TRAILS_ELEVATION_CHANGES':
+      return action.elevationChanges;
+    default: return state;
+  }
+}
+
+const activeTrailsDistance = (state = 0, action) => {
+  switch (action.type) {
+    case 'SET_TRAILS_LENGTH':
+      return action.distance;
+    default: return state;
+  }
+}
+
 const trailsDataUrl = (state = false, action) => {
   switch (action.type) {
     case 'SET_TRAILS_DATA_URL_BOUNDS':
@@ -38,4 +55,11 @@ const trailsDataUrl = (state = false, action) => {
   };
 };
 
-export default combineReducers({lastHoveredTrail, tooltipVisibility, activeTrails, trailsDataUrl});
+export default combineReducers({
+  lastHoveredTrail,
+  tooltipVisibility,
+  activeTrails,
+  activeTrailsElevationChanges,
+  activeTrailsDistance,
+  trailsDataUrl
+});

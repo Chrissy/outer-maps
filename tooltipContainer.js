@@ -4,7 +4,8 @@ import Tooltip from './tooltip';
 const mapStateToProps = (state) => {
   return {
     trail: state.lastHoveredTrail,
-    visibility: state.tooltipVisibility
+    visibility: state.tooltipVisibility,
+    elevationChanges: state.activeTrailsElevationChanges
   }
 };
 
