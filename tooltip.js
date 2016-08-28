@@ -23,7 +23,8 @@ export default class Tooltip extends React.Component {
          surface: {this.props.trail.surface}<br/>
          id: {this.props.trail.id}<br/>
          elevation gain: {this.props.elevationChanges.elevationGain}<br/>
-         elevation loss: {this.props.elevationChanges.elevationLoss}
+         elevation loss: {this.props.elevationChanges.elevationLoss}<br/>
+         distance: {this.props.distance}
       </div>
     )
   }

@@ -5,7 +5,8 @@ const mapStateToProps = (state) => {
   return {
     trail: state.lastHoveredTrail,
     visibility: state.tooltipVisibility,
-    elevationChanges: state.activeTrailsElevationChanges
+    elevationChanges: state.activeTrailsElevationChanges,
+    distance: state.activeTrailsDistance
   }
 };
 
