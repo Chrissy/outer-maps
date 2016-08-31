@@ -3,7 +3,7 @@ import _ from 'underscore'
 import {createAltitudeQueryString} from './mapzenInterface';
 import {cumulativeElevationChanges} from './cumulativeElevationChanges';
 
-export function setHoveredTrail(id) {
+export function getHoveredTrail(id) {
   return dispatch => {
     return fetch(`/api/trails/${id}`)
       .then(response => response.json())

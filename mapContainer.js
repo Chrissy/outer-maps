@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { setHoveredTrail, addActiveTrail } from './actions'
+import { getHoveredTrail, addActiveTrail } from './actions'
 import Map from './map';
 
 const mapStateToProps = (state) => {
@@ -13,7 +13,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onTrailMouseIn: (trailID) => {
-      dispatch(setHoveredTrail(trailID));
+      dispatch(getHoveredTrail(trailID));
       dispatch({type: 'SHOW_TOOLTIP'});
     },
 
