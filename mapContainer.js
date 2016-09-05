@@ -12,27 +12,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onTrailMouseIn: (trailID) => {
-      dispatch(previewTrail(trailID));
-      dispatch({type: 'SHOW_TOOLTIP'});
-    },
-
-    onTrailMouseOut: () => {
-      dispatch({type: 'HIDE_TOOLTIP'});
-      dispatch({type: 'CLEAR_PREVIEWING'});
-    },
-
-    onTrailClick: (trailID) => {
-      dispatch(selectTrail(trailID));
-    },
-
-    onNonTrailMapClick: () => {
-      dispatch({type: 'CLEAR_SELECTED'});
-    },
-
-    setTrailsBox: (bounds) => {
-      dispatch({type: 'SET_TRAILS_DATA_URL_BOUNDS', bounds});
-    }
+    onTrailMouseIn: (trailID) => dispatch(previewTrail(trailID)),
+    onTrailMouseOut: () => dispatch({type: 'CLEAR_PREVIEWING'}),
+    onTrailClick: (trailID) => dispatch(selectTrail(trailID)),
+    onNonTrailMapClick: () => dispatch({type: 'CLEAR_SELECTED'}),
+    setTrailsBox: (bounds) => dispatch({type: 'SET_TRAILS_DATA_URL_BOUNDS', bounds})
   }
 };
 
