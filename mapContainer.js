@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
-import { getHoveredTrail, addActiveTrail } from './actions'
+import { previewTrail, selectTrail } from './actions'
 import Map from './map';
 
 const mapStateToProps = (state) => {
   return {
-    lastHoveredTrail: state.lastHoveredTrail,
-    activeTrails: state.activeTrails,
+    selectedTrails: state.trails.filter(trail => trail.selected),
+    previewTrails: state.trails.filter(trail => trail.previewing),
     trailsDataUrl: state.trailsDataUrl
   }
 }
@@ -13,21 +13,21 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onTrailMouseIn: (trailID) => {
-      dispatch(getHoveredTrail(trailID));
+      dispatch(previewTrail(trailID));
       dispatch({type: 'SHOW_TOOLTIP'});
     },
 
     onTrailMouseOut: () => {
-      dispatch({type: 'REMOVE_HOVERED_TRAIL'});
       dispatch({type: 'HIDE_TOOLTIP'});
+      dispatch({type: 'CLEAR_PREVIEWING'});
     },
 
     onTrailClick: (trailID) => {
-      dispatch(addActiveTrail(trailID));
+      dispatch(selectTrail(trailID));
     },
 
     onNonTrailMapClick: () => {
-      dispatch({type: 'CLEAR_ACTIVE_TRAILS'});
+      dispatch({type: 'CLEAR_SELECTED'});
     },
 
     setTrailsBox: (bounds) => {

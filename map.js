@@ -6,8 +6,10 @@ export default class Map extends React.Component {
 
   onMapMouseMove(event) {
     if (event.features.length) {
-      this.props.onTrailMouseIn(event.features[0].properties.id);
-    } else if (this.props.lastHoveredTrail) {
+      let trail_id = event.features[0].properties.id;
+      if (this.props.previewTrails.some(t => t.id == trail_id)) return;
+      this.props.onTrailMouseIn(trail_id);
+    } else if (this.props.previewTrails.length) {
       this.props.onTrailMouseOut();
     }
   }
@@ -15,7 +17,7 @@ export default class Map extends React.Component {
   onMapClick(event) {
     if (event.features.length) {
       this.props.onTrailClick(event.features[0].properties.id);
-    } else if (this.props.activeTrails.length){
+    } else if (this.props.selectedTrails.length){
       this.props.onNonTrailMapClick();
     }
   }
@@ -28,17 +30,15 @@ export default class Map extends React.Component {
     this.props.setTrailsBox(event.bounds);
   }
 
-  combinedActiveTrailIds() {
-    return [...this.props.activeTrails, this.props.lastHoveredTrail]
-      .filter(trail => trail && trail.id)
-      .map(trail => parseInt(trail.id));
+  activeTrailIds() {
+    return [...this.props.previewTrails, ...this.props.selectedTrails].map(t => t.id);
   }
 
   render() {
     return (
         <div id="the-map">
           <MapBox
-          activeTrailIDs={this.combinedActiveTrailIds()}
+          activeTrailIDs={this.activeTrailIds()}
           trailsDataUrl={this.props.trailsDataUrl}
           onClick={this.onMapClick.bind(this)}
           onLoad={this.onMapLoad.bind(this)}
