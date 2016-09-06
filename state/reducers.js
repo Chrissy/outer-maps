@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux'
-import {cumulativeElevationChanges} from './cumulativeElevationChanges'
 
 const trail = (state = {}, action) => {
   switch (action.type) {

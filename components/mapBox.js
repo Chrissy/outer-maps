@@ -1,6 +1,6 @@
 import React, { Proptypes } from 'react';
 import MapboxGL from 'mapbox-gl';
-import {trailsLayerStatic, trailsLayerActive, accessToken} from './mapboxStaticData';
+import {trailsLayerStatic, trailsLayerActive, accessToken} from '../modules/mapboxStaticData';
 
 export default class MapBox extends React.Component {
 

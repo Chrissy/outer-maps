@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import { previewTrail, selectTrail } from './actions'
-import Map from './map';
+import { previewTrail, selectTrail } from '../state/actions'
+import Map from '../components/map';
 
 const mapStateToProps = (state) => {
   return {

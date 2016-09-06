@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import _ from 'underscore'
-import {createAltitudeQueryString} from './mapzenInterface';
-import {cumulativeElevationChanges} from './cumulativeElevationChanges';
+import {createAltitudeQueryString} from '../modules/mapzenInterface';
+import {cumulativeElevationChanges} from '../modules/cumulativeElevationChanges';
 
 function getTrail(id) {
   return (dispatch, getState) => {
