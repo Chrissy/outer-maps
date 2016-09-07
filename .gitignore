@@ -32,6 +32,7 @@ public/static
 node_modules
 jspm_packages
 lib
+public/static
 
 # Optional npm cache directory
 .npm

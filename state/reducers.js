@@ -23,7 +23,6 @@ const trail = (state = {}, action) => {
         hasElevationData: true,
         elevationGain: action.elevationChanges.elevationGain,
         elevationLoss: action.elevationChanges.elevationLoss,
-        distance: action.distance
       }
     default: return state
   }

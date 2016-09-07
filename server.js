@@ -49,7 +49,7 @@ app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
 
 app.get('/api/trails/:id', function(request, response) {
   let query = `
-    SELECT name, surface, ST_AsGeoJson(the_geog) as the_geog
+    SELECT name, surface, ST_AsGeoJson(the_geog) as the_geog, ST_Length(the_geog) as distance
     FROM osm_trails
     WHERE ogc_fid = ${request.params.id}
     LIMIT 1
@@ -67,7 +67,8 @@ app.get('/api/trails/:id', function(request, response) {
         "name": r.name,
         "id": request.params.id,
         "surface": r.surface,
-        "geography": JSON.parse(r.the_geog)
+        "geography": JSON.parse(r.the_geog),
+        "distance": r.distance
       });
     })
   })

@@ -26,8 +26,7 @@ function getAltitudeData(trail) {
       .then(response => response.json())
       .then(altitudeData => {
         let elevationChanges = cumulativeElevationChanges(altitudeData.range_height.map((e) => e[1]));
-        let distance = _.last(altitudeData.range_height)[0]
-        dispatch({type: 'SET_ELEVATION_DATA', elevationChanges, distance, id: trail.id});
+        dispatch({type: 'SET_ELEVATION_DATA', elevationChanges, id: trail.id});
       });
   }
 }

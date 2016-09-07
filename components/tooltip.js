@@ -1,5 +1,6 @@
 import React from 'react'
 import fetch from 'isomorphic-fetch'
+import {metersToFeet, metersToMiles} from '../modules/conversions'
 
 export default class Tooltip extends React.Component {
 
@@ -20,11 +21,11 @@ export default class Tooltip extends React.Component {
       className={'tooltip' + (this.props.trail ? '' : ' hidden')}
       style={{top: this.y + 5 + 'px', left: this.x + 5 + 'px'}}>
          name: {this.props.trail.name}<br/>
+         elevation gain: {metersToFeet(this.props.trail.elevationGain)} Feet<br/>
+         elevation loss: {metersToFeet(this.props.trail.elevationLoss)} Feet<br/>
+         distance: {metersToMiles(this.props.trail.distance)} Miles<br/>
          surface: {this.props.trail.surface}<br/>
-         id: {this.props.trail.id}<br/>
-         elevation gain: {this.props.trail.elevationGain}<br/>
-         elevation loss: {this.props.trail.elevationLoss}<br/>
-         distance: {this.props.trail.distance}
+         id: {this.props.trail.id}
       </div>
     )
   }
