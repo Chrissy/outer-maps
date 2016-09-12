@@ -6,7 +6,7 @@ const app = express();
 app.use(express.static('public'))
 
 var pool = new pg.Pool({
-  database: 'mountains_2',
+  database: 'mountains_3',
   max: 10,
   idleTimeoutMillis: 3000
 });
@@ -95,7 +95,7 @@ app.get('/api/elevation/:id', function(request, response){
               'POINT(${point[0]} ${point[1]})',
             4326), 4326)
           )
-          FROM elevation_GMTED2010N30W120_150
+          FROM elevation_2
           WHERE rid=4
         `;
         client.query(query, function(err, result){

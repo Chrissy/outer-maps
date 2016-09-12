@@ -19,17 +19,30 @@ function getTrail(id) {
   }
 }
 
+// function getAltitudeData(trail) {
+//   return dispatch => {
+//     if (trail.hasElevationData) return Promise.resolve();
+//     return fetch(createAltitudeQueryString(trail.geography.coordinates))
+//       .then(response => response.json())
+//       .then(altitudeData => {
+//         let elevationChanges = cumulativeElevationChanges(altitudeData.range_height.map((e) => e[1]));
+//         dispatch({type: 'SET_ELEVATION_DATA', elevationChanges, id: trail.id});
+//       });
+//   }
+// }
+
 function getAltitudeData(trail) {
   return dispatch => {
     if (trail.hasElevationData) return Promise.resolve();
-    return fetch(createAltitudeQueryString(trail.geography.coordinates))
+    return fetch(`/api/elevation/${trail.id}`)
       .then(response => response.json())
       .then(altitudeData => {
-        let elevationChanges = cumulativeElevationChanges(altitudeData.range_height.map((e) => e[1]));
+        let elevationChanges = cumulativeElevationChanges(altitudeData);
         dispatch({type: 'SET_ELEVATION_DATA', elevationChanges, id: trail.id});
       });
   }
 }
+
 
 export function previewTrail(id) {
   return dispatch => {

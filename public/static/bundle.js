@@ -473,14 +473,23 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.cumulativeElevationChanges = cumulativeElevationChanges;
+var rolling_average = function rolling_average(array, index) {
+  return (array[index] + array[index + 1] + array[index - 1]) / 3;
+};
+
 function cumulativeElevationChanges(elevations) {
   var elevationGain = 0;
   var elevationLoss = 0;
 
-  elevations.forEach(function (el, i) {
-    var el2 = elevations[i + 1];
+  var smooth_elevations = elevations.map(function (e, i) {
+    return rolling_average(elevations, i);
+  });
 
-    if (!el || !el2) return;
+  smooth_elevations.forEach(function (el, i) {
+    var el2 = smooth_elevations[i + 1];
+
+    if (!el || !el2 || el == el2) return;
+
     if (el < el2) elevationGain += el2 - el;
     if (el > el2) elevationLoss += el - el2;
   });
@@ -57187,15 +57196,25 @@ function getTrail(id) {
   };
 }
 
+// function getAltitudeData(trail) {
+//   return dispatch => {
+//     if (trail.hasElevationData) return Promise.resolve();
+//     return fetch(createAltitudeQueryString(trail.geography.coordinates))
+//       .then(response => response.json())
+//       .then(altitudeData => {
+//         let elevationChanges = cumulativeElevationChanges(altitudeData.range_height.map((e) => e[1]));
+//         dispatch({type: 'SET_ELEVATION_DATA', elevationChanges, id: trail.id});
+//       });
+//   }
+// }
+
 function getAltitudeData(trail) {
   return function (dispatch) {
     if (trail.hasElevationData) return Promise.resolve();
-    return (0, _isomorphicFetch2.default)((0, _mapzenInterface.createAltitudeQueryString)(trail.geography.coordinates)).then(function (response) {
+    return (0, _isomorphicFetch2.default)('/api/elevation/' + trail.id).then(function (response) {
       return response.json();
     }).then(function (altitudeData) {
-      var elevationChanges = (0, _cumulativeElevationChanges.cumulativeElevationChanges)(altitudeData.range_height.map(function (e) {
-        return e[1];
-      }));
+      var elevationChanges = (0, _cumulativeElevationChanges.cumulativeElevationChanges)(altitudeData);
       dispatch({ type: 'SET_ELEVATION_DATA', elevationChanges: elevationChanges, id: trail.id });
     });
   };
