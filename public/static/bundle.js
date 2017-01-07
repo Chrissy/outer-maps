@@ -481,7 +481,7 @@ var rollingAverage = function rollingAverage(a, i) {
 
 var glitchDetector = function glitchDetector(a) {
   return a.filter(function (e, i) {
-    return a[i - 1] == e && a[i + 1] == e;
+    return a[i - 2] == e && a[i + 2] == e;
   });
 };
 

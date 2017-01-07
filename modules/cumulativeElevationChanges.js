@@ -3,7 +3,7 @@ const rollingAverage = function(a, i) {
 }
 
 const glitchDetector = function(a) {
-  return a.filter((e, i) => a[i - 1] == e && a[i + 1] == e);
+  return a.filter((e, i) => a[i - 2] == e && a[i + 2] == e);
 }
 
 export function cumulativeElevationChanges(elevations) {
