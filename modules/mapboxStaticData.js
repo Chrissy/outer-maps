@@ -12,6 +12,9 @@ export const trailsLayerStatic = {
 
 export const trailsLayerActive = Object.assign({}, trailsLayerStatic, {
   'id': 'trails-active',
-  'paint': { 'line-color': '#FF9100'},
+  'paint': {
+    'line-color': '#FF9100',
+    'line-width': 6
+  },
   'filter': ["==", "id", 0]
 })

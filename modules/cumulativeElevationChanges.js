@@ -1,14 +1,16 @@
-const rolling_average = function(array, index) {
-  return (array[index] +
-    array[index + 1] +
-    array[index - 1]) / 3;
+const rollingAverage = function(a, i) {
+  return a.map((e, i) => parseInt((a[i] + a[i + 1] + a[i - 1]) / 3)).slice(1).slice(0, -1)
+}
+
+const glitchDetector = function(a) {
+  return a.filter((e, i) => a[i - 1] == e && a[i + 1] == e);
 }
 
 export function cumulativeElevationChanges(elevations) {
   let elevationGain = 0;
   let elevationLoss = 0;
 
-  let smooth_elevations = elevations.map((e, i) => rolling_average(elevations, i));
+  let smooth_elevations = rollingAverage(glitchDetector(elevations));
 
   smooth_elevations.forEach(function(el, i) {
     let el2 = smooth_elevations[i + 1];

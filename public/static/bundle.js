@@ -473,17 +473,23 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.cumulativeElevationChanges = cumulativeElevationChanges;
-var rolling_average = function rolling_average(array, index) {
-  return (array[index] + array[index + 1] + array[index - 1]) / 3;
+var rollingAverage = function rollingAverage(a, i) {
+  return a.map(function (e, i) {
+    return parseInt((a[i] + a[i + 1] + a[i - 1]) / 3);
+  }).slice(1).slice(0, -1);
+};
+
+var glitchDetector = function glitchDetector(a) {
+  return a.filter(function (e, i) {
+    return a[i - 1] == e && a[i + 1] == e;
+  });
 };
 
 function cumulativeElevationChanges(elevations) {
   var elevationGain = 0;
   var elevationLoss = 0;
 
-  var smooth_elevations = elevations.map(function (e, i) {
-    return rolling_average(elevations, i);
-  });
+  var smooth_elevations = rollingAverage(glitchDetector(elevations));
 
   smooth_elevations.forEach(function (el, i) {
     var el2 = smooth_elevations[i + 1];
@@ -520,7 +526,10 @@ var trailsLayerStatic = exports.trailsLayerStatic = {
 
 var trailsLayerActive = exports.trailsLayerActive = Object.assign({}, trailsLayerStatic, {
   'id': 'trails-active',
-  'paint': { 'line-color': '#FF9100' },
+  'paint': {
+    'line-color': '#FF9100',
+    'line-width': 6
+  },
   'filter': ["==", "id", 0]
 });
 
