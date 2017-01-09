@@ -474,13 +474,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.cumulativeElevationChanges = cumulativeElevationChanges;
 var rollingAverage = function rollingAverage(array, size) {
-  return a.map(function (element, index) {
+  return array.map(function (element, index) {
     var total = 0;
     for (var offset = -size; offset <= size; offset++) {
-      total += array[index + offset];
+      if (array[index + offset] == undefined) {
+        total += array[index];
+      } else {
+        total += array[index + offset];
+      }
     };
     return parseInt(total / (size * 2 + 1));
-  }).slice(size).slice(0, -size);
+  });
 };
 
 var glitchDetector = function glitchDetector(array, size) {
@@ -496,7 +500,7 @@ function cumulativeElevationChanges(elevations) {
   var elevationGain = 0;
   var elevationLoss = 0;
 
-  var smooth_elevations = rollingAverage(glitchDetector(elevations));
+  var smooth_elevations = rollingAverage(glitchDetector(elevations, 2), 2);
 
   smooth_elevations.forEach(function (el, i) {
     var el2 = smooth_elevations[i + 1];

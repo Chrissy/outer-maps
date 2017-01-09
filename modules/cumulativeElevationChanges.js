@@ -1,11 +1,15 @@
 var rollingAverage = function(array, size) {
-  return a.map((element, index) => {
+  return array.map((element, index) => {
     var total = 0
     for (var offset = -size; offset <= size; offset++) {
-      total += array[index + offset]
+      if (array[index + offset] == undefined) {
+        total += array[index];
+      } else {
+        total += array[index + offset];
+      }
     };
     return parseInt(total/(size * 2 + 1));
-  }).slice(size).slice(0, -size);
+  });
 }
 
 const glitchDetector = function(array, size) {
@@ -21,7 +25,7 @@ export function cumulativeElevationChanges(elevations) {
   let elevationGain = 0;
   let elevationLoss = 0;
 
-  let smooth_elevations = rollingAverage(glitchDetector(elevations));
+  let smooth_elevations = rollingAverage(glitchDetector(elevations, 2), 2);
 
   smooth_elevations.forEach(function(el, i) {
     let el2 = smooth_elevations[i + 1];
