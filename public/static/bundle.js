@@ -473,15 +473,18 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.cumulativeElevationChanges = cumulativeElevationChanges;
-var rollingAverage = function rollingAverage(a, i) {
+var rollingAverage = function rollingAverage(a, size) {
   return a.map(function (e, i) {
     return parseInt((a[i] + a[i + 1] + a[i - 1]) / 3);
   }).slice(1).slice(0, -1);
 };
 
-var glitchDetector = function glitchDetector(a) {
-  return a.filter(function (e, i) {
-    return a[i - 2] == e && a[i + 2] == e;
+var glitchDetector = function glitchDetector(array, size) {
+  return array.filter(function (el, i) {
+    for (var x = size * -1; x <= size; x++) {
+      if (array[i + x] !== el) return false;
+    };
+    return true;
   });
 };
 

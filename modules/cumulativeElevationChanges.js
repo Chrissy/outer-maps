@@ -1,9 +1,14 @@
-const rollingAverage = function(a, i) {
+const rollingAverage = function(a, size) {
   return a.map((e, i) => parseInt((a[i] + a[i + 1] + a[i - 1]) / 3)).slice(1).slice(0, -1)
 }
 
-const glitchDetector = function(a) {
-  return a.filter((e, i) => a[i - 2] == e && a[i + 2] == e);
+const glitchDetector = function(array, size) {
+  return array.filter((el, i) => {
+    for (var x = size * -1; x <= size; x++) {
+      if (array[i + x] !== el) return false;
+    };
+    return true;
+  });
 }
 
 export function cumulativeElevationChanges(elevations) {
