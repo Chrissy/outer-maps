@@ -473,16 +473,20 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.cumulativeElevationChanges = cumulativeElevationChanges;
-var rollingAverage = function rollingAverage(a, size) {
-  return a.map(function (e, i) {
-    return parseInt((a[i] + a[i + 1] + a[i - 1]) / 3);
-  }).slice(1).slice(0, -1);
+var rollingAverage = function rollingAverage(array, size) {
+  return a.map(function (element, index) {
+    var total = 0;
+    for (var offset = -size; offset <= size; offset++) {
+      total += array[index + offset];
+    };
+    return parseInt(total / (size * 2 + 1));
+  }).slice(size).slice(0, -size);
 };
 
 var glitchDetector = function glitchDetector(array, size) {
-  return array.filter(function (el, i) {
-    for (var x = size * -1; x <= size; x++) {
-      if (array[i + x] !== el) return false;
+  return array.filter(function (element, index) {
+    for (var offset = -size; offset <= size; offset++) {
+      if (array[index + offset] !== el) return false;
     };
     return true;
   });

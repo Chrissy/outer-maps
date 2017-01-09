@@ -1,11 +1,17 @@
-const rollingAverage = function(a, size) {
-  return a.map((e, i) => parseInt((a[i] + a[i + 1] + a[i - 1]) / 3)).slice(1).slice(0, -1)
+var rollingAverage = function(array, size) {
+  return a.map((element, index) => {
+    var total = 0
+    for (var offset = -size; offset <= size; offset++) {
+      total += array[index + offset]
+    };
+    return parseInt(total/(size * 2 + 1));
+  }).slice(size).slice(0, -size);
 }
 
 const glitchDetector = function(array, size) {
-  return array.filter((el, i) => {
-    for (var x = size * -1; x <= size; x++) {
-      if (array[i + x] !== el) return false;
+  return array.filter((element, index) => {
+    for (var offset = -size; offset <= size; offset++) {
+      if (array[index + offset] !== el) return false;
     };
     return true;
   });
