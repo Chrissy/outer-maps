@@ -2,11 +2,7 @@ var rollingAverage = function(array, size) {
   return array.map((element, index) => {
     var total = 0
     for (var offset = -size; offset <= size; offset++) {
-      if (array[index + offset] == undefined) {
-        total += array[index];
-      } else {
-        total += array[index + offset];
-      }
+      total += (array[index + offset] == undefined) ? array[index + offset] : array[index];
     };
     return parseInt(total/(size * 2 + 1));
   });
