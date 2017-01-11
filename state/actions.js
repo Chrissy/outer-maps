@@ -1,6 +1,5 @@
 import fetch from 'isomorphic-fetch';
 import _ from 'underscore'
-import {createAltitudeQueryString} from '../modules/mapzenInterface';
 import {cumulativeElevationChanges} from '../modules/cumulativeElevationChanges';
 
 function getTrail(id) {
@@ -18,18 +17,6 @@ function getTrail(id) {
       });
   }
 }
-
-// function getAltitudeData(trail) {
-//   return dispatch => {
-//     if (trail.hasElevationData) return Promise.resolve();
-//     return fetch(createAltitudeQueryString(trail.geography.coordinates))
-//       .then(response => response.json())
-//       .then(altitudeData => {
-//         let elevationChanges = cumulativeElevationChanges(altitudeData.range_height.map((e) => e[1]));
-//         dispatch({type: 'SET_ELEVATION_DATA', elevationChanges, id: trail.id});
-//       });
-//   }
-// }
 
 function getAltitudeData(trail) {
   return dispatch => {

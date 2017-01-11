@@ -11,7 +11,7 @@ var rollingAverage = function(array, size) {
 const glitchDetector = function(array, size) {
   return array.filter((element, index) => {
     for (var offset = -size; offset <= size; offset++) {
-      if (array[index + offset] !== el) return false;
+      if (array[index + offset] !== element) return false;
     };
     return true;
   });
@@ -21,7 +21,7 @@ export function cumulativeElevationChanges(elevations) {
   let elevationGain = 0;
   let elevationLoss = 0;
 
-  let smooth_elevations = rollingAverage(glitchDetector(elevations, 2), 2);
+  let smooth_elevations = glitchDetector(rollingAverage(elevations, 2), 2);
 
   smooth_elevations.forEach(function(el, i) {
     let el2 = smooth_elevations[i + 1];
