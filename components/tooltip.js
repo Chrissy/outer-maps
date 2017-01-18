@@ -1,5 +1,5 @@
 import React from 'react'
-import fetch from 'isomorphic-fetch'
+import LineGraph from './lineGraph';
 import {metersToFeet, metersToMiles} from '../modules/conversions'
 
 export default class Tooltip extends React.Component {
@@ -25,7 +25,8 @@ export default class Tooltip extends React.Component {
          elevation loss: {metersToFeet(this.props.trail.elevationLoss)} Feet<br/>
          distance: {metersToMiles(this.props.trail.distance)} Miles<br/>
          surface: {this.props.trail.surface}<br/>
-         id: {this.props.trail.id}
+         id: {this.props.trail.id}<br/>
+         <LineGraph points={this.props.trail.elevations}/>
       </div>
     )
   }
