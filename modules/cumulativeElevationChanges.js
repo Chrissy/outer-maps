@@ -8,11 +8,10 @@ var rollingAverage = function(array, size) {
   });
 }
 
-const glitchDetector = function(array, size) {
+const glitchDetector = function(array) {
   return array.map((element, index) => {
-    for (var offset = -size; offset <= size; offset++) {
-      if (array[index + offset] !== element) return false;
-    };
+    if (index == 0 || index >= array.length - 2) return element
+    if (array[index - 1] == array[index + 1] && array[index - 1] !== element) return array[index - 1];
     return element;
   });
 }

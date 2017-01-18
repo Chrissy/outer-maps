@@ -483,11 +483,10 @@ var rollingAverage = function rollingAverage(array, size) {
   });
 };
 
-var glitchDetector = function glitchDetector(array, size) {
+var glitchDetector = function glitchDetector(array) {
   return array.map(function (element, index) {
-    for (var offset = -size; offset <= size; offset++) {
-      if (array[index + offset] !== element) return false;
-    };
+    if (index == 0 || index >= array.length - 2) return element;
+    if (array[index - 1] == array[index + 1] && array[index - 1] !== element) return array[index - 1];
     return element;
   });
 };
