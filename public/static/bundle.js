@@ -484,32 +484,36 @@ var rollingAverage = function rollingAverage(array, size) {
 };
 
 var glitchDetector = function glitchDetector(array, size) {
-  return array.filter(function (element, index) {
+  return array.map(function (element, index) {
     for (var offset = -size; offset <= size; offset++) {
       if (array[index + offset] !== element) return false;
     };
-    return true;
+    return element;
   });
 };
 
 function cumulativeElevationChanges(elevations) {
-  var elevationGain = 0;
-  var elevationLoss = 0;
+  var elevationGain = 0,
+      elevationLoss = 0;
+  var smoothElevations = glitchDetector(rollingAverage(elevations.map(function (e) {
+    return e[0];
+  }), 2), 2);
 
-  var smooth_elevations = glitchDetector(rollingAverage(elevations, 2), 2);
-
-  smooth_elevations.forEach(function (el, i) {
-    var el2 = smooth_elevations[i + 1];
-
-    if (!el || !el2 || el == el2) return;
+  var recoupledElevations = smoothElevations.map(function (el, i) {
+    var el2 = smoothElevations[i + 1];
 
     if (el < el2) elevationGain += el2 - el;
     if (el > el2) elevationLoss += el - el2;
+
+    return [el, elevations[i][1]];
+  }).filter(function (e) {
+    return e[0] !== false;
   });
 
   return {
     elevationGain: elevationGain,
-    elevationLoss: elevationLoss
+    elevationLoss: elevationLoss,
+    elevations: recoupledElevations
   };
 }
 
@@ -57279,7 +57283,8 @@ var trail = function trail() {
       return _extends({}, state, {
         hasElevationData: true,
         elevationGain: action.elevationChanges.elevationGain,
-        elevationLoss: action.elevationChanges.elevationLoss
+        elevationLoss: action.elevationChanges.elevationLoss,
+        elevations: action.elevationChanges.elevations
       });
     default:
       return state;
