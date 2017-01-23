@@ -3,11 +3,12 @@ const pg = require('pg');
 const express = require('express');
 const app = express();
 const geolib = require('geolib');
+const _ = require('underscore');
 
 app.use(express.static('public'))
 
 var pool = new pg.Pool({
-  database: 'mountains_3',
+  database: 'mountains_5',
   max: 10,
   idleTimeoutMillis: 3000
 });
@@ -15,9 +16,9 @@ var pool = new pg.Pool({
 app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
 
   let query = `
-    SELECT ogc_fid, ST_AsGeoJson(the_geog) AS the_geog
-    FROM osm_trails
-    WHERE ST_Intersects(the_geog,
+    SELECT id, ST_AsGeoJson(geog) AS geog
+    FROM trails
+    WHERE ST_Intersects(geog,
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
     )
   `
@@ -34,9 +35,9 @@ app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
         features.push({
           "type": "Feature",
           "properties": {
-            "id": row.ogc_fid
+            "id": row.id
           },
-          "geometry": JSON.parse(row.the_geog)
+          "geometry": JSON.parse(row.geog)
         });
       }
 
@@ -50,9 +51,9 @@ app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
 
 app.get('/api/trails/:id', function(request, response) {
   let query = `
-    SELECT name, surface, ST_AsGeoJson(the_geog) as the_geog, ST_Length(the_geog) as distance
-    FROM osm_trails
-    WHERE ogc_fid = ${request.params.id}
+    SELECT name, surface, ST_AsGeoJson(geog) as geog, ST_Length(geog) as distance
+    FROM trails
+    WHERE id = ${request.params.id}
     LIMIT 1
   `
 
@@ -68,7 +69,7 @@ app.get('/api/trails/:id', function(request, response) {
         "name": r.name,
         "id": request.params.id,
         "surface": r.surface,
-        "geography": JSON.parse(r.the_geog),
+        "geography": JSON.parse(r.geog),
         "distance": r.distance
       });
     })
@@ -77,16 +78,19 @@ app.get('/api/trails/:id', function(request, response) {
 
 app.get('/api/elevation/:id', function(request, response){
   let query = `
-    select ST_AsGeoJson(the_geog) as the_geog
-    FROM osm_trails
-    WHERE ogc_fid = ${request.params.id}
+    select ST_AsGeoJson(geog) as geog
+    FROM trails
+    WHERE id = ${request.params.id}
   `
 
   pool.connect(function(err, client, done){
     client.query(query, function(err, result){
       if (err) throw err;
 
-      const points = JSON.parse(result.rows[0].the_geog).coordinates;
+      console.log(result.rows[0].geog);
+
+      var data = JSON.parse(result.rows[0].geog);
+      var points = (data.type == "MultiLineString") ? _.flatten(data.coordinates, true) : data.coordinates;
       var altitudes = [], distance = 0;
 
       points.forEach(function(point, i) {
