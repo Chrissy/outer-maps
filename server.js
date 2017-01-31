@@ -87,8 +87,6 @@ app.get('/api/elevation/:id', function(request, response){
     client.query(query, function(err, result){
       if (err) throw err;
 
-      console.log(result.rows[0].geog);
-
       var data = JSON.parse(result.rows[0].geog);
       var points = (data.type == "MultiLineString") ? _.flatten(data.coordinates, true) : data.coordinates;
       var altitudes = [], distance = 0;
