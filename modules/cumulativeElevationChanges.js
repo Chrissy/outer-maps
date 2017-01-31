@@ -10,7 +10,7 @@ var rollingAverage = function(array, size) {
 
 const glitchDetector = function(array) {
   return array.map((element, index) => {
-    if (index == 0 || index >= array.length - 2) return element
+    if (index == 0 || index >= array.length - 2) return element;
     if (array[index - 1] == array[index + 1] && array[index - 1] !== element) return array[index - 1];
     return element;
   });

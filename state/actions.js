@@ -15,8 +15,8 @@ function getTrail(id) {
         dispatch({type: 'ADD_TRAIL', trail});
         dispatch(getAltitudeData(trail));
       });
-  }
-}
+  };
+};
 
 function getAltitudeData(trail) {
   return dispatch => {
@@ -27,8 +27,8 @@ function getAltitudeData(trail) {
         let elevationChanges = cumulativeElevationChanges(altitudeData);
         dispatch({type: 'SET_ELEVATION_DATA', elevationChanges, id: trail.id});
       });
-  }
-}
+  };
+};
 
 
 export function previewTrail(id) {
@@ -36,13 +36,13 @@ export function previewTrail(id) {
     dispatch(getTrail(id)).then( trail => {
       return dispatch({type: 'TOGGLE_PREVIEWING', id});
     });
-  }
-}
+  };
+};
 
 export function selectTrail(id) {
   return dispatch => {
     dispatch(getTrail(id)).then( trail => {
       return dispatch({type: 'TOGGLE_SELECTED', id});
     });
-  }
-}
+  };
+};

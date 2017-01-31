@@ -1,4 +1,6 @@
-import React from 'react'
+import React from 'react';
+import LineGraph from './lineGraph';
+import {metersToFeet} from '../modules/conversions';
 
 export default class MapSidebar extends React.Component {
 
@@ -12,7 +14,12 @@ export default class MapSidebar extends React.Component {
         margin: '1em',
         background: '#fefefe',
         boxSizing: 'border-box'
-      }}></div>
+      }}>
+        surface: {this.props.trail.surface}<br/>
+        elevation gain: {metersToFeet(this.props.trail.elevationGain)} Feet<br/>
+        elevation loss: {metersToFeet(this.props.trail.elevationLoss)} Feet<br/>
+        <LineGraph points={this.props.trail.elevations}/>
+      </div>
     )
   }
 };

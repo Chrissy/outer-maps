@@ -1,7 +1,7 @@
 import React, { Proptypes } from 'react';
 import TooltipContainer from './tooltipContainer';
 import MapBox from './mapBox';
-import MapSidebar from '../components/mapSidebar';
+import MapSidebarContainer from './mapSidebarContainer';
 
 export default class Map extends React.Component {
 
@@ -46,7 +46,7 @@ export default class Map extends React.Component {
           onMouseMove={this.onMapMouseMove.bind(this)}
           onDrag={this.onMapDrag.bind(this)}/>
           <TooltipContainer/>
-          <MapSidebar />
+          <MapSidebarContainer/>
         </div>
     );
   }
