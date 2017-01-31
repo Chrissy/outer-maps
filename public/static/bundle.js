@@ -463,7 +463,11 @@ var MapSidebar = function (_React$Component) {
             minWidth: '300px',
             margin: '1em',
             background: '#fefefe',
-            boxSizing: 'border-box'
+            boxSizing: 'border-box',
+            padding: '1em',
+            opacity: this.props.trail.selected ? '1' : '0',
+            transform: 'translateX(' + (this.props.trail.selected ? '0' : '-1em') + ')',
+            transition: '.3s all'
           } },
         'surface: ',
         this.props.trail.surface,
@@ -504,7 +508,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = (0, _reactRedux.connect)(function (state) {
   return { trail: state.trails.find(function (t) {
-      return t.previewing;
+      return t.selected;
     }) || {} };
 })(_mapSidebar2.default);
 
@@ -57327,15 +57331,13 @@ function getTrail(id) {
     var cachedTrail = getState().trails.find(function (trail) {
       return trail.id == id;
     });
-    if (cachedTrail) return Promise.resolve();
+    if (cachedTrail) return Promise.resolve(cachedTrail);
 
     return (0, _isomorphicFetch2.default)('/api/trails/' + id).then(function (response) {
       return response.json();
     }).then(function (t) {
       var trail = Object.assign({}, t);
-      trail.id = parseInt(trail.id);
-      dispatch({ type: 'ADD_TRAIL', trail: trail });
-      dispatch(getAltitudeData(trail));
+      return dispatch({ type: 'ADD_TRAIL', trail: trail });
     });
   };
 };
@@ -57347,7 +57349,7 @@ function getAltitudeData(trail) {
       return response.json();
     }).then(function (altitudeData) {
       var elevationChanges = (0, _cumulativeElevationChanges.cumulativeElevationChanges)(altitudeData);
-      dispatch({ type: 'SET_ELEVATION_DATA', elevationChanges: elevationChanges, id: trail.id });
+      return dispatch({ type: 'SET_ELEVATION_DATA', elevationChanges: elevationChanges, id: trail.id });
     });
   };
 };
@@ -57355,7 +57357,7 @@ function getAltitudeData(trail) {
 function previewTrail(id) {
   return function (dispatch) {
     dispatch(getTrail(id)).then(function (trail) {
-      return dispatch({ type: 'TOGGLE_PREVIEWING', id: id });
+      return dispatch({ type: 'TOGGLE_PREVIEWING', trail: trail });
     });
   };
 };
@@ -57363,7 +57365,8 @@ function previewTrail(id) {
 function selectTrail(id) {
   return function (dispatch) {
     dispatch(getTrail(id)).then(function (trail) {
-      return dispatch({ type: 'TOGGLE_SELECTED', id: id });
+      dispatch({ type: 'TOGGLE_SELECTED', trail: trail });
+      dispatch(getAltitudeData(trail));
     });
   };
 };
@@ -57413,15 +57416,12 @@ var trail = function trail() {
     case 'ADD_TRAIL':
       return action.trail;
     case 'TOGGLE_PREVIEWING':
-      if (action.id !== state.id) return state;
+      if (action.trail.id !== state.id) return state;
       return _extends({}, state, { previewing: true });
     case 'CLEAR_PREVIEWING':
       return _extends({}, state, { previewing: false });
-    case 'TOGGLE_VIEWING':
-      if (action.id !== state.id) return _extends({}, state, { viewing: false });
-      return _extends({}, state, { viewing: true });
     case 'TOGGLE_SELECTED':
-      if (action.id !== state.id) return state;
+      if (action.trail.id !== state.id) return state;
       return _extends({}, state, { selected: !state.selected });
     case 'CLEAR_SELECTED':
       return _extends({}, state, { selected: false });
@@ -57450,10 +57450,6 @@ var trails = function trails() {
         return trail(t, action);
       });
     case 'CLEAR_PREVIEWING':
-      return state.map(function (t) {
-        return trail(t, action);
-      });
-    case 'TOGGLE_VIEWING':
       return state.map(function (t) {
         return trail(t, action);
       });

@@ -13,7 +13,11 @@ export default class MapSidebar extends React.Component {
         minWidth: '300px',
         margin: '1em',
         background: '#fefefe',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        padding: '1em',
+        opacity: (this.props.trail.selected) ? '1' : '0',
+        transform: `translateX(${(this.props.trail.selected) ? '0' : '-1em'})`,
+        transition: '.3s all'
       }}>
         surface: {this.props.trail.surface}<br/>
         elevation gain: {metersToFeet(this.props.trail.elevationGain)} Feet<br/>

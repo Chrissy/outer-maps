@@ -5,15 +5,12 @@ const trail = (state = {}, action) => {
     case 'ADD_TRAIL':
       return action.trail
     case 'TOGGLE_PREVIEWING':
-      if (action.id !== state.id) return state
+      if (action.trail.id !== state.id) return state
       return { ...state, previewing: true }
     case 'CLEAR_PREVIEWING':
       return { ...state, previewing: false }
-    case 'TOGGLE_VIEWING':
-      if (action.id !== state.id) return { ...state, viewing: false }
-      return {...state, viewing: true }
     case 'TOGGLE_SELECTED':
-      if (action.id !== state.id) return state
+      if (action.trail.id !== state.id) return state
       return { ...state, selected: !state.selected }
     case 'CLEAR_SELECTED':
       return { ...state, selected: false }
@@ -36,8 +33,6 @@ const trails = (state = [], action) => {
     case 'TOGGLE_PREVIEWING':
       return state.map(t => trail(t, action))
     case 'CLEAR_PREVIEWING':
-      return state.map(t => trail(t, action))
-    case 'TOGGLE_VIEWING':
       return state.map(t => trail(t, action))
     case 'TOGGLE_SELECTED':
       return state.map(t => trail(t, action))
