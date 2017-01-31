@@ -18,7 +18,7 @@ export default class LineGraph extends React.Component {
     if (!this.props.points) return null;
 
     return (
-      <svg width="200" height="100" viewBox="0 0 200 100">
+      <svg width="200" height="100" viewBox="0 0 200 100" style={{width:'100%', height:'100%'}}>
         <polyline points={this.pointsToPathString()} strokeWidth="2" stroke="black"/>
       </svg>
     )

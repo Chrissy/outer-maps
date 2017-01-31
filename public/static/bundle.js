@@ -31,7 +31,7 @@ _reactDom2.default.render(_react2.default.createElement(
   _react2.default.createElement(_mapContainer2.default, null)
 ), document.getElementById("app"));
 
-},{"../components/mapContainer":5,"../state/configureStore":399,"react":369,"react-dom":220,"react-redux":223,"redux":376}],2:[function(require,module,exports){
+},{"../components/mapContainer":6,"../state/configureStore":400,"react":370,"react-dom":221,"react-redux":224,"redux":377}],2:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -91,7 +91,7 @@ var LineGraph = function (_React$Component) {
 
       return _react2.default.createElement(
         "svg",
-        { width: "200", height: "100", viewBox: "0 0 200 100" },
+        { width: "200", height: "100", viewBox: "0 0 200 100", style: { width: '100%', height: '100%' } },
         _react2.default.createElement("polyline", { points: this.pointsToPathString(), strokeWidth: "2", stroke: "black" })
       );
     }
@@ -103,7 +103,74 @@ var LineGraph = function (_React$Component) {
 exports.default = LineGraph;
 ;
 
-},{"react":369}],3:[function(require,module,exports){
+},{"react":370}],3:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var LoadingSpinner = function (_React$Component) {
+  _inherits(LoadingSpinner, _React$Component);
+
+  function LoadingSpinner() {
+    _classCallCheck(this, LoadingSpinner);
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(LoadingSpinner).apply(this, arguments));
+  }
+
+  _createClass(LoadingSpinner, [{
+    key: "render",
+    value: function render() {
+      return _react2.default.createElement(
+        "svg",
+        { viewBox: "0 0 64 64" },
+        _react2.default.createElement(
+          "g",
+          null,
+          _react2.default.createElement(
+            "defs",
+            null,
+            _react2.default.createElement(
+              "linearGradient",
+              { id: "sGD", gradientUnits: "userSpaceOnUse", x1: "55", y1: "46", x2: "2", y2: "46" },
+              _react2.default.createElement("stop", { offset: "0.1" }),
+              _react2.default.createElement("stop", { offset: "1" })
+            )
+          ),
+          _react2.default.createElement(
+            "g",
+            { strokeWidth: "4", strokeLinecap: "round", fill: "none", transform: "rotate(82.912 32 32)" },
+            _react2.default.createElement("path", { stroke: "url(#sGD)", d: "M4,32 c0,15,12,28,28,28c8,0,16-4,21-9" }),
+            _react2.default.createElement("path", { d: "M60,32 C60,16,47.464,4,32,4S4,16,4,32" }),
+            _react2.default.createElement("animateTransform", { values: "0,32,32;360,32,32", attributeName: "transform", type: "rotate", repeatCount: "indefinite", dur: "750ms" })
+          )
+        )
+      );
+    }
+  }]);
+
+  return LoadingSpinner;
+}(_react2.default.Component);
+
+exports.default = LoadingSpinner;
+;
+
+},{"react":370}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -220,7 +287,7 @@ var Map = function (_React$Component) {
 
 exports.default = Map;
 
-},{"./mapBox":4,"./mapSidebarContainer":7,"./tooltipContainer":9,"react":369}],4:[function(require,module,exports){
+},{"./mapBox":5,"./mapSidebarContainer":8,"./tooltipContainer":10,"react":370}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -362,7 +429,7 @@ var MapBox = function (_React$Component) {
 
 exports.default = MapBox;
 
-},{"../modules/mapboxStaticData":12,"mapbox-gl":117,"react":369}],5:[function(require,module,exports){
+},{"../modules/mapboxStaticData":13,"mapbox-gl":118,"react":370}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -415,7 +482,7 @@ var mapContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)
 
 exports.default = mapContainer;
 
-},{"../components/map":3,"../state/actions":398,"react-redux":223}],6:[function(require,module,exports){
+},{"../components/map":4,"../state/actions":399,"react-redux":224}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -431,6 +498,10 @@ var _react2 = _interopRequireDefault(_react);
 var _lineGraph = require('./lineGraph');
 
 var _lineGraph2 = _interopRequireDefault(_lineGraph);
+
+var _loadingSpinner = require('./loadingSpinner');
+
+var _loadingSpinner2 = _interopRequireDefault(_loadingSpinner);
 
 var _conversions = require('../modules/conversions');
 
@@ -469,18 +540,45 @@ var MapSidebar = function (_React$Component) {
             transform: 'translateX(' + (this.props.trail.selected ? '0' : '-1em') + ')',
             transition: '.3s all'
           } },
-        'surface: ',
-        this.props.trail.surface,
-        _react2.default.createElement('br', null),
-        'elevation gain: ',
-        (0, _conversions.metersToFeet)(this.props.trail.elevationGain),
-        ' Feet',
-        _react2.default.createElement('br', null),
-        'elevation loss: ',
-        (0, _conversions.metersToFeet)(this.props.trail.elevationLoss),
-        ' Feet',
-        _react2.default.createElement('br', null),
-        _react2.default.createElement(_lineGraph2.default, { points: this.props.trail.elevations })
+        _react2.default.createElement(
+          'div',
+          { style: {
+              opacity: this.props.trail.hasElevationData ? '1' : '0',
+              fontSize: '1.1em',
+              lineHeight: '1.5em',
+              transition: '.2s all'
+            } },
+          'surface: ',
+          this.props.trail.surface || 'unknown',
+          _react2.default.createElement('br', null),
+          'elevation gain: ',
+          (0, _conversions.metersToFeet)(this.props.trail.elevationGain),
+          ' Feet',
+          _react2.default.createElement('br', null),
+          'elevation loss: ',
+          (0, _conversions.metersToFeet)(this.props.trail.elevationLoss),
+          ' Feet',
+          _react2.default.createElement('br', null),
+          _react2.default.createElement(
+            'div',
+            { style: { marginTop: '1em' } },
+            _react2.default.createElement(_lineGraph2.default, { points: this.props.trail.elevations })
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { style: {
+              opacity: !this.props.trail.hasElevationData ? '1' : '0',
+              transition: '.2s all',
+              width: '2em',
+              height: '2em',
+              left: '50%',
+              top: '50%',
+              position: 'absolute',
+              transform: 'translateX(-50%) translateY(-50%)'
+            } },
+          _react2.default.createElement(_loadingSpinner2.default, null)
+        )
       );
     }
   }]);
@@ -491,7 +589,7 @@ var MapSidebar = function (_React$Component) {
 exports.default = MapSidebar;
 ;
 
-},{"../modules/conversions":10,"./lineGraph":2,"react":369}],7:[function(require,module,exports){
+},{"../modules/conversions":11,"./lineGraph":2,"./loadingSpinner":3,"react":370}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -512,7 +610,7 @@ exports.default = (0, _reactRedux.connect)(function (state) {
     }) || {} };
 })(_mapSidebar2.default);
 
-},{"./mapSidebar":6,"react-redux":223}],8:[function(require,module,exports){
+},{"./mapSidebar":7,"react-redux":224}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -581,7 +679,7 @@ var Tooltip = function (_React$Component) {
 exports.default = Tooltip;
 ;
 
-},{"../modules/conversions":10,"react":369}],9:[function(require,module,exports){
+},{"../modules/conversions":11,"react":370}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -602,7 +700,7 @@ exports.default = (0, _reactRedux.connect)(function (state) {
     }) };
 })(_tooltip2.default);
 
-},{"./tooltip":8,"react-redux":223}],10:[function(require,module,exports){
+},{"./tooltip":9,"react-redux":224}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -618,7 +716,7 @@ function metersToMiles(meters) {
   return Math.round(meters * 0.000621371 * 10) / 10;
 }
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -668,7 +766,7 @@ function cumulativeElevationChanges(elevations) {
   };
 }
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -695,7 +793,7 @@ var trailsLayerActive = exports.trailsLayerActive = Object.assign({}, trailsLaye
   'filter': ["==", "id", 0]
 });
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 // http://wiki.commonjs.org/wiki/Unit_Testing/1.0
 //
 // THIS IS NOT TESTED NOR LIKELY TO WORK OUTSIDE V8!
@@ -1056,7 +1154,7 @@ var objectKeys = Object.keys || function (obj) {
   return keys;
 };
 
-},{"util/":386}],14:[function(require,module,exports){
+},{"util/":387}],15:[function(require,module,exports){
 // (c) Dean McNamee <dean@gmail.com>, 2012.
 //
 // https://github.com/deanm/css-color-parser-js
@@ -1258,7 +1356,7 @@ function parseCSSColor(css_str) {
 
 try { exports.parseCSSColor = parseCSSColor } catch(e) { }
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 'use strict';
 
 module.exports = earcut;
@@ -1904,7 +2002,7 @@ earcut.flatten = function (data) {
     return result;
 };
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -1990,7 +2088,7 @@ var EventListener = {
 
 module.exports = EventListener;
 }).call(this,require('_process'))
-},{"./emptyFunction":23,"_process":218}],17:[function(require,module,exports){
+},{"./emptyFunction":24,"_process":219}],18:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -2026,7 +2124,7 @@ var ExecutionEnvironment = {
 };
 
 module.exports = ExecutionEnvironment;
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 
 /**
@@ -2058,7 +2156,7 @@ function camelize(string) {
 }
 
 module.exports = camelize;
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -2098,7 +2196,7 @@ function camelizeStyleName(string) {
 }
 
 module.exports = camelizeStyleName;
-},{"./camelize":18}],20:[function(require,module,exports){
+},{"./camelize":19}],21:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2138,7 +2236,7 @@ function containsNode(outerNode, innerNode) {
 }
 
 module.exports = containsNode;
-},{"./isTextNode":33}],21:[function(require,module,exports){
+},{"./isTextNode":34}],22:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -2267,7 +2365,7 @@ function createArrayFromMixed(obj) {
 
 module.exports = createArrayFromMixed;
 }).call(this,require('_process'))
-},{"./invariant":31,"_process":218}],22:[function(require,module,exports){
+},{"./invariant":32,"_process":219}],23:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -2353,7 +2451,7 @@ function createNodesFromMarkup(markup, handleScript) {
 
 module.exports = createNodesFromMarkup;
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":17,"./createArrayFromMixed":21,"./getMarkupWrap":27,"./invariant":31,"_process":218}],23:[function(require,module,exports){
+},{"./ExecutionEnvironment":18,"./createArrayFromMixed":22,"./getMarkupWrap":28,"./invariant":32,"_process":219}],24:[function(require,module,exports){
 "use strict";
 
 /**
@@ -2392,7 +2490,7 @@ emptyFunction.thatReturnsArgument = function (arg) {
 };
 
 module.exports = emptyFunction;
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -2414,7 +2512,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = emptyObject;
 }).call(this,require('_process'))
-},{"_process":218}],25:[function(require,module,exports){
+},{"_process":219}],26:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -2441,7 +2539,7 @@ function focusNode(node) {
 }
 
 module.exports = focusNode;
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2476,7 +2574,7 @@ function getActiveElement() /*?DOMElement*/{
 }
 
 module.exports = getActiveElement;
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -2573,7 +2671,7 @@ function getMarkupWrap(nodeName) {
 
 module.exports = getMarkupWrap;
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":17,"./invariant":31,"_process":218}],28:[function(require,module,exports){
+},{"./ExecutionEnvironment":18,"./invariant":32,"_process":219}],29:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -2612,7 +2710,7 @@ function getUnboundedScrollPosition(scrollable) {
 }
 
 module.exports = getUnboundedScrollPosition;
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2645,7 +2743,7 @@ function hyphenate(string) {
 }
 
 module.exports = hyphenate;
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -2684,7 +2782,7 @@ function hyphenateStyleName(string) {
 }
 
 module.exports = hyphenateStyleName;
-},{"./hyphenate":29}],31:[function(require,module,exports){
+},{"./hyphenate":30}],32:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -2736,7 +2834,7 @@ function invariant(condition, format, a, b, c, d, e, f) {
 
 module.exports = invariant;
 }).call(this,require('_process'))
-},{"_process":218}],32:[function(require,module,exports){
+},{"_process":219}],33:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2759,7 +2857,7 @@ function isNode(object) {
 }
 
 module.exports = isNode;
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2784,7 +2882,7 @@ function isTextNode(object) {
 }
 
 module.exports = isTextNode;
-},{"./isNode":32}],34:[function(require,module,exports){
+},{"./isNode":33}],35:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -2834,7 +2932,7 @@ var keyMirror = function keyMirror(obj) {
 
 module.exports = keyMirror;
 }).call(this,require('_process'))
-},{"./invariant":31,"_process":218}],35:[function(require,module,exports){
+},{"./invariant":32,"_process":219}],36:[function(require,module,exports){
 "use strict";
 
 /**
@@ -2869,7 +2967,7 @@ var keyOf = function keyOf(oneKeyObj) {
 };
 
 module.exports = keyOf;
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -2920,7 +3018,7 @@ function mapObject(object, callback, context) {
 }
 
 module.exports = mapObject;
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -2950,7 +3048,7 @@ function memoizeStringOnly(callback) {
 }
 
 module.exports = memoizeStringOnly;
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -2973,7 +3071,7 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = performance || {};
-},{"./ExecutionEnvironment":17}],39:[function(require,module,exports){
+},{"./ExecutionEnvironment":18}],40:[function(require,module,exports){
 'use strict';
 
 /**
@@ -3007,7 +3105,7 @@ if (performance.now) {
 }
 
 module.exports = performanceNow;
-},{"./performance":38}],40:[function(require,module,exports){
+},{"./performance":39}],41:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -3074,7 +3172,7 @@ function shallowEqual(objA, objB) {
 }
 
 module.exports = shallowEqual;
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -3133,7 +3231,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = warning;
 }).call(this,require('_process'))
-},{"./emptyFunction":23,"_process":218}],42:[function(require,module,exports){
+},{"./emptyFunction":24,"_process":219}],43:[function(require,module,exports){
 'use strict';
 
 module.exports = createFilter;
@@ -3215,7 +3313,7 @@ function compare(a, b) {
     return a < b ? -1 : a > b ? 1 : 0;
 }
 
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 var wgs84 = require('wgs84');
 
 module.exports.geometry = geometry;
@@ -3281,7 +3379,7 @@ function rad(_) {
     return _ * Math.PI / 180;
 }
 
-},{"wgs84":395}],44:[function(require,module,exports){
+},{"wgs84":396}],45:[function(require,module,exports){
 var geojsonArea = require('geojson-area');
 
 module.exports = rewind;
@@ -3332,7 +3430,7 @@ function cw(_) {
     return geojsonArea.ring(_) >= 0;
 }
 
-},{"geojson-area":43}],45:[function(require,module,exports){
+},{"geojson-area":44}],46:[function(require,module,exports){
 'use strict';
 
 module.exports = clip;
@@ -3485,7 +3583,7 @@ function newSlice(slices, slice, area, dist) {
     return [];
 }
 
-},{}],46:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 'use strict';
 
 module.exports = convert;
@@ -3631,7 +3729,7 @@ function calcRingBBox(min, max, points) {
     }
 }
 
-},{"./simplify":48}],47:[function(require,module,exports){
+},{"./simplify":49}],48:[function(require,module,exports){
 'use strict';
 
 module.exports = geojsonvt;
@@ -3873,7 +3971,7 @@ function isClippedSquare(tile, extent, buffer) {
     return true;
 }
 
-},{"./clip":45,"./convert":46,"./tile":49,"./transform":50,"./wrap":51}],48:[function(require,module,exports){
+},{"./clip":46,"./convert":47,"./tile":50,"./transform":51,"./wrap":52}],49:[function(require,module,exports){
 'use strict';
 
 module.exports = simplify;
@@ -3949,7 +4047,7 @@ function getSqSegDist(p, a, b) {
     return dx * dx + dy * dy;
 }
 
-},{}],49:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 'use strict';
 
 module.exports = createTile;
@@ -4036,7 +4134,7 @@ function addFeature(tile, feature, tolerance, noSimplify) {
     }
 }
 
-},{}],50:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 'use strict';
 
 exports.tile = transformTile;
@@ -4079,7 +4177,7 @@ function transformPoint(p, extent, z2, tx, ty) {
     return [x, y];
 }
 
-},{}],51:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 'use strict';
 
 var clip = require('./clip');
@@ -4142,7 +4240,7 @@ function shiftCoords(points, offset) {
     return newPoints;
 }
 
-},{"./clip":45}],52:[function(require,module,exports){
+},{"./clip":46}],53:[function(require,module,exports){
 /**
  * @fileoverview gl-matrix - High performance matrix and vector operations
  * @author Brandon Jones
@@ -4180,7 +4278,7 @@ exports.quat = require("./gl-matrix/quat.js");
 exports.vec2 = require("./gl-matrix/vec2.js");
 exports.vec3 = require("./gl-matrix/vec3.js");
 exports.vec4 = require("./gl-matrix/vec4.js");
-},{"./gl-matrix/common.js":53,"./gl-matrix/mat2.js":54,"./gl-matrix/mat2d.js":55,"./gl-matrix/mat3.js":56,"./gl-matrix/mat4.js":57,"./gl-matrix/quat.js":58,"./gl-matrix/vec2.js":59,"./gl-matrix/vec3.js":60,"./gl-matrix/vec4.js":61}],53:[function(require,module,exports){
+},{"./gl-matrix/common.js":54,"./gl-matrix/mat2.js":55,"./gl-matrix/mat2d.js":56,"./gl-matrix/mat3.js":57,"./gl-matrix/mat4.js":58,"./gl-matrix/quat.js":59,"./gl-matrix/vec2.js":60,"./gl-matrix/vec3.js":61,"./gl-matrix/vec4.js":62}],54:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4252,7 +4350,7 @@ glMatrix.equals = function(a, b) {
 
 module.exports = glMatrix;
 
-},{}],54:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4690,7 +4788,7 @@ mat2.multiplyScalarAndAdd = function(out, a, b, scale) {
 
 module.exports = mat2;
 
-},{"./common.js":53}],55:[function(require,module,exports){
+},{"./common.js":54}],56:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -5161,7 +5259,7 @@ mat2d.equals = function (a, b) {
 
 module.exports = mat2d;
 
-},{"./common.js":53}],56:[function(require,module,exports){
+},{"./common.js":54}],57:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -5909,7 +6007,7 @@ mat3.equals = function (a, b) {
 
 module.exports = mat3;
 
-},{"./common.js":53}],57:[function(require,module,exports){
+},{"./common.js":54}],58:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -8047,7 +8145,7 @@ mat4.equals = function (a, b) {
 
 module.exports = mat4;
 
-},{"./common.js":53}],58:[function(require,module,exports){
+},{"./common.js":54}],59:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -8649,7 +8747,7 @@ quat.equals = vec4.equals;
 
 module.exports = quat;
 
-},{"./common.js":53,"./mat3.js":56,"./vec3.js":60,"./vec4.js":61}],59:[function(require,module,exports){
+},{"./common.js":54,"./mat3.js":57,"./vec3.js":61,"./vec4.js":62}],60:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -9238,7 +9336,7 @@ vec2.equals = function (a, b) {
 
 module.exports = vec2;
 
-},{"./common.js":53}],60:[function(require,module,exports){
+},{"./common.js":54}],61:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -10017,7 +10115,7 @@ vec3.equals = function (a, b) {
 
 module.exports = vec3;
 
-},{"./common.js":53}],61:[function(require,module,exports){
+},{"./common.js":54}],62:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -10628,7 +10726,7 @@ vec4.equals = function (a, b) {
 
 module.exports = vec4;
 
-},{"./common.js":53}],62:[function(require,module,exports){
+},{"./common.js":54}],63:[function(require,module,exports){
 'use strict';
 
 module.exports = GridIndex;
@@ -10787,7 +10885,7 @@ GridIndex.prototype.toArrayBuffer = function() {
     return array.buffer;
 };
 
-},{}],63:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 /**
  * Copyright 2015, Yahoo! Inc.
  * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
@@ -10839,7 +10937,7 @@ module.exports = function hoistNonReactStatics(targetComponent, sourceComponent,
     return targetComponent;
 };
 
-},{}],64:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = nBytes * 8 - mLen - 1
@@ -10925,7 +11023,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],65:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -10950,7 +11048,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],66:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -11005,7 +11103,7 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 
 }).call(this,require('_process'))
-},{"_process":218}],67:[function(require,module,exports){
+},{"_process":219}],68:[function(require,module,exports){
 // the whatwg-fetch polyfill installs the fetch() function
 // on the global object (window or self)
 //
@@ -11013,7 +11111,7 @@ module.exports = invariant;
 require('whatwg-fetch');
 module.exports = self.fetch.bind(self);
 
-},{"whatwg-fetch":396}],68:[function(require,module,exports){
+},{"whatwg-fetch":397}],69:[function(require,module,exports){
 'use strict';
 
 var sort = require('./sort');
@@ -11059,7 +11157,7 @@ KDBush.prototype = {
 function defaultGetX(p) { return p[0]; }
 function defaultGetY(p) { return p[1]; }
 
-},{"./range":69,"./sort":70,"./within":71}],69:[function(require,module,exports){
+},{"./range":70,"./sort":71,"./within":72}],70:[function(require,module,exports){
 'use strict';
 
 module.exports = range;
@@ -11107,7 +11205,7 @@ function range(ids, coords, minX, minY, maxX, maxY, nodeSize) {
     return result;
 }
 
-},{}],70:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
 'use strict';
 
 module.exports = sortKD;
@@ -11175,7 +11273,7 @@ function swap(arr, i, j) {
     arr[j] = tmp;
 }
 
-},{}],71:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 'use strict';
 
 module.exports = within;
@@ -11227,7 +11325,7 @@ function sqDist(ax, ay, bx, by) {
     return dx * dx + dy * dy;
 }
 
-},{}],72:[function(require,module,exports){
+},{}],73:[function(require,module,exports){
 /* Built-in method references for those with the same name as other `lodash` methods. */
 var nativeGetPrototype = Object.getPrototypeOf;
 
@@ -11244,7 +11342,7 @@ function getPrototype(value) {
 
 module.exports = getPrototype;
 
-},{}],73:[function(require,module,exports){
+},{}],74:[function(require,module,exports){
 /**
  * Checks if `value` is a host object in IE < 9.
  *
@@ -11266,7 +11364,7 @@ function isHostObject(value) {
 
 module.exports = isHostObject;
 
-},{}],74:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 /**
  * Checks if `value` is object-like. A value is object-like if it's not `null`
  * and has a `typeof` result of "object".
@@ -11297,7 +11395,7 @@ function isObjectLike(value) {
 
 module.exports = isObjectLike;
 
-},{}],75:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 var getPrototype = require('./_getPrototype'),
     isHostObject = require('./_isHostObject'),
     isObjectLike = require('./isObjectLike');
@@ -11369,7 +11467,7 @@ function isPlainObject(value) {
 
 module.exports = isPlainObject;
 
-},{"./_getPrototype":72,"./_isHostObject":73,"./isObjectLike":74}],76:[function(require,module,exports){
+},{"./_getPrototype":73,"./_isHostObject":74,"./isObjectLike":75}],77:[function(require,module,exports){
 'use strict';
 
 function createFunction(parameters, defaultType) {
@@ -11536,7 +11634,7 @@ module.exports['piecewise-constant'] = function(parameters) {
     return createFunction(parameters, 'interval');
 };
 
-},{}],77:[function(require,module,exports){
+},{}],78:[function(require,module,exports){
 'use strict';
 
 if (typeof module !== 'undefined' && module.exports) {
@@ -11660,7 +11758,7 @@ function isWebGLSupported(failIfMajorPerformanceCaveat) {
     }
 }
 
-},{}],78:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 
 var path = require('path');
 
@@ -11722,7 +11820,7 @@ module.exports = {
 
 module.exports.util = "float evaluate_zoom_function_1(const vec4 values, const float t) {\n    if (t < 1.0) {\n        return mix(values[0], values[1], t);\n    } else if (t < 2.0) {\n        return mix(values[1], values[2], t - 1.0);\n    } else {\n        return mix(values[2], values[3], t - 2.0);\n    }\n}\nvec4 evaluate_zoom_function_4(const vec4 value0, const vec4 value1, const vec4 value2, const vec4 value3, const float t) {\n    if (t < 1.0) {\n        return mix(value0, value1, t);\n    } else if (t < 2.0) {\n        return mix(value1, value2, t - 1.0);\n    } else {\n        return mix(value2, value3, t - 2.0);\n    }\n}\n";
 
-},{"path":214}],79:[function(require,module,exports){
+},{"path":215}],80:[function(require,module,exports){
 'use strict';
 
 var format = require('util').format;
@@ -11740,7 +11838,7 @@ function ValidationError(key, value /*, message, ...*/) {
 
 module.exports = ValidationError;
 
-},{"util":386}],80:[function(require,module,exports){
+},{"util":387}],81:[function(require,module,exports){
 'use strict';
 
 module.exports = function (output) {
@@ -11753,7 +11851,7 @@ module.exports = function (output) {
     return output;
 };
 
-},{}],81:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 'use strict';
 
 module.exports = function getType(val) {
@@ -11772,7 +11870,7 @@ module.exports = function getType(val) {
     }
 };
 
-},{}],82:[function(require,module,exports){
+},{}],83:[function(require,module,exports){
 'use strict';
 
 // Turn jsonlint-lines-primitives objects into primitive objects
@@ -11784,7 +11882,7 @@ module.exports = function unbundle(value) {
     }
 };
 
-},{}],83:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -11851,7 +11949,7 @@ module.exports = function validate(options) {
     }
 };
 
-},{"../error/validation_error":79,"../util/extend":80,"../util/get_type":81,"./validate_array":84,"./validate_boolean":85,"./validate_color":86,"./validate_constants":87,"./validate_enum":88,"./validate_filter":89,"./validate_function":90,"./validate_layer":92,"./validate_number":94,"./validate_object":95,"./validate_source":97,"./validate_string":98}],84:[function(require,module,exports){
+},{"../error/validation_error":80,"../util/extend":81,"../util/get_type":82,"./validate_array":85,"./validate_boolean":86,"./validate_color":87,"./validate_constants":88,"./validate_enum":89,"./validate_filter":90,"./validate_function":91,"./validate_layer":93,"./validate_number":95,"./validate_object":96,"./validate_source":98,"./validate_string":99}],85:[function(require,module,exports){
 'use strict';
 
 var getType = require('../util/get_type');
@@ -11905,7 +12003,7 @@ module.exports = function validateArray(options) {
     return errors;
 };
 
-},{"../error/validation_error":79,"../util/get_type":81,"./validate":83}],85:[function(require,module,exports){
+},{"../error/validation_error":80,"../util/get_type":82,"./validate":84}],86:[function(require,module,exports){
 'use strict';
 
 var getType = require('../util/get_type');
@@ -11923,7 +12021,7 @@ module.exports = function validateBoolean(options) {
     return [];
 };
 
-},{"../error/validation_error":79,"../util/get_type":81}],86:[function(require,module,exports){
+},{"../error/validation_error":80,"../util/get_type":82}],87:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -11946,7 +12044,7 @@ module.exports = function validateColor(options) {
     return [];
 };
 
-},{"../error/validation_error":79,"../util/get_type":81,"csscolorparser":14}],87:[function(require,module,exports){
+},{"../error/validation_error":80,"../util/get_type":82,"csscolorparser":15}],88:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -11980,7 +12078,7 @@ module.exports = function validateConstants(options) {
 
 };
 
-},{"../error/validation_error":79,"../util/get_type":81}],88:[function(require,module,exports){
+},{"../error/validation_error":80,"../util/get_type":82}],89:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -11998,7 +12096,7 @@ module.exports = function validateEnum(options) {
     return errors;
 };
 
-},{"../error/validation_error":79,"../util/unbundle_jsonlint":82}],89:[function(require,module,exports){
+},{"../error/validation_error":80,"../util/unbundle_jsonlint":83}],90:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -12103,7 +12201,7 @@ module.exports = function validateFilter(options) {
     return errors;
 };
 
-},{"../error/validation_error":79,"../util/get_type":81,"../util/unbundle_jsonlint":82,"./validate_enum":88}],90:[function(require,module,exports){
+},{"../error/validation_error":80,"../util/get_type":82,"../util/unbundle_jsonlint":83,"./validate_enum":89}],91:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -12237,7 +12335,7 @@ module.exports = function validateFunction(options) {
 
 };
 
-},{"../error/validation_error":79,"../util/get_type":81,"./validate":83,"./validate_array":84,"./validate_number":94,"./validate_object":95}],91:[function(require,module,exports){
+},{"../error/validation_error":80,"../util/get_type":82,"./validate":84,"./validate_array":85,"./validate_number":95,"./validate_object":96}],92:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -12261,7 +12359,7 @@ module.exports = function(options) {
     return errors;
 };
 
-},{"../error/validation_error":79,"./validate_string":98}],92:[function(require,module,exports){
+},{"../error/validation_error":80,"./validate_string":99}],93:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -12374,7 +12472,7 @@ module.exports = function validateLayer(options) {
     return errors;
 };
 
-},{"../error/validation_error":79,"../util/extend":80,"../util/unbundle_jsonlint":82,"./validate_filter":89,"./validate_layout_property":93,"./validate_object":95,"./validate_paint_property":96}],93:[function(require,module,exports){
+},{"../error/validation_error":80,"../util/extend":81,"../util/unbundle_jsonlint":83,"./validate_filter":90,"./validate_layout_property":94,"./validate_object":96,"./validate_paint_property":97}],94:[function(require,module,exports){
 'use strict';
 
 var validate = require('./validate');
@@ -12413,7 +12511,7 @@ module.exports = function validateLayoutProperty(options) {
 
 };
 
-},{"../error/validation_error":79,"./validate":83}],94:[function(require,module,exports){
+},{"../error/validation_error":80,"./validate":84}],95:[function(require,module,exports){
 'use strict';
 
 var getType = require('../util/get_type');
@@ -12440,7 +12538,7 @@ module.exports = function validateNumber(options) {
     return [];
 };
 
-},{"../error/validation_error":79,"../util/get_type":81}],95:[function(require,module,exports){
+},{"../error/validation_error":80,"../util/get_type":82}],96:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -12493,7 +12591,7 @@ module.exports = function validateObject(options) {
     return errors;
 };
 
-},{"../error/validation_error":79,"../util/get_type":81,"./validate":83}],96:[function(require,module,exports){
+},{"../error/validation_error":80,"../util/get_type":82,"./validate":84}],97:[function(require,module,exports){
 'use strict';
 
 var validate = require('./validate');
@@ -12533,7 +12631,7 @@ module.exports = function validatePaintProperty(options) {
 
 };
 
-},{"../error/validation_error":79,"./validate":83}],97:[function(require,module,exports){
+},{"../error/validation_error":80,"./validate":84}],98:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -12610,7 +12708,7 @@ module.exports = function validateSource(options) {
     }
 };
 
-},{"../error/validation_error":79,"../util/unbundle_jsonlint":82,"./validate_enum":88,"./validate_object":95}],98:[function(require,module,exports){
+},{"../error/validation_error":80,"../util/unbundle_jsonlint":83,"./validate_enum":89,"./validate_object":96}],99:[function(require,module,exports){
 'use strict';
 
 var getType = require('../util/get_type');
@@ -12628,7 +12726,7 @@ module.exports = function validateString(options) {
     return [];
 };
 
-},{"../error/validation_error":79,"../util/get_type":81}],99:[function(require,module,exports){
+},{"../error/validation_error":80,"../util/get_type":82}],100:[function(require,module,exports){
 'use strict';
 
 var validateConstants = require('./validate/validate_constants');
@@ -12698,13 +12796,13 @@ function wrapCleanErrors(inner) {
 
 module.exports = validateStyleMin;
 
-},{"../reference/latest.min":101,"./validate/validate":83,"./validate/validate_constants":87,"./validate/validate_filter":89,"./validate/validate_glyphs_url":91,"./validate/validate_layer":92,"./validate/validate_layout_property":93,"./validate/validate_paint_property":96,"./validate/validate_source":97}],100:[function(require,module,exports){
+},{"../reference/latest.min":102,"./validate/validate":84,"./validate/validate_constants":88,"./validate/validate_filter":90,"./validate/validate_glyphs_url":92,"./validate/validate_layer":93,"./validate/validate_layout_property":94,"./validate/validate_paint_property":97,"./validate/validate_source":98}],101:[function(require,module,exports){
 module.exports = require('./v8.json');
 
-},{"./v8.json":102}],101:[function(require,module,exports){
+},{"./v8.json":103}],102:[function(require,module,exports){
 module.exports = require('./v8.min.json');
 
-},{"./v8.min.json":103}],102:[function(require,module,exports){
+},{"./v8.min.json":104}],103:[function(require,module,exports){
 module.exports={
   "$version": 8,
   "$root": {
@@ -14316,9 +14414,9 @@ module.exports={
   }
 }
 
-},{}],103:[function(require,module,exports){
-module.exports={"$version":8,"$root":{"version":{"required":true,"type":"enum","values":[8]},"name":{"type":"string"},"metadata":{"type":"*"},"center":{"type":"array","value":"number"},"zoom":{"type":"number"},"bearing":{"type":"number","default":0,"period":360,"units":"degrees"},"pitch":{"type":"number","default":0,"units":"degrees"},"sources":{"required":true,"type":"sources"},"sprite":{"type":"string"},"glyphs":{"type":"string"},"transition":{"type":"transition"},"layers":{"required":true,"type":"array","value":"layer"}},"sources":{"*":{"type":"source"}},"source":["source_tile","source_geojson","source_video","source_image"],"source_tile":{"type":{"required":true,"type":"enum","values":["vector","raster"]},"url":{"type":"string"},"tiles":{"type":"array","value":"string"},"minzoom":{"type":"number","default":0},"maxzoom":{"type":"number","default":22},"tileSize":{"type":"number","default":512,"units":"pixels"},"*":{"type":"*"}},"source_geojson":{"type":{"required":true,"type":"enum","values":["geojson"]},"data":{"type":"*"},"maxzoom":{"type":"number","default":14},"buffer":{"type":"number","default":64},"tolerance":{"type":"number","default":3},"cluster":{"type":"boolean","default":false},"clusterRadius":{"type":"number","default":400},"clusterMaxZoom":{"type":"number"}},"source_video":{"type":{"required":true,"type":"enum","values":["video"]},"urls":{"required":true,"type":"array","value":"string"},"coordinates":{"required":true,"type":"array","length":4,"value":{"type":"array","length":2,"value":"number"}}},"source_image":{"type":{"required":true,"type":"enum","values":["image"]},"url":{"required":true,"type":"string"},"coordinates":{"required":true,"type":"array","length":4,"value":{"type":"array","length":2,"value":"number"}}},"layer":{"id":{"type":"string","required":true},"type":{"type":"enum","values":["fill","line","symbol","circle","raster","background"]},"metadata":{"type":"*"},"ref":{"type":"string"},"source":{"type":"string"},"source-layer":{"type":"string"},"minzoom":{"type":"number","minimum":0,"maximum":22},"maxzoom":{"type":"number","minimum":0,"maximum":22},"interactive":{"type":"boolean","default":false},"filter":{"type":"filter"},"layout":{"type":"layout"},"paint":{"type":"paint"},"paint.*":{"type":"paint"}},"layout":["layout_fill","layout_line","layout_circle","layout_symbol","layout_raster","layout_background"],"layout_background":{"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_fill":{"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_circle":{"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_line":{"line-cap":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["butt","round","square"],"default":"butt"},"line-join":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["bevel","round","miter"],"default":"miter"},"line-miter-limit":{"type":"number","default":2,"function":"interpolated","zoom-function":true,"property-function":true,"requires":[{"line-join":"miter"}]},"line-round-limit":{"type":"number","default":1.05,"function":"interpolated","zoom-function":true,"property-function":true,"requires":[{"line-join":"round"}]},"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_symbol":{"symbol-placement":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["point","line"],"default":"point"},"symbol-spacing":{"type":"number","default":250,"minimum":1,"function":"interpolated","zoom-function":true,"property-function":true,"units":"pixels","requires":[{"symbol-placement":"line"}]},"symbol-avoid-edges":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false},"icon-allow-overlap":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["icon-image"]},"icon-ignore-placement":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["icon-image"]},"icon-optional":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["icon-image","text-field"]},"icon-rotation-alignment":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"viewport","requires":["icon-image"]},"icon-size":{"type":"number","default":1,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"requires":["icon-image"]},"icon-text-fit":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":false,"values":["none","both","width","height"],"default":"none","requires":["icon-image","text-field"]},"icon-text-fit-padding":{"type":"array","value":"number","length":4,"default":[0,0,0,0],"units":"pixels","function":"interpolated","zoom-function":true,"property-function":true,"requires":["icon-image","icon-text-fit","text-field"]},"icon-image":{"type":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"tokens":true},"icon-rotate":{"type":"number","default":0,"period":360,"function":"interpolated","zoom-function":true,"property-function":true,"units":"degrees","requires":["icon-image"]},"icon-padding":{"type":"number","default":2,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"units":"pixels","requires":["icon-image"]},"icon-keep-upright":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["icon-image",{"icon-rotation-alignment":"map"},{"symbol-placement":"line"}]},"icon-offset":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"requires":["icon-image"]},"text-pitch-alignment":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"requires":["text-field"]},"text-rotation-alignment":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"viewport","requires":["text-field"]},"text-field":{"type":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":"","tokens":true},"text-font":{"type":"array","value":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":["Open Sans Regular","Arial Unicode MS Regular"],"requires":["text-field"]},"text-size":{"type":"number","default":16,"minimum":0,"units":"pixels","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-max-width":{"type":"number","default":10,"minimum":0,"units":"em","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-line-height":{"type":"number","default":1.2,"units":"em","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-letter-spacing":{"type":"number","default":0,"units":"em","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-justify":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["left","center","right"],"default":"center","requires":["text-field"]},"text-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["center","left","right","top","bottom","top-left","top-right","bottom-left","bottom-right"],"default":"center","requires":["text-field"]},"text-max-angle":{"type":"number","default":45,"units":"degrees","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field",{"symbol-placement":"line"}]},"text-rotate":{"type":"number","default":0,"period":360,"units":"degrees","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-padding":{"type":"number","default":2,"minimum":0,"units":"pixels","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-keep-upright":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":true,"requires":["text-field",{"text-rotation-alignment":"map"},{"symbol-placement":"line"}]},"text-transform":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["none","uppercase","lowercase"],"default":"none","requires":["text-field"]},"text-offset":{"type":"array","value":"number","units":"ems","function":"interpolated","zoom-function":true,"property-function":true,"length":2,"default":[0,0],"requires":["text-field"]},"text-allow-overlap":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["text-field"]},"text-ignore-placement":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["text-field"]},"text-optional":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["text-field","icon-image"]},"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_raster":{"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"filter":{"type":"array","value":"*"},"filter_operator":{"type":"enum","values":["==","!=",">",">=","<","<=","in","!in","all","any","none","has","!has"]},"geometry_type":{"type":"enum","values":["Point","LineString","Polygon"]},"color_operation":{"type":"enum","values":["lighten","saturate","spin","fade","mix"]},"function":{"stops":{"type":"array","required":true,"value":"function_stop"},"base":{"type":"number","default":1,"minimum":0},"property":{"type":"string","default":"$zoom"},"type":{"type":"enum","values":["exponential","interval","categorical"],"default":"exponential"}},"function_stop":{"type":"array","minimum":0,"maximum":22,"value":["number","color"],"length":2},"paint":["paint_fill","paint_line","paint_circle","paint_symbol","paint_raster","paint_background"],"paint_fill":{"fill-antialias":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":true},"fill-opacity":{"type":"number","function":"interpolated","zoom-function":true,"property-function":true,"default":1,"minimum":0,"maximum":1,"transition":true},"fill-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":[{"!":"fill-pattern"}]},"fill-outline-color":{"type":"color","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":[{"!":"fill-pattern"},{"fill-antialias":true}]},"fill-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"fill-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["fill-translate"]},"fill-pattern":{"type":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"transition":true}},"paint_line":{"line-opacity":{"type":"number","function":"interpolated","zoom-function":true,"property-function":true,"default":1,"minimum":0,"maximum":1,"transition":true},"line-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":[{"!":"line-pattern"}]},"line-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["line-translate"]},"line-width":{"type":"number","default":1,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-gap-width":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-offset":{"type":"number","default":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-blur":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-dasharray":{"type":"array","value":"number","function":"piecewise-constant","zoom-function":true,"property-function":true,"minimum":0,"transition":true,"units":"line widths","requires":[{"!":"line-pattern"}]},"line-pattern":{"type":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"transition":true}},"paint_circle":{"circle-radius":{"type":"number","default":5,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"circle-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true},"circle-blur":{"type":"number","default":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true},"circle-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true},"circle-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"circle-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["circle-translate"]}},"paint_symbol":{"icon-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["icon-image"]},"icon-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["icon-image"]},"icon-halo-color":{"type":"color","default":"rgba(0, 0, 0, 0)","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["icon-image"]},"icon-halo-width":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["icon-image"]},"icon-halo-blur":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["icon-image"]},"icon-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["icon-image"]},"icon-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["icon-image","icon-translate"]},"text-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["text-field"]},"text-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["text-field"]},"text-halo-color":{"type":"color","default":"rgba(0, 0, 0, 0)","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["text-field"]},"text-halo-width":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["text-field"]},"text-halo-blur":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["text-field"]},"text-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["text-field"]},"text-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["text-field","text-translate"]}},"paint_raster":{"raster-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"transition":true},"raster-hue-rotate":{"type":"number","default":0,"period":360,"function":"interpolated","zoom-function":true,"transition":true,"units":"degrees"},"raster-brightness-min":{"type":"number","function":"interpolated","zoom-function":true,"default":0,"minimum":0,"maximum":1,"transition":true},"raster-brightness-max":{"type":"number","function":"interpolated","zoom-function":true,"default":1,"minimum":0,"maximum":1,"transition":true},"raster-saturation":{"type":"number","default":0,"minimum":-1,"maximum":1,"function":"interpolated","zoom-function":true,"transition":true},"raster-contrast":{"type":"number","default":0,"minimum":-1,"maximum":1,"function":"interpolated","zoom-function":true,"transition":true},"raster-fade-duration":{"type":"number","default":300,"minimum":0,"function":"interpolated","zoom-function":true,"transition":true,"units":"milliseconds"}},"paint_background":{"background-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"transition":true,"requires":[{"!":"background-pattern"}]},"background-pattern":{"type":"string","function":"piecewise-constant","zoom-function":true,"transition":true},"background-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"transition":true}},"transition":{"duration":{"type":"number","default":300,"minimum":0,"units":"milliseconds"},"delay":{"type":"number","default":0,"minimum":0,"units":"milliseconds"}}}
 },{}],104:[function(require,module,exports){
+module.exports={"$version":8,"$root":{"version":{"required":true,"type":"enum","values":[8]},"name":{"type":"string"},"metadata":{"type":"*"},"center":{"type":"array","value":"number"},"zoom":{"type":"number"},"bearing":{"type":"number","default":0,"period":360,"units":"degrees"},"pitch":{"type":"number","default":0,"units":"degrees"},"sources":{"required":true,"type":"sources"},"sprite":{"type":"string"},"glyphs":{"type":"string"},"transition":{"type":"transition"},"layers":{"required":true,"type":"array","value":"layer"}},"sources":{"*":{"type":"source"}},"source":["source_tile","source_geojson","source_video","source_image"],"source_tile":{"type":{"required":true,"type":"enum","values":["vector","raster"]},"url":{"type":"string"},"tiles":{"type":"array","value":"string"},"minzoom":{"type":"number","default":0},"maxzoom":{"type":"number","default":22},"tileSize":{"type":"number","default":512,"units":"pixels"},"*":{"type":"*"}},"source_geojson":{"type":{"required":true,"type":"enum","values":["geojson"]},"data":{"type":"*"},"maxzoom":{"type":"number","default":14},"buffer":{"type":"number","default":64},"tolerance":{"type":"number","default":3},"cluster":{"type":"boolean","default":false},"clusterRadius":{"type":"number","default":400},"clusterMaxZoom":{"type":"number"}},"source_video":{"type":{"required":true,"type":"enum","values":["video"]},"urls":{"required":true,"type":"array","value":"string"},"coordinates":{"required":true,"type":"array","length":4,"value":{"type":"array","length":2,"value":"number"}}},"source_image":{"type":{"required":true,"type":"enum","values":["image"]},"url":{"required":true,"type":"string"},"coordinates":{"required":true,"type":"array","length":4,"value":{"type":"array","length":2,"value":"number"}}},"layer":{"id":{"type":"string","required":true},"type":{"type":"enum","values":["fill","line","symbol","circle","raster","background"]},"metadata":{"type":"*"},"ref":{"type":"string"},"source":{"type":"string"},"source-layer":{"type":"string"},"minzoom":{"type":"number","minimum":0,"maximum":22},"maxzoom":{"type":"number","minimum":0,"maximum":22},"interactive":{"type":"boolean","default":false},"filter":{"type":"filter"},"layout":{"type":"layout"},"paint":{"type":"paint"},"paint.*":{"type":"paint"}},"layout":["layout_fill","layout_line","layout_circle","layout_symbol","layout_raster","layout_background"],"layout_background":{"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_fill":{"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_circle":{"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_line":{"line-cap":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["butt","round","square"],"default":"butt"},"line-join":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["bevel","round","miter"],"default":"miter"},"line-miter-limit":{"type":"number","default":2,"function":"interpolated","zoom-function":true,"property-function":true,"requires":[{"line-join":"miter"}]},"line-round-limit":{"type":"number","default":1.05,"function":"interpolated","zoom-function":true,"property-function":true,"requires":[{"line-join":"round"}]},"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_symbol":{"symbol-placement":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["point","line"],"default":"point"},"symbol-spacing":{"type":"number","default":250,"minimum":1,"function":"interpolated","zoom-function":true,"property-function":true,"units":"pixels","requires":[{"symbol-placement":"line"}]},"symbol-avoid-edges":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false},"icon-allow-overlap":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["icon-image"]},"icon-ignore-placement":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["icon-image"]},"icon-optional":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["icon-image","text-field"]},"icon-rotation-alignment":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"viewport","requires":["icon-image"]},"icon-size":{"type":"number","default":1,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"requires":["icon-image"]},"icon-text-fit":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":false,"values":["none","both","width","height"],"default":"none","requires":["icon-image","text-field"]},"icon-text-fit-padding":{"type":"array","value":"number","length":4,"default":[0,0,0,0],"units":"pixels","function":"interpolated","zoom-function":true,"property-function":true,"requires":["icon-image","icon-text-fit","text-field"]},"icon-image":{"type":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"tokens":true},"icon-rotate":{"type":"number","default":0,"period":360,"function":"interpolated","zoom-function":true,"property-function":true,"units":"degrees","requires":["icon-image"]},"icon-padding":{"type":"number","default":2,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"units":"pixels","requires":["icon-image"]},"icon-keep-upright":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["icon-image",{"icon-rotation-alignment":"map"},{"symbol-placement":"line"}]},"icon-offset":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"requires":["icon-image"]},"text-pitch-alignment":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"requires":["text-field"]},"text-rotation-alignment":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"viewport","requires":["text-field"]},"text-field":{"type":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":"","tokens":true},"text-font":{"type":"array","value":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":["Open Sans Regular","Arial Unicode MS Regular"],"requires":["text-field"]},"text-size":{"type":"number","default":16,"minimum":0,"units":"pixels","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-max-width":{"type":"number","default":10,"minimum":0,"units":"em","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-line-height":{"type":"number","default":1.2,"units":"em","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-letter-spacing":{"type":"number","default":0,"units":"em","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-justify":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["left","center","right"],"default":"center","requires":["text-field"]},"text-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["center","left","right","top","bottom","top-left","top-right","bottom-left","bottom-right"],"default":"center","requires":["text-field"]},"text-max-angle":{"type":"number","default":45,"units":"degrees","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field",{"symbol-placement":"line"}]},"text-rotate":{"type":"number","default":0,"period":360,"units":"degrees","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-padding":{"type":"number","default":2,"minimum":0,"units":"pixels","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-keep-upright":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":true,"requires":["text-field",{"text-rotation-alignment":"map"},{"symbol-placement":"line"}]},"text-transform":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["none","uppercase","lowercase"],"default":"none","requires":["text-field"]},"text-offset":{"type":"array","value":"number","units":"ems","function":"interpolated","zoom-function":true,"property-function":true,"length":2,"default":[0,0],"requires":["text-field"]},"text-allow-overlap":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["text-field"]},"text-ignore-placement":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["text-field"]},"text-optional":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["text-field","icon-image"]},"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_raster":{"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"filter":{"type":"array","value":"*"},"filter_operator":{"type":"enum","values":["==","!=",">",">=","<","<=","in","!in","all","any","none","has","!has"]},"geometry_type":{"type":"enum","values":["Point","LineString","Polygon"]},"color_operation":{"type":"enum","values":["lighten","saturate","spin","fade","mix"]},"function":{"stops":{"type":"array","required":true,"value":"function_stop"},"base":{"type":"number","default":1,"minimum":0},"property":{"type":"string","default":"$zoom"},"type":{"type":"enum","values":["exponential","interval","categorical"],"default":"exponential"}},"function_stop":{"type":"array","minimum":0,"maximum":22,"value":["number","color"],"length":2},"paint":["paint_fill","paint_line","paint_circle","paint_symbol","paint_raster","paint_background"],"paint_fill":{"fill-antialias":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":true},"fill-opacity":{"type":"number","function":"interpolated","zoom-function":true,"property-function":true,"default":1,"minimum":0,"maximum":1,"transition":true},"fill-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":[{"!":"fill-pattern"}]},"fill-outline-color":{"type":"color","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":[{"!":"fill-pattern"},{"fill-antialias":true}]},"fill-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"fill-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["fill-translate"]},"fill-pattern":{"type":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"transition":true}},"paint_line":{"line-opacity":{"type":"number","function":"interpolated","zoom-function":true,"property-function":true,"default":1,"minimum":0,"maximum":1,"transition":true},"line-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":[{"!":"line-pattern"}]},"line-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["line-translate"]},"line-width":{"type":"number","default":1,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-gap-width":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-offset":{"type":"number","default":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-blur":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-dasharray":{"type":"array","value":"number","function":"piecewise-constant","zoom-function":true,"property-function":true,"minimum":0,"transition":true,"units":"line widths","requires":[{"!":"line-pattern"}]},"line-pattern":{"type":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"transition":true}},"paint_circle":{"circle-radius":{"type":"number","default":5,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"circle-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true},"circle-blur":{"type":"number","default":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true},"circle-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true},"circle-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"circle-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["circle-translate"]}},"paint_symbol":{"icon-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["icon-image"]},"icon-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["icon-image"]},"icon-halo-color":{"type":"color","default":"rgba(0, 0, 0, 0)","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["icon-image"]},"icon-halo-width":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["icon-image"]},"icon-halo-blur":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["icon-image"]},"icon-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["icon-image"]},"icon-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["icon-image","icon-translate"]},"text-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["text-field"]},"text-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["text-field"]},"text-halo-color":{"type":"color","default":"rgba(0, 0, 0, 0)","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["text-field"]},"text-halo-width":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["text-field"]},"text-halo-blur":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["text-field"]},"text-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["text-field"]},"text-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["text-field","text-translate"]}},"paint_raster":{"raster-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"transition":true},"raster-hue-rotate":{"type":"number","default":0,"period":360,"function":"interpolated","zoom-function":true,"transition":true,"units":"degrees"},"raster-brightness-min":{"type":"number","function":"interpolated","zoom-function":true,"default":0,"minimum":0,"maximum":1,"transition":true},"raster-brightness-max":{"type":"number","function":"interpolated","zoom-function":true,"default":1,"minimum":0,"maximum":1,"transition":true},"raster-saturation":{"type":"number","default":0,"minimum":-1,"maximum":1,"function":"interpolated","zoom-function":true,"transition":true},"raster-contrast":{"type":"number","default":0,"minimum":-1,"maximum":1,"function":"interpolated","zoom-function":true,"transition":true},"raster-fade-duration":{"type":"number","default":300,"minimum":0,"function":"interpolated","zoom-function":true,"transition":true,"units":"milliseconds"}},"paint_background":{"background-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"transition":true,"requires":[{"!":"background-pattern"}]},"background-pattern":{"type":"string","function":"piecewise-constant","zoom-function":true,"transition":true},"background-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"transition":true}},"transition":{"duration":{"type":"number","default":300,"minimum":0,"units":"milliseconds"},"delay":{"type":"number","default":0,"minimum":0,"units":"milliseconds"}}}
+},{}],105:[function(require,module,exports){
 'use strict';
 
 var featureFilter = require('feature-filter');
@@ -14860,7 +14958,7 @@ function createGetUniform(attribute, stopOffset) {
     };
 }
 
-},{"../render/vertex_array_object":131,"../util/struct_array":208,"../util/util":210,"./bucket/circle_bucket":105,"./bucket/fill_bucket":106,"./bucket/line_bucket":107,"./bucket/symbol_bucket":108,"./buffer":109,"assert":13,"feature-filter":42}],105:[function(require,module,exports){
+},{"../render/vertex_array_object":132,"../util/struct_array":209,"../util/util":211,"./bucket/circle_bucket":106,"./bucket/fill_bucket":107,"./bucket/line_bucket":108,"./bucket/symbol_bucket":109,"./buffer":110,"assert":14,"feature-filter":43}],106:[function(require,module,exports){
 'use strict';
 
 var Bucket = require('../bucket');
@@ -14983,7 +15081,7 @@ CircleBucket.prototype.addFeature = function(feature) {
     this.populatePaintArrays('circle', globalProperties, feature.properties, startGroup, startIndex);
 };
 
-},{"../../util/util":210,"../bucket":104,"../load_geometry":111}],106:[function(require,module,exports){
+},{"../../util/util":211,"../bucket":105,"../load_geometry":112}],107:[function(require,module,exports){
 'use strict';
 
 var Bucket = require('../bucket');
@@ -15088,7 +15186,7 @@ FillBucket.prototype.addPolygon = function(polygon) {
     }
 };
 
-},{"../../util/classify_rings":199,"../../util/util":210,"../bucket":104,"../load_geometry":111,"earcut":15}],107:[function(require,module,exports){
+},{"../../util/classify_rings":200,"../../util/util":211,"../bucket":105,"../load_geometry":112,"earcut":16}],108:[function(require,module,exports){
 'use strict';
 
 var Bucket = require('../bucket');
@@ -15517,7 +15615,7 @@ LineBucket.prototype.addPieSliceVertex = function(currentVertex, distance, extru
     }
 };
 
-},{"../../util/util":210,"../bucket":104,"../load_geometry":111}],108:[function(require,module,exports){
+},{"../../util/util":211,"../bucket":105,"../load_geometry":112}],109:[function(require,module,exports){
 'use strict';
 
 var Point = require('point-geometry');
@@ -16151,7 +16249,7 @@ SymbolBucket.prototype.addSymbolQuad = function(symbolQuad) {
 };
 
 
-},{"../../symbol/anchor":161,"../../symbol/clip_line":163,"../../symbol/collision_feature":165,"../../symbol/get_anchors":167,"../../symbol/mergelines":170,"../../symbol/quads":171,"../../symbol/resolve_text":172,"../../symbol/shaping":173,"../../util/token":209,"../../util/util":210,"../bucket":104,"../load_geometry":111,"point-geometry":217}],109:[function(require,module,exports){
+},{"../../symbol/anchor":162,"../../symbol/clip_line":164,"../../symbol/collision_feature":166,"../../symbol/get_anchors":168,"../../symbol/mergelines":171,"../../symbol/quads":172,"../../symbol/resolve_text":173,"../../symbol/shaping":174,"../../util/token":210,"../../util/util":211,"../bucket":105,"../load_geometry":112,"point-geometry":218}],110:[function(require,module,exports){
 'use strict';
 
 module.exports = Buffer;
@@ -16268,7 +16366,7 @@ Buffer.ELEMENT_ATTRIBUTE_TYPE = 'Uint16';
  */
 Buffer.VERTEX_ATTRIBUTE_ALIGNMENT = 4;
 
-},{}],110:[function(require,module,exports){
+},{}],111:[function(require,module,exports){
 'use strict';
 
 var Point = require('point-geometry');
@@ -16569,7 +16667,7 @@ function offsetLine(rings, offset) {
     return newRings;
 }
 
-},{"../util/dictionary_coder":201,"../util/intersection_tests":205,"../util/struct_array":208,"../util/util":210,"../util/vectortile_to_geojson":211,"./bucket":104,"./load_geometry":111,"feature-filter":42,"grid-index":62,"pbf":216,"point-geometry":217,"vector-tile":387}],111:[function(require,module,exports){
+},{"../util/dictionary_coder":202,"../util/intersection_tests":206,"../util/struct_array":209,"../util/util":211,"../util/vectortile_to_geojson":212,"./bucket":105,"./load_geometry":112,"feature-filter":43,"grid-index":63,"pbf":217,"point-geometry":218,"vector-tile":388}],112:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -16606,7 +16704,7 @@ module.exports = function loadGeometry(feature) {
     return geometry;
 };
 
-},{"../util/util":210,"./bucket":104}],112:[function(require,module,exports){
+},{"../util/util":211,"./bucket":105}],113:[function(require,module,exports){
 'use strict';
 
 module.exports = Coordinate;
@@ -16685,7 +16783,7 @@ Coordinate.prototype = {
     }
 };
 
-},{}],113:[function(require,module,exports){
+},{}],114:[function(require,module,exports){
 'use strict';
 
 module.exports = LngLat;
@@ -16779,7 +16877,7 @@ LngLat.convert = function (input) {
     return input;
 };
 
-},{"../util/util":210}],114:[function(require,module,exports){
+},{"../util/util":211}],115:[function(require,module,exports){
 'use strict';
 
 module.exports = LngLatBounds;
@@ -16953,7 +17051,7 @@ LngLatBounds.convert = function (input) {
     return new LngLatBounds(input);
 };
 
-},{"./lng_lat":113}],115:[function(require,module,exports){
+},{"./lng_lat":114}],116:[function(require,module,exports){
 'use strict';
 
 var LngLat = require('./lng_lat'),
@@ -17380,7 +17478,7 @@ Transform.prototype = {
     }
 };
 
-},{"../data/bucket":104,"../source/tile_coord":139,"../util/interpolate":204,"../util/util":210,"./coordinate":112,"./lng_lat":113,"gl-matrix":52,"point-geometry":217}],116:[function(require,module,exports){
+},{"../data/bucket":105,"../source/tile_coord":140,"../util/interpolate":205,"../util/util":211,"./coordinate":113,"./lng_lat":114,"gl-matrix":53,"point-geometry":218}],117:[function(require,module,exports){
 'use strict';
 
 // Font data From Hershey Simplex Font
@@ -17513,7 +17611,7 @@ module.exports = function textVertices(text, left, baseline, scale) {
     return strokes;
 };
 
-},{}],117:[function(require,module,exports){
+},{}],118:[function(require,module,exports){
 'use strict';
 
 // jshint -W079
@@ -17555,7 +17653,7 @@ Object.defineProperty(mapboxgl, 'accessToken', {
     set: function(token) { config.ACCESS_TOKEN = token; }
 });
 
-},{"../package.json":212,"./geo/lng_lat":113,"./geo/lng_lat_bounds":114,"./source/geojson_source":132,"./source/image_source":134,"./source/video_source":142,"./style/style":148,"./ui/control/attribution":179,"./ui/control/control":180,"./ui/control/geolocate":181,"./ui/control/navigation":182,"./ui/map":191,"./ui/popup":192,"./util/ajax":194,"./util/browser":195,"./util/config":200,"./util/evented":202,"./util/util":210,"point-geometry":217}],118:[function(require,module,exports){
+},{"../package.json":213,"./geo/lng_lat":114,"./geo/lng_lat_bounds":115,"./source/geojson_source":133,"./source/image_source":135,"./source/video_source":143,"./style/style":149,"./ui/control/attribution":180,"./ui/control/control":181,"./ui/control/geolocate":182,"./ui/control/navigation":183,"./ui/map":192,"./ui/popup":193,"./util/ajax":195,"./util/browser":196,"./util/config":201,"./util/evented":203,"./util/util":211,"point-geometry":218}],119:[function(require,module,exports){
 'use strict';
 
 var assert = require('assert');
@@ -17575,7 +17673,7 @@ module.exports = function(uniforms) {
     return pragmas;
 };
 
-},{"assert":13}],119:[function(require,module,exports){
+},{"assert":14}],120:[function(require,module,exports){
 'use strict';
 
 var TilePyramid = require('../source/tile_pyramid');
@@ -17666,7 +17764,7 @@ function drawBackground(painter, source, layer) {
     gl.stencilFunc(gl.EQUAL, 0x80, 0x80);
 }
 
-},{"../source/pixels_to_tile_units":135,"../source/tile_pyramid":140,"./create_uniform_pragmas":118}],120:[function(require,module,exports){
+},{"../source/pixels_to_tile_units":136,"../source/tile_pyramid":141,"./create_uniform_pragmas":119}],121:[function(require,module,exports){
 'use strict';
 
 var browser = require('../util/browser');
@@ -17724,7 +17822,7 @@ function drawCircles(painter, source, layer, coords) {
     }
 }
 
-},{"../util/browser":195}],121:[function(require,module,exports){
+},{"../util/browser":196}],122:[function(require,module,exports){
 'use strict';
 
 module.exports = drawCollisionDebug;
@@ -17759,7 +17857,7 @@ function drawCollisionDebug(painter, source, layer, coords) {
     }
 }
 
-},{}],122:[function(require,module,exports){
+},{}],123:[function(require,module,exports){
 'use strict';
 
 var textVertices = require('../lib/debugtext');
@@ -17820,7 +17918,7 @@ function drawDebugTile(painter, source, coord) {
     gl.drawArrays(gl.LINES, 0, debugTextBuffer.length);
 }
 
-},{"../data/bucket":104,"../data/buffer":109,"../lib/debugtext":116,"../util/browser":195,"./vertex_array_object":131,"gl-matrix":52}],123:[function(require,module,exports){
+},{"../data/bucket":105,"../data/buffer":110,"../lib/debugtext":117,"../util/browser":196,"./vertex_array_object":132,"gl-matrix":53}],124:[function(require,module,exports){
 'use strict';
 
 var pixelsToTileUnits = require('../source/pixels_to_tile_units');
@@ -18018,7 +18116,7 @@ function setPattern(image, opacity, tile, coord, painter, program) {
     painter.spriteAtlas.bind(gl, true);
 }
 
-},{"../source/pixels_to_tile_units":135}],124:[function(require,module,exports){
+},{"../source/pixels_to_tile_units":136}],125:[function(require,module,exports){
 'use strict';
 
 var browser = require('../util/browser');
@@ -18183,7 +18281,7 @@ module.exports = function drawLine(painter, source, layer, coords) {
 
 };
 
-},{"../source/pixels_to_tile_units":135,"../util/browser":195,"gl-matrix":52}],125:[function(require,module,exports){
+},{"../source/pixels_to_tile_units":136,"../util/browser":196,"gl-matrix":53}],126:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -18329,7 +18427,7 @@ function getOpacities(tile, parentTile, layer, transform) {
     return opacity;
 }
 
-},{"../util/struct_array":208,"../util/util":210}],126:[function(require,module,exports){
+},{"../util/struct_array":209,"../util/util":211}],127:[function(require,module,exports){
 'use strict';
 
 var browser = require('../util/browser');
@@ -18530,7 +18628,7 @@ function drawSymbol(painter, layer, posMatrix, tile, bucket, bufferGroups, isTex
     }
 }
 
-},{"../source/pixels_to_tile_units":135,"../util/browser":195,"./draw_collision_debug":121}],127:[function(require,module,exports){
+},{"../source/pixels_to_tile_units":136,"../util/browser":196,"./draw_collision_debug":122}],128:[function(require,module,exports){
 'use strict';
 
 module.exports = FrameHistory;
@@ -18602,7 +18700,7 @@ FrameHistory.prototype.bind = function(gl) {
     }
 };
 
-},{}],128:[function(require,module,exports){
+},{}],129:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -18749,7 +18847,7 @@ LineAtlas.prototype.bind = function(gl) {
     }
 };
 
-},{"../util/util":210}],129:[function(require,module,exports){
+},{"../util/util":211}],130:[function(require,module,exports){
 'use strict';
 
 var browser = require('../util/browser');
@@ -19090,7 +19188,7 @@ Painter.prototype.showOverdrawInspector = function(enabled) {
     }
 };
 
-},{"../data/bucket":104,"../data/buffer":109,"../source/pixels_to_tile_units":135,"../source/tile_pyramid":140,"../util/browser":195,"../util/struct_array":208,"../util/util":210,"./create_uniform_pragmas":118,"./draw_background":119,"./draw_circle":120,"./draw_debug":122,"./draw_fill":123,"./draw_line":124,"./draw_raster":125,"./draw_symbol":126,"./frame_history":127,"./painter/use_program":130,"./vertex_array_object":131,"gl-matrix":52}],130:[function(require,module,exports){
+},{"../data/bucket":105,"../data/buffer":110,"../source/pixels_to_tile_units":136,"../source/tile_pyramid":141,"../util/browser":196,"../util/struct_array":209,"../util/util":211,"./create_uniform_pragmas":119,"./draw_background":120,"./draw_circle":121,"./draw_debug":123,"./draw_fill":124,"./draw_line":125,"./draw_raster":126,"./draw_symbol":127,"./frame_history":128,"./painter/use_program":131,"./vertex_array_object":132,"gl-matrix":53}],131:[function(require,module,exports){
 'use strict';
 
 var assert = require('assert');
@@ -19187,7 +19285,7 @@ function applyPragmas(source, pragmas) {
     });
 }
 
-},{"../../util/util":210,"assert":13,"mapbox-gl-shaders":78}],131:[function(require,module,exports){
+},{"../../util/util":211,"assert":14,"mapbox-gl-shaders":79}],132:[function(require,module,exports){
 'use strict';
 
 var assert = require('assert');
@@ -19285,7 +19383,7 @@ VertexArrayObject.prototype.destroy = function(gl) {
     }
 };
 
-},{"assert":13}],132:[function(require,module,exports){
+},{"assert":14}],133:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -19519,7 +19617,7 @@ GeoJSONSource.prototype = util.inherit(Evented, /** @lends GeoJSONSource.prototy
     }
 });
 
-},{"../data/bucket":104,"../util/evented":202,"../util/util":210,"./source":137,"./tile_pyramid":140,"resolve-url":378}],133:[function(require,module,exports){
+},{"../data/bucket":105,"../util/evented":203,"../util/util":211,"./source":138,"./tile_pyramid":141,"resolve-url":379}],134:[function(require,module,exports){
 'use strict';
 
 var Point = require('point-geometry');
@@ -19595,7 +19693,7 @@ FeatureWrapper.prototype.bbox = function() {
 
 FeatureWrapper.prototype.toGeoJSON = VectorTileFeature.prototype.toGeoJSON;
 
-},{"../data/bucket":104,"point-geometry":217,"vector-tile":387}],134:[function(require,module,exports){
+},{"../data/bucket":105,"point-geometry":218,"vector-tile":388}],135:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -19758,7 +19856,7 @@ ImageSource.prototype = util.inherit(Evented, /** @lends ImageSource.prototype *
     }
 });
 
-},{"../data/bucket":104,"../data/buffer":109,"../geo/lng_lat":113,"../render/draw_raster":125,"../render/vertex_array_object":131,"../util/ajax":194,"../util/evented":202,"../util/util":210,"./tile":138,"./tile_coord":139,"point-geometry":217}],135:[function(require,module,exports){
+},{"../data/bucket":105,"../data/buffer":110,"../geo/lng_lat":114,"../render/draw_raster":126,"../render/vertex_array_object":132,"../util/ajax":195,"../util/evented":203,"../util/util":211,"./tile":139,"./tile_coord":140,"point-geometry":218}],136:[function(require,module,exports){
 'use strict';
 
 var Bucket = require('../data/bucket');
@@ -19783,7 +19881,7 @@ module.exports = function(tile, pixelValue, z) {
 };
 
 
-},{"../data/bucket":104}],136:[function(require,module,exports){
+},{"../data/bucket":105}],137:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -19904,7 +20002,7 @@ RasterTileSource.prototype = util.inherit(Evented, {
     }
 });
 
-},{"../util/ajax":194,"../util/evented":202,"../util/mapbox":207,"../util/util":210,"./source":137}],137:[function(require,module,exports){
+},{"../util/ajax":195,"../util/evented":203,"../util/mapbox":208,"../util/util":211,"./source":138}],138:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -20099,7 +20197,7 @@ exports.is = function(source) {
     return false;
 };
 
-},{"../util/ajax":194,"../util/browser":195,"../util/mapbox":207,"../util/util":210,"./geojson_source":132,"./image_source":134,"./raster_tile_source":136,"./tile_coord":139,"./tile_pyramid":140,"./vector_tile_source":141,"./video_source":142}],138:[function(require,module,exports){
+},{"../util/ajax":195,"../util/browser":196,"../util/mapbox":208,"../util/util":211,"./geojson_source":133,"./image_source":135,"./raster_tile_source":137,"./tile_coord":140,"./tile_pyramid":141,"./vector_tile_source":142,"./video_source":143}],139:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -20291,7 +20389,7 @@ function unserializeBuckets(input, style) {
     return output;
 }
 
-},{"../data/bucket":104,"../data/feature_index":110,"../symbol/collision_box":164,"../symbol/collision_tile":166,"../symbol/symbol_instances":175,"../symbol/symbol_quads":176,"../util/util":210,"../util/vectortile_to_geojson":211,"feature-filter":42,"pbf":216,"vector-tile":387}],139:[function(require,module,exports){
+},{"../data/bucket":105,"../data/feature_index":111,"../symbol/collision_box":165,"../symbol/collision_tile":167,"../symbol/symbol_instances":176,"../symbol/symbol_quads":177,"../util/util":211,"../util/vectortile_to_geojson":212,"feature-filter":43,"pbf":217,"vector-tile":388}],140:[function(require,module,exports){
 'use strict';
 
 var assert = require('assert');
@@ -20474,7 +20572,7 @@ TileCoord.cover = function(z, bounds, actualZ) {
     });
 };
 
-},{"../geo/coordinate":112,"assert":13,"whoots-js":397}],140:[function(require,module,exports){
+},{"../geo/coordinate":113,"assert":14,"whoots-js":398}],141:[function(require,module,exports){
 'use strict';
 
 var Tile = require('./tile');
@@ -20940,7 +21038,7 @@ function compareKeyZoom(a, b) {
     return (a % 32) - (b % 32);
 }
 
-},{"../data/bucket":104,"../geo/coordinate":112,"../util/lru_cache":206,"../util/util":210,"./tile":138,"./tile_coord":139,"point-geometry":217}],141:[function(require,module,exports){
+},{"../data/bucket":105,"../geo/coordinate":113,"../util/lru_cache":207,"../util/util":211,"./tile":139,"./tile_coord":140,"point-geometry":218}],142:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -21069,7 +21167,7 @@ VectorTileSource.prototype = util.inherit(Evented, {
     }
 });
 
-},{"../util/evented":202,"../util/mapbox":207,"../util/util":210,"./source":137}],142:[function(require,module,exports){
+},{"../util/evented":203,"../util/mapbox":208,"../util/util":211,"./source":138}],143:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -21260,7 +21358,7 @@ VideoSource.prototype = util.inherit(Evented, /** @lends VideoSource.prototype *
     }
 });
 
-},{"../data/bucket":104,"../data/buffer":109,"../geo/lng_lat":113,"../render/draw_raster":125,"../render/vertex_array_object":131,"../util/ajax":194,"../util/evented":202,"../util/util":210,"./tile":138,"./tile_coord":139,"point-geometry":217}],143:[function(require,module,exports){
+},{"../data/bucket":105,"../data/buffer":110,"../geo/lng_lat":114,"../render/draw_raster":126,"../render/vertex_array_object":132,"../util/ajax":195,"../util/evented":203,"../util/util":211,"./tile":139,"./tile_coord":140,"point-geometry":218}],144:[function(require,module,exports){
 'use strict';
 
 var Actor = require('../util/actor');
@@ -21503,7 +21601,7 @@ function createLayerFamilies(layers) {
     return families;
 }
 
-},{"../style/style_layer":151,"../util/actor":193,"../util/ajax":194,"../util/util":210,"./geojson_wrapper":133,"./worker_tile":144,"geojson-rewind":44,"geojson-vt":47,"pbf":216,"supercluster":380,"vector-tile":387,"vt-pbf":391}],144:[function(require,module,exports){
+},{"../style/style_layer":152,"../util/actor":194,"../util/ajax":195,"../util/util":211,"./geojson_wrapper":134,"./worker_tile":145,"geojson-rewind":45,"geojson-vt":48,"pbf":217,"supercluster":381,"vector-tile":388,"vt-pbf":392}],145:[function(require,module,exports){
 'use strict';
 
 var FeatureIndex = require('../data/feature_index');
@@ -21810,7 +21908,7 @@ function getLayerId(layer) {
     return layer.id;
 }
 
-},{"../data/bucket":104,"../data/feature_index":110,"../symbol/collision_box":164,"../symbol/collision_tile":166,"../symbol/symbol_instances":175,"../symbol/symbol_quads":176,"../util/dictionary_coder":201,"../util/util":210}],145:[function(require,module,exports){
+},{"../data/bucket":105,"../data/feature_index":111,"../symbol/collision_box":165,"../symbol/collision_tile":167,"../symbol/symbol_instances":176,"../symbol/symbol_quads":177,"../util/dictionary_coder":202,"../util/util":211}],146:[function(require,module,exports){
 'use strict';
 
 module.exports = AnimationLoop;
@@ -21842,7 +21940,7 @@ AnimationLoop.prototype.cancel = function(n) {
     });
 };
 
-},{}],146:[function(require,module,exports){
+},{}],147:[function(require,module,exports){
 'use strict';
 
 var Evented = require('../util/evented');
@@ -21923,7 +22021,7 @@ ImageSprite.prototype.getSpritePosition = function(name) {
     return new SpritePosition();
 };
 
-},{"../util/ajax":194,"../util/browser":195,"../util/evented":202,"../util/mapbox":207}],147:[function(require,module,exports){
+},{"../util/ajax":195,"../util/browser":196,"../util/evented":203,"../util/mapbox":208}],148:[function(require,module,exports){
 'use strict';
 
 var parseColorString = require('csscolorparser').parseCSSColor;
@@ -21965,7 +22063,7 @@ module.exports = function parseColor(input) {
     }
 };
 
-},{"../util/util":210,"./style_function":150,"csscolorparser":14}],148:[function(require,module,exports){
+},{"../util/util":211,"./style_function":151,"csscolorparser":15}],149:[function(require,module,exports){
 'use strict';
 
 var Evented = require('../util/evented');
@@ -22709,7 +22807,7 @@ Style.prototype = util.inherit(Evented, {
     }
 });
 
-},{"../render/line_atlas":128,"../source/source":137,"../symbol/glyph_source":169,"../symbol/sprite_atlas":174,"../util/ajax":194,"../util/browser":195,"../util/dispatcher":197,"../util/evented":202,"../util/mapbox":207,"../util/util":210,"./animation_loop":145,"./image_sprite":146,"./style_function":150,"./style_layer":151,"./style_spec":158,"./validate_style":160}],149:[function(require,module,exports){
+},{"../render/line_atlas":129,"../source/source":138,"../symbol/glyph_source":170,"../symbol/sprite_atlas":175,"../util/ajax":195,"../util/browser":196,"../util/dispatcher":198,"../util/evented":203,"../util/mapbox":208,"../util/util":211,"./animation_loop":146,"./image_sprite":147,"./style_function":151,"./style_layer":152,"./style_spec":159,"./validate_style":161}],150:[function(require,module,exports){
 'use strict';
 
 var MapboxGLFunction = require('./style_function');
@@ -22795,7 +22893,7 @@ function transitioned(calculate) {
     };
 }
 
-},{"../util/util":210,"./parse_color":147,"./style_function":150}],150:[function(require,module,exports){
+},{"../util/util":211,"./parse_color":148,"./style_function":151}],151:[function(require,module,exports){
 'use strict';
 
 var MapboxGLFunction = require('mapbox-gl-function');
@@ -22822,7 +22920,7 @@ exports['piecewise-constant'] = function(parameters) {
 
 exports.isFunctionDefinition = MapboxGLFunction.isFunctionDefinition;
 
-},{"mapbox-gl-function":76}],151:[function(require,module,exports){
+},{"mapbox-gl-function":77}],152:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -23159,7 +23257,7 @@ function getDeclarationValue(declaration) {
     return declaration.value;
 }
 
-},{"../util/evented":202,"../util/util":210,"./parse_color":147,"./style_declaration":149,"./style_layer/background_style_layer":152,"./style_layer/circle_style_layer":153,"./style_layer/fill_style_layer":154,"./style_layer/line_style_layer":155,"./style_layer/raster_style_layer":156,"./style_layer/symbol_style_layer":157,"./style_spec":158,"./style_transition":159,"./validate_style":160}],152:[function(require,module,exports){
+},{"../util/evented":203,"../util/util":211,"./parse_color":148,"./style_declaration":150,"./style_layer/background_style_layer":153,"./style_layer/circle_style_layer":154,"./style_layer/fill_style_layer":155,"./style_layer/line_style_layer":156,"./style_layer/raster_style_layer":157,"./style_layer/symbol_style_layer":158,"./style_spec":159,"./style_transition":160,"./validate_style":161}],153:[function(require,module,exports){
 'use strict';
 
 var util = require('../../util/util');
@@ -23173,7 +23271,7 @@ module.exports = BackgroundStyleLayer;
 
 BackgroundStyleLayer.prototype = util.inherit(StyleLayer, {});
 
-},{"../../util/util":210,"../style_layer":151}],153:[function(require,module,exports){
+},{"../../util/util":211,"../style_layer":152}],154:[function(require,module,exports){
 'use strict';
 
 var util = require('../../util/util');
@@ -23187,7 +23285,7 @@ module.exports = CircleStyleLayer;
 
 CircleStyleLayer.prototype = util.inherit(StyleLayer, {});
 
-},{"../../util/util":210,"../style_layer":151}],154:[function(require,module,exports){
+},{"../../util/util":211,"../style_layer":152}],155:[function(require,module,exports){
 'use strict';
 
 var util = require('../../util/util');
@@ -23243,7 +23341,7 @@ FillStyleLayer.prototype = util.inherit(StyleLayer, {
 
 module.exports = FillStyleLayer;
 
-},{"../../util/util":210,"../style_layer":151}],155:[function(require,module,exports){
+},{"../../util/util":211,"../style_layer":152}],156:[function(require,module,exports){
 'use strict';
 
 var util = require('../../util/util');
@@ -23277,7 +23375,7 @@ LineStyleLayer.prototype = util.inherit(StyleLayer, {
     }
 });
 
-},{"../../util/util":210,"../style_layer":151}],156:[function(require,module,exports){
+},{"../../util/util":211,"../style_layer":152}],157:[function(require,module,exports){
 'use strict';
 
 var util = require('../../util/util');
@@ -23291,7 +23389,7 @@ module.exports = RasterStyleLayer;
 
 RasterStyleLayer.prototype = util.inherit(StyleLayer, {});
 
-},{"../../util/util":210,"../style_layer":151}],157:[function(require,module,exports){
+},{"../../util/util":211,"../style_layer":152}],158:[function(require,module,exports){
 'use strict';
 
 var util = require('../../util/util');
@@ -23331,12 +23429,12 @@ SymbolStyleLayer.prototype = util.inherit(StyleLayer, {
 
 });
 
-},{"../../util/util":210,"../style_layer":151}],158:[function(require,module,exports){
+},{"../../util/util":211,"../style_layer":152}],159:[function(require,module,exports){
 'use strict';
 
 module.exports = require('mapbox-gl-style-spec/reference/latest');
 
-},{"mapbox-gl-style-spec/reference/latest":100}],159:[function(require,module,exports){
+},{"mapbox-gl-style-spec/reference/latest":101}],160:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -23421,7 +23519,7 @@ function interpZoomTransitioned(from, to, t) {
     }
 }
 
-},{"../util/interpolate":204,"../util/util":210}],160:[function(require,module,exports){
+},{"../util/interpolate":205,"../util/util":211}],161:[function(require,module,exports){
 'use strict';
 
 module.exports = require('mapbox-gl-style-spec/lib/validate_style.min');
@@ -23445,7 +23543,7 @@ module.exports.throwErrors = function throwErrors(emitter, errors) {
     }
 };
 
-},{"mapbox-gl-style-spec/lib/validate_style.min":99}],161:[function(require,module,exports){
+},{"mapbox-gl-style-spec/lib/validate_style.min":100}],162:[function(require,module,exports){
 'use strict';
 
 var Point = require('point-geometry');
@@ -23468,7 +23566,7 @@ Anchor.prototype.clone = function() {
     return new Anchor(this.x, this.y, this.angle, this.segment);
 };
 
-},{"point-geometry":217}],162:[function(require,module,exports){
+},{"point-geometry":218}],163:[function(require,module,exports){
 'use strict';
 
 module.exports = checkMaxAngle;
@@ -23548,7 +23646,7 @@ function checkMaxAngle(line, anchor, labelLength, windowSize, maxAngle) {
     return true;
 }
 
-},{}],163:[function(require,module,exports){
+},{}],164:[function(require,module,exports){
 'use strict';
 
 var Point = require('point-geometry');
@@ -23622,7 +23720,7 @@ function clipLine(lines, x1, y1, x2, y2) {
     return clippedLines;
 }
 
-},{"point-geometry":217}],164:[function(require,module,exports){
+},{"point-geometry":218}],165:[function(require,module,exports){
 'use strict';
 
 var StructArrayType = require('../util/struct_array');
@@ -23703,7 +23801,7 @@ util.extendAll(CollisionBoxArray.prototype.StructType.prototype, {
     }
 });
 
-},{"../util/struct_array":208,"../util/util":210,"point-geometry":217}],165:[function(require,module,exports){
+},{"../util/struct_array":209,"../util/util":211,"point-geometry":218}],166:[function(require,module,exports){
 'use strict';
 
 module.exports = CollisionFeature;
@@ -23837,7 +23935,7 @@ CollisionFeature.prototype._addLineCollisionBoxes = function(collisionBoxArray, 
     return bboxes;
 };
 
-},{}],166:[function(require,module,exports){
+},{}],167:[function(require,module,exports){
 'use strict';
 
 var Point = require('point-geometry');
@@ -24138,7 +24236,7 @@ CollisionTile.prototype.insertCollisionFeature = function(collisionFeature, minP
     }
 };
 
-},{"../data/bucket":104,"grid-index":62,"point-geometry":217}],167:[function(require,module,exports){
+},{"../data/bucket":105,"grid-index":63,"point-geometry":218}],168:[function(require,module,exports){
 'use strict';
 
 var interpolate = require('../util/interpolate');
@@ -24242,7 +24340,7 @@ function resample(line, offset, spacing, angleWindowSize, maxAngle, labelLength,
     return anchors;
 }
 
-},{"../symbol/anchor":161,"../util/interpolate":204,"./check_max_angle":162}],168:[function(require,module,exports){
+},{"../symbol/anchor":162,"../util/interpolate":205,"./check_max_angle":163}],169:[function(require,module,exports){
 'use strict';
 
 var ShelfPack = require('shelf-pack');
@@ -24409,7 +24507,7 @@ GlyphAtlas.prototype.updateTexture = function(gl) {
     }
 };
 
-},{"../util/util":210,"shelf-pack":379}],169:[function(require,module,exports){
+},{"../util/util":211,"shelf-pack":380}],170:[function(require,module,exports){
 'use strict';
 
 var normalizeURL = require('../util/mapbox').normalizeGlyphsURL;
@@ -24551,7 +24649,7 @@ function glyphUrl(fontstack, range, url, subdomains) {
         .replace('{range}', range);
 }
 
-},{"../symbol/glyph_atlas":168,"../util/ajax":194,"../util/glyphs":203,"../util/mapbox":207,"pbf":216}],170:[function(require,module,exports){
+},{"../symbol/glyph_atlas":169,"../util/ajax":195,"../util/glyphs":204,"../util/mapbox":208,"pbf":217}],171:[function(require,module,exports){
 'use strict';
 
 module.exports = function (features, textFeatures, geometries) {
@@ -24642,7 +24740,7 @@ module.exports = function (features, textFeatures, geometries) {
     };
 };
 
-},{}],171:[function(require,module,exports){
+},{}],172:[function(require,module,exports){
 'use strict';
 
 var Point = require('point-geometry');
@@ -24896,7 +24994,7 @@ function getSegmentGlyphs(glyphs, anchor, offset, line, segment, forward) {
     return placementScale;
 }
 
-},{"point-geometry":217}],172:[function(require,module,exports){
+},{"point-geometry":218}],173:[function(require,module,exports){
 'use strict';
 
 var resolveTokens = require('../util/token');
@@ -24939,7 +25037,7 @@ function resolveText(features, layoutProperties, codepoints) {
     return textFeatures;
 }
 
-},{"../util/token":209}],173:[function(require,module,exports){
+},{"../util/token":210}],174:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -25120,7 +25218,7 @@ function PositionedIcon(image, top, bottom, left, right) {
     this.right = right;
 }
 
-},{}],174:[function(require,module,exports){
+},{}],175:[function(require,module,exports){
 'use strict';
 
 var ShelfPack = require('shelf-pack');
@@ -25353,7 +25451,7 @@ function AtlasImage(rect, width, height, sdf, pixelRatio) {
     this.pixelRatio = pixelRatio;
 }
 
-},{"../util/browser":195,"../util/util":210,"shelf-pack":379}],175:[function(require,module,exports){
+},{"../util/browser":196,"../util/util":211,"shelf-pack":380}],176:[function(require,module,exports){
 'use strict';
 
 var StructArrayType = require('../util/struct_array');
@@ -25398,7 +25496,7 @@ util.extendAll(SymbolInstancesArray.prototype.StructType.prototype, {
 
 
 
-},{"../util/struct_array":208,"../util/util":210,"point-geometry":217}],176:[function(require,module,exports){
+},{"../util/struct_array":209,"../util/util":211,"point-geometry":218}],177:[function(require,module,exports){
 'use strict';
 
 var StructArrayType = require('../util/struct_array');
@@ -25469,7 +25567,7 @@ util.extendAll(SymbolQuadsArray.prototype.StructType.prototype, {
 });
 
 
-},{"../util/struct_array":208,"../util/util":210,"./quads":171,"point-geometry":217}],177:[function(require,module,exports){
+},{"../util/struct_array":209,"../util/util":211,"./quads":172,"point-geometry":218}],178:[function(require,module,exports){
 'use strict';
 
 var DOM = require('../util/dom');
@@ -25613,7 +25711,7 @@ module.exports = function bindHandlers(map, bindOptions, mapOptions) {
     }
 };
 
-},{"../util/dom":198,"./handler/box_zoom":183,"./handler/dblclick_zoom":184,"./handler/drag_pan":185,"./handler/drag_rotate":186,"./handler/keyboard":187,"./handler/scroll_zoom":188,"./handler/touch_zoom_rotate":189,"point-geometry":217}],178:[function(require,module,exports){
+},{"../util/dom":199,"./handler/box_zoom":184,"./handler/dblclick_zoom":185,"./handler/drag_pan":186,"./handler/drag_rotate":187,"./handler/keyboard":188,"./handler/scroll_zoom":189,"./handler/touch_zoom_rotate":190,"point-geometry":218}],179:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -26392,7 +26490,7 @@ util.extend(Camera.prototype, /** @lends Map.prototype */{
  * @property {EventData} data Original event data
  */
 
-},{"../geo/lng_lat":113,"../geo/lng_lat_bounds":114,"../util/browser":195,"../util/interpolate":204,"../util/util":210,"point-geometry":217}],179:[function(require,module,exports){
+},{"../geo/lng_lat":114,"../geo/lng_lat_bounds":115,"../util/browser":196,"../util/interpolate":205,"../util/util":211,"point-geometry":218}],180:[function(require,module,exports){
 'use strict';
 
 var Control = require('./control');
@@ -26473,7 +26571,7 @@ Attribution.prototype = util.inherit(Control, {
     }
 });
 
-},{"../../util/dom":198,"../../util/util":210,"./control":180}],180:[function(require,module,exports){
+},{"../../util/dom":199,"../../util/util":211,"./control":181}],181:[function(require,module,exports){
 'use strict';
 
 var util = require('../../util/util');
@@ -26528,7 +26626,7 @@ Control.prototype = {
 
 util.extend(Control.prototype, Evented);
 
-},{"../../util/evented":202,"../../util/util":210}],181:[function(require,module,exports){
+},{"../../util/evented":203,"../../util/util":211}],182:[function(require,module,exports){
 'use strict';
 
 var Control = require('./control');
@@ -26627,7 +26725,7 @@ Geolocate.prototype = util.inherit(Control, {
   *
   */
 
-},{"../../util/browser":195,"../../util/dom":198,"../../util/util":210,"./control":180}],182:[function(require,module,exports){
+},{"../../util/browser":196,"../../util/dom":199,"../../util/util":211,"./control":181}],183:[function(require,module,exports){
 'use strict';
 
 var Control = require('./control');
@@ -26745,7 +26843,7 @@ function copyMouseEvent(e) {
 }
 
 
-},{"../../util/dom":198,"../../util/util":210,"./control":180}],183:[function(require,module,exports){
+},{"../../util/dom":199,"../../util/util":211,"./control":181}],184:[function(require,module,exports){
 'use strict';
 
 var DOM = require('../../util/dom'),
@@ -26921,7 +27019,7 @@ BoxZoomHandler.prototype = {
  * @property {EventData} data Original event data
  */
 
-},{"../../geo/lng_lat_bounds":114,"../../util/dom":198,"../../util/util":210}],184:[function(require,module,exports){
+},{"../../geo/lng_lat_bounds":115,"../../util/dom":199,"../../util/util":211}],185:[function(require,module,exports){
 'use strict';
 
 module.exports = DoubleClickZoomHandler;
@@ -26976,7 +27074,7 @@ DoubleClickZoomHandler.prototype = {
     }
 };
 
-},{}],185:[function(require,module,exports){
+},{}],186:[function(require,module,exports){
 'use strict';
 
 var DOM = require('../../util/dom'),
@@ -27206,7 +27304,7 @@ DragPanHandler.prototype = {
  * @property {EventData} data Original event data
  */
 
-},{"../../util/dom":198,"../../util/util":210}],186:[function(require,module,exports){
+},{"../../util/dom":199,"../../util/util":211}],187:[function(require,module,exports){
 'use strict';
 
 var DOM = require('../../util/dom'),
@@ -27451,7 +27549,7 @@ DragRotateHandler.prototype = {
  * @property {EventData} data Original event data
  */
 
-},{"../../util/dom":198,"../../util/util":210,"point-geometry":217}],187:[function(require,module,exports){
+},{"../../util/dom":199,"../../util/util":211,"point-geometry":218}],188:[function(require,module,exports){
 'use strict';
 
 module.exports = KeyboardHandler;
@@ -27577,7 +27675,7 @@ KeyboardHandler.prototype = {
     }
 };
 
-},{}],188:[function(require,module,exports){
+},{}],189:[function(require,module,exports){
 'use strict';
 
 var DOM = require('../../util/dom'),
@@ -27755,7 +27853,7 @@ ScrollZoomHandler.prototype = {
  * @property {EventData} data Original event data, if fired interactively
  */
 
-},{"../../util/browser":195,"../../util/dom":198,"../../util/util":210}],189:[function(require,module,exports){
+},{"../../util/browser":196,"../../util/dom":199,"../../util/util":211}],190:[function(require,module,exports){
 'use strict';
 
 var DOM = require('../../util/dom'),
@@ -27964,7 +28062,7 @@ TouchZoomRotateHandler.prototype = {
     }
 };
 
-},{"../../util/dom":198,"../../util/util":210}],190:[function(require,module,exports){
+},{"../../util/dom":199,"../../util/util":211}],191:[function(require,module,exports){
 'use strict';
 
 /*
@@ -28039,7 +28137,7 @@ Hash.prototype = {
     }
 };
 
-},{"../util/util":210}],191:[function(require,module,exports){
+},{"../util/util":211}],192:[function(require,module,exports){
 'use strict';
 
 var Canvas = require('../util/canvas');
@@ -29381,7 +29479,7 @@ function removeNode(node) {
    * @property {EventData} data Original event data, if fired interactively
    */
 
-},{"../geo/lng_lat":113,"../geo/lng_lat_bounds":114,"../geo/transform":115,"../render/painter":129,"../style/animation_loop":145,"../style/style":148,"../util/browser":195,"../util/canvas":196,"../util/dom":198,"../util/evented":202,"../util/util":210,"./bind_handlers":177,"./camera":178,"./control/attribution":179,"./hash":190,"point-geometry":217}],192:[function(require,module,exports){
+},{"../geo/lng_lat":114,"../geo/lng_lat_bounds":115,"../geo/transform":116,"../render/painter":130,"../style/animation_loop":146,"../style/style":149,"../util/browser":196,"../util/canvas":197,"../util/dom":199,"../util/evented":203,"../util/util":211,"./bind_handlers":178,"./camera":179,"./control/attribution":180,"./hash":191,"point-geometry":218}],193:[function(require,module,exports){
 'use strict';
 
 module.exports = Popup;
@@ -29613,7 +29711,7 @@ Popup.prototype = util.inherit(Evented, /** @lends Popup.prototype */{
     }
 });
 
-},{"../geo/lng_lat":113,"../util/dom":198,"../util/evented":202,"../util/util":210}],193:[function(require,module,exports){
+},{"../geo/lng_lat":114,"../util/dom":199,"../util/evented":203,"../util/util":211}],194:[function(require,module,exports){
 'use strict';
 
 module.exports = Actor;
@@ -29678,7 +29776,7 @@ Actor.prototype.postMessage = function(message, transferList) {
     this.target.postMessage(message, transferList);
 };
 
-},{}],194:[function(require,module,exports){
+},{}],195:[function(require,module,exports){
 'use strict';
 
 exports.getJSON = function(url, callback) {
@@ -29768,7 +29866,7 @@ exports.getVideo = function(urls, callback) {
     return video;
 };
 
-},{}],195:[function(require,module,exports){
+},{}],196:[function(require,module,exports){
 'use strict';
 
 /**
@@ -29863,7 +29961,7 @@ webpImgTest.src = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAQAAAAfQ//
 
 exports.supportsGeolocation = !!navigator.geolocation;
 
-},{"mapbox-gl-js-supported":77}],196:[function(require,module,exports){
+},{"mapbox-gl-js-supported":78}],197:[function(require,module,exports){
 'use strict';
 
 var util = require('../util');
@@ -29907,7 +30005,7 @@ Canvas.prototype.getElement = function() {
     return this.canvas;
 };
 
-},{"../util":210,"mapbox-gl-js-supported":77}],197:[function(require,module,exports){
+},{"../util":211,"mapbox-gl-js-supported":78}],198:[function(require,module,exports){
 'use strict';
 
 var Actor = require('../actor');
@@ -29951,7 +30049,7 @@ Dispatcher.prototype = {
     }
 };
 
-},{"../../source/worker":143,"../actor":193,"webworkify":394}],198:[function(require,module,exports){
+},{"../../source/worker":144,"../actor":194,"webworkify":395}],199:[function(require,module,exports){
 'use strict';
 
 var Point = require('point-geometry');
@@ -30026,7 +30124,7 @@ exports.touchPos = function (el, e) {
     return points;
 };
 
-},{"point-geometry":217}],199:[function(require,module,exports){
+},{"point-geometry":218}],200:[function(require,module,exports){
 'use strict';
 
 var quickselect = require('quickselect');
@@ -30086,7 +30184,7 @@ function calculateSignedArea(ring) {
     return sum;
 }
 
-},{"quickselect":219}],200:[function(require,module,exports){
+},{"quickselect":220}],201:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -30094,7 +30192,7 @@ module.exports = {
     REQUIRE_ACCESS_TOKEN: true
 };
 
-},{}],201:[function(require,module,exports){
+},{}],202:[function(require,module,exports){
 'use strict';
 
 var assert = require('assert');
@@ -30121,7 +30219,7 @@ DictionaryCoder.prototype.decode = function(n) {
     return this._numberToString[n];
 };
 
-},{"assert":13}],202:[function(require,module,exports){
+},{"assert":14}],203:[function(require,module,exports){
 'use strict';
 
 var util = require('./util');
@@ -30229,7 +30327,7 @@ var Evented = {
 
 module.exports = Evented;
 
-},{"./util":210}],203:[function(require,module,exports){
+},{"./util":211}],204:[function(require,module,exports){
 'use strict';
 
 module.exports = Glyphs;
@@ -30264,7 +30362,7 @@ function readGlyph(tag, glyph, pbf) {
     else if (tag === 7) glyph.advance = pbf.readVarint();
 }
 
-},{}],204:[function(require,module,exports){
+},{}],205:[function(require,module,exports){
 'use strict';
 
 module.exports = interpolate;
@@ -30305,7 +30403,7 @@ interpolate.array = function(from, to, t) {
     });
 };
 
-},{}],205:[function(require,module,exports){
+},{}],206:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -30471,7 +30569,7 @@ function polygonContainsPoint(ring, p) {
     return c;
 }
 
-},{}],206:[function(require,module,exports){
+},{}],207:[function(require,module,exports){
 'use strict';
 
 module.exports = LRUCache;
@@ -30596,7 +30694,7 @@ LRUCache.prototype.setMaxSize = function(max) {
     return this;
 };
 
-},{}],207:[function(require,module,exports){
+},{}],208:[function(require,module,exports){
 'use strict';
 
 var config = require('./config');
@@ -30677,7 +30775,7 @@ module.exports.normalizeTileURL = function(url, sourceUrl, tileSize) {
     return url.replace(/\.((?:png|jpg)\d*)(?=$|\?)/, browser.devicePixelRatio >= 2 || tileSize === 512 ? '@2x.' + extension : '.' + extension);
 };
 
-},{"./browser":195,"./config":200}],208:[function(require,module,exports){
+},{"./browser":196,"./config":201}],209:[function(require,module,exports){
 'use strict';
 
 // Note: all "sizes" are measured in bytes
@@ -31017,7 +31115,7 @@ StructArray.prototype.toArray = function(startIndex, endIndex) {
     return array;
 };
 
-},{"assert":13}],209:[function(require,module,exports){
+},{"assert":14}],210:[function(require,module,exports){
 'use strict';
 
 module.exports = resolveTokens;
@@ -31036,7 +31134,7 @@ function resolveTokens(properties, text) {
     });
 }
 
-},{}],210:[function(require,module,exports){
+},{}],211:[function(require,module,exports){
 'use strict';
 
 var UnitBezier = require('unitbezier');
@@ -31494,7 +31592,7 @@ exports.warnOnce = function(message) {
     }
 };
 
-},{"../geo/coordinate":112,"unitbezier":384}],211:[function(require,module,exports){
+},{"../geo/coordinate":113,"unitbezier":385}],212:[function(require,module,exports){
 'use strict';
 
 module.exports = Feature;
@@ -31539,7 +31637,7 @@ Feature.prototype = {
     }
 };
 
-},{}],212:[function(require,module,exports){
+},{}],213:[function(require,module,exports){
 module.exports={
   "_args": [
     [
@@ -31862,7 +31960,7 @@ module.exports={
   "version": "0.20.1"
 }
 
-},{}],213:[function(require,module,exports){
+},{}],214:[function(require,module,exports){
 'use strict';
 /* eslint-disable no-unused-vars */
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -31947,7 +32045,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],214:[function(require,module,exports){
+},{}],215:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -32175,7 +32273,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":218}],215:[function(require,module,exports){
+},{"_process":219}],216:[function(require,module,exports){
 'use strict';
 
 // lightweight Buffer shim for pbf browser build
@@ -32336,7 +32434,7 @@ function encodeString(str) {
     return bytes;
 }
 
-},{"ieee754":64}],216:[function(require,module,exports){
+},{"ieee754":65}],217:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -32762,7 +32860,7 @@ function writePackedFixed64(arr, pbf)  { for (var i = 0; i < arr.length; i++) pb
 function writePackedSFixed64(arr, pbf) { for (var i = 0; i < arr.length; i++) pbf.writeSFixed64(arr[i]); }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./buffer":215}],217:[function(require,module,exports){
+},{"./buffer":216}],218:[function(require,module,exports){
 'use strict';
 
 module.exports = Point;
@@ -32895,7 +32993,7 @@ Point.convert = function (a) {
     return a;
 };
 
-},{}],218:[function(require,module,exports){
+},{}],219:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -33016,7 +33114,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],219:[function(require,module,exports){
+},{}],220:[function(require,module,exports){
 'use strict';
 
 module.exports = partialSort;
@@ -33078,12 +33176,12 @@ function defaultCompare(a, b) {
     return a < b ? -1 : a > b ? 1 : 0;
 }
 
-},{}],220:[function(require,module,exports){
+},{}],221:[function(require,module,exports){
 'use strict';
 
 module.exports = require('react/lib/ReactDOM');
 
-},{"react/lib/ReactDOM":264}],221:[function(require,module,exports){
+},{"react/lib/ReactDOM":265}],222:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -33164,7 +33262,7 @@ Provider.childContextTypes = {
   store: _storeShape2["default"].isRequired
 };
 }).call(this,require('_process'))
-},{"../utils/storeShape":225,"../utils/warning":226,"_process":218,"react":369}],222:[function(require,module,exports){
+},{"../utils/storeShape":226,"../utils/warning":227,"_process":219,"react":370}],223:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -33560,7 +33658,7 @@ function connect(mapStateToProps, mapDispatchToProps, mergeProps) {
   };
 }
 }).call(this,require('_process'))
-},{"../utils/shallowEqual":224,"../utils/storeShape":225,"../utils/warning":226,"../utils/wrapActionCreators":227,"_process":218,"hoist-non-react-statics":63,"invariant":66,"lodash/isPlainObject":75,"react":369}],223:[function(require,module,exports){
+},{"../utils/shallowEqual":225,"../utils/storeShape":226,"../utils/warning":227,"../utils/wrapActionCreators":228,"_process":219,"hoist-non-react-statics":64,"invariant":67,"lodash/isPlainObject":76,"react":370}],224:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33578,7 +33676,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 
 exports.Provider = _Provider2["default"];
 exports.connect = _connect2["default"];
-},{"./components/Provider":221,"./components/connect":222}],224:[function(require,module,exports){
+},{"./components/Provider":222,"./components/connect":223}],225:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -33605,7 +33703,7 @@ function shallowEqual(objA, objB) {
 
   return true;
 }
-},{}],225:[function(require,module,exports){
+},{}],226:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33617,7 +33715,7 @@ exports["default"] = _react.PropTypes.shape({
   dispatch: _react.PropTypes.func.isRequired,
   getState: _react.PropTypes.func.isRequired
 });
-},{"react":369}],226:[function(require,module,exports){
+},{"react":370}],227:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33642,7 +33740,7 @@ function warning(message) {
   } catch (e) {}
   /* eslint-enable no-empty */
 }
-},{}],227:[function(require,module,exports){
+},{}],228:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33655,7 +33753,7 @@ function wrapActionCreators(actionCreators) {
     return (0, _redux.bindActionCreators)(actionCreators, dispatch);
   };
 }
-},{"redux":376}],228:[function(require,module,exports){
+},{"redux":377}],229:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -33680,7 +33778,7 @@ var AutoFocusUtils = {
 };
 
 module.exports = AutoFocusUtils;
-},{"./ReactDOMComponentTree":268,"fbjs/lib/focusNode":25}],229:[function(require,module,exports){
+},{"./ReactDOMComponentTree":269,"fbjs/lib/focusNode":26}],230:[function(require,module,exports){
 /**
  * Copyright 2013-present Facebook, Inc.
  * All rights reserved.
@@ -34069,7 +34167,7 @@ var BeforeInputEventPlugin = {
 };
 
 module.exports = BeforeInputEventPlugin;
-},{"./EventConstants":243,"./EventPropagators":247,"./FallbackCompositionState":248,"./SyntheticCompositionEvent":325,"./SyntheticInputEvent":329,"fbjs/lib/ExecutionEnvironment":17,"fbjs/lib/keyOf":35}],230:[function(require,module,exports){
+},{"./EventConstants":244,"./EventPropagators":248,"./FallbackCompositionState":249,"./SyntheticCompositionEvent":326,"./SyntheticInputEvent":330,"fbjs/lib/ExecutionEnvironment":18,"fbjs/lib/keyOf":36}],231:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -34218,7 +34316,7 @@ var CSSProperty = {
 };
 
 module.exports = CSSProperty;
-},{}],231:[function(require,module,exports){
+},{}],232:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -34426,7 +34524,7 @@ var CSSPropertyOperations = {
 
 module.exports = CSSPropertyOperations;
 }).call(this,require('_process'))
-},{"./CSSProperty":230,"./ReactInstrumentation":300,"./dangerousStyleValue":343,"_process":218,"fbjs/lib/ExecutionEnvironment":17,"fbjs/lib/camelizeStyleName":19,"fbjs/lib/hyphenateStyleName":30,"fbjs/lib/memoizeStringOnly":37,"fbjs/lib/warning":41}],232:[function(require,module,exports){
+},{"./CSSProperty":231,"./ReactInstrumentation":301,"./dangerousStyleValue":344,"_process":219,"fbjs/lib/ExecutionEnvironment":18,"fbjs/lib/camelizeStyleName":20,"fbjs/lib/hyphenateStyleName":31,"fbjs/lib/memoizeStringOnly":38,"fbjs/lib/warning":42}],233:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -34535,7 +34633,7 @@ PooledClass.addPoolingTo(CallbackQueue);
 
 module.exports = CallbackQueue;
 }).call(this,require('_process'))
-},{"./PooledClass":252,"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31,"object-assign":213}],233:[function(require,module,exports){
+},{"./PooledClass":253,"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32,"object-assign":214}],234:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -34861,7 +34959,7 @@ var ChangeEventPlugin = {
 };
 
 module.exports = ChangeEventPlugin;
-},{"./EventConstants":243,"./EventPluginHub":244,"./EventPropagators":247,"./ReactDOMComponentTree":268,"./ReactUpdates":318,"./SyntheticEvent":327,"./getEventTarget":351,"./isEventSupported":358,"./isTextInputElement":359,"fbjs/lib/ExecutionEnvironment":17,"fbjs/lib/keyOf":35}],234:[function(require,module,exports){
+},{"./EventConstants":244,"./EventPluginHub":245,"./EventPropagators":248,"./ReactDOMComponentTree":269,"./ReactUpdates":319,"./SyntheticEvent":328,"./getEventTarget":352,"./isEventSupported":359,"./isTextInputElement":360,"fbjs/lib/ExecutionEnvironment":18,"fbjs/lib/keyOf":36}],235:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -35058,7 +35156,7 @@ var DOMChildrenOperations = {
 
 module.exports = DOMChildrenOperations;
 }).call(this,require('_process'))
-},{"./DOMLazyTree":235,"./Danger":239,"./ReactDOMComponentTree":268,"./ReactInstrumentation":300,"./ReactMultiChildUpdateTypes":305,"./createMicrosoftUnsafeLocalFunction":342,"./setInnerHTML":364,"./setTextContent":365,"_process":218}],235:[function(require,module,exports){
+},{"./DOMLazyTree":236,"./Danger":240,"./ReactDOMComponentTree":269,"./ReactInstrumentation":301,"./ReactMultiChildUpdateTypes":306,"./createMicrosoftUnsafeLocalFunction":343,"./setInnerHTML":365,"./setTextContent":366,"_process":219}],236:[function(require,module,exports){
 /**
  * Copyright 2015-present, Facebook, Inc.
  * All rights reserved.
@@ -35177,7 +35275,7 @@ DOMLazyTree.queueHTML = queueHTML;
 DOMLazyTree.queueText = queueText;
 
 module.exports = DOMLazyTree;
-},{"./DOMNamespaces":236,"./createMicrosoftUnsafeLocalFunction":342,"./setInnerHTML":364,"./setTextContent":365}],236:[function(require,module,exports){
+},{"./DOMNamespaces":237,"./createMicrosoftUnsafeLocalFunction":343,"./setInnerHTML":365,"./setTextContent":366}],237:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -35198,7 +35296,7 @@ var DOMNamespaces = {
 };
 
 module.exports = DOMNamespaces;
-},{}],237:[function(require,module,exports){
+},{}],238:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -35407,7 +35505,7 @@ var DOMProperty = {
 
 module.exports = DOMProperty;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31}],238:[function(require,module,exports){
+},{"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32}],239:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -35638,7 +35736,7 @@ var DOMPropertyOperations = {
 
 module.exports = DOMPropertyOperations;
 }).call(this,require('_process'))
-},{"./DOMProperty":237,"./ReactDOMComponentTree":268,"./ReactDOMInstrumentation":276,"./ReactInstrumentation":300,"./quoteAttributeValueForBrowser":361,"_process":218,"fbjs/lib/warning":41}],239:[function(require,module,exports){
+},{"./DOMProperty":238,"./ReactDOMComponentTree":269,"./ReactDOMInstrumentation":277,"./ReactInstrumentation":301,"./quoteAttributeValueForBrowser":362,"_process":219,"fbjs/lib/warning":42}],240:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -35689,7 +35787,7 @@ var Danger = {
 
 module.exports = Danger;
 }).call(this,require('_process'))
-},{"./DOMLazyTree":235,"./reactProdInvariant":362,"_process":218,"fbjs/lib/ExecutionEnvironment":17,"fbjs/lib/createNodesFromMarkup":22,"fbjs/lib/emptyFunction":23,"fbjs/lib/invariant":31}],240:[function(require,module,exports){
+},{"./DOMLazyTree":236,"./reactProdInvariant":363,"_process":219,"fbjs/lib/ExecutionEnvironment":18,"fbjs/lib/createNodesFromMarkup":23,"fbjs/lib/emptyFunction":24,"fbjs/lib/invariant":32}],241:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -35717,7 +35815,7 @@ var keyOf = require('fbjs/lib/keyOf');
 var DefaultEventPluginOrder = [keyOf({ ResponderEventPlugin: null }), keyOf({ SimpleEventPlugin: null }), keyOf({ TapEventPlugin: null }), keyOf({ EnterLeaveEventPlugin: null }), keyOf({ ChangeEventPlugin: null }), keyOf({ SelectEventPlugin: null }), keyOf({ BeforeInputEventPlugin: null })];
 
 module.exports = DefaultEventPluginOrder;
-},{"fbjs/lib/keyOf":35}],241:[function(require,module,exports){
+},{"fbjs/lib/keyOf":36}],242:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -35768,7 +35866,7 @@ var DisabledInputUtils = {
 };
 
 module.exports = DisabledInputUtils;
-},{}],242:[function(require,module,exports){
+},{}],243:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -35874,7 +35972,7 @@ var EnterLeaveEventPlugin = {
 };
 
 module.exports = EnterLeaveEventPlugin;
-},{"./EventConstants":243,"./EventPropagators":247,"./ReactDOMComponentTree":268,"./SyntheticMouseEvent":331,"fbjs/lib/keyOf":35}],243:[function(require,module,exports){
+},{"./EventConstants":244,"./EventPropagators":248,"./ReactDOMComponentTree":269,"./SyntheticMouseEvent":332,"fbjs/lib/keyOf":36}],244:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -35972,7 +36070,7 @@ var EventConstants = {
 };
 
 module.exports = EventConstants;
-},{"fbjs/lib/keyMirror":34}],244:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":35}],245:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -36216,7 +36314,7 @@ var EventPluginHub = {
 
 module.exports = EventPluginHub;
 }).call(this,require('_process'))
-},{"./EventPluginRegistry":245,"./EventPluginUtils":246,"./ReactErrorUtils":291,"./accumulateInto":338,"./forEachAccumulated":347,"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31}],245:[function(require,module,exports){
+},{"./EventPluginRegistry":246,"./EventPluginUtils":247,"./ReactErrorUtils":292,"./accumulateInto":339,"./forEachAccumulated":348,"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32}],246:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -36466,7 +36564,7 @@ var EventPluginRegistry = {
 
 module.exports = EventPluginRegistry;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31}],246:[function(require,module,exports){
+},{"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32}],247:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -36698,7 +36796,7 @@ var EventPluginUtils = {
 
 module.exports = EventPluginUtils;
 }).call(this,require('_process'))
-},{"./EventConstants":243,"./ReactErrorUtils":291,"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31,"fbjs/lib/warning":41}],247:[function(require,module,exports){
+},{"./EventConstants":244,"./ReactErrorUtils":292,"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32,"fbjs/lib/warning":42}],248:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -36838,7 +36936,7 @@ var EventPropagators = {
 
 module.exports = EventPropagators;
 }).call(this,require('_process'))
-},{"./EventConstants":243,"./EventPluginHub":244,"./EventPluginUtils":246,"./accumulateInto":338,"./forEachAccumulated":347,"_process":218,"fbjs/lib/warning":41}],248:[function(require,module,exports){
+},{"./EventConstants":244,"./EventPluginHub":245,"./EventPluginUtils":247,"./accumulateInto":339,"./forEachAccumulated":348,"_process":219,"fbjs/lib/warning":42}],249:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -36934,7 +37032,7 @@ _assign(FallbackCompositionState.prototype, {
 PooledClass.addPoolingTo(FallbackCompositionState);
 
 module.exports = FallbackCompositionState;
-},{"./PooledClass":252,"./getTextContentAccessor":355,"object-assign":213}],249:[function(require,module,exports){
+},{"./PooledClass":253,"./getTextContentAccessor":356,"object-assign":214}],250:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -37143,7 +37241,7 @@ var HTMLDOMPropertyConfig = {
 };
 
 module.exports = HTMLDOMPropertyConfig;
-},{"./DOMProperty":237}],250:[function(require,module,exports){
+},{"./DOMProperty":238}],251:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -37203,7 +37301,7 @@ var KeyEscapeUtils = {
 };
 
 module.exports = KeyEscapeUtils;
-},{}],251:[function(require,module,exports){
+},{}],252:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -37341,7 +37439,7 @@ var LinkedValueUtils = {
 
 module.exports = LinkedValueUtils;
 }).call(this,require('_process'))
-},{"./ReactPropTypeLocations":310,"./ReactPropTypes":311,"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31,"fbjs/lib/warning":41}],252:[function(require,module,exports){
+},{"./ReactPropTypeLocations":311,"./ReactPropTypes":312,"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32,"fbjs/lib/warning":42}],253:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -37465,7 +37563,7 @@ var PooledClass = {
 
 module.exports = PooledClass;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31}],253:[function(require,module,exports){
+},{"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32}],254:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -37555,7 +37653,7 @@ var React = {
 
 module.exports = React;
 }).call(this,require('_process'))
-},{"./ReactChildren":256,"./ReactClass":257,"./ReactComponent":258,"./ReactDOMFactories":272,"./ReactElement":288,"./ReactElementValidator":289,"./ReactPropTypes":311,"./ReactVersion":319,"./onlyChild":360,"_process":218,"fbjs/lib/warning":41,"object-assign":213}],254:[function(require,module,exports){
+},{"./ReactChildren":257,"./ReactClass":258,"./ReactComponent":259,"./ReactDOMFactories":273,"./ReactElement":289,"./ReactElementValidator":290,"./ReactPropTypes":312,"./ReactVersion":320,"./onlyChild":361,"_process":219,"fbjs/lib/warning":42,"object-assign":214}],255:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -37873,7 +37971,7 @@ var ReactBrowserEventEmitter = _assign({}, ReactEventEmitterMixin, {
 });
 
 module.exports = ReactBrowserEventEmitter;
-},{"./EventConstants":243,"./EventPluginRegistry":245,"./ReactEventEmitterMixin":292,"./ViewportMetrics":337,"./getVendorPrefixedEventName":356,"./isEventSupported":358,"object-assign":213}],255:[function(require,module,exports){
+},{"./EventConstants":244,"./EventPluginRegistry":246,"./ReactEventEmitterMixin":293,"./ViewportMetrics":338,"./getVendorPrefixedEventName":357,"./isEventSupported":359,"object-assign":214}],256:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -38010,7 +38108,7 @@ var ReactChildReconciler = {
 
 module.exports = ReactChildReconciler;
 }).call(this,require('_process'))
-},{"./KeyEscapeUtils":250,"./ReactComponentTreeDevtool":261,"./ReactReconciler":313,"./instantiateReactComponent":357,"./shouldUpdateReactComponent":366,"./traverseAllChildren":367,"_process":218,"fbjs/lib/warning":41}],256:[function(require,module,exports){
+},{"./KeyEscapeUtils":251,"./ReactComponentTreeDevtool":262,"./ReactReconciler":314,"./instantiateReactComponent":358,"./shouldUpdateReactComponent":367,"./traverseAllChildren":368,"_process":219,"fbjs/lib/warning":42}],257:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -38202,7 +38300,7 @@ var ReactChildren = {
 };
 
 module.exports = ReactChildren;
-},{"./PooledClass":252,"./ReactElement":288,"./traverseAllChildren":367,"fbjs/lib/emptyFunction":23}],257:[function(require,module,exports){
+},{"./PooledClass":253,"./ReactElement":289,"./traverseAllChildren":368,"fbjs/lib/emptyFunction":24}],258:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -38930,7 +39028,7 @@ var ReactClass = {
 
 module.exports = ReactClass;
 }).call(this,require('_process'))
-},{"./ReactComponent":258,"./ReactElement":288,"./ReactNoopUpdateQueue":307,"./ReactPropTypeLocationNames":309,"./ReactPropTypeLocations":310,"./reactProdInvariant":362,"_process":218,"fbjs/lib/emptyObject":24,"fbjs/lib/invariant":31,"fbjs/lib/keyMirror":34,"fbjs/lib/keyOf":35,"fbjs/lib/warning":41,"object-assign":213}],258:[function(require,module,exports){
+},{"./ReactComponent":259,"./ReactElement":289,"./ReactNoopUpdateQueue":308,"./ReactPropTypeLocationNames":310,"./ReactPropTypeLocations":311,"./reactProdInvariant":363,"_process":219,"fbjs/lib/emptyObject":25,"fbjs/lib/invariant":32,"fbjs/lib/keyMirror":35,"fbjs/lib/keyOf":36,"fbjs/lib/warning":42,"object-assign":214}],259:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -39051,7 +39149,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = ReactComponent;
 }).call(this,require('_process'))
-},{"./ReactNoopUpdateQueue":307,"./canDefineProperty":340,"./reactProdInvariant":362,"_process":218,"fbjs/lib/emptyObject":24,"fbjs/lib/invariant":31,"fbjs/lib/warning":41}],259:[function(require,module,exports){
+},{"./ReactNoopUpdateQueue":308,"./canDefineProperty":341,"./reactProdInvariant":363,"_process":219,"fbjs/lib/emptyObject":25,"fbjs/lib/invariant":32,"fbjs/lib/warning":42}],260:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -39091,7 +39189,7 @@ var ReactComponentBrowserEnvironment = {
 };
 
 module.exports = ReactComponentBrowserEnvironment;
-},{"./DOMChildrenOperations":234,"./ReactDOMIDOperations":274}],260:[function(require,module,exports){
+},{"./DOMChildrenOperations":235,"./ReactDOMIDOperations":275}],261:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -39147,7 +39245,7 @@ var ReactComponentEnvironment = {
 
 module.exports = ReactComponentEnvironment;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31}],261:[function(require,module,exports){
+},{"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32}],262:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2016-present, Facebook, Inc.
@@ -39368,7 +39466,7 @@ var ReactComponentTreeDevtool = {
 
 module.exports = ReactComponentTreeDevtool;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":263,"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31,"fbjs/lib/warning":41}],262:[function(require,module,exports){
+},{"./ReactCurrentOwner":264,"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32,"fbjs/lib/warning":42}],263:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -40264,7 +40362,7 @@ var ReactCompositeComponent = {
 
 module.exports = ReactCompositeComponent;
 }).call(this,require('_process'))
-},{"./ReactComponentEnvironment":260,"./ReactCurrentOwner":263,"./ReactElement":288,"./ReactErrorUtils":291,"./ReactInstanceMap":299,"./ReactInstrumentation":300,"./ReactNodeTypes":306,"./ReactPropTypeLocations":310,"./ReactReconciler":313,"./checkReactTypeSpec":341,"./reactProdInvariant":362,"./shouldUpdateReactComponent":366,"_process":218,"fbjs/lib/emptyObject":24,"fbjs/lib/invariant":31,"fbjs/lib/warning":41,"object-assign":213}],263:[function(require,module,exports){
+},{"./ReactComponentEnvironment":261,"./ReactCurrentOwner":264,"./ReactElement":289,"./ReactErrorUtils":292,"./ReactInstanceMap":300,"./ReactInstrumentation":301,"./ReactNodeTypes":307,"./ReactPropTypeLocations":311,"./ReactReconciler":314,"./checkReactTypeSpec":342,"./reactProdInvariant":363,"./shouldUpdateReactComponent":367,"_process":219,"fbjs/lib/emptyObject":25,"fbjs/lib/invariant":32,"fbjs/lib/warning":42,"object-assign":214}],264:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -40296,7 +40394,7 @@ var ReactCurrentOwner = {
 };
 
 module.exports = ReactCurrentOwner;
-},{}],264:[function(require,module,exports){
+},{}],265:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -40400,7 +40498,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = React;
 }).call(this,require('_process'))
-},{"./ReactDOMComponentTree":268,"./ReactDefaultInjection":287,"./ReactMount":303,"./ReactReconciler":313,"./ReactUpdates":318,"./ReactVersion":319,"./findDOMNode":345,"./getHostComponentFromComposite":352,"./renderSubtreeIntoContainer":363,"_process":218,"fbjs/lib/ExecutionEnvironment":17,"fbjs/lib/warning":41}],265:[function(require,module,exports){
+},{"./ReactDOMComponentTree":269,"./ReactDefaultInjection":288,"./ReactMount":304,"./ReactReconciler":314,"./ReactUpdates":319,"./ReactVersion":320,"./findDOMNode":346,"./getHostComponentFromComposite":353,"./renderSubtreeIntoContainer":364,"_process":219,"fbjs/lib/ExecutionEnvironment":18,"fbjs/lib/warning":42}],266:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -40425,7 +40523,7 @@ var ReactDOMButton = {
 };
 
 module.exports = ReactDOMButton;
-},{"./DisabledInputUtils":241}],266:[function(require,module,exports){
+},{"./DisabledInputUtils":242}],267:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -41431,7 +41529,7 @@ _assign(ReactDOMComponent.prototype, ReactDOMComponent.Mixin, ReactMultiChild.Mi
 
 module.exports = ReactDOMComponent;
 }).call(this,require('_process'))
-},{"./AutoFocusUtils":228,"./CSSPropertyOperations":231,"./DOMLazyTree":235,"./DOMNamespaces":236,"./DOMProperty":237,"./DOMPropertyOperations":238,"./EventConstants":243,"./EventPluginHub":244,"./EventPluginRegistry":245,"./ReactBrowserEventEmitter":254,"./ReactComponentBrowserEnvironment":259,"./ReactDOMButton":265,"./ReactDOMComponentFlags":267,"./ReactDOMComponentTree":268,"./ReactDOMInput":275,"./ReactDOMOption":278,"./ReactDOMSelect":279,"./ReactDOMTextarea":282,"./ReactInstrumentation":300,"./ReactMultiChild":304,"./ReactServerRenderingTransaction":315,"./escapeTextContentForBrowser":344,"./isEventSupported":358,"./reactProdInvariant":362,"./validateDOMNesting":368,"_process":218,"fbjs/lib/emptyFunction":23,"fbjs/lib/invariant":31,"fbjs/lib/keyOf":35,"fbjs/lib/shallowEqual":40,"fbjs/lib/warning":41,"object-assign":213}],267:[function(require,module,exports){
+},{"./AutoFocusUtils":229,"./CSSPropertyOperations":232,"./DOMLazyTree":236,"./DOMNamespaces":237,"./DOMProperty":238,"./DOMPropertyOperations":239,"./EventConstants":244,"./EventPluginHub":245,"./EventPluginRegistry":246,"./ReactBrowserEventEmitter":255,"./ReactComponentBrowserEnvironment":260,"./ReactDOMButton":266,"./ReactDOMComponentFlags":268,"./ReactDOMComponentTree":269,"./ReactDOMInput":276,"./ReactDOMOption":279,"./ReactDOMSelect":280,"./ReactDOMTextarea":283,"./ReactInstrumentation":301,"./ReactMultiChild":305,"./ReactServerRenderingTransaction":316,"./escapeTextContentForBrowser":345,"./isEventSupported":359,"./reactProdInvariant":363,"./validateDOMNesting":369,"_process":219,"fbjs/lib/emptyFunction":24,"fbjs/lib/invariant":32,"fbjs/lib/keyOf":36,"fbjs/lib/shallowEqual":41,"fbjs/lib/warning":42,"object-assign":214}],268:[function(require,module,exports){
 /**
  * Copyright 2015-present, Facebook, Inc.
  * All rights reserved.
@@ -41450,7 +41548,7 @@ var ReactDOMComponentFlags = {
 };
 
 module.exports = ReactDOMComponentFlags;
-},{}],268:[function(require,module,exports){
+},{}],269:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -41641,7 +41739,7 @@ var ReactDOMComponentTree = {
 
 module.exports = ReactDOMComponentTree;
 }).call(this,require('_process'))
-},{"./DOMProperty":237,"./ReactDOMComponentFlags":267,"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31}],269:[function(require,module,exports){
+},{"./DOMProperty":238,"./ReactDOMComponentFlags":268,"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32}],270:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -41677,7 +41775,7 @@ function ReactDOMContainerInfo(topLevelWrapper, node) {
 
 module.exports = ReactDOMContainerInfo;
 }).call(this,require('_process'))
-},{"./validateDOMNesting":368,"_process":218}],270:[function(require,module,exports){
+},{"./validateDOMNesting":369,"_process":219}],271:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -41747,7 +41845,7 @@ ReactDOMDebugTool.addDevtool(ReactDOMNullInputValuePropDevtool);
 
 module.exports = ReactDOMDebugTool;
 }).call(this,require('_process'))
-},{"./ReactDOMNullInputValuePropDevtool":277,"./ReactDOMUnknownPropertyDevtool":284,"./ReactDebugTool":285,"_process":218,"fbjs/lib/warning":41}],271:[function(require,module,exports){
+},{"./ReactDOMNullInputValuePropDevtool":278,"./ReactDOMUnknownPropertyDevtool":285,"./ReactDebugTool":286,"_process":219,"fbjs/lib/warning":42}],272:[function(require,module,exports){
 /**
  * Copyright 2014-present, Facebook, Inc.
  * All rights reserved.
@@ -41808,7 +41906,7 @@ _assign(ReactDOMEmptyComponent.prototype, {
 });
 
 module.exports = ReactDOMEmptyComponent;
-},{"./DOMLazyTree":235,"./ReactDOMComponentTree":268,"object-assign":213}],272:[function(require,module,exports){
+},{"./DOMLazyTree":236,"./ReactDOMComponentTree":269,"object-assign":214}],273:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -41987,7 +42085,7 @@ var ReactDOMFactories = mapObject({
 
 module.exports = ReactDOMFactories;
 }).call(this,require('_process'))
-},{"./ReactElement":288,"./ReactElementValidator":289,"_process":218,"fbjs/lib/mapObject":36}],273:[function(require,module,exports){
+},{"./ReactElement":289,"./ReactElementValidator":290,"_process":219,"fbjs/lib/mapObject":37}],274:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -42006,7 +42104,7 @@ var ReactDOMFeatureFlags = {
 };
 
 module.exports = ReactDOMFeatureFlags;
-},{}],274:[function(require,module,exports){
+},{}],275:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -42041,7 +42139,7 @@ var ReactDOMIDOperations = {
 };
 
 module.exports = ReactDOMIDOperations;
-},{"./DOMChildrenOperations":234,"./ReactDOMComponentTree":268}],275:[function(require,module,exports){
+},{"./DOMChildrenOperations":235,"./ReactDOMComponentTree":269}],276:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -42288,7 +42386,7 @@ function _handleChange(event) {
 
 module.exports = ReactDOMInput;
 }).call(this,require('_process'))
-},{"./DOMPropertyOperations":238,"./DisabledInputUtils":241,"./LinkedValueUtils":251,"./ReactDOMComponentTree":268,"./ReactUpdates":318,"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31,"fbjs/lib/warning":41,"object-assign":213}],276:[function(require,module,exports){
+},{"./DOMPropertyOperations":239,"./DisabledInputUtils":242,"./LinkedValueUtils":252,"./ReactDOMComponentTree":269,"./ReactUpdates":319,"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32,"fbjs/lib/warning":42,"object-assign":214}],277:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -42312,7 +42410,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = { debugTool: debugTool };
 }).call(this,require('_process'))
-},{"./ReactDOMDebugTool":270,"_process":218}],277:[function(require,module,exports){
+},{"./ReactDOMDebugTool":271,"_process":219}],278:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -42358,7 +42456,7 @@ var ReactDOMUnknownPropertyDevtool = {
 
 module.exports = ReactDOMUnknownPropertyDevtool;
 }).call(this,require('_process'))
-},{"./ReactComponentTreeDevtool":261,"_process":218,"fbjs/lib/warning":41}],278:[function(require,module,exports){
+},{"./ReactComponentTreeDevtool":262,"_process":219,"fbjs/lib/warning":42}],279:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -42484,7 +42582,7 @@ var ReactDOMOption = {
 
 module.exports = ReactDOMOption;
 }).call(this,require('_process'))
-},{"./ReactChildren":256,"./ReactDOMComponentTree":268,"./ReactDOMSelect":279,"_process":218,"fbjs/lib/warning":41,"object-assign":213}],279:[function(require,module,exports){
+},{"./ReactChildren":257,"./ReactDOMComponentTree":269,"./ReactDOMSelect":280,"_process":219,"fbjs/lib/warning":42,"object-assign":214}],280:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -42687,7 +42785,7 @@ function _handleChange(event) {
 
 module.exports = ReactDOMSelect;
 }).call(this,require('_process'))
-},{"./DisabledInputUtils":241,"./LinkedValueUtils":251,"./ReactDOMComponentTree":268,"./ReactUpdates":318,"_process":218,"fbjs/lib/warning":41,"object-assign":213}],280:[function(require,module,exports){
+},{"./DisabledInputUtils":242,"./LinkedValueUtils":252,"./ReactDOMComponentTree":269,"./ReactUpdates":319,"_process":219,"fbjs/lib/warning":42,"object-assign":214}],281:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -42900,7 +42998,7 @@ var ReactDOMSelection = {
 };
 
 module.exports = ReactDOMSelection;
-},{"./getNodeForCharacterOffset":354,"./getTextContentAccessor":355,"fbjs/lib/ExecutionEnvironment":17}],281:[function(require,module,exports){
+},{"./getNodeForCharacterOffset":355,"./getTextContentAccessor":356,"fbjs/lib/ExecutionEnvironment":18}],282:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -43074,7 +43172,7 @@ _assign(ReactDOMTextComponent.prototype, {
 
 module.exports = ReactDOMTextComponent;
 }).call(this,require('_process'))
-},{"./DOMChildrenOperations":234,"./DOMLazyTree":235,"./ReactDOMComponentTree":268,"./ReactInstrumentation":300,"./escapeTextContentForBrowser":344,"./reactProdInvariant":362,"./validateDOMNesting":368,"_process":218,"fbjs/lib/invariant":31,"object-assign":213}],282:[function(require,module,exports){
+},{"./DOMChildrenOperations":235,"./DOMLazyTree":236,"./ReactDOMComponentTree":269,"./ReactInstrumentation":301,"./escapeTextContentForBrowser":345,"./reactProdInvariant":363,"./validateDOMNesting":369,"_process":219,"fbjs/lib/invariant":32,"object-assign":214}],283:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -43232,7 +43330,7 @@ function _handleChange(event) {
 
 module.exports = ReactDOMTextarea;
 }).call(this,require('_process'))
-},{"./DisabledInputUtils":241,"./LinkedValueUtils":251,"./ReactDOMComponentTree":268,"./ReactUpdates":318,"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31,"fbjs/lib/warning":41,"object-assign":213}],283:[function(require,module,exports){
+},{"./DisabledInputUtils":242,"./LinkedValueUtils":252,"./ReactDOMComponentTree":269,"./ReactUpdates":319,"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32,"fbjs/lib/warning":42,"object-assign":214}],284:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -43371,7 +43469,7 @@ module.exports = {
   traverseEnterLeave: traverseEnterLeave
 };
 }).call(this,require('_process'))
-},{"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31}],284:[function(require,module,exports){
+},{"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32}],285:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -43486,7 +43584,7 @@ var ReactDOMUnknownPropertyDevtool = {
 
 module.exports = ReactDOMUnknownPropertyDevtool;
 }).call(this,require('_process'))
-},{"./DOMProperty":237,"./EventPluginRegistry":245,"./ReactComponentTreeDevtool":261,"_process":218,"fbjs/lib/warning":41}],285:[function(require,module,exports){
+},{"./DOMProperty":238,"./EventPluginRegistry":246,"./ReactComponentTreeDevtool":262,"_process":219,"fbjs/lib/warning":42}],286:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2016-present, Facebook, Inc.
@@ -43792,7 +43890,7 @@ if (/[?&]react_perf\b/.test(url)) {
 
 module.exports = ReactDebugTool;
 }).call(this,require('_process'))
-},{"./ReactComponentTreeDevtool":261,"./ReactHostOperationHistoryDevtool":296,"./ReactInvalidSetStateWarningDevTool":301,"_process":218,"fbjs/lib/ExecutionEnvironment":17,"fbjs/lib/performanceNow":39,"fbjs/lib/warning":41}],286:[function(require,module,exports){
+},{"./ReactComponentTreeDevtool":262,"./ReactHostOperationHistoryDevtool":297,"./ReactInvalidSetStateWarningDevTool":302,"_process":219,"fbjs/lib/ExecutionEnvironment":18,"fbjs/lib/performanceNow":40,"fbjs/lib/warning":42}],287:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -43861,7 +43959,7 @@ var ReactDefaultBatchingStrategy = {
 };
 
 module.exports = ReactDefaultBatchingStrategy;
-},{"./ReactUpdates":318,"./Transaction":336,"fbjs/lib/emptyFunction":23,"object-assign":213}],287:[function(require,module,exports){
+},{"./ReactUpdates":319,"./Transaction":337,"fbjs/lib/emptyFunction":24,"object-assign":214}],288:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -43946,7 +44044,7 @@ function inject() {
 module.exports = {
   inject: inject
 };
-},{"./BeforeInputEventPlugin":229,"./ChangeEventPlugin":233,"./DefaultEventPluginOrder":240,"./EnterLeaveEventPlugin":242,"./HTMLDOMPropertyConfig":249,"./ReactComponentBrowserEnvironment":259,"./ReactDOMComponent":266,"./ReactDOMComponentTree":268,"./ReactDOMEmptyComponent":271,"./ReactDOMTextComponent":281,"./ReactDOMTreeTraversal":283,"./ReactDefaultBatchingStrategy":286,"./ReactEventListener":293,"./ReactInjection":297,"./ReactReconcileTransaction":312,"./SVGDOMPropertyConfig":320,"./SelectEventPlugin":321,"./SimpleEventPlugin":322}],288:[function(require,module,exports){
+},{"./BeforeInputEventPlugin":230,"./ChangeEventPlugin":234,"./DefaultEventPluginOrder":241,"./EnterLeaveEventPlugin":243,"./HTMLDOMPropertyConfig":250,"./ReactComponentBrowserEnvironment":260,"./ReactDOMComponent":267,"./ReactDOMComponentTree":269,"./ReactDOMEmptyComponent":272,"./ReactDOMTextComponent":282,"./ReactDOMTreeTraversal":284,"./ReactDefaultBatchingStrategy":287,"./ReactEventListener":294,"./ReactInjection":298,"./ReactReconcileTransaction":313,"./SVGDOMPropertyConfig":321,"./SelectEventPlugin":322,"./SimpleEventPlugin":323}],289:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -44301,7 +44399,7 @@ ReactElement.REACT_ELEMENT_TYPE = REACT_ELEMENT_TYPE;
 
 module.exports = ReactElement;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":263,"./canDefineProperty":340,"_process":218,"fbjs/lib/warning":41,"object-assign":213}],289:[function(require,module,exports){
+},{"./ReactCurrentOwner":264,"./canDefineProperty":341,"_process":219,"fbjs/lib/warning":42,"object-assign":214}],290:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -44530,7 +44628,7 @@ var ReactElementValidator = {
 
 module.exports = ReactElementValidator;
 }).call(this,require('_process'))
-},{"./ReactComponentTreeDevtool":261,"./ReactCurrentOwner":263,"./ReactElement":288,"./ReactPropTypeLocations":310,"./canDefineProperty":340,"./checkReactTypeSpec":341,"./getIteratorFn":353,"_process":218,"fbjs/lib/warning":41}],290:[function(require,module,exports){
+},{"./ReactComponentTreeDevtool":262,"./ReactCurrentOwner":264,"./ReactElement":289,"./ReactPropTypeLocations":311,"./canDefineProperty":341,"./checkReactTypeSpec":342,"./getIteratorFn":354,"_process":219,"fbjs/lib/warning":42}],291:[function(require,module,exports){
 /**
  * Copyright 2014-present, Facebook, Inc.
  * All rights reserved.
@@ -44561,7 +44659,7 @@ var ReactEmptyComponent = {
 ReactEmptyComponent.injection = ReactEmptyComponentInjection;
 
 module.exports = ReactEmptyComponent;
-},{}],291:[function(require,module,exports){
+},{}],292:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -44640,7 +44738,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = ReactErrorUtils;
 }).call(this,require('_process'))
-},{"_process":218}],292:[function(require,module,exports){
+},{"_process":219}],293:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -44674,7 +44772,7 @@ var ReactEventEmitterMixin = {
 };
 
 module.exports = ReactEventEmitterMixin;
-},{"./EventPluginHub":244}],293:[function(require,module,exports){
+},{"./EventPluginHub":245}],294:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -44832,7 +44930,7 @@ var ReactEventListener = {
 };
 
 module.exports = ReactEventListener;
-},{"./PooledClass":252,"./ReactDOMComponentTree":268,"./ReactUpdates":318,"./getEventTarget":351,"fbjs/lib/EventListener":16,"fbjs/lib/ExecutionEnvironment":17,"fbjs/lib/getUnboundedScrollPosition":28,"object-assign":213}],294:[function(require,module,exports){
+},{"./PooledClass":253,"./ReactDOMComponentTree":269,"./ReactUpdates":319,"./getEventTarget":352,"fbjs/lib/EventListener":17,"fbjs/lib/ExecutionEnvironment":18,"fbjs/lib/getUnboundedScrollPosition":29,"object-assign":214}],295:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -44855,7 +44953,7 @@ var ReactFeatureFlags = {
 };
 
 module.exports = ReactFeatureFlags;
-},{}],295:[function(require,module,exports){
+},{}],296:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -44934,7 +45032,7 @@ var ReactHostComponent = {
 
 module.exports = ReactHostComponent;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31,"object-assign":213}],296:[function(require,module,exports){
+},{"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32,"object-assign":214}],297:[function(require,module,exports){
 /**
  * Copyright 2016-present, Facebook, Inc.
  * All rights reserved.
@@ -44972,7 +45070,7 @@ var ReactHostOperationHistoryDevtool = {
 };
 
 module.exports = ReactHostOperationHistoryDevtool;
-},{}],297:[function(require,module,exports){
+},{}],298:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -45009,7 +45107,7 @@ var ReactInjection = {
 };
 
 module.exports = ReactInjection;
-},{"./DOMProperty":237,"./EventPluginHub":244,"./EventPluginUtils":246,"./ReactBrowserEventEmitter":254,"./ReactClass":257,"./ReactComponentEnvironment":260,"./ReactEmptyComponent":290,"./ReactHostComponent":295,"./ReactUpdates":318}],298:[function(require,module,exports){
+},{"./DOMProperty":238,"./EventPluginHub":245,"./EventPluginUtils":247,"./ReactBrowserEventEmitter":255,"./ReactClass":258,"./ReactComponentEnvironment":261,"./ReactEmptyComponent":291,"./ReactHostComponent":296,"./ReactUpdates":319}],299:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -45134,7 +45232,7 @@ var ReactInputSelection = {
 };
 
 module.exports = ReactInputSelection;
-},{"./ReactDOMSelection":280,"fbjs/lib/containsNode":20,"fbjs/lib/focusNode":25,"fbjs/lib/getActiveElement":26}],299:[function(require,module,exports){
+},{"./ReactDOMSelection":281,"fbjs/lib/containsNode":21,"fbjs/lib/focusNode":26,"fbjs/lib/getActiveElement":27}],300:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -45183,7 +45281,7 @@ var ReactInstanceMap = {
 };
 
 module.exports = ReactInstanceMap;
-},{}],300:[function(require,module,exports){
+},{}],301:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2016-present, Facebook, Inc.
@@ -45207,7 +45305,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = { debugTool: debugTool };
 }).call(this,require('_process'))
-},{"./ReactDebugTool":285,"_process":218}],301:[function(require,module,exports){
+},{"./ReactDebugTool":286,"_process":219}],302:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2016-present, Facebook, Inc.
@@ -45246,7 +45344,7 @@ var ReactInvalidSetStateWarningDevTool = {
 
 module.exports = ReactInvalidSetStateWarningDevTool;
 }).call(this,require('_process'))
-},{"_process":218,"fbjs/lib/warning":41}],302:[function(require,module,exports){
+},{"_process":219,"fbjs/lib/warning":42}],303:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -45297,7 +45395,7 @@ var ReactMarkupChecksum = {
 };
 
 module.exports = ReactMarkupChecksum;
-},{"./adler32":339}],303:[function(require,module,exports){
+},{"./adler32":340}],304:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -45799,7 +45897,7 @@ var ReactMount = {
 
 module.exports = ReactMount;
 }).call(this,require('_process'))
-},{"./DOMLazyTree":235,"./DOMProperty":237,"./ReactBrowserEventEmitter":254,"./ReactCurrentOwner":263,"./ReactDOMComponentTree":268,"./ReactDOMContainerInfo":269,"./ReactDOMFeatureFlags":273,"./ReactElement":288,"./ReactFeatureFlags":294,"./ReactInstanceMap":299,"./ReactInstrumentation":300,"./ReactMarkupChecksum":302,"./ReactReconciler":313,"./ReactUpdateQueue":317,"./ReactUpdates":318,"./instantiateReactComponent":357,"./reactProdInvariant":362,"./setInnerHTML":364,"./shouldUpdateReactComponent":366,"_process":218,"fbjs/lib/emptyObject":24,"fbjs/lib/invariant":31,"fbjs/lib/warning":41}],304:[function(require,module,exports){
+},{"./DOMLazyTree":236,"./DOMProperty":238,"./ReactBrowserEventEmitter":255,"./ReactCurrentOwner":264,"./ReactDOMComponentTree":269,"./ReactDOMContainerInfo":270,"./ReactDOMFeatureFlags":274,"./ReactElement":289,"./ReactFeatureFlags":295,"./ReactInstanceMap":300,"./ReactInstrumentation":301,"./ReactMarkupChecksum":303,"./ReactReconciler":314,"./ReactUpdateQueue":318,"./ReactUpdates":319,"./instantiateReactComponent":358,"./reactProdInvariant":363,"./setInnerHTML":365,"./shouldUpdateReactComponent":367,"_process":219,"fbjs/lib/emptyObject":25,"fbjs/lib/invariant":32,"fbjs/lib/warning":42}],305:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -46252,7 +46350,7 @@ var ReactMultiChild = {
 
 module.exports = ReactMultiChild;
 }).call(this,require('_process'))
-},{"./ReactChildReconciler":255,"./ReactComponentEnvironment":260,"./ReactCurrentOwner":263,"./ReactInstanceMap":299,"./ReactInstrumentation":300,"./ReactMultiChildUpdateTypes":305,"./ReactReconciler":313,"./flattenChildren":346,"./reactProdInvariant":362,"_process":218,"fbjs/lib/emptyFunction":23,"fbjs/lib/invariant":31}],305:[function(require,module,exports){
+},{"./ReactChildReconciler":256,"./ReactComponentEnvironment":261,"./ReactCurrentOwner":264,"./ReactInstanceMap":300,"./ReactInstrumentation":301,"./ReactMultiChildUpdateTypes":306,"./ReactReconciler":314,"./flattenChildren":347,"./reactProdInvariant":363,"_process":219,"fbjs/lib/emptyFunction":24,"fbjs/lib/invariant":32}],306:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -46285,7 +46383,7 @@ var ReactMultiChildUpdateTypes = keyMirror({
 });
 
 module.exports = ReactMultiChildUpdateTypes;
-},{"fbjs/lib/keyMirror":34}],306:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":35}],307:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -46328,7 +46426,7 @@ var ReactNodeTypes = {
 
 module.exports = ReactNodeTypes;
 }).call(this,require('_process'))
-},{"./ReactElement":288,"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31}],307:[function(require,module,exports){
+},{"./ReactElement":289,"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32}],308:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -46427,7 +46525,7 @@ var ReactNoopUpdateQueue = {
 
 module.exports = ReactNoopUpdateQueue;
 }).call(this,require('_process'))
-},{"_process":218,"fbjs/lib/warning":41}],308:[function(require,module,exports){
+},{"_process":219,"fbjs/lib/warning":42}],309:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -46524,7 +46622,7 @@ var ReactOwner = {
 
 module.exports = ReactOwner;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31}],309:[function(require,module,exports){
+},{"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32}],310:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -46551,7 +46649,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = ReactPropTypeLocationNames;
 }).call(this,require('_process'))
-},{"_process":218}],310:[function(require,module,exports){
+},{"_process":219}],311:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -46574,7 +46672,7 @@ var ReactPropTypeLocations = keyMirror({
 });
 
 module.exports = ReactPropTypeLocations;
-},{"fbjs/lib/keyMirror":34}],311:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":35}],312:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -46978,7 +47076,7 @@ function getClassName(propValue) {
 }
 
 module.exports = ReactPropTypes;
-},{"./ReactElement":288,"./ReactPropTypeLocationNames":309,"./getIteratorFn":353,"fbjs/lib/emptyFunction":23}],312:[function(require,module,exports){
+},{"./ReactElement":289,"./ReactPropTypeLocationNames":310,"./getIteratorFn":354,"fbjs/lib/emptyFunction":24}],313:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -47159,7 +47257,7 @@ PooledClass.addPoolingTo(ReactReconcileTransaction);
 
 module.exports = ReactReconcileTransaction;
 }).call(this,require('_process'))
-},{"./CallbackQueue":232,"./PooledClass":252,"./ReactBrowserEventEmitter":254,"./ReactInputSelection":298,"./ReactInstrumentation":300,"./ReactUpdateQueue":317,"./Transaction":336,"_process":218,"object-assign":213}],313:[function(require,module,exports){
+},{"./CallbackQueue":233,"./PooledClass":253,"./ReactBrowserEventEmitter":255,"./ReactInputSelection":299,"./ReactInstrumentation":301,"./ReactUpdateQueue":318,"./Transaction":337,"_process":219,"object-assign":214}],314:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -47338,7 +47436,7 @@ var ReactReconciler = {
 
 module.exports = ReactReconciler;
 }).call(this,require('_process'))
-},{"./ReactInstrumentation":300,"./ReactRef":314,"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31}],314:[function(require,module,exports){
+},{"./ReactInstrumentation":301,"./ReactRef":315,"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32}],315:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -47417,7 +47515,7 @@ ReactRef.detachRefs = function (instance, element) {
 };
 
 module.exports = ReactRef;
-},{"./ReactOwner":308}],315:[function(require,module,exports){
+},{"./ReactOwner":309}],316:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -47510,7 +47608,7 @@ PooledClass.addPoolingTo(ReactServerRenderingTransaction);
 
 module.exports = ReactServerRenderingTransaction;
 }).call(this,require('_process'))
-},{"./PooledClass":252,"./ReactInstrumentation":300,"./ReactServerUpdateQueue":316,"./Transaction":336,"_process":218,"object-assign":213}],316:[function(require,module,exports){
+},{"./PooledClass":253,"./ReactInstrumentation":301,"./ReactServerUpdateQueue":317,"./Transaction":337,"_process":219,"object-assign":214}],317:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -47654,7 +47752,7 @@ var ReactServerUpdateQueue = function () {
 
 module.exports = ReactServerUpdateQueue;
 }).call(this,require('_process'))
-},{"./ReactUpdateQueue":317,"./Transaction":336,"_process":218,"fbjs/lib/warning":41}],317:[function(require,module,exports){
+},{"./ReactUpdateQueue":318,"./Transaction":337,"_process":219,"fbjs/lib/warning":42}],318:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -47882,7 +47980,7 @@ var ReactUpdateQueue = {
 
 module.exports = ReactUpdateQueue;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":263,"./ReactInstanceMap":299,"./ReactInstrumentation":300,"./ReactUpdates":318,"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31,"fbjs/lib/warning":41}],318:[function(require,module,exports){
+},{"./ReactCurrentOwner":264,"./ReactInstanceMap":300,"./ReactInstrumentation":301,"./ReactUpdates":319,"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32,"fbjs/lib/warning":42}],319:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -48136,7 +48234,7 @@ var ReactUpdates = {
 
 module.exports = ReactUpdates;
 }).call(this,require('_process'))
-},{"./CallbackQueue":232,"./PooledClass":252,"./ReactFeatureFlags":294,"./ReactReconciler":313,"./Transaction":336,"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31,"object-assign":213}],319:[function(require,module,exports){
+},{"./CallbackQueue":233,"./PooledClass":253,"./ReactFeatureFlags":295,"./ReactReconciler":314,"./Transaction":337,"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32,"object-assign":214}],320:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -48151,7 +48249,7 @@ module.exports = ReactUpdates;
 'use strict';
 
 module.exports = '15.2.1';
-},{}],320:[function(require,module,exports){
+},{}],321:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -48452,7 +48550,7 @@ Object.keys(ATTRS).forEach(function (key) {
 });
 
 module.exports = SVGDOMPropertyConfig;
-},{}],321:[function(require,module,exports){
+},{}],322:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -48649,7 +48747,7 @@ var SelectEventPlugin = {
 };
 
 module.exports = SelectEventPlugin;
-},{"./EventConstants":243,"./EventPropagators":247,"./ReactDOMComponentTree":268,"./ReactInputSelection":298,"./SyntheticEvent":327,"./isTextInputElement":359,"fbjs/lib/ExecutionEnvironment":17,"fbjs/lib/getActiveElement":26,"fbjs/lib/keyOf":35,"fbjs/lib/shallowEqual":40}],322:[function(require,module,exports){
+},{"./EventConstants":244,"./EventPropagators":248,"./ReactDOMComponentTree":269,"./ReactInputSelection":299,"./SyntheticEvent":328,"./isTextInputElement":360,"fbjs/lib/ExecutionEnvironment":18,"fbjs/lib/getActiveElement":27,"fbjs/lib/keyOf":36,"fbjs/lib/shallowEqual":41}],323:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -49281,7 +49379,7 @@ var SimpleEventPlugin = {
 
 module.exports = SimpleEventPlugin;
 }).call(this,require('_process'))
-},{"./EventConstants":243,"./EventPropagators":247,"./ReactDOMComponentTree":268,"./SyntheticAnimationEvent":323,"./SyntheticClipboardEvent":324,"./SyntheticDragEvent":326,"./SyntheticEvent":327,"./SyntheticFocusEvent":328,"./SyntheticKeyboardEvent":330,"./SyntheticMouseEvent":331,"./SyntheticTouchEvent":332,"./SyntheticTransitionEvent":333,"./SyntheticUIEvent":334,"./SyntheticWheelEvent":335,"./getEventCharCode":348,"./reactProdInvariant":362,"_process":218,"fbjs/lib/EventListener":16,"fbjs/lib/emptyFunction":23,"fbjs/lib/invariant":31,"fbjs/lib/keyOf":35}],323:[function(require,module,exports){
+},{"./EventConstants":244,"./EventPropagators":248,"./ReactDOMComponentTree":269,"./SyntheticAnimationEvent":324,"./SyntheticClipboardEvent":325,"./SyntheticDragEvent":327,"./SyntheticEvent":328,"./SyntheticFocusEvent":329,"./SyntheticKeyboardEvent":331,"./SyntheticMouseEvent":332,"./SyntheticTouchEvent":333,"./SyntheticTransitionEvent":334,"./SyntheticUIEvent":335,"./SyntheticWheelEvent":336,"./getEventCharCode":349,"./reactProdInvariant":363,"_process":219,"fbjs/lib/EventListener":17,"fbjs/lib/emptyFunction":24,"fbjs/lib/invariant":32,"fbjs/lib/keyOf":36}],324:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -49321,7 +49419,7 @@ function SyntheticAnimationEvent(dispatchConfig, dispatchMarker, nativeEvent, na
 SyntheticEvent.augmentClass(SyntheticAnimationEvent, AnimationEventInterface);
 
 module.exports = SyntheticAnimationEvent;
-},{"./SyntheticEvent":327}],324:[function(require,module,exports){
+},{"./SyntheticEvent":328}],325:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -49360,7 +49458,7 @@ function SyntheticClipboardEvent(dispatchConfig, dispatchMarker, nativeEvent, na
 SyntheticEvent.augmentClass(SyntheticClipboardEvent, ClipboardEventInterface);
 
 module.exports = SyntheticClipboardEvent;
-},{"./SyntheticEvent":327}],325:[function(require,module,exports){
+},{"./SyntheticEvent":328}],326:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -49397,7 +49495,7 @@ function SyntheticCompositionEvent(dispatchConfig, dispatchMarker, nativeEvent, 
 SyntheticEvent.augmentClass(SyntheticCompositionEvent, CompositionEventInterface);
 
 module.exports = SyntheticCompositionEvent;
-},{"./SyntheticEvent":327}],326:[function(require,module,exports){
+},{"./SyntheticEvent":328}],327:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -49434,7 +49532,7 @@ function SyntheticDragEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeE
 SyntheticMouseEvent.augmentClass(SyntheticDragEvent, DragEventInterface);
 
 module.exports = SyntheticDragEvent;
-},{"./SyntheticMouseEvent":331}],327:[function(require,module,exports){
+},{"./SyntheticMouseEvent":332}],328:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -49697,7 +49795,7 @@ function getPooledWarningPropertyDefinition(propName, getVal) {
   }
 }
 }).call(this,require('_process'))
-},{"./PooledClass":252,"_process":218,"fbjs/lib/emptyFunction":23,"fbjs/lib/warning":41,"object-assign":213}],328:[function(require,module,exports){
+},{"./PooledClass":253,"_process":219,"fbjs/lib/emptyFunction":24,"fbjs/lib/warning":42,"object-assign":214}],329:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -49734,7 +49832,7 @@ function SyntheticFocusEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticFocusEvent, FocusEventInterface);
 
 module.exports = SyntheticFocusEvent;
-},{"./SyntheticUIEvent":334}],329:[function(require,module,exports){
+},{"./SyntheticUIEvent":335}],330:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -49772,7 +49870,7 @@ function SyntheticInputEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticEvent.augmentClass(SyntheticInputEvent, InputEventInterface);
 
 module.exports = SyntheticInputEvent;
-},{"./SyntheticEvent":327}],330:[function(require,module,exports){
+},{"./SyntheticEvent":328}],331:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -49857,7 +49955,7 @@ function SyntheticKeyboardEvent(dispatchConfig, dispatchMarker, nativeEvent, nat
 SyntheticUIEvent.augmentClass(SyntheticKeyboardEvent, KeyboardEventInterface);
 
 module.exports = SyntheticKeyboardEvent;
-},{"./SyntheticUIEvent":334,"./getEventCharCode":348,"./getEventKey":349,"./getEventModifierState":350}],331:[function(require,module,exports){
+},{"./SyntheticUIEvent":335,"./getEventCharCode":349,"./getEventKey":350,"./getEventModifierState":351}],332:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -49930,7 +50028,7 @@ function SyntheticMouseEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticMouseEvent, MouseEventInterface);
 
 module.exports = SyntheticMouseEvent;
-},{"./SyntheticUIEvent":334,"./ViewportMetrics":337,"./getEventModifierState":350}],332:[function(require,module,exports){
+},{"./SyntheticUIEvent":335,"./ViewportMetrics":338,"./getEventModifierState":351}],333:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -49976,7 +50074,7 @@ function SyntheticTouchEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticTouchEvent, TouchEventInterface);
 
 module.exports = SyntheticTouchEvent;
-},{"./SyntheticUIEvent":334,"./getEventModifierState":350}],333:[function(require,module,exports){
+},{"./SyntheticUIEvent":335,"./getEventModifierState":351}],334:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -50016,7 +50114,7 @@ function SyntheticTransitionEvent(dispatchConfig, dispatchMarker, nativeEvent, n
 SyntheticEvent.augmentClass(SyntheticTransitionEvent, TransitionEventInterface);
 
 module.exports = SyntheticTransitionEvent;
-},{"./SyntheticEvent":327}],334:[function(require,module,exports){
+},{"./SyntheticEvent":328}],335:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -50076,7 +50174,7 @@ function SyntheticUIEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeEve
 SyntheticEvent.augmentClass(SyntheticUIEvent, UIEventInterface);
 
 module.exports = SyntheticUIEvent;
-},{"./SyntheticEvent":327,"./getEventTarget":351}],335:[function(require,module,exports){
+},{"./SyntheticEvent":328,"./getEventTarget":352}],336:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -50131,7 +50229,7 @@ function SyntheticWheelEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticMouseEvent.augmentClass(SyntheticWheelEvent, WheelEventInterface);
 
 module.exports = SyntheticWheelEvent;
-},{"./SyntheticMouseEvent":331}],336:[function(require,module,exports){
+},{"./SyntheticMouseEvent":332}],337:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -50367,7 +50465,7 @@ var Transaction = {
 
 module.exports = Transaction;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31}],337:[function(require,module,exports){
+},{"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32}],338:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -50395,7 +50493,7 @@ var ViewportMetrics = {
 };
 
 module.exports = ViewportMetrics;
-},{}],338:[function(require,module,exports){
+},{}],339:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -50456,7 +50554,7 @@ function accumulateInto(current, next) {
 
 module.exports = accumulateInto;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31}],339:[function(require,module,exports){
+},{"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32}],340:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -50501,7 +50599,7 @@ function adler32(data) {
 }
 
 module.exports = adler32;
-},{}],340:[function(require,module,exports){
+},{}],341:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -50528,7 +50626,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = canDefineProperty;
 }).call(this,require('_process'))
-},{"_process":218}],341:[function(require,module,exports){
+},{"_process":219}],342:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -50604,7 +50702,7 @@ function checkReactTypeSpec(typeSpecs, values, location, componentName, element,
 
 module.exports = checkReactTypeSpec;
 }).call(this,require('_process'))
-},{"./ReactComponentTreeDevtool":261,"./ReactPropTypeLocationNames":309,"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31,"fbjs/lib/warning":41}],342:[function(require,module,exports){
+},{"./ReactComponentTreeDevtool":262,"./ReactPropTypeLocationNames":310,"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32,"fbjs/lib/warning":42}],343:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -50637,7 +50735,7 @@ var createMicrosoftUnsafeLocalFunction = function (func) {
 };
 
 module.exports = createMicrosoftUnsafeLocalFunction;
-},{}],343:[function(require,module,exports){
+},{}],344:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -50719,7 +50817,7 @@ function dangerousStyleValue(name, value, component) {
 
 module.exports = dangerousStyleValue;
 }).call(this,require('_process'))
-},{"./CSSProperty":230,"_process":218,"fbjs/lib/warning":41}],344:[function(require,module,exports){
+},{"./CSSProperty":231,"_process":219,"fbjs/lib/warning":42}],345:[function(require,module,exports){
 /**
  * Copyright 2016-present, Facebook, Inc.
  * All rights reserved.
@@ -50842,7 +50940,7 @@ function escapeTextContentForBrowser(text) {
 }
 
 module.exports = escapeTextContentForBrowser;
-},{}],345:[function(require,module,exports){
+},{}],346:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -50905,7 +51003,7 @@ function findDOMNode(componentOrElement) {
 
 module.exports = findDOMNode;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":263,"./ReactDOMComponentTree":268,"./ReactInstanceMap":299,"./getHostComponentFromComposite":352,"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31,"fbjs/lib/warning":41}],346:[function(require,module,exports){
+},{"./ReactCurrentOwner":264,"./ReactDOMComponentTree":269,"./ReactInstanceMap":300,"./getHostComponentFromComposite":353,"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32,"fbjs/lib/warning":42}],347:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -50969,7 +51067,7 @@ function flattenChildren(children, selfDebugID) {
 
 module.exports = flattenChildren;
 }).call(this,require('_process'))
-},{"./KeyEscapeUtils":250,"./ReactComponentTreeDevtool":261,"./traverseAllChildren":367,"_process":218,"fbjs/lib/warning":41}],347:[function(require,module,exports){
+},{"./KeyEscapeUtils":251,"./ReactComponentTreeDevtool":262,"./traverseAllChildren":368,"_process":219,"fbjs/lib/warning":42}],348:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -51001,7 +51099,7 @@ function forEachAccumulated(arr, cb, scope) {
 }
 
 module.exports = forEachAccumulated;
-},{}],348:[function(require,module,exports){
+},{}],349:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -51052,7 +51150,7 @@ function getEventCharCode(nativeEvent) {
 }
 
 module.exports = getEventCharCode;
-},{}],349:[function(require,module,exports){
+},{}],350:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -51155,7 +51253,7 @@ function getEventKey(nativeEvent) {
 }
 
 module.exports = getEventKey;
-},{"./getEventCharCode":348}],350:[function(require,module,exports){
+},{"./getEventCharCode":349}],351:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -51199,7 +51297,7 @@ function getEventModifierState(nativeEvent) {
 }
 
 module.exports = getEventModifierState;
-},{}],351:[function(require,module,exports){
+},{}],352:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -51235,7 +51333,7 @@ function getEventTarget(nativeEvent) {
 }
 
 module.exports = getEventTarget;
-},{}],352:[function(require,module,exports){
+},{}],353:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -51266,7 +51364,7 @@ function getHostComponentFromComposite(inst) {
 }
 
 module.exports = getHostComponentFromComposite;
-},{"./ReactNodeTypes":306}],353:[function(require,module,exports){
+},{"./ReactNodeTypes":307}],354:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -51308,7 +51406,7 @@ function getIteratorFn(maybeIterable) {
 }
 
 module.exports = getIteratorFn;
-},{}],354:[function(require,module,exports){
+},{}],355:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -51383,7 +51481,7 @@ function getNodeForCharacterOffset(root, offset) {
 }
 
 module.exports = getNodeForCharacterOffset;
-},{}],355:[function(require,module,exports){
+},{}],356:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -51417,7 +51515,7 @@ function getTextContentAccessor() {
 }
 
 module.exports = getTextContentAccessor;
-},{"fbjs/lib/ExecutionEnvironment":17}],356:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":18}],357:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -51519,7 +51617,7 @@ function getVendorPrefixedEventName(eventName) {
 }
 
 module.exports = getVendorPrefixedEventName;
-},{"fbjs/lib/ExecutionEnvironment":17}],357:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":18}],358:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -51668,7 +51766,7 @@ function instantiateReactComponent(node, shouldHaveDebugID) {
 
 module.exports = instantiateReactComponent;
 }).call(this,require('_process'))
-},{"./ReactCompositeComponent":262,"./ReactEmptyComponent":290,"./ReactHostComponent":295,"./ReactInstrumentation":300,"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31,"fbjs/lib/warning":41,"object-assign":213}],358:[function(require,module,exports){
+},{"./ReactCompositeComponent":263,"./ReactEmptyComponent":291,"./ReactHostComponent":296,"./ReactInstrumentation":301,"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32,"fbjs/lib/warning":42,"object-assign":214}],359:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -51729,7 +51827,7 @@ function isEventSupported(eventNameSuffix, capture) {
 }
 
 module.exports = isEventSupported;
-},{"fbjs/lib/ExecutionEnvironment":17}],359:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":18}],360:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -51781,7 +51879,7 @@ function isTextInputElement(elem) {
 }
 
 module.exports = isTextInputElement;
-},{}],360:[function(require,module,exports){
+},{}],361:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -51822,7 +51920,7 @@ function onlyChild(children) {
 
 module.exports = onlyChild;
 }).call(this,require('_process'))
-},{"./ReactElement":288,"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31}],361:[function(require,module,exports){
+},{"./ReactElement":289,"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32}],362:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -51849,7 +51947,7 @@ function quoteAttributeValueForBrowser(value) {
 }
 
 module.exports = quoteAttributeValueForBrowser;
-},{"./escapeTextContentForBrowser":344}],362:[function(require,module,exports){
+},{"./escapeTextContentForBrowser":345}],363:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -51889,7 +51987,7 @@ function reactProdInvariant(code) {
 }
 
 module.exports = reactProdInvariant;
-},{}],363:[function(require,module,exports){
+},{}],364:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -51906,7 +52004,7 @@ module.exports = reactProdInvariant;
 var ReactMount = require('./ReactMount');
 
 module.exports = ReactMount.renderSubtreeIntoContainer;
-},{"./ReactMount":303}],364:[function(require,module,exports){
+},{"./ReactMount":304}],365:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -52005,7 +52103,7 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = setInnerHTML;
-},{"./DOMNamespaces":236,"./createMicrosoftUnsafeLocalFunction":342,"fbjs/lib/ExecutionEnvironment":17}],365:[function(require,module,exports){
+},{"./DOMNamespaces":237,"./createMicrosoftUnsafeLocalFunction":343,"fbjs/lib/ExecutionEnvironment":18}],366:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -52054,7 +52152,7 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = setTextContent;
-},{"./escapeTextContentForBrowser":344,"./setInnerHTML":364,"fbjs/lib/ExecutionEnvironment":17}],366:[function(require,module,exports){
+},{"./escapeTextContentForBrowser":345,"./setInnerHTML":365,"fbjs/lib/ExecutionEnvironment":18}],367:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -52097,7 +52195,7 @@ function shouldUpdateReactComponent(prevElement, nextElement) {
 }
 
 module.exports = shouldUpdateReactComponent;
-},{}],367:[function(require,module,exports){
+},{}],368:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -52260,7 +52358,7 @@ function traverseAllChildren(children, callback, traverseContext) {
 
 module.exports = traverseAllChildren;
 }).call(this,require('_process'))
-},{"./KeyEscapeUtils":250,"./ReactCurrentOwner":263,"./ReactElement":288,"./getIteratorFn":353,"./reactProdInvariant":362,"_process":218,"fbjs/lib/invariant":31,"fbjs/lib/warning":41}],368:[function(require,module,exports){
+},{"./KeyEscapeUtils":251,"./ReactCurrentOwner":264,"./ReactElement":289,"./getIteratorFn":354,"./reactProdInvariant":363,"_process":219,"fbjs/lib/invariant":32,"fbjs/lib/warning":42}],369:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -52632,12 +52730,12 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = validateDOMNesting;
 }).call(this,require('_process'))
-},{"_process":218,"fbjs/lib/emptyFunction":23,"fbjs/lib/warning":41,"object-assign":213}],369:[function(require,module,exports){
+},{"_process":219,"fbjs/lib/emptyFunction":24,"fbjs/lib/warning":42,"object-assign":214}],370:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/React');
 
-},{"./lib/React":253}],370:[function(require,module,exports){
+},{"./lib/React":254}],371:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52661,7 +52759,7 @@ var thunk = createThunkMiddleware();
 thunk.withExtraArgument = createThunkMiddleware;
 
 exports['default'] = thunk;
-},{}],371:[function(require,module,exports){
+},{}],372:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52720,7 +52818,7 @@ function applyMiddleware() {
     };
   };
 }
-},{"./compose":374}],372:[function(require,module,exports){
+},{"./compose":375}],373:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52772,7 +52870,7 @@ function bindActionCreators(actionCreators, dispatch) {
   }
   return boundActionCreators;
 }
-},{}],373:[function(require,module,exports){
+},{}],374:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -52902,7 +53000,7 @@ function combineReducers(reducers) {
   };
 }
 }).call(this,require('_process'))
-},{"./createStore":375,"./utils/warning":377,"_process":218,"lodash/isPlainObject":75}],374:[function(require,module,exports){
+},{"./createStore":376,"./utils/warning":378,"_process":219,"lodash/isPlainObject":76}],375:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -52943,7 +53041,7 @@ function compose() {
     if (typeof _ret === "object") return _ret.v;
   }
 }
-},{}],375:[function(require,module,exports){
+},{}],376:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53206,7 +53304,7 @@ function createStore(reducer, initialState, enhancer) {
     replaceReducer: replaceReducer
   }, _ref2[_symbolObservable2["default"]] = observable, _ref2;
 }
-},{"lodash/isPlainObject":75,"symbol-observable":381}],376:[function(require,module,exports){
+},{"lodash/isPlainObject":76,"symbol-observable":382}],377:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -53255,7 +53353,7 @@ exports.bindActionCreators = _bindActionCreators2["default"];
 exports.applyMiddleware = _applyMiddleware2["default"];
 exports.compose = _compose2["default"];
 }).call(this,require('_process'))
-},{"./applyMiddleware":371,"./bindActionCreators":372,"./combineReducers":373,"./compose":374,"./createStore":375,"./utils/warning":377,"_process":218}],377:[function(require,module,exports){
+},{"./applyMiddleware":372,"./bindActionCreators":373,"./combineReducers":374,"./compose":375,"./createStore":376,"./utils/warning":378,"_process":219}],378:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53281,7 +53379,7 @@ function warning(message) {
   } catch (e) {}
   /* eslint-enable no-empty */
 }
-},{}],378:[function(require,module,exports){
+},{}],379:[function(require,module,exports){
 // Copyright 2014 Simon Lydell
 // X11 (“MIT”) Licensed. (See LICENSE.)
 
@@ -53330,7 +53428,7 @@ void (function(root, factory) {
 
 }));
 
-},{}],379:[function(require,module,exports){
+},{}],380:[function(require,module,exports){
 'use strict';
 
 module.exports = ShelfPack;
@@ -53573,7 +53671,7 @@ Shelf.prototype.resize = function(w) {
     return true;
 };
 
-},{}],380:[function(require,module,exports){
+},{}],381:[function(require,module,exports){
 'use strict';
 
 var kdbush = require('kdbush');
@@ -53788,7 +53886,7 @@ function getY(p) {
     return p.y;
 }
 
-},{"kdbush":68}],381:[function(require,module,exports){
+},{"kdbush":69}],382:[function(require,module,exports){
 (function (global){
 /* global window */
 'use strict';
@@ -53796,7 +53894,7 @@ function getY(p) {
 module.exports = require('./ponyfill')(global || window || this);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./ponyfill":382}],382:[function(require,module,exports){
+},{"./ponyfill":383}],383:[function(require,module,exports){
 'use strict';
 
 module.exports = function symbolObservablePonyfill(root) {
@@ -53817,7 +53915,7 @@ module.exports = function symbolObservablePonyfill(root) {
 	return result;
 };
 
-},{}],383:[function(require,module,exports){
+},{}],384:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -55367,7 +55465,7 @@ module.exports = function symbolObservablePonyfill(root) {
   }
 }.call(this));
 
-},{}],384:[function(require,module,exports){
+},{}],385:[function(require,module,exports){
 /*
  * Copyright (C) 2008 Apple Inc. All Rights Reserved.
  *
@@ -55474,14 +55572,14 @@ UnitBezier.prototype.solve = function(x, epsilon) {
     return this.sampleCurveY(this.solveCurveX(x, epsilon));
 };
 
-},{}],385:[function(require,module,exports){
+},{}],386:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],386:[function(require,module,exports){
+},{}],387:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -56071,12 +56169,12 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":385,"_process":218,"inherits":65}],387:[function(require,module,exports){
+},{"./support/isBuffer":386,"_process":219,"inherits":66}],388:[function(require,module,exports){
 module.exports.VectorTile = require('./lib/vectortile.js');
 module.exports.VectorTileFeature = require('./lib/vectortilefeature.js');
 module.exports.VectorTileLayer = require('./lib/vectortilelayer.js');
 
-},{"./lib/vectortile.js":388,"./lib/vectortilefeature.js":389,"./lib/vectortilelayer.js":390}],388:[function(require,module,exports){
+},{"./lib/vectortile.js":389,"./lib/vectortilefeature.js":390,"./lib/vectortilelayer.js":391}],389:[function(require,module,exports){
 'use strict';
 
 var VectorTileLayer = require('./vectortilelayer');
@@ -56095,7 +56193,7 @@ function readTile(tag, layers, pbf) {
 }
 
 
-},{"./vectortilelayer":390}],389:[function(require,module,exports){
+},{"./vectortilelayer":391}],390:[function(require,module,exports){
 'use strict';
 
 var Point = require('point-geometry');
@@ -56330,7 +56428,7 @@ function signedArea(ring) {
     return sum;
 }
 
-},{"point-geometry":217}],390:[function(require,module,exports){
+},{"point-geometry":218}],391:[function(require,module,exports){
 'use strict';
 
 var VectorTileFeature = require('./vectortilefeature.js');
@@ -56393,7 +56491,7 @@ VectorTileLayer.prototype.feature = function(i) {
     return new VectorTileFeature(this._pbf, end, this.extent, this._keys, this._values);
 };
 
-},{"./vectortilefeature.js":389}],391:[function(require,module,exports){
+},{"./vectortilefeature.js":390}],392:[function(require,module,exports){
 var Pbf = require('pbf')
 var vtpb = require('./vector-tile-pb')
 var GeoJSONWrapper = require('./lib/geojson_wrapper')
@@ -56548,7 +56646,7 @@ function wrapValue (value) {
   return result
 }
 
-},{"./lib/geojson_wrapper":392,"./vector-tile-pb":393,"pbf":216}],392:[function(require,module,exports){
+},{"./lib/geojson_wrapper":393,"./vector-tile-pb":394,"pbf":217}],393:[function(require,module,exports){
 'use strict'
 
 var Point = require('point-geometry')
@@ -56615,7 +56713,7 @@ FeatureWrapper.prototype.bbox = function () {
 
 FeatureWrapper.prototype.toGeoJSON = VectorTileFeature.prototype.toGeoJSON
 
-},{"point-geometry":217,"vector-tile":387}],393:[function(require,module,exports){
+},{"point-geometry":218,"vector-tile":388}],394:[function(require,module,exports){
 'use strict';
 
 // tile ========================================
@@ -56721,7 +56819,7 @@ function writeLayer(layer, pbf) {
     if (layer.extent !== undefined) pbf.writeVarintField(5, layer.extent);
 }
 
-},{}],394:[function(require,module,exports){
+},{}],395:[function(require,module,exports){
 var bundleFn = arguments[3];
 var sources = arguments[4];
 var cache = arguments[5];
@@ -56787,12 +56885,12 @@ module.exports = function (fn, options) {
     return (options && options.bare) ? blob : new Worker(URL.createObjectURL(blob));
 };
 
-},{}],395:[function(require,module,exports){
+},{}],396:[function(require,module,exports){
 module.exports.RADIUS = 6378137;
 module.exports.FLATTENING = 1/298.257223563;
 module.exports.POLAR_RADIUS = 6356752.3142;
 
-},{}],396:[function(require,module,exports){
+},{}],397:[function(require,module,exports){
 (function(self) {
   'use strict';
 
@@ -57227,7 +57325,7 @@ module.exports.POLAR_RADIUS = 6356752.3142;
   self.fetch.polyfill = true
 })(typeof self !== 'undefined' ? self : this);
 
-},{}],397:[function(require,module,exports){
+},{}],398:[function(require,module,exports){
 'use strict';
 
 /**
@@ -57305,7 +57403,7 @@ exports.getMercCoords = function(x, y, z) {
     return [merc_x, merc_y];
 };
 
-},{}],398:[function(require,module,exports){
+},{}],399:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -57371,7 +57469,7 @@ function selectTrail(id) {
   };
 };
 
-},{"../modules/cumulativeElevationChanges":11,"isomorphic-fetch":67,"underscore":383}],399:[function(require,module,exports){
+},{"../modules/cumulativeElevationChanges":12,"isomorphic-fetch":68,"underscore":384}],400:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -57395,7 +57493,7 @@ function configureStore(preloadedState) {
   return (0, _redux.createStore)(_reducers2.default, preloadedState, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 }
 
-},{"../state/reducers":400,"redux":376,"redux-thunk":370}],400:[function(require,module,exports){
+},{"../state/reducers":401,"redux":377,"redux-thunk":371}],401:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -57488,4 +57586,4 @@ exports.default = (0, _redux.combineReducers)({
   trailsDataUrl: trailsDataUrl
 });
 
-},{"redux":376}]},{},[1]);
+},{"redux":377}]},{},[1]);
