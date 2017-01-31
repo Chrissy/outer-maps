@@ -502,15 +502,11 @@ var _mapSidebar2 = _interopRequireDefault(_mapSidebar);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var mapStateToProps = function mapStateToProps(state) {
+exports.default = (0, _reactRedux.connect)(function (state) {
   return { trail: state.trails.find(function (t) {
       return t.previewing;
     }) || {} };
-};
-
-var mapSidebarContainer = (0, _reactRedux.connect)(mapStateToProps)(_mapSidebar2.default);
-
-exports.default = mapSidebarContainer;
+})(_mapSidebar2.default);
 
 },{"./mapSidebar":6,"react-redux":223}],8:[function(require,module,exports){
 'use strict';
@@ -596,15 +592,11 @@ var _tooltip2 = _interopRequireDefault(_tooltip);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var mapStateToProps = function mapStateToProps(state) {
+exports.default = (0, _reactRedux.connect)(function (state) {
   return { trail: state.trails.find(function (t) {
       return t.previewing;
     }) };
-};
-
-var TooltipContainer = (0, _reactRedux.connect)(mapStateToProps)(_tooltip2.default);
-
-exports.default = TooltipContainer;
+})(_tooltip2.default);
 
 },{"./tooltip":8,"react-redux":223}],10:[function(require,module,exports){
 "use strict";
