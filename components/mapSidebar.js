@@ -1,4 +1,5 @@
 import React from 'react';
+import cx from "classnames";
 import LineGraph from './lineGraph';
 import LoadingSpinner from './loadingSpinner';
 import {metersToFeet} from '../modules/conversions';
@@ -9,16 +10,8 @@ export default class MapSidebar extends React.Component {
 
   render() {
     return (
-      <div style={{
-        opacity: (this.props.trail.selected) ? '1' : '0',
-        transform: `translateX(${(this.props.trail.selected) ? '0' : '-1em'})`}}
-        className={styles.body}>
-        <div style={{
-          opacity: (this.props.trail.hasElevationData) ? '1' : '0',
-          fontSize: '1.1em',
-          lineHeight: '1.5em',
-          transition: '.2s all'
-        }}>
+      <div className={cx(styles.body, {[styles.active]: this.props.trail.selected})}>
+        <div className={cx(styles.content, {[styles.active]: this.props.trail.hasElevationData})}>
           surface: {this.props.trail.surface || 'unknown'}<br/>
           elevation gain: {metersToFeet(this.props.trail.elevationGain)} Feet<br/>
           elevation loss: {metersToFeet(this.props.trail.elevationLoss)} Feet<br/>
@@ -26,16 +19,7 @@ export default class MapSidebar extends React.Component {
             <LineGraph points={this.props.trail.elevations}/>
           </div>
         </div>
-        <div style={{
-          opacity: (!this.props.trail.hasElevationData) ? '1' : '0',
-          transition: '.2s all',
-          width: '2em',
-          height: '2em',
-          left: '50%',
-          top: '50%',
-          position: 'absolute',
-          transform: 'translateX(-50%) translateY(-50%)'
-        }}>
+        <div className={cx(styles.spinner, {[styles.hidden]: this.props.trail.hasElevationData})}>
           <LoadingSpinner/>
         </div>
       </div>
