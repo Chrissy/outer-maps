@@ -1,6 +1,7 @@
 import React, { Proptypes } from 'react';
 import MapboxGL from 'mapbox-gl';
-import {trailsLayerStatic, trailsLayerActive, accessToken} from '../modules/mapboxStaticData';
+import {accessToken} from '../modules/mapBoxStaticData';
+import MapBoxLayers from '../modules/mapBoxLayers';
 
 export default class MapBox extends React.Component {
 
@@ -33,8 +34,10 @@ export default class MapBox extends React.Component {
 
   clearMap() {
     this.mapboxed.removeSource('trails-data');
-    this.mapboxed.removeLayer('trails');
-    this.mapboxed.removeLayer('trails-active');
+
+    MapBoxLayers.forEach(function(layer) {
+      this.mapboxed.removeLayer(layer.id)
+    }.bind(this));
   }
 
   drawMap(dataUrl) {
@@ -45,7 +48,9 @@ export default class MapBox extends React.Component {
       'data': dataUrl
     });
 
-    this.mapboxed.addLayer(trailsLayerStatic).addLayer(trailsLayerActive);
+    MapBoxLayers.forEach(function(layer) {
+      this.mapboxed.addLayer(layer)
+    }.bind(this));
   }
 
   componentDidMount() {
