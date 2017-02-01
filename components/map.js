@@ -41,6 +41,7 @@ export default class Map extends React.Component {
           <MapBox
           activeTrailIDs={this.activeTrailIds()}
           trailsDataUrl={this.props.trailsDataUrl}
+          pointer={this.props.previewTrails.length > 0}
           onClick={this.onMapClick.bind(this)}
           onLoad={this.onMapLoad.bind(this)}
           onMouseMove={this.onMapMouseMove.bind(this)}

@@ -272,6 +272,7 @@ var Map = function (_React$Component) {
         _react2.default.createElement(_mapBox2.default, {
           activeTrailIDs: this.activeTrailIds(),
           trailsDataUrl: this.props.trailsDataUrl,
+          pointer: this.props.previewTrails.length > 0,
           onClick: this.onMapClick.bind(this),
           onLoad: this.onMapLoad.bind(this),
           onMouseMove: this.onMapMouseMove.bind(this),
@@ -410,6 +411,11 @@ var MapBox = function (_React$Component) {
           return parseInt(t);
         }))));
       }
+    }
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(props) {
+      this.mapboxed.getCanvas().style.cursor = this.props.pointer ? 'pointer' : '';
     }
   }, {
     key: 'mapEvents',

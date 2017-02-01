@@ -77,6 +77,10 @@ export default class MapBox extends React.Component {
     }
   }
 
+  componentDidUpdate(props) {
+    this.mapboxed.getCanvas().style.cursor = (this.props.pointer) ? 'pointer' : '';
+  }
+
   mapEvents() {
     let watchEvents = {
       'handleLoad': 'load',
