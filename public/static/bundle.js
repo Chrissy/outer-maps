@@ -397,8 +397,10 @@ var MapBox = function (_React$Component) {
         this.drawMap(nextProps.trailsDataUrl);
       }
 
-      if (nextProps.activeTrailIDs && nextProps.activeTrailIDs !== this.props.activeTrailIDs) {
-        this.mapboxed.setFilter("trails-active", ["in", "id"].concat(_toConsumableArray(nextProps.activeTrailIDs)));
+      if (nextProps.activeTrailIDs !== this.props.activeTrailIDs) {
+        this.mapboxed.setFilter("trails-active", ["in", "id"].concat(_toConsumableArray(nextProps.activeTrailIDs.map(function (t) {
+          return parseInt(t);
+        }))));
       }
     }
   }, {

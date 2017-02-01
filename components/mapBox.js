@@ -67,8 +67,8 @@ export default class MapBox extends React.Component {
       this.drawMap(nextProps.trailsDataUrl);
     }
 
-    if (nextProps.activeTrailIDs && nextProps.activeTrailIDs !== this.props.activeTrailIDs) {
-      this.mapboxed.setFilter("trails-active", ["in", "id", ...nextProps.activeTrailIDs]);
+    if (nextProps.activeTrailIDs !== this.props.activeTrailIDs) {
+      this.mapboxed.setFilter("trails-active", ["in", "id", ...nextProps.activeTrailIDs.map(t => parseInt(t))]);
     }
   }
 
