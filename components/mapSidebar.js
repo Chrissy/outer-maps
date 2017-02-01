@@ -5,6 +5,7 @@ import LoadingSpinner from './loadingSpinner';
 import {metersToFeet} from '../modules/conversions';
 
 import styles from './mapSidebar.css';
+import spacing from './spacing.css';
 
 export default class MapSidebar extends React.Component {
 
@@ -15,7 +16,7 @@ export default class MapSidebar extends React.Component {
           surface: {this.props.trail.surface || 'unknown'}<br/>
           elevation gain: {metersToFeet(this.props.trail.elevationGain)} Feet<br/>
           elevation loss: {metersToFeet(this.props.trail.elevationLoss)} Feet<br/>
-          <div style={{marginTop: '1em'}}>
+          <div className={spacing.top_margin}>
             <LineGraph points={this.props.trail.elevations}/>
           </div>
         </div>
