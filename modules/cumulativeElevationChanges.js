@@ -18,7 +18,7 @@ const glitchDetector = function(array) {
 
 export function cumulativeElevationChanges(elevations) {
   var elevationGain = 0, elevationLoss = 0;
-  var smoothElevations = glitchDetector(rollingAverage(elevations.map(e => e[0]), 2));
+  var smoothElevations = rollingAverage(glitchDetector(elevations.map(e => e[0])), 2);
 
   var recoupledElevations = smoothElevations.map(function(el, i) {
     let el2 = smoothElevations[i + 1];
