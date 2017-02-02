@@ -5,12 +5,12 @@ const trail = (state = {}, action) => {
     case 'ADD_TRAIL':
       return action.trail
     case 'TOGGLE_PREVIEWING':
-      if (action.trail.id !== state.id) return state
+      if (action.trail.id !== state.id) return { ...state, previewing: false }
       return { ...state, previewing: true }
     case 'CLEAR_PREVIEWING':
       return { ...state, previewing: false }
     case 'TOGGLE_SELECTED':
-      if (action.trail.id !== state.id) return state
+      if (action.trail.id !== state.id) return { ...state, selected: false }
       return { ...state, selected: !state.selected }
     case 'CLEAR_SELECTED':
       return { ...state, selected: false }

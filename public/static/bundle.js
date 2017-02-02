@@ -57595,12 +57595,12 @@ var trail = function trail() {
     case 'ADD_TRAIL':
       return action.trail;
     case 'TOGGLE_PREVIEWING':
-      if (action.trail.id !== state.id) return state;
+      if (action.trail.id !== state.id) return _extends({}, state, { previewing: false });
       return _extends({}, state, { previewing: true });
     case 'CLEAR_PREVIEWING':
       return _extends({}, state, { previewing: false });
     case 'TOGGLE_SELECTED':
-      if (action.trail.id !== state.id) return state;
+      if (action.trail.id !== state.id) return _extends({}, state, { selected: false });
       return _extends({}, state, { selected: !state.selected });
     case 'CLEAR_SELECTED':
       return _extends({}, state, { selected: false });
