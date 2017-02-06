@@ -59,8 +59,8 @@ export default class MapBox extends React.Component {
     this.mapboxed = new MapboxGL.Map({
       container: 'mapbox-gl-element',
       style: 'mapbox://styles/mapbox/outdoors-v9',
-      center: [-118.6686774, 36.7933829],
-      zoom: 10
+      center: [-113.0, 37.3],
+      zoom: 11
     });
 
     this.mapEvents()

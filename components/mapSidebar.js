@@ -3,6 +3,7 @@ import cx from "classnames";
 import LineGraph from './lineGraph';
 import LoadingSpinner from './loadingSpinner';
 import {metersToFeet} from '../modules/conversions';
+import NOAA from '../modules/NOAA';
 
 import styles from './mapSidebar.css';
 import spacing from './spacing.css';
@@ -10,6 +11,7 @@ import spacing from './spacing.css';
 export default class MapSidebar extends React.Component {
 
   render() {
+
     return (
       <div className={cx(styles.body, {[styles.active]: this.props.trail.selected})}>
         <div className={cx(styles.content, {[styles.active]: this.props.trail.hasElevationData})}>
