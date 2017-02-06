@@ -3,10 +3,27 @@ import cx from "classnames";
 import LineGraph from './lineGraph';
 import LoadingSpinner from './loadingSpinner';
 import {metersToFeet} from '../modules/conversions';
+import {getDataFromNearestStation} from '../modules/NOAA';
 import NOAA from '../modules/NOAA';
 
 import styles from './mapSidebar.css';
 import spacing from './spacing.css';
+
+getDataFromNearestStation({
+  x: 36.8,
+  y: -118.7,
+  dataSetID: "NORMAL_DLY",
+  dataTypeIDs: [
+    "DLY-TMAX-NORMAL",
+    "DLY-TMIN-NORMAL",
+    "DLY-PRCP-PCTALL-GE001HI",
+    "DLY-PRCP-PCTALL-GE050HI",
+    "DLY-SNOW-PCTALL-GE001TI",
+    "DLY-SNOW-PCTALL-GE030TI",
+    "DLY-SNWD-PCTALL-GE001WI",
+    "DLY-SNWD-PCTALL-GE010WI"
+  ]
+}).then(r => console.log(r));
 
 export default class MapSidebar extends React.Component {
 

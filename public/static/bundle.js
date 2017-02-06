@@ -549,6 +549,15 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+(0, _NOAA.getDataFromNearestStation)({
+  x: 36.8,
+  y: -118.7,
+  dataSetID: "NORMAL_DLY",
+  dataTypeIDs: ["DLY-TMAX-NORMAL", "DLY-TMIN-NORMAL", "DLY-PRCP-PCTALL-GE001HI", "DLY-PRCP-PCTALL-GE050HI", "DLY-SNOW-PCTALL-GE001TI", "DLY-SNOW-PCTALL-GE030TI", "DLY-SNWD-PCTALL-GE001WI", "DLY-SNWD-PCTALL-GE010WI"]
+}).then(function (r) {
+  return console.log(r);
+});
+
 var MapSidebar = function (_React$Component) {
   _inherits(MapSidebar, _React$Component);
 
@@ -719,8 +728,7 @@ exports.default = (0, _reactRedux.connect)(function (state) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+exports.getDataFromNearestStation = undefined;
 
 var _request = require('request');
 
@@ -732,133 +740,79 @@ var _moment2 = _interopRequireDefault(_moment);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
 var key = 'aMjnYsZqxVmjzkbPYtHBVXUnYHUROvwS';
 
-var NOAA = function () {
-  function NOAA() {
-    _classCallCheck(this, NOAA);
-  }
+var getData = function getData() {
+  var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
-  _createClass(NOAA, [{
-    key: 'getData',
-    value: function getData() {
-      var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+  var _ref$dataSetID = _ref.dataSetID;
+  var dataSetID = _ref$dataSetID === undefined ? null : _ref$dataSetID;
+  var _ref$stationID = _ref.stationID;
+  var stationID = _ref$stationID === undefined ? null : _ref$stationID;
+  var _ref$startDate = _ref.startDate;
+  var startDate = _ref$startDate === undefined ? "01-01" : _ref$startDate;
+  var _ref$endDate = _ref.endDate;
+  var endDate = _ref$endDate === undefined ? "01-01" : _ref$endDate;
+  var _ref$dataTypeIDs = _ref.dataTypeIDs;
+  var dataTypeIDs = _ref$dataTypeIDs === undefined ? [] : _ref$dataTypeIDs;
 
-      var _ref$dataSetID = _ref.dataSetID;
-      var dataSetID = _ref$dataSetID === undefined ? null : _ref$dataSetID;
-      var _ref$stationID = _ref.stationID;
-      var stationID = _ref$stationID === undefined ? null : _ref$stationID;
-      var _ref$startDate = _ref.startDate;
-      var startDate = _ref$startDate === undefined ? "01-01" : _ref$startDate;
-      var _ref$endDate = _ref.endDate;
-      var endDate = _ref$endDate === undefined ? "01-01" : _ref$endDate;
-      var _ref$dataTypeIDs = _ref.dataTypeIDs;
-      var dataTypeIDs = _ref$dataTypeIDs === undefined ? [] : _ref$dataTypeIDs;
+  return get('/data?datasetid=' + dataSetID + '&stationid=' + stationID + '&startdate=2010-' + startDate + '&enddate=2010-' + endDate + '&datatypeid=' + dataTypeIDs.join("&datatypeid=") + '&limit=10&units=standard');
+};
 
-      return get('/data?datasetid=' + dataSetID + '&stationid=' + stationID + '&startdate=2010-' + startDate + '&enddate=2010-' + endDate + '&datatypeid=' + dataTypeIDs.join("&datatypeid=") + '&limit=10&units=standard');
-    }
-  }, {
-    key: 'getDataForToday',
-    value: function getDataForToday() {
-      var _ref2 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+var getDataForToday = function getDataForToday() {
+  var _ref2 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
-      var _ref2$dataSetID = _ref2.dataSetID;
-      var dataSetID = _ref2$dataSetID === undefined ? null : _ref2$dataSetID;
-      var _ref2$stationID = _ref2.stationID;
-      var stationID = _ref2$stationID === undefined ? null : _ref2$stationID;
-      var _ref2$dataTypeIDs = _ref2.dataTypeIDs;
-      var dataTypeIDs = _ref2$dataTypeIDs === undefined ? [] : _ref2$dataTypeIDs;
+  var _ref2$dataSetID = _ref2.dataSetID;
+  var dataSetID = _ref2$dataSetID === undefined ? null : _ref2$dataSetID;
+  var _ref2$stationID = _ref2.stationID;
+  var stationID = _ref2$stationID === undefined ? null : _ref2$stationID;
+  var _ref2$dataTypeIDs = _ref2.dataTypeIDs;
+  var dataTypeIDs = _ref2$dataTypeIDs === undefined ? [] : _ref2$dataTypeIDs;
 
-      var moment = new _moment2.default();
-      var dateString = moment.format("MM-DD");
-      return this.getData({ startDate: dateString, endDate: dateString, dataSetID: dataSetID, stationID: stationID, dataTypeIDs: dataTypeIDs });
-    }
-  }, {
-    key: 'getStation',
-    value: function getStation(_ref3) {
-      var _ref3$x = _ref3.x;
-      var x = _ref3$x === undefined ? null : _ref3$x;
-      var _ref3$y = _ref3.y;
-      var y = _ref3$y === undefined ? null : _ref3$y;
-      var _ref3$dataSetID = _ref3.dataSetID;
-      var dataSetID = _ref3$dataSetID === undefined ? null : _ref3$dataSetID;
-      var _ref3$size = _ref3.size;
-      var size = _ref3$size === undefined ? 0.2 : _ref3$size;
+  var moment = new _moment2.default();
+  var dateString = moment.format("MM-DD");
+  return getData({ startDate: dateString, endDate: dateString, dataSetID: dataSetID, stationID: stationID, dataTypeIDs: dataTypeIDs });
+};
 
-      return new Promise(function (resolve) {
-        get('/stations/?extent=' + (x - size) + ',' + (y - size) + ',' + (x + size) + ',' + (y + size) + '&datasetid=' + dataSetID).then(function (response) {
-          resolve(response.results.sort(function (a, b) {
-            return distance(a, { x: x, y: y }) - distance(b, { x: x, y: y });
-          })[0]);
-        });
-      });
-    }
-  }, {
-    key: 'getDataFromNearestStation',
-    value: function getDataFromNearestStation() {
-      var _ref4 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+var getStation = function getStation(_ref3) {
+  var _ref3$x = _ref3.x;
+  var x = _ref3$x === undefined ? null : _ref3$x;
+  var _ref3$y = _ref3.y;
+  var y = _ref3$y === undefined ? null : _ref3$y;
+  var _ref3$dataSetID = _ref3.dataSetID;
+  var dataSetID = _ref3$dataSetID === undefined ? null : _ref3$dataSetID;
+  var _ref3$size = _ref3.size;
+  var size = _ref3$size === undefined ? 0.2 : _ref3$size;
 
-      var _ref4$x = _ref4.x;
-      var x = _ref4$x === undefined ? null : _ref4$x;
-      var _ref4$y = _ref4.y;
-      var y = _ref4$y === undefined ? null : _ref4$y;
-      var _ref4$dataSetID = _ref4.dataSetID;
-      var dataSetID = _ref4$dataSetID === undefined ? "" : _ref4$dataSetID;
-      var _ref4$dataTypeIDs = _ref4.dataTypeIDs;
-      var dataTypeIDs = _ref4$dataTypeIDs === undefined ? [] : _ref4$dataTypeIDs;
+  return new Promise(function (resolve) {
+    get('/stations/?extent=' + (x - size) + ',' + (y - size) + ',' + (x + size) + ',' + (y + size) + '&datasetid=' + dataSetID).then(function (response) {
+      resolve(response.results.sort(function (a, b) {
+        return distance(a, { x: x, y: y }) - distance(b, { x: x, y: y });
+      })[0]);
+    });
+  });
+};
 
-      return new Promise(function (resolve) {
-        this.getStation({ x: x, y: y, dataSetID: dataSetID }).then(function (station) {
-          if (station) {
-            return resolve(this.getDataForToday({ stationID: station.id, dataSetID: dataSetID, dataTypeIDs: dataTypeIDs }));
-          }
-        }.bind(this));
-      }.bind(this));
-    }
-  }, {
-    key: 'getDatasetsForStation',
-    value: function getDatasetsForStation(stationID) {
-      return get('/datasets?stationid=' + stationID);
-    }
-  }, {
-    key: 'getDataTypesForDataCategory',
-    value: function getDataTypesForDataCategory(dataCategoryID) {
-      return get('/datatypes?datacategoryid=' + dataCategoryID);
-    }
-  }, {
-    key: 'getDataTypesForStationAndDataset',
-    value: function getDataTypesForStationAndDataset(stationID, dataSetID) {
-      return get('/datatypes?stationid=' + stationID + '&datasetid=' + dataSetID + '&limit=100');
-    }
-  }, {
-    key: 'getDataCategories',
-    value: function getDataCategories() {
-      return get('/datacategories?limit=50');
-    }
-  }, {
-    key: 'getDatasets',
-    value: function getDatasets() {
-      return get("/datasets");
-    }
-  }, {
-    key: 'getDataTypeInfo',
-    value: function getDataTypeInfo(dataTypeId) {
-      return get('/datatypes/' + dataTypeId);
-    }
-  }, {
-    key: 'getLocationCategories',
-    value: function getLocationCategories() {
-      return get("/locationcategories");
-    }
-  }]);
+var getDataFromNearestStation = function getDataFromNearestStation() {
+  var _ref4 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
-  return NOAA;
-}();
+  var _ref4$x = _ref4.x;
+  var x = _ref4$x === undefined ? null : _ref4$x;
+  var _ref4$y = _ref4.y;
+  var y = _ref4$y === undefined ? null : _ref4$y;
+  var _ref4$dataSetID = _ref4.dataSetID;
+  var dataSetID = _ref4$dataSetID === undefined ? "" : _ref4$dataSetID;
+  var _ref4$dataTypeIDs = _ref4.dataTypeIDs;
+  var dataTypeIDs = _ref4$dataTypeIDs === undefined ? [] : _ref4$dataTypeIDs;
 
-exports.default = NOAA;
-;
+  return new Promise(function (resolve) {
+    getStation({ x: x, y: y, dataSetID: dataSetID }).then(function (station) {
+      if (station) {
+        return resolve(getDataForToday({ stationID: station.id, dataSetID: dataSetID, dataTypeIDs: dataTypeIDs }));
+      }
+    });
+  });
+};
 
 var get = function get(path) {
   return new Promise(function (resolve, reject) {
@@ -871,9 +825,39 @@ var get = function get(path) {
   });
 };
 
+var getDatasetsForStation = function getDatasetsForStation(stationID) {
+  return get('/datasets?stationid=' + stationID);
+};
+
+var getDataTypesForDataCategory = function getDataTypesForDataCategory(dataCategoryID) {
+  return get('/datatypes?datacategoryid=' + dataCategoryID);
+};
+
+var getDataTypesForStationAndDataset = function getDataTypesForStationAndDataset(stationID, dataSetID) {
+  return get('/datatypes?stationid=' + stationID + '&datasetid=' + dataSetID + '&limit=100');
+};
+
+var getDataCategories = function getDataCategories() {
+  return get('/datacategories?limit=50');
+};
+
+var getDatasets = function getDatasets() {
+  return get("/datasets");
+};
+
+var getDataTypeInfo = function getDataTypeInfo(dataTypeId) {
+  return get('/datatypes/' + dataTypeId);
+};
+
+var getLocationCategories = function getLocationCategories() {
+  return get("/locationcategories");
+};
+
 var distance = function distance(point1, point2) {
   return Math.abs(point1.x - point2.x) + Math.abs(point1.y - point2.y);
 };
+
+exports.getDataFromNearestStation = getDataFromNearestStation;
 
 },{"moment":388,"request":600}],14:[function(require,module,exports){
 "use strict";
