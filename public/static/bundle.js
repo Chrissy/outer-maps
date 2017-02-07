@@ -357,6 +357,8 @@ var MapBox = function (_React$Component) {
   }, {
     key: 'handleLoad',
     value: function handleLoad(event) {
+      this.drawBoundaries();
+
       this.props.onLoad(Object.assign({}, event, {
         bounds: this.mapboxed.getBounds()
       }));
@@ -383,6 +385,24 @@ var MapBox = function (_React$Component) {
       _mapBoxLayers2.default.forEach(function (layer) {
         this.mapboxed.addLayer(layer);
       }.bind(this));
+    }
+  }, {
+    key: 'drawBoundaries',
+    value: function drawBoundaries() {
+      this.mapboxed.addSource('park-boundaries', {
+        'type': 'geojson',
+        'data': '/api/boundaries'
+      });
+
+      this.mapboxed.addLayer({
+        'id': 'park-boundaries',
+        'source': 'park-boundaries',
+        'type': 'fill',
+        'paint': {
+          'fill-color': 'red',
+          'fill-opacity': 0.5
+        }
+      });
     }
   }, {
     key: 'componentDidMount',

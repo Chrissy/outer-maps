@@ -15,7 +15,7 @@ var pool = new pg.Pool({
 
 app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
 
-  let query = `
+  const query = `
     SELECT id, ST_AsGeoJson(geog) AS geog
     FROM trails
     WHERE ST_Intersects(geog,
@@ -50,7 +50,7 @@ app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
 })
 
 app.get('/api/trails/:id', function(request, response) {
-  let query = `
+  const query = `
     SELECT name, surface, ST_AsGeoJson(geog) as geog, ST_Length(geog) as distance
     FROM trails
     WHERE id = ${request.params.id}
@@ -77,7 +77,7 @@ app.get('/api/trails/:id', function(request, response) {
 })
 
 app.get('/api/elevation/:id', function(request, response){
-  let query = `
+  const query = `
     select ST_AsGeoJson(geog) as geog
     FROM trails
     WHERE id = ${request.params.id}
@@ -92,7 +92,7 @@ app.get('/api/elevation/:id', function(request, response){
       var altitudes = [], distance = 0;
 
       points.forEach(function(point, i) {
-        let query = `
+        const query = `
           SELECT ST_Value(rast, ST_Transform(
             ST_GeomFromText(
               'POINT(${point[0]} ${point[1]})',
@@ -110,6 +110,36 @@ app.get('/api/elevation/:id', function(request, response){
             response.json(altitudes);
           }
         })
+      });
+    });
+  });
+});
+
+app.get('/api/boundaries', function(request, response) {
+  const query = `
+    SELECT gid AS id, ST_AsGeoJson(geog) AS geog
+    FROM boundaries
+  `
+  pool.connect(function(err, client, done){
+    client.query(query, function(err, result){
+      if (err) throw err;
+
+      let features = [];
+
+      for (var row of result.rows) {
+        features.push({
+          "type": "Feature",
+          "properties": {
+            "id": row.id
+          },
+          "geometry": JSON.parse(row.geog)
+        });
+      }
+
+      done();
+      response.json({
+        "type": "FeatureCollection",
+        "features": features
       });
     });
   });

@@ -27,6 +27,8 @@ export default class MapBox extends React.Component {
   }
 
   handleLoad(event) {
+    this.drawBoundaries();
+
     this.props.onLoad(Object.assign({}, event, {
       bounds: this.mapboxed.getBounds()
     }));
@@ -53,6 +55,23 @@ export default class MapBox extends React.Component {
     }.bind(this));
   }
 
+  drawBoundaries() {
+    this.mapboxed.addSource('park-boundaries', {
+      'type': 'geojson',
+      'data': '/api/boundaries'
+    })
+
+    this.mapboxed.addLayer({
+      'id': 'park-boundaries',
+      'source': 'park-boundaries',
+      'type': 'fill',
+      'paint': {
+        'fill-color': 'red',
+        'fill-opacity': 0.5
+      }
+    });
+  }
+
   componentDidMount() {
     MapboxGL.accessToken = accessToken;
 
@@ -63,7 +82,7 @@ export default class MapBox extends React.Component {
       zoom: 11
     });
 
-    this.mapEvents()
+    this.mapEvents();
   }
 
   componentWillReceiveProps(nextProps) {
