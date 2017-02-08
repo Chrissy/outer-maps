@@ -271,7 +271,7 @@ var Map = function (_React$Component) {
         { id: 'the-map' },
         _react2.default.createElement(_mapBox2.default, {
           activeTrailIDs: this.activeTrailIds(),
-          trailsDataUrl: this.props.trailsDataUrl,
+          viewBox: this.props.viewBox,
           pointer: this.props.previewTrails.length > 0,
           onClick: this.onMapClick.bind(this),
           onLoad: this.onMapLoad.bind(this),
@@ -308,8 +308,6 @@ var _mapboxGl2 = _interopRequireDefault(_mapboxGl);
 var _mapBoxStaticData = require('../modules/mapBoxStaticData');
 
 var _mapBoxLayers = require('../modules/mapBoxLayers');
-
-var _mapBoxLayers2 = _interopRequireDefault(_mapBoxLayers);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -357,52 +355,75 @@ var MapBox = function (_React$Component) {
   }, {
     key: 'handleLoad',
     value: function handleLoad(event) {
-      this.drawBoundaries();
-
       this.props.onLoad(Object.assign({}, event, {
         bounds: this.mapboxed.getBounds()
       }));
     }
   }, {
+    key: 'drawMap',
+    value: function drawMap(viewBox) {
+      console.log(this.mapboxed.getZoom());
+      if (this.mapboxed.getZoom() > 9) {
+        this.drawTrails(viewBox);
+      } else {
+        this.drawBoundaries(viewBox);
+      }
+    }
+  }, {
     key: 'clearMap',
     value: function clearMap() {
+      if (this.mapboxed.getSource('trails-data')) this.clearTrails();
+      if (this.mapboxed.getSource('boundaries-data')) this.clearBoundaries();
+    }
+  }, {
+    key: 'drawTrails',
+    value: function drawTrails(viewBox) {
+      var _this2 = this;
+
+      if (!viewBox) return;
+
+      this.mapboxed.addSource('trails-data', {
+        'type': 'geojson',
+        'data': '/api/' + viewBox.sw1 + '/' + viewBox.sw2 + '/' + viewBox.ne1 + '/' + viewBox.ne2
+      });
+
+      _mapBoxLayers.trailLayers.forEach(function (layer) {
+        return _this2.mapboxed.addLayer(layer);
+      });
+    }
+  }, {
+    key: 'clearTrails',
+    value: function clearTrails() {
       this.mapboxed.removeSource('trails-data');
 
-      _mapBoxLayers2.default.forEach(function (layer) {
+      _mapBoxLayers.trailLayers.forEach(function (layer) {
         this.mapboxed.removeLayer(layer.id);
       }.bind(this));
     }
   }, {
-    key: 'drawMap',
-    value: function drawMap(dataUrl) {
-      if (!dataUrl) return;
+    key: 'drawBoundaries',
+    value: function drawBoundaries(viewBox) {
+      var _this3 = this;
 
-      this.mapboxed.addSource('trails-data', {
+      if (!viewBox) return;
+
+      this.mapboxed.addSource('boundaries-data', {
         'type': 'geojson',
-        'data': dataUrl
+        'data': '/api/boundaries/' + viewBox.sw1 + '/' + viewBox.sw2 + '/' + viewBox.ne1 + '/' + viewBox.ne2
       });
 
-      _mapBoxLayers2.default.forEach(function (layer) {
-        this.mapboxed.addLayer(layer);
-      }.bind(this));
+      _mapBoxLayers.boundaryLayers.forEach(function (layer) {
+        return _this3.mapboxed.addLayer(layer);
+      });
     }
   }, {
-    key: 'drawBoundaries',
-    value: function drawBoundaries() {
-      this.mapboxed.addSource('park-boundaries', {
-        'type': 'geojson',
-        'data': '/api/boundaries'
-      });
+    key: 'clearBoundaries',
+    value: function clearBoundaries() {
+      this.mapboxed.removeSource('boundaries-data');
 
-      this.mapboxed.addLayer({
-        'id': 'park-boundaries',
-        'source': 'park-boundaries',
-        'type': 'fill',
-        'paint': {
-          'fill-color': 'red',
-          'fill-opacity': 0.5
-        }
-      });
+      _mapBoxLayers.boundaryLayers.forEach(function (layer) {
+        this.mapboxed.removeLayer(layer.id);
+      }.bind(this));
     }
   }, {
     key: 'componentDidMount',
@@ -421,12 +442,14 @@ var MapBox = function (_React$Component) {
   }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
-      if (nextProps.trailsDataUrl !== this.props.trailsDataUrl) {
-        if (this.props.trailsDataUrl) this.clearMap();
-        this.drawMap(nextProps.trailsDataUrl);
+      var viewBox = nextProps.viewBox;
+
+      if (viewBox !== this.props.viewBox) {
+        if (this.props.viewBox) this.clearMap();
+        this.drawMap(viewBox);
       }
 
-      if (nextProps.activeTrailIDs !== this.props.activeTrailIDs) {
+      if (nextProps.activeTrailIDs !== this.props.activeTrailIDs && this.mapboxed.getSource('trails-data')) {
         this.mapboxed.setFilter("trails-active", ["in", "id"].concat(_toConsumableArray(nextProps.activeTrailIDs.map(function (t) {
           return parseInt(t);
         }))));
@@ -490,7 +513,7 @@ var mapStateToProps = function mapStateToProps(state) {
     previewTrails: state.trails.filter(function (trail) {
       return trail.previewing;
     }),
-    trailsDataUrl: state.trailsDataUrl
+    viewBox: state.viewBox
   };
 };
 
@@ -509,7 +532,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
       return dispatch({ type: 'CLEAR_SELECTED' });
     },
     setTrailsBox: function setTrailsBox(bounds) {
-      return dispatch({ type: 'SET_TRAILS_DATA_URL_BOUNDS', bounds: bounds });
+      return dispatch({ type: 'SET_VIEWBOX', bounds: bounds });
     }
   };
 };
@@ -951,7 +974,7 @@ function cumulativeElevationChanges(elevations) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = [{
+var trailLayers = exports.trailLayers = [{
   'id': 'trails',
   'source': 'trails-data',
   'type': 'line',
@@ -984,6 +1007,16 @@ exports.default = [{
   'paint': {
     'line-color': '#FF9100',
     'line-width': 2
+  }
+}];
+
+var boundaryLayers = exports.boundaryLayers = [{
+  'id': 'boundaries-data',
+  'source': 'boundaries-data',
+  'type': 'fill',
+  'paint': {
+    'fill-color': 'red',
+    'fill-opacity': 0.5
   }
 }];
 
@@ -122027,13 +122060,18 @@ var trails = function trails() {
   }
 };
 
-var trailsDataUrl = function trailsDataUrl() {
+var viewBox = function viewBox() {
   var state = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
   var action = arguments[1];
 
   switch (action.type) {
-    case 'SET_TRAILS_DATA_URL_BOUNDS':
-      return '/api/' + action.bounds._sw.lng + '/' + action.bounds._sw.lat + '/' + action.bounds._ne.lng + '/' + action.bounds._ne.lat;
+    case 'SET_VIEWBOX':
+      return {
+        sw1: action.bounds._sw.lng,
+        sw2: action.bounds._sw.lat,
+        ne1: action.bounds._ne.lng,
+        ne2: action.bounds._ne.lat
+      };
     default:
       return state;
   }
@@ -122042,7 +122080,7 @@ var trailsDataUrl = function trailsDataUrl() {
 exports.default = (0, _redux.combineReducers)({
   trail: trail,
   trails: trails,
-  trailsDataUrl: trailsDataUrl
+  viewBox: viewBox
 });
 
 },{"redux":598}]},{},[1]);

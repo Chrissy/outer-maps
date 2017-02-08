@@ -44,10 +44,15 @@ const trails = (state = [], action) => {
   }
 }
 
-const trailsDataUrl = (state = false, action) => {
+const viewBox = (state = false, action) => {
   switch (action.type) {
-    case 'SET_TRAILS_DATA_URL_BOUNDS':
-      return `/api/${action.bounds._sw.lng}/${action.bounds._sw.lat}/${action.bounds._ne.lng}/${action.bounds._ne.lat}`
+    case 'SET_VIEWBOX':
+      return {
+        sw1: action.bounds._sw.lng,
+        sw2: action.bounds._sw.lat,
+        ne1: action.bounds._ne.lng,
+        ne2: action.bounds._ne.lat
+      }
     default: return state
   }
 }
@@ -55,5 +60,5 @@ const trailsDataUrl = (state = false, action) => {
 export default combineReducers({
   trail,
   trails,
-  trailsDataUrl
+  viewBox
 })

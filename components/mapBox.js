@@ -1,7 +1,7 @@
 import React, { Proptypes } from 'react';
 import MapboxGL from 'mapbox-gl';
 import {accessToken} from '../modules/mapBoxStaticData';
-import MapBoxLayers from '../modules/mapBoxLayers';
+import {boundaryLayers, trailLayers} from '../modules/mapBoxLayers';
 
 export default class MapBox extends React.Component {
 
@@ -27,49 +27,61 @@ export default class MapBox extends React.Component {
   }
 
   handleLoad(event) {
-    this.drawBoundaries();
-
     this.props.onLoad(Object.assign({}, event, {
       bounds: this.mapboxed.getBounds()
     }));
   }
 
+  drawMap(viewBox) {
+    console.log(this.mapboxed.getZoom());
+    if (this.mapboxed.getZoom() > 9) {
+      this.drawTrails(viewBox)
+    } else {
+      this.drawBoundaries(viewBox);
+    }
+  }
+
   clearMap() {
+    if (this.mapboxed.getSource('trails-data')) this.clearTrails();
+    if (this.mapboxed.getSource('boundaries-data')) this.clearBoundaries();
+  }
+
+  drawTrails(viewBox) {
+    if (!viewBox) return;
+
+    this.mapboxed.addSource('trails-data', {
+      'type': 'geojson',
+      'data': `/api/${viewBox.sw1}/${viewBox.sw2}/${viewBox.ne1}/${viewBox.ne2}`
+    });
+
+    trailLayers.forEach(layer => this.mapboxed.addLayer(layer));
+  }
+
+  clearTrails() {
     this.mapboxed.removeSource('trails-data');
 
-    MapBoxLayers.forEach(function(layer) {
+    trailLayers.forEach(function(layer) {
       this.mapboxed.removeLayer(layer.id)
     }.bind(this));
   }
 
-  drawMap(dataUrl) {
-    if (!dataUrl) return;
+  drawBoundaries(viewBox) {
+    if (!viewBox) return;
 
-    this.mapboxed.addSource('trails-data', {
+    this.mapboxed.addSource('boundaries-data', {
       'type': 'geojson',
-      'data': dataUrl
+      'data': `/api/boundaries/${viewBox.sw1}/${viewBox.sw2}/${viewBox.ne1}/${viewBox.ne2}`
     });
 
-    MapBoxLayers.forEach(function(layer) {
-      this.mapboxed.addLayer(layer)
-    }.bind(this));
+    boundaryLayers.forEach(layer => this.mapboxed.addLayer(layer));
   }
 
-  drawBoundaries() {
-    this.mapboxed.addSource('park-boundaries', {
-      'type': 'geojson',
-      'data': '/api/boundaries'
-    })
+  clearBoundaries() {
+    this.mapboxed.removeSource('boundaries-data');
 
-    this.mapboxed.addLayer({
-      'id': 'park-boundaries',
-      'source': 'park-boundaries',
-      'type': 'fill',
-      'paint': {
-        'fill-color': 'red',
-        'fill-opacity': 0.5
-      }
-    });
+    boundaryLayers.forEach(function(layer) {
+      this.mapboxed.removeLayer(layer.id)
+    }.bind(this));
   }
 
   componentDidMount() {
@@ -86,12 +98,14 @@ export default class MapBox extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.trailsDataUrl !== this.props.trailsDataUrl) {
-      if (this.props.trailsDataUrl) this.clearMap();
-      this.drawMap(nextProps.trailsDataUrl);
+    const viewBox = nextProps.viewBox
+
+    if (viewBox !== this.props.viewBox) {
+      if (this.props.viewBox) this.clearMap();
+      this.drawMap(viewBox);
     }
 
-    if (nextProps.activeTrailIDs !== this.props.activeTrailIDs) {
+    if (nextProps.activeTrailIDs !== this.props.activeTrailIDs && this.mapboxed.getSource('trails-data')) {
       this.mapboxed.setFilter("trails-active", ["in", "id", ...nextProps.activeTrailIDs.map(t => parseInt(t))]);
     }
   }

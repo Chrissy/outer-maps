@@ -5,6 +5,8 @@ const app = express();
 const geolib = require('geolib');
 const _ = require('underscore');
 
+const db = require('./modules/db.js')
+
 app.use(express.static('public'))
 
 var pool = new pg.Pool({
@@ -26,25 +28,8 @@ app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
   pool.connect(function(err, client, done){
     client.query(query, function(err, result){
       done();
-
       if (err) throw err;
-
-      var features = []
-
-      for (var row of result.rows) {
-        features.push({
-          "type": "Feature",
-          "properties": {
-            "id": row.id
-          },
-          "geometry": JSON.parse(row.geog)
-        });
-      }
-
-      response.json({
-        "type": "FeatureCollection",
-        "features": features
-      });
+      response.json(db.makeGeoJson(result));
     })
   })
 })
@@ -115,32 +100,19 @@ app.get('/api/elevation/:id', function(request, response){
   });
 });
 
-app.get('/api/boundaries', function(request, response) {
+app.get('/api/boundaries/:x1/:y1/:x2/:y2', function(request, response) {
   const query = `
-    SELECT gid AS id, ST_AsGeoJson(geog) AS geog
+    SELECT gid AS id, ST_AsGeoJson(ST_Simplify(geog::geometry, 0.02)) AS geog
     FROM boundaries
+    WHERE ST_Intersects(geog,
+      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
+    )
   `
   pool.connect(function(err, client, done){
     client.query(query, function(err, result){
-      if (err) throw err;
-
-      let features = [];
-
-      for (var row of result.rows) {
-        features.push({
-          "type": "Feature",
-          "properties": {
-            "id": row.id
-          },
-          "geometry": JSON.parse(row.geog)
-        });
-      }
-
       done();
-      response.json({
-        "type": "FeatureCollection",
-        "features": features
-      });
+      if (err) throw err;
+      response.json(db.makeGeoJson(result));
     });
   });
 });

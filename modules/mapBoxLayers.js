@@ -1,4 +1,4 @@
-export default [
+export const trailLayers = [
   {
     'id': 'trails',
     'source': 'trails-data',
@@ -36,5 +36,17 @@ export default [
       'line-color': '#FF9100',
       'line-width': 2,
     }
-  },
+  }
+]
+
+export const boundaryLayers = [
+  {
+    'id': 'boundaries-data',
+    'source': 'boundaries-data',
+    'type': 'fill',
+    'paint': {
+      'fill-color': 'red',
+      'fill-opacity': 0.5
+    }
+  }
 ]

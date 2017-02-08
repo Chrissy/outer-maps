@@ -6,7 +6,7 @@ const mapStateToProps = (state) => {
   return {
     selectedTrails: state.trails.filter(trail => trail.selected),
     previewTrails: state.trails.filter(trail => trail.previewing),
-    trailsDataUrl: state.trailsDataUrl
+    viewBox: state.viewBox
   }
 }
 
@@ -16,7 +16,7 @@ const mapDispatchToProps = (dispatch) => {
     onTrailMouseOut: () => dispatch({type: 'CLEAR_PREVIEWING'}),
     onTrailClick: (trailID) => dispatch(selectTrail(trailID)),
     onNonTrailMapClick: () => dispatch({type: 'CLEAR_SELECTED'}),
-    setTrailsBox: (bounds) => dispatch({type: 'SET_TRAILS_DATA_URL_BOUNDS', bounds})
+    setTrailsBox: (bounds) => dispatch({type: 'SET_VIEWBOX', bounds})
   }
 };
 

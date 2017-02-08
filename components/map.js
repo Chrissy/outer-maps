@@ -40,7 +40,7 @@ export default class Map extends React.Component {
         <div id="the-map">
           <MapBox
           activeTrailIDs={this.activeTrailIds()}
-          trailsDataUrl={this.props.trailsDataUrl}
+          viewBox={this.props.viewBox}
           pointer={this.props.previewTrails.length > 0}
           onClick={this.onMapClick.bind(this)}
           onLoad={this.onMapLoad.bind(this)}
