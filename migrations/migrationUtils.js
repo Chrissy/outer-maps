@@ -7,7 +7,8 @@ const genericQuery = function(query, callback) {
     var pool = new pg.Pool({
       database: env.databaseName,
       max: 10,
-      idleTimeoutMillis: 3000
+      idleTimeoutMillis: 3000,
+      user: dbUser
     });
 
     pool.connect(function(err, client, done){
@@ -61,5 +62,5 @@ exports.insertElevationRasters = function({directoryName, srid = '4326', tableNa
   const pathStr = path(env.libDirectory + "/" + directoryName);
   const user = (env.dbUser) ? `-U ${env.dbUser}` : '';
 
-  execSync(`cd ${env.libDirectory}/${directoryName}; raster2pgsql -s ${srid} -C *.tif public.${tableName} | psql -d ${env.databaseName} ${user}`, {cwd: pathStr});
+  execSync(`raster2pgsql -s ${srid} -C *.tif public.${tableName} | psql -d ${env.databaseName} ${user}`, {cwd: pathStr});
 }
