@@ -1,4 +1,3 @@
-import request from 'request';
 import Moment from 'moment';
 
 const key = 'aMjnYsZqxVmjzkbPYtHBVXUnYHUROvwS';
@@ -14,37 +13,31 @@ const getDataForToday = function({dataSetID = null, stationID = null, dataTypeID
 }
 
 const getStation = function({x = null, y = null, dataSetID = null, size = 0.2}) {
-  return new Promise(function(resolve){
-    get(`/stations/?extent=${x - size},${y - size},${x + size},${y + size}&datasetid=${dataSetID}`).then(function(response){
-      resolve(response.results.sort(function(a, b) {
-        return distance(a, {x: x, y: y}) - distance(b, {x: x, y: y});
-      })[0]);
-    });
+  return get(`/stations/?extent=${x - size},${y - size},${x + size},${y + size}&datasetid=${dataSetID}`).then(function(response){
+    return response.results.sort(function(a, b) {
+      return distance(a, {x: x, y: y}) - distance(b, {x: x, y: y});
+    })[0];
   });
 }
 
 const getDataFromNearestStation = function({x = null, y = null, dataSetID = "", dataTypeIDs = []} = {}) {
-  return new Promise(function(resolve){
-    getStation({x: x, y: y, dataSetID: dataSetID}).then(function(station) {
-      if (station) {
-        return resolve(getDataForToday({stationID: station.id, dataSetID: dataSetID, dataTypeIDs: dataTypeIDs}));
-      }
-    });
+  return getStation({x: x, y: y, dataSetID: dataSetID}).then(function(station) {
+    if (station) {
+      return getDataForToday({stationID: station.id, dataSetID: dataSetID, dataTypeIDs: dataTypeIDs});
+    }
   });
 }
 
 const get = function(path) {
-  return new Promise(function(resolve, reject) {
-    request({
-      url:`https://www.ncdc.noaa.gov/cdo-web/api/v2${path}`,
-      headers: { 'token': key }
-    }, function(error, response, body) {
-      resolve(JSON.parse(response.body));
-    });
+  return fetch(`https://www.ncdc.noaa.gov/cdo-web/api/v2${path}`, {
+    headers: new Headers({'token': key})
+  }).then(response => response.json())
+  .then(data => {
+    return data
   });
 }
 
-const getDatasetsForStation = (stationID) => get(`/datasets?stationid=${stationID}`);
+const printDataSetsForStation = (stationID) => get(`/datasets?stationid=${stationID}`).then(r => print(r.results));
 
 const getDataTypesForDataCategory = (dataCategoryID) => get(`/datatypes?datacategoryid=${dataCategoryID}`);
 
@@ -52,7 +45,9 @@ const getDataTypesForStationAndDataset = (stationID, dataSetID) => get(`/datatyp
 
 const getDataCategories = () => get(`/datacategories?limit=50`);
 
-const getDatasets = () => get("/datasets");
+const printDataSets = () => get("/datasets").then(r => print(r.results));
+
+const printDataSetInfo = (dataSet) => get(`/datasets/${dataSet}`).then(r => console.log(r));
 
 const getDataTypeInfo = (dataTypeId) => get(`/datatypes/${dataTypeId}`);
 
@@ -62,4 +57,9 @@ const distance = function(point1, point2) {
   return Math.abs(point1.x - point2.x) + Math.abs(point1.y - point2.y);
 }
 
+const print = (results) => results.forEach(r => console.log(r.name, r.id));
+
 export {getDataFromNearestStation}
+
+
+//"https://www.ncdc.noaa.gov/cdo-web/api/v2/datasets"

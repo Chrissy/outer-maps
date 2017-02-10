@@ -52,7 +52,12 @@ app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
 
 app.get('/api/trails/:id', function(request, response) {
   let query = `
-    SELECT name, surface, ST_AsGeoJson(geog) as geog, ST_Length(geog) as distance
+    SELECT
+      name,
+      surface,
+      ST_AsGeoJson(geog) as geog,
+      ST_Length(geog) as distance,
+      ST_AsGeoJson(ST_Centroid(geog::geometry)) as center
     FROM trails
     WHERE id = ${request.params.id}
     LIMIT 1
@@ -71,7 +76,8 @@ app.get('/api/trails/:id', function(request, response) {
         "id": request.params.id,
         "surface": r.surface,
         "geography": JSON.parse(r.geog),
-        "distance": r.distance
+        "distance": r.distance,
+        "center": JSON.parse(r.center).coordinates
       });
     })
   })

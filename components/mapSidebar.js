@@ -3,27 +3,9 @@ import cx from "classnames";
 import LineGraph from './lineGraph';
 import LoadingSpinner from './loadingSpinner';
 import {metersToFeet} from '../modules/conversions';
-import {getDataFromNearestStation} from '../modules/NOAA';
-import NOAA from '../modules/NOAA';
 
 import styles from './mapSidebar.css';
 import spacing from './spacing.css';
-
-getDataFromNearestStation({
-  x: 36.8,
-  y: -118.7,
-  dataSetID: "NORMAL_DLY",
-  dataTypeIDs: [
-    "DLY-TMAX-NORMAL",
-    "DLY-TMIN-NORMAL",
-    "DLY-PRCP-PCTALL-GE001HI",
-    "DLY-PRCP-PCTALL-GE050HI",
-    "DLY-SNOW-PCTALL-GE001TI",
-    "DLY-SNOW-PCTALL-GE030TI",
-    "DLY-SNWD-PCTALL-GE001WI",
-    "DLY-SNWD-PCTALL-GE010WI"
-  ]
-}).then(r => console.log(r));
 
 export default class MapSidebar extends React.Component {
 
@@ -38,6 +20,8 @@ export default class MapSidebar extends React.Component {
           <div className={spacing.top_margin}>
             <LineGraph points={this.props.trail.elevations}/>
           </div>
+          average high this week: {this.props.trail.maxTemperature}° <br/>
+          average low this week: {this.props.trail.minTemperature}° <br/>
         </div>
         <div className={cx(styles.spinner, {[styles.hidden]: this.props.trail.hasElevationData})}>
           <LoadingSpinner/>

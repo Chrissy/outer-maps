@@ -22,6 +22,13 @@ const trail = (state = {}, action) => {
         elevationLoss: action.elevationChanges.elevationLoss,
         elevations: action.elevationChanges.elevations
       }
+    case 'SET_WEATHER_DATA':
+      if (action.id !== state.id) return state
+      return { ...state,
+        hasWeatherData: true,
+        maxTemperature: action.weatherData.results[6].value,
+        minTemperature: action.weatherData.results[7].value
+      }
     default: return state
   }
 }
@@ -39,6 +46,8 @@ const trails = (state = [], action) => {
     case 'CLEAR_SELECTED':
       return state.map(t => trail(t, action))
     case 'SET_ELEVATION_DATA':
+      return state.map(t => trail(t, action))
+    case 'SET_WEATHER_DATA':
       return state.map(t => trail(t, action))
     default: return state
   }
