@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 const geolib = require('geolib');
 const _ = require('underscore');
-const env = require('/environment/development');
+const env = require('./environment/development');
 
 app.use(express.static('public'))
 
