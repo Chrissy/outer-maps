@@ -12,7 +12,7 @@ const getDataForToday = function({dataSetID = null, stationID = null, dataTypeID
   return getData({startDate: dateString, endDate: dateString, dataSetID: dataSetID, stationID: stationID, dataTypeIDs: dataTypeIDs})
 }
 
-const getStation = function({x = null, y = null, dataSetID = null, size = 0.2}) {
+const getStation = function({x = null, y = null, dataSetID = null, size = 0.3}) {
   return get(`/stations/?extent=${x - size},${y - size},${x + size},${y + size}&datasetid=${dataSetID}`).then(function(response){
     return response.results.sort(function(a, b) {
       return distance(a, {x: x, y: y}) - distance(b, {x: x, y: y});

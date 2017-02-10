@@ -46,7 +46,8 @@ function getWeatherData(trail) {
         "DLY-SNWD-PCTALL-GE001WI",
         "DLY-SNWD-PCTALL-GE010WI"
       ]
-    }).then(weatherData => {
+    }).then(response => {
+      const weatherData = response.results;
       return dispatch({type: 'SET_WEATHER_DATA', weatherData, id: trail.id});
     });
   }

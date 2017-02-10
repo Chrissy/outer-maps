@@ -20,8 +20,15 @@ export default class MapSidebar extends React.Component {
           <div className={spacing.top_margin}>
             <LineGraph points={this.props.trail.elevations}/>
           </div>
-          average high this week: {this.props.trail.maxTemperature}° <br/>
-          average low this week: {this.props.trail.minTemperature}° <br/>
+          Weather almanac for this week:
+          High temperature: {this.props.trail.maxTemperature}° <br/>
+          Low Temperature: {this.props.trail.minTemperature}° <br/>
+          Chance of percipitation: {this.props.trail.chanceOfPercipitation}% <br/>
+          Chance of heavy percipitation: {this.props.trail.chanceOfHeavyPercipitation}% <br/>
+          Chance of snow: {this.props.trail.chanceOfSnow}% <br/>
+          Chance of heavy snow: {this.props.trail.chanceOfHeavySnow}% <br/>
+          Chance of snowpack: {this.props.trail.chanceOfSnowPack}% <br/>
+          Chance of heavy snowpack: {this.props.trail.chanceOfHeavySnowPack}% <br/>
         </div>
         <div className={cx(styles.spinner, {[styles.hidden]: this.props.trail.hasElevationData})}>
           <LoadingSpinner/>
