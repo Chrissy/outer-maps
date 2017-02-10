@@ -4,7 +4,7 @@ const execSync = require('child_process').execSync;
 
 const genericQuery = function(query, callback) {
     var pool = new pg.Pool({
-      database: env.database_name,
+      database: env.databaseName,
       max: 10,
       idleTimeoutMillis: 3000
     });
@@ -26,7 +26,7 @@ exports.genericQuery = genericQuery;
 exports.uploadShapeFile = function({directoryName, filename, srid = '4326', tableName} = {}) {
   console.log("uploading...");
 
-  execSync(`cd ${env.lib_directory}/${directoryName}; shp2pgsql -G -c -s ${srid}:4326 ${filename}.shp public.${tableName} | psql -d ${env.database_name}`, function(error, stdout, stderr) {
+  execSync(`cd ${env.libDirectory}/${directoryName}; shp2pgsql -G -c -s ${srid}:4326 ${filename}.shp public.${tableName} | psql -d ${env.databaseName}`, function(error, stdout, stderr) {
     if (error) {
       console.error(`exec error: ${error}`);
       return;
@@ -61,7 +61,7 @@ exports.mergeIntoTrailsTable = function({baseTableName, mergingTableName, name =
 exports.insertElevationRasters = function({directoryName, srid = '4326', tableName} = {}) {
   console.log("inserting...");
 
-  execSync(`cd ${env.lib_directory}/${directoryName}; raster2pgsql -s ${srid} -C *.tif public.${tableName} | psql -d ${env.database_name}`, function(error, stdout, stderr) {
+  execSync(`cd ${env.libDirectory}/${directoryName}; raster2pgsql -s ${srid} -C *.tif public.${tableName} | psql -d ${env.databaseName}`, function(error, stdout, stderr) {
     if (error) {
       console.error(`exec error: ${error}`);
       return;

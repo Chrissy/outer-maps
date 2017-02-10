@@ -4,11 +4,12 @@ const express = require('express');
 const app = express();
 const geolib = require('geolib');
 const _ = require('underscore');
+const env = require('/environment/development');
 
 app.use(express.static('public'))
 
 var pool = new pg.Pool({
-  database: 'mountains_7',
+  database: env.databaseName,
   max: 10,
   idleTimeoutMillis: 3000
 });

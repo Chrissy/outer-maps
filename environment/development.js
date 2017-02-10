@@ -1,2 +1,2 @@
-exports.database_name = 'mountains_7';
-exports.lib_directory = '/Users/chrissy/src/mountains_lib';
+exports.databaseName = 'mountains_7';
+exports.libDirectory = '/Users/chrissy/Dropbox/mountains_lib';
