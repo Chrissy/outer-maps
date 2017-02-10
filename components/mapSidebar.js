@@ -3,27 +3,9 @@ import cx from "classnames";
 import LineGraph from './lineGraph';
 import LoadingSpinner from './loadingSpinner';
 import {metersToFeet} from '../modules/conversions';
-import {getDataFromNearestStation} from '../modules/NOAA';
-import NOAA from '../modules/NOAA';
 
 import styles from './mapSidebar.css';
 import spacing from './spacing.css';
-
-getDataFromNearestStation({
-  x: 36.8,
-  y: -118.7,
-  dataSetID: "NORMAL_DLY",
-  dataTypeIDs: [
-    "DLY-TMAX-NORMAL",
-    "DLY-TMIN-NORMAL",
-    "DLY-PRCP-PCTALL-GE001HI",
-    "DLY-PRCP-PCTALL-GE050HI",
-    "DLY-SNOW-PCTALL-GE001TI",
-    "DLY-SNOW-PCTALL-GE030TI",
-    "DLY-SNWD-PCTALL-GE001WI",
-    "DLY-SNWD-PCTALL-GE010WI"
-  ]
-}).then(r => console.log(r));
 
 export default class MapSidebar extends React.Component {
 
@@ -38,6 +20,15 @@ export default class MapSidebar extends React.Component {
           <div className={spacing.top_margin}>
             <LineGraph points={this.props.trail.elevations}/>
           </div>
+          Weather almanac for this week:
+          High temperature: {this.props.trail.maxTemperature}° <br/>
+          Low Temperature: {this.props.trail.minTemperature}° <br/>
+          Chance of percipitation: {this.props.trail.chanceOfPercipitation}% <br/>
+          Chance of heavy percipitation: {this.props.trail.chanceOfHeavyPercipitation}% <br/>
+          Chance of snow: {this.props.trail.chanceOfSnow}% <br/>
+          Chance of heavy snow: {this.props.trail.chanceOfHeavySnow}% <br/>
+          Chance of snowpack: {this.props.trail.chanceOfSnowPack}% <br/>
+          Chance of heavy snowpack: {this.props.trail.chanceOfHeavySnowPack}% <br/>
         </div>
         <div className={cx(styles.spinner, {[styles.hidden]: this.props.trail.hasElevationData})}>
           <LoadingSpinner/>

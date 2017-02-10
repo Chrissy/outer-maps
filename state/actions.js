@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import _ from 'underscore'
 import {cumulativeElevationChanges} from '../modules/cumulativeElevationChanges';
+import {getDataFromNearestStation} from '../modules/NOAA';
 
 function getTrail(id) {
   return (dispatch, getState) => {
@@ -28,6 +29,30 @@ function getAltitudeData(trail) {
   };
 };
 
+function getWeatherData(trail) {
+  return dispatch => {
+    if (trail.hasWeatherData) return Promise.resolve();
+    getDataFromNearestStation({
+      x: trail.center[1],
+      y: trail.center[0],
+      dataSetID: "NORMAL_DLY",
+      dataTypeIDs: [
+        "DLY-TMAX-NORMAL",
+        "DLY-TMIN-NORMAL",
+        "DLY-PRCP-PCTALL-GE001HI",
+        "DLY-PRCP-PCTALL-GE050HI",
+        "DLY-SNOW-PCTALL-GE001TI",
+        "DLY-SNOW-PCTALL-GE030TI",
+        "DLY-SNWD-PCTALL-GE001WI",
+        "DLY-SNWD-PCTALL-GE010WI"
+      ]
+    }).then(response => {
+      const weatherData = response.results;
+      return dispatch({type: 'SET_WEATHER_DATA', weatherData, id: trail.id});
+    });
+  }
+}
+
 
 export function previewTrail(id) {
   return dispatch => {
@@ -42,6 +67,7 @@ export function selectTrail(id) {
     dispatch(getTrail(id)).then(trail => {
       dispatch({type: 'TOGGLE_SELECTED', trail});
       dispatch(getAltitudeData(trail));
+      dispatch(getWeatherData(trail));
     });
   };
 };

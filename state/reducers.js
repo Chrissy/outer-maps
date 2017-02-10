@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from 'redux';
 
 const trail = (state = {}, action) => {
   switch (action.type) {
@@ -22,6 +22,23 @@ const trail = (state = {}, action) => {
         elevationLoss: action.elevationChanges.elevationLoss,
         elevations: action.elevationChanges.elevations
       }
+    case 'SET_WEATHER_DATA':
+      if (action.id !== state.id) return state
+
+      const convertToPercent = (integer) => parseInt(integer/10);
+      const findByDatatype = (datatype) => (action.weatherData.find(node => node.datatype == datatype) || {}).value || "unknown";
+
+      return { ...state,
+        hasWeatherData: true,
+        maxTemperature: findByDatatype("DLY-TMAX-NORMAL"),
+        minTemperature: findByDatatype("DLY-TMIN-NORMAL"),
+        chanceOfPercipitation: convertToPercent(findByDatatype("DLY-PRCP-PCTALL-GE001HI")),
+        chanceOfHeavyPercipitation: convertToPercent(findByDatatype("DLY-PRCP-PCTALL-GE050HI")),
+        chanceOfSnow: convertToPercent(findByDatatype("DLY-SNOW-PCTALL-GE001TI")),
+        chanceOfHeavySnow: convertToPercent(findByDatatype("DLY-SNOW-PCTALL-GE030TI")),
+        chanceOfSnowPack: convertToPercent(findByDatatype("DLY-SNWD-PCTALL-GE001WI")),
+        chanceOfHeavySnowPack: convertToPercent(findByDatatype("DLY-SNWD-PCTALL-GE010WI"))
+      }
     default: return state
   }
 }
@@ -39,6 +56,8 @@ const trails = (state = [], action) => {
     case 'CLEAR_SELECTED':
       return state.map(t => trail(t, action))
     case 'SET_ELEVATION_DATA':
+      return state.map(t => trail(t, action))
+    case 'SET_WEATHER_DATA':
       return state.map(t => trail(t, action))
     default: return state
   }
