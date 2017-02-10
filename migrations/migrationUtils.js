@@ -8,7 +8,7 @@ const genericQuery = function(query, callback) {
       database: env.databaseName,
       max: 10,
       idleTimeoutMillis: 3000,
-      user: dbUser
+      user: env.dbUser
     });
 
     pool.connect(function(err, client, done){
