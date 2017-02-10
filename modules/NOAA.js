@@ -32,9 +32,7 @@ const get = function(path) {
   return fetch(`https://www.ncdc.noaa.gov/cdo-web/api/v2${path}`, {
     headers: new Headers({'token': key})
   }).then(response => response.json())
-  .then(data => {
-    return data
-  });
+  .then(data => data);
 }
 
 const printDataSetsForStation = (stationID) => get(`/datasets?stationid=${stationID}`).then(r => print(r.results));
@@ -60,6 +58,3 @@ const distance = function(point1, point2) {
 const print = (results) => results.forEach(r => console.log(r.name, r.id));
 
 export {getDataFromNearestStation}
-
-
-//"https://www.ncdc.noaa.gov/cdo-web/api/v2/datasets"
