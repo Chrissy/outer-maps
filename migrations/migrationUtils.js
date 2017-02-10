@@ -25,11 +25,12 @@ const genericQuery = function(query, callback) {
 exports.genericQuery = genericQuery;
 
 exports.uploadShapeFile = function({directoryName, filename, srid = '4326', tableName} = {}) {
-  console.log(path(env.libDirectory + "/" + directoryName));
+  console.log("uploading...");
 
   const pathStr = path(env.libDirectory + "/" + directoryName);
+  const user = (env.dbUser) ? `-U ${env.dbUser}` : '';
 
-  execSync(`shp2pgsql -G -c -s ${srid}:4326 ${filename}.shp public.${tableName} | psql -d ${env.databaseName}`, {cwd: pathStr});
+  execSync(`shp2pgsql -G -c -s ${srid}:4326 ${filename}.shp public.${tableName} | psql -d ${env.databaseName} ${user}`, {cwd: pathStr});
 }
 
 exports.mergeIntoTrailsTable = function({baseTableName, mergingTableName, name = 'name', surface = 'surface', sourceId='source_id', geog = 'geog', sourceUrl} = {}, callback) {
@@ -57,12 +58,8 @@ exports.mergeIntoTrailsTable = function({baseTableName, mergingTableName, name =
 exports.insertElevationRasters = function({directoryName, srid = '4326', tableName} = {}) {
   console.log("inserting...");
 
-  execSync(`cd ${env.libDirectory}/${directoryName}; raster2pgsql -s ${srid} -C *.tif public.${tableName} | psql -d ${env.databaseName}`, function(error, stdout, stderr) {
-    if (error) {
-      console.error(`exec error: ${error}`);
-      return;
-    }
-    console.log(`stdout: ${stdout}`);
-    console.log(`stderr: ${stderr}`);
-  });
+  const pathStr = path(env.libDirectory + "/" + directoryName);
+  const user = (env.dbUser) ? `-U ${env.dbUser}` : '';
+
+  execSync(`cd ${env.libDirectory}/${directoryName}; raster2pgsql -s ${srid} -C *.tif public.${tableName} | psql -d ${env.databaseName} ${user}`, {cwd: pathStr});
 }
