@@ -1,1 +1,0 @@
-{"migrations":[{"title":"1486669639681-createTrails.js"},{"title":"1486670803817-addUtahTrails.js"},{"title":"1486670870460-addWashingtonTrails.js"},{"title":"1486678630915-insertElevationRasters.js"}],"path":"migrations/.migrate","pos":4,"_events":{},"_eventsCount":1}
