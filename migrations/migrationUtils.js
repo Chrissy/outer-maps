@@ -1,6 +1,7 @@
 const pg = require('pg');
 const env = require('../environment/development');
 const execSync = require('child_process').execSync;
+const path = require('path').normalize;
 
 const genericQuery = function(query, callback) {
     var pool = new pg.Pool({
@@ -24,9 +25,11 @@ const genericQuery = function(query, callback) {
 exports.genericQuery = genericQuery;
 
 exports.uploadShapeFile = function({directoryName, filename, srid = '4326', tableName} = {}) {
-  console.log("uploading...");
+  console.log(path(env.libDirectory + "/" + directoryName));
 
-  execSync(`cd ${env.libDirectory}/${directoryName}; shp2pgsql -G -c -s ${srid}:4326 ${filename}.shp public.${tableName} | psql -d ${env.databaseName}`, function(error, stdout, stderr) {
+  const pathStr = path(env.libDirectory + "/" + directoryName);
+
+  execSync(`cd ${pathStr}; shp2pgsql -G -c -s ${srid}:4326 ${filename}.shp public.${tableName} | psql -d ${env.databaseName}`, function(error, stdout, stderr) {
     if (error) {
       console.error(`exec error: ${error}`);
       return;
