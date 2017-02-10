@@ -11,7 +11,8 @@ app.use(express.static('public'));
 var pool = new pg.Pool({
   database: env.databaseName,
   max: 10,
-  idleTimeoutMillis: 3000
+  idleTimeoutMillis: 3000,
+  user: env.dbUser
 });
 
 app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
