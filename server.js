@@ -6,7 +6,7 @@ const geolib = require('geolib');
 const _ = require('underscore');
 const env = require('./environment/development');
 
-app.use(express.static('public'))
+app.use(express.static('public'));
 
 var pool = new pg.Pool({
   database: env.databaseName,
