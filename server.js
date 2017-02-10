@@ -4,11 +4,12 @@ const express = require('express');
 const app = express();
 const geolib = require('geolib');
 const _ = require('underscore');
+const env = require('./environment/development');
 
 app.use(express.static('public'))
 
 var pool = new pg.Pool({
-  database: 'mountains_5',
+  database: env.databaseName,
   max: 10,
   idleTimeoutMillis: 3000
 });
@@ -98,7 +99,7 @@ app.get('/api/elevation/:id', function(request, response){
               'POINT(${point[0]} ${point[1]})',
             4326), 4326)
           )
-          FROM elevation_2
+          FROM elevation
           WHERE rid=4
         `;
         client.query(query, function(err, result){
