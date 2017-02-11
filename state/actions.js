@@ -12,13 +12,14 @@ function getTrail(id) {
       .then(response => response.json())
       .then(t => {
         let trail = Object.assign({}, t)
-        return dispatch({type: 'ADD_TRAIL', trail});
+        dispatch({type: 'ADD_TRAIL', trail});
+        return trail;
       });
   };
 };
 
 function getAltitudeData(trail) {
-  return dispatch => {
+  return (dispatch, getState) => {
     if (trail.hasElevationData) return Promise.resolve();
     return fetch(`/api/elevation/${trail.id}`)
       .then(response => response.json())
