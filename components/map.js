@@ -27,6 +27,10 @@ export default class Map extends React.Component {
     this.props.setTrailsBox(event.bounds);
   }
 
+  onMapZoom(event) {
+    this.props.setTrailsBox(event.bounds);
+  }
+
   onMapLoad(event) {
     this.props.setTrailsBox(event.bounds);
   }
@@ -45,6 +49,7 @@ export default class Map extends React.Component {
           onClick={this.onMapClick.bind(this)}
           onLoad={this.onMapLoad.bind(this)}
           onMouseMove={this.onMapMouseMove.bind(this)}
+          onZoom={this.onMapZoom.bind(this)}
           onDrag={this.onMapDrag.bind(this)}/>
           <TooltipContainer/>
           <MapSidebarContainer/>

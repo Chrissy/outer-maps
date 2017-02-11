@@ -26,6 +26,12 @@ export default class MapBox extends React.Component {
     }));
   }
 
+  handleZoom(event) {
+    this.props.onDrag(Object.assign({}, event, {
+      bounds: this.mapboxed.getBounds()
+    }));
+  }
+
   handleLoad(event) {
     this.props.onLoad(Object.assign({}, event, {
       bounds: this.mapboxed.getBounds()
@@ -86,12 +92,13 @@ export default class MapBox extends React.Component {
       'handleLoad': 'load',
       'handleDrag': 'moveend',
       'handleMouseMove': 'mousemove',
-      'handleClick': 'click'
+      'handleClick': 'click',
+      'handleZoom': 'zoomend'
     }
 
     Object.keys(watchEvents).forEach(function(functionName){
       this.mapboxed.on(watchEvents[functionName], function(event){
-        if (this.mapboxed.loaded()) this[functionName](event);
+        this[functionName](event);
       }.bind(this))
     }.bind(this))
   }
