@@ -3,16 +3,28 @@ import { combineReducers } from 'redux';
 const trail = (state = {}, action) => {
   switch (action.type) {
     case 'ADD_TRAIL':
-      return action.trail
+      return {id: action.id}
+    case 'SET_BASE_DATA':
+      if (parseInt(action.trail.id) !== state.id) return state
+      return {...state,
+        name: action.trail.name,
+        distance: action.trail.distance,
+        center: action.trail.center,
+        distance: action.trail.distance,
+        geog: action.trail.geog,
+        surface: action.trail.surface
+      }
     case 'TOGGLE_PREVIEWING':
       return { ...state, previewing: (state.id === action.trail.id) }
     case 'CLEAR_PREVIEWING':
       return { ...state, previewing: false }
     case 'TOGGLE_SELECTED':
-      if (state.id === action.trail.id) return { ...state, selected: true }
+      if (state.id === action.trail.id && !action.trail.selected){
+        return { ...state, selected: true, selectedId: action.selectedTrailCount};
+      }
       return state;
     case 'CLEAR_SELECTED':
-      return { ...state, selected: false }
+      return { ...state, selected: false, selectedId: null }
     case 'SET_ELEVATION_DATA':
       if (action.id !== state.id) return state
       return { ...state,
@@ -51,10 +63,12 @@ const trails = (state = [], action) => {
     case 'CLEAR_PREVIEWING':
       return state.map(t => trail(t, action))
     case 'TOGGLE_SELECTED':
-      return state.map(t => trail(t, action))
+      return state.map(t => trail(t, {...action, selectedTrailCount: state.filter(e => e.selected).length + 1}))
     case 'CLEAR_SELECTED':
       return state.map(t => trail(t, action))
     case 'SET_ELEVATION_DATA':
+      return state.map(t => trail(t, action))
+    case 'SET_BASE_DATA':
       return state.map(t => trail(t, action))
     case 'SET_WEATHER_DATA':
       return state.map(t => trail(t, action))

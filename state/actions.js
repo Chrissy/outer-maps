@@ -6,13 +6,16 @@ import {getDataFromNearestStation} from '../modules/NOAA';
 function getTrail(id) {
   return (dispatch, getState) => {
     let cachedTrail = getState().trails.find(trail => trail.id == id);
+
     if (cachedTrail) return Promise.resolve(cachedTrail);
+
+    dispatch({type: 'ADD_TRAIL', id});
 
     return fetch(`/api/trails/${id}`)
       .then(response => response.json())
       .then(t => {
         let trail = Object.assign({}, t)
-        dispatch({type: 'ADD_TRAIL', trail});
+        dispatch({type: 'SET_BASE_DATA', trail});
         return trail;
       });
   };
