@@ -17,10 +17,12 @@ export default class MapSidebar extends React.Component {
       let elevations = trail.elevations;
       if (!elevations || elevations.length == 0) return accumulator;
       if (accumulator.length > 0) {
-        const distanceToFirstPoint = Geolib.getDistance(_.last(accumulator)[1], _.first(elevations)[1]);
-        const distanceToLastPoint = Geolib.getDistance(_.last(accumulator)[1], _.last(elevations)[1]);
+        const distanceToFirstPoint = Geolib.getDistance(_.last(accumulator).point, _.first(elevations).point);
+        const distanceToLastPoint = Geolib.getDistance(_.last(accumulator).point, _.last(elevations).point);
         if (distanceToFirstPoint > distanceToLastPoint) elevations.reverse();
-        return accumulator.concat(this.mapElevationsToDistances(elevations).map(t => [t[0], t[1], t[2] + _.last(accumulator)[2]]));
+        return accumulator.concat(this.mapElevationsToDistances(elevations).map((el) => {
+          return {...el, distance: el.distance + _.last(accumulator).distance }
+        }));
       } else {
         return accumulator.concat(this.mapElevationsToDistances(elevations));
       }
@@ -30,8 +32,8 @@ export default class MapSidebar extends React.Component {
   mapElevationsToDistances(elevations){
     let distance = 0;
     return elevations.map((element, index) => {
-      distance = (index == 0) ? 0 : Geolib.getDistance(element[1], elevations[index - 1][1]) + distance;
-      return [element[0], element[1], distance];
+      distance = (index == 0) ? 0 : Geolib.getDistance(element.point, elevations[index - 1].point) + distance;
+      return {...element, distance: distance};
     });
   }
 

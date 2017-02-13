@@ -96,7 +96,7 @@ app.get('/api/elevation/:id', function(request, response){
 
       var data = JSON.parse(result.rows[0].geog);
       var points = (data.type == "MultiLineString") ? _.flatten(data.coordinates, true) : data.coordinates;
-      var altitudes = [], distance = 0;
+      var elevations = [], distance = 0;
 
       points.forEach(function(point, i) {
         let query = `
@@ -110,10 +110,10 @@ app.get('/api/elevation/:id', function(request, response){
         `;
         client.query(query, function(err, result){
           if (err) throw err;
-          if (result) altitudes.push([result.rows[0].st_value, point]);
+          if (result) elevations.push({elevation: result.rows[0].st_value, point: point});
           if (i + 1 >= points.length) {
             done();
-            response.json(altitudes);
+            response.json(elevations);
           }
         })
       });
