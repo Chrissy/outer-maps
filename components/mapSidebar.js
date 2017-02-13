@@ -1,5 +1,6 @@
 import React from 'react';
-import cx from "classnames";
+import cx from 'classnames';
+import Geolib from 'geolib';
 import LineGraph from './lineGraph';
 import LoadingSpinner from './loadingSpinner';
 import _ from 'underscore';
@@ -12,12 +13,39 @@ import spacing from './spacing.css';
 export default class MapSidebar extends React.Component {
 
   cumulativeElevations() {
-    return this.props.trails.reduce((accumulator, trail) => {
-      let elevations = trail.elevations;
-      if (!elevations || elevations.length == 0) return accumulator;
-      if (accumulator.length > 0) return accumulator.concat(elevations.map(t => [t[0], t[1] + _.last(accumulator)[1]]));
-      return accumulator.concat(elevations);
-    }, []);
+    return this.props.trails.reduce(function(accumulator, trail) {
+      if (!trail.elevations) return accumulator;
+      if (accumulator.length === 0) {
+        return accumulator.concat(this.mapElevationsToDistances(trail.elevations))
+      } else {
+        return accumulator.concat(this.combineElevations(accumulator, trail.elevations));
+      };
+    }.bind(this), []);
+  }
+
+  combineElevations(firstSet, secondSet) {
+    if (this.pathsAreInOppositeDirections(firstSet, secondSet)) secondSet.reverse();
+
+    let mappedSecondSet = this.mapElevationsToDistances(secondSet);
+
+    return firstSet.concat(mappedSecondSet.map((element) => {
+      return {...element, distance: element.distance + _.last(firstSet).distance }
+    }));
+  }
+
+  mapElevationsToDistances(elevations){
+    let distance = 0;
+    return elevations.map((element, index) => {
+      distance = (index == 0) ? 0 : Geolib.getDistance(element.point, elevations[index - 1].point) + distance;
+      return {...element, distance: distance};
+    });
+  }
+
+  pathsAreInOppositeDirections(pointSet1, pointSet2) {
+    const distanceToFirstPoint = Geolib.getDistance(_.last(pointSet1).point, _.first(pointSet2).point);
+    const distanceToLastPoint = Geolib.getDistance(_.last(pointSet1).point, _.last(pointSet2).point);
+
+    return distanceToFirstPoint > distanceToLastPoint;
   }
 
   compoundTrailsAttribute(attribute) {

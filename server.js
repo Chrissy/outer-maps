@@ -2,7 +2,6 @@ const http = require('http');
 const pg = require('pg');
 const express = require('express');
 const app = express();
-const geolib = require('geolib');
 const _ = require('underscore');
 const env = require('./environment/development');
 
@@ -97,7 +96,7 @@ app.get('/api/elevation/:id', function(request, response){
 
       var data = JSON.parse(result.rows[0].geog);
       var points = (data.type == "MultiLineString") ? _.flatten(data.coordinates, true) : data.coordinates;
-      var altitudes = [], distance = 0;
+      var elevations = [], distance = 0;
 
       points.forEach(function(point, i) {
         let query = `
@@ -111,11 +110,10 @@ app.get('/api/elevation/:id', function(request, response){
         `;
         client.query(query, function(err, result){
           if (err) throw err;
-          distance = (i == 0) ? 0 : distance + geolib.getDistance(point, points[i - 1]);
-          if (result) altitudes.push([result.rows[0].st_value, distance]);
+          if (result) elevations.push({elevation: result.rows[0].st_value, point: point});
           if (i + 1 >= points.length) {
             done();
-            response.json(altitudes);
+            response.json(elevations);
           }
         })
       });
