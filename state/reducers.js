@@ -35,8 +35,6 @@ const trail = (state = {}, action) => {
       }
     case 'SET_WEATHER_DATA':
       if (action.id !== state.id) return state
-      const data = action.weatherData
-      debugger
       return { ...state,
         hasWeatherData: true,
         maxTemperature: action.maxTemperature,

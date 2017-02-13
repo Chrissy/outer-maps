@@ -71,4 +71,4 @@ const distance = function(point1, point2) {
 
 const print = (results) => results.forEach(r => console.log(r.name, r.id));
 
-export {getDataFromNearestStation}
+export {getDataFromNearestStation, convertToPercent}
