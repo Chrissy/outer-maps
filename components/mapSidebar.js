@@ -14,19 +14,23 @@ export default class MapSidebar extends React.Component {
 
   cumulativeElevations() {
     return this.props.trails.reduce(function(accumulator, trail) {
-      let elevations = trail.elevations;
-      if (!elevations || elevations.length == 0) return accumulator;
-      if (accumulator.length > 0) {
-        const distanceToFirstPoint = Geolib.getDistance(_.last(accumulator).point, _.first(elevations).point);
-        const distanceToLastPoint = Geolib.getDistance(_.last(accumulator).point, _.last(elevations).point);
-        if (distanceToFirstPoint > distanceToLastPoint) elevations.reverse();
-        return accumulator.concat(this.mapElevationsToDistances(elevations).map((el) => {
-          return {...el, distance: el.distance + _.last(accumulator).distance }
-        }));
+      if (!trail.elevations) return accumulator;
+      if (accumulator.length === 0) {
+        return accumulator.concat(this.mapElevationsToDistances(trail.elevations))
       } else {
-        return accumulator.concat(this.mapElevationsToDistances(elevations));
-      }
+        return accumulator.concat(this.combineElevations(accumulator, trail.elevations));
+      };
     }.bind(this), []);
+  }
+
+  combineElevations(firstSet, secondSet) {
+    if (this.pathsAreInOppositeDirections(firstSet, secondSet)) secondSet.reverse();
+
+    let mappedSecondSet = this.mapElevationsToDistances(secondSet);
+
+    return firstSet.concat(mappedSecondSet.map((element) => {
+      return {...element, distance: element.distance + _.last(firstSet).distance }
+    }));
   }
 
   mapElevationsToDistances(elevations){
@@ -35,6 +39,13 @@ export default class MapSidebar extends React.Component {
       distance = (index == 0) ? 0 : Geolib.getDistance(element.point, elevations[index - 1].point) + distance;
       return {...element, distance: distance};
     });
+  }
+
+  pathsAreInOppositeDirections(pointSet1, pointSet2) {
+    const distanceToFirstPoint = Geolib.getDistance(_.last(pointSet1).point, _.first(pointSet2).point);
+    const distanceToLastPoint = Geolib.getDistance(_.last(pointSet1).point, _.last(pointSet2).point);
+
+    return distanceToFirstPoint > distanceToLastPoint;
   }
 
   compoundTrailsAttribute(attribute) {
