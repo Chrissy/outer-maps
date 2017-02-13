@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 const trail = (state = {}, action) => {
   switch (action.type) {
     case 'ADD_TRAIL':
-      return {id: action.id}
+      return {...state, id: action.id}
     case 'SET_BASE_DATA':
       if (parseInt(action.trail.id) !== state.id) return state
       return {...state,

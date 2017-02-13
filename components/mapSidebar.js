@@ -19,16 +19,8 @@ export default class MapSidebar extends React.Component {
     }, []);
   }
 
-  cumulativeElevationGain() {
-    return this.props.trails.reduce((accumulator, trail) => accumulator += trail.elevationGain, 0);
-  }
-
-  cumulativeElevationLoss() {
-    return this.props.trails.reduce((accumulator, trail) => accumulator += trail.elevationLoss, 0);
-  }
-
-  cumulativeDistance() {
-    return this.props.trails.reduce((accumulator, trail) => accumulator += trail.distance, 0);
+  compoundTrailsAttribute(attribute) {
+    return this.props.trails.reduce((accumulator, trail) => accumulator += trail[attribute], 0);
   }
 
   render() {
@@ -38,9 +30,9 @@ export default class MapSidebar extends React.Component {
     return (
       <div className={cx(styles.body, {[styles.active]: this.props.firstTrail.selected})}>
         <div className={cx(styles.content, {[styles.active]: this.props.firstTrail.hasElevationData})}>
-          length: {metersToMiles(this.cumulativeDistance())}<br/>
-          elevation gain: {metersToFeet(this.cumulativeElevationGain())} Feet<br/>
-          elevation loss: {metersToFeet(this.cumulativeElevationLoss())} Feet<br/>
+          length: {metersToMiles(this.compoundTrailsAttribute("distance"))}<br/>
+          elevation gain: {metersToFeet(this.compoundTrailsAttribute("elevationGain"))} Feet<br/>
+          elevation loss: {metersToFeet(this.compoundTrailsAttribute("elevationLoss"))} Feet<br/>
           <div className={spacing.top_margin}>
             <LineGraph points={this.cumulativeElevations()}/>
           </div>
