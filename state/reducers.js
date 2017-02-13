@@ -81,7 +81,6 @@ const trailsDataUrl = (state = false, action) => {
 }
 
 export default combineReducers({
-  trail,
   trails,
   trailsDataUrl
 })
