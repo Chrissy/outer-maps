@@ -5,7 +5,6 @@ import reducers from '../state/reducers'
 export default function configureStore(preloadedState) {
   return createStore(
     reducers,
-    preloadedState,
     applyMiddleware(
       thunkMiddleware
     )

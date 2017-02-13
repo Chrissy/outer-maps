@@ -26,7 +26,7 @@ export function cumulativeElevationChanges(elevations) {
     if (el < el2) elevationGain += el2 - el;
     if (el > el2) elevationLoss += el - el2;
 
-    return [el, elevations[i][1]];
+    return [el, ...elevations[i].slice(1)];
   }).filter(e => e[0] !== false);
 
   return {

@@ -1,5 +1,6 @@
 import React from 'react';
-import cx from "classnames";
+import cx from 'classnames';
+import Geolib from 'geolib';
 import LineGraph from './lineGraph';
 import LoadingSpinner from './loadingSpinner';
 import _ from 'underscore';
@@ -12,12 +13,26 @@ import spacing from './spacing.css';
 export default class MapSidebar extends React.Component {
 
   cumulativeElevations() {
-    return this.props.trails.reduce((accumulator, trail) => {
+    return this.props.trails.reduce(function(accumulator, trail) {
       let elevations = trail.elevations;
       if (!elevations || elevations.length == 0) return accumulator;
-      if (accumulator.length > 0) return accumulator.concat(elevations.map(t => [t[0], t[1] + _.last(accumulator)[1]]));
-      return accumulator.concat(elevations);
-    }, []);
+      if (accumulator.length > 0) {
+        const distanceToFirstPoint = Geolib.getDistance(_.last(accumulator)[1], _.first(elevations)[1]);
+        const distanceToLastPoint = Geolib.getDistance(_.last(accumulator)[1], _.last(elevations)[1]);
+        if (distanceToFirstPoint > distanceToLastPoint) elevations.reverse();
+        return accumulator.concat(this.mapElevationsToDistances(elevations).map(t => [t[0], t[1], t[2] + _.last(accumulator)[2]]));
+      } else {
+        return accumulator.concat(this.mapElevationsToDistances(elevations));
+      }
+    }.bind(this), []);
+  }
+
+  mapElevationsToDistances(elevations){
+    let distance = 0;
+    return elevations.map((element, index) => {
+      distance = (index == 0) ? 0 : Geolib.getDistance(element[1], elevations[index - 1][1]) + distance;
+      return [element[0], element[1], distance];
+    });
   }
 
   compoundTrailsAttribute(attribute) {
