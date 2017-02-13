@@ -35,20 +35,18 @@ const trail = (state = {}, action) => {
       }
     case 'SET_WEATHER_DATA':
       if (action.id !== state.id) return state
-
-      const convertToPercent = (integer) => parseInt(integer/10);
-      const findByDatatype = (datatype) => (action.weatherData.find(node => node.datatype == datatype) || {}).value || "unknown";
-
+      const data = action.weatherData
+      debugger
       return { ...state,
         hasWeatherData: true,
-        maxTemperature: findByDatatype("DLY-TMAX-NORMAL"),
-        minTemperature: findByDatatype("DLY-TMIN-NORMAL"),
-        chanceOfPercipitation: convertToPercent(findByDatatype("DLY-PRCP-PCTALL-GE001HI")),
-        chanceOfHeavyPercipitation: convertToPercent(findByDatatype("DLY-PRCP-PCTALL-GE050HI")),
-        chanceOfSnow: convertToPercent(findByDatatype("DLY-SNOW-PCTALL-GE001TI")),
-        chanceOfHeavySnow: convertToPercent(findByDatatype("DLY-SNOW-PCTALL-GE030TI")),
-        chanceOfSnowPack: convertToPercent(findByDatatype("DLY-SNWD-PCTALL-GE001WI")),
-        chanceOfHeavySnowPack: convertToPercent(findByDatatype("DLY-SNWD-PCTALL-GE010WI"))
+        maxTemperature: action.maxTemperature,
+        minTemperature: action.minTemperature,
+        chanceOfPercipitation: action.chanceOfPercipitation,
+        chanceOfHeavyPercipitation: action.chanceOfHeavyPercipitation,
+        chanceOfSnow: action.chanceOfSnow,
+        chanceOfHeavySnow: action.chanceOfHeavySnow,
+        chanceOfSnowPack: action.chanceOfSnowPack,
+        chanceOfHeavySnowPack: action.chanceOfHeavySnowPack
       }
     default: return state
   }
