@@ -69,6 +69,8 @@ export default class MapBox extends React.Component {
       zoom: 11
     });
 
+    this.mapboxed.addControl(new MapboxGL.Navigation());
+
     this.mapEvents()
   }
 
