@@ -1,4 +1,6 @@
 import { combineReducers } from 'redux';
+import Geolib from 'geolib';
+import _ from 'underscore';
 
 const trail = (state = {}, action) => {
   switch (action.type) {
@@ -11,8 +13,11 @@ const trail = (state = {}, action) => {
         distance: action.trail.distance,
         center: action.trail.center,
         distance: action.trail.distance,
-        geog: action.trail.geog,
-        surface: action.trail.surface
+        geog: action.trail.geography,
+        surface: action.trail.surface,
+        points: _.flatten(action.trail.geography.coordinates, 1).map((coordinates) => point(undefined, {...action,
+          coordinates: coordinates
+        }))
       }
     case 'TOGGLE_PREVIEWING':
       return { ...state, previewing: (state.id === action.trail.id) }
@@ -31,7 +36,10 @@ const trail = (state = {}, action) => {
         hasElevationData: true,
         elevationGain: action.elevationChanges.elevationGain,
         elevationLoss: action.elevationChanges.elevationLoss,
-        elevations: action.elevationChanges.elevations
+        points: state.points.map((p, i) => point(p, {...action,
+          elevation: action.elevationChanges.elevations[i],
+          distanceToNextPoint: (i == 0) ? 0 : Geolib.getDistance(p.coordinates, state.points[i - 1].coordinates)
+        }))
       }
     case 'SET_WEATHER_DATA':
       if (action.id !== state.id) return state
@@ -68,6 +76,21 @@ const trails = (state = [], action) => {
       return state.map(t => trail(t, action))
     case 'SET_WEATHER_DATA':
       return state.map(t => trail(t, action))
+    default: return state
+  }
+}
+
+const point = (state = {}, action) => {
+  switch (action.type) {
+    case 'SET_BASE_DATA':
+      return {
+        coordinates: action.coordinates
+      }
+    case 'SET_ELEVATION_DATA':
+      return {...state,
+        elevation: action.elevation,
+        distanceToNextPoint: action.distanceToNextPoint
+      }
     default: return state
   }
 }
