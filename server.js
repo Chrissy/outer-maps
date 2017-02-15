@@ -110,7 +110,7 @@ app.get('/api/elevation/:id', function(request, response){
         `;
         client.query(query, function(err, result){
           if (err) throw err;
-          if (result) elevations.push({elevation: result.rows[0].st_value, point: point});
+          if (result) elevations.push(result.rows[0].st_value);
           if (i + 1 >= points.length) {
             done();
             response.json(elevations);

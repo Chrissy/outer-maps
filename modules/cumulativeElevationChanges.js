@@ -1,4 +1,4 @@
-var rollingAverage = function(array, size) {
+export const rollingAverage = function(array, size) {
   return array.map((element, index) => {
     var total = 0
     for (var offset = -size; offset <= size; offset++) {
@@ -8,30 +8,10 @@ var rollingAverage = function(array, size) {
   });
 }
 
-const glitchDetector = function(array) {
+export const glitchDetector = function(array) {
   return array.map((element, index) => {
     if (index == 0 || index >= array.length - 2) return element;
     if (array[index - 1] == array[index + 1] && array[index - 1] !== element) return array[index - 1];
     return element;
   });
-}
-
-export function cumulativeElevationChanges(elevations) {
-  var elevationGain = 0, elevationLoss = 0;
-  var smoothElevations = rollingAverage(glitchDetector(elevations.map(e => e.elevation)), 15);
-
-  var recoupledElevations = smoothElevations.map(function(el, i) {
-    let el2 = smoothElevations[i + 1];
-
-    if (el < el2) elevationGain += el2 - el;
-    if (el > el2) elevationLoss += el - el2;
-
-    return {...elevations[i], elevation: el}
-  });
-
-  return {
-    elevationGain: elevationGain,
-    elevationLoss: elevationLoss,
-    elevations: recoupledElevations
-  };
 }

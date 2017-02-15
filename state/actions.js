@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch';
 import _ from 'underscore'
-import {cumulativeElevationChanges} from '../modules/cumulativeElevationChanges';
+import {rollingAverage, glitchDetector} from '../modules/cumulativeElevationChanges';
 import {getDataFromNearestStation} from '../modules/NOAA';
 
 function getTrail(id) {
@@ -26,9 +26,9 @@ function getAltitudeData(trail) {
     if (trail.hasElevationData) return Promise.resolve();
     return fetch(`/api/elevation/${trail.id}`)
       .then(response => response.json())
-      .then(altitudeData => {
-        let elevationChanges = cumulativeElevationChanges(altitudeData);
-        return dispatch({type: 'SET_ELEVATION_DATA', elevationChanges, id: trail.id});
+      .then(elevationData => {
+        const elevations = rollingAverage(glitchDetector(elevationData), 15);
+        return dispatch({type: 'SET_ELEVATION_DATA', elevations, id: trail.id});
       });
   };
 };
