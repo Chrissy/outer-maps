@@ -22,8 +22,8 @@ export default class MapSidebar extends React.Component {
       <div className={cx(styles.body, {[styles.active]: this.props.firstTrail.selected})}>
         <div className={cx(styles.content, {[styles.active]: this.props.firstTrail.hasElevationData})}>
           length: {metersToMiles(this.compoundTrailsAttribute("distance"))}<br/>
-          elevation gain: {metersToFeet(this.compoundTrailsAttribute("elevationGain"))} Feet<br/>
-          elevation loss: {metersToFeet(this.compoundTrailsAttribute("elevationLoss"))} Feet<br/>
+          elevation gain: {metersToFeet(this.props.elevationGain)} Feet<br/>
+          elevation loss: {metersToFeet(this.props.elevationLoss)} Feet<br/>
           <div className={spacing.top_margin}>
             <LineGraph points={this.props.cumulativeElevations}/>
           </div>

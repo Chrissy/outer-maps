@@ -34,10 +34,8 @@ const trail = (state = {}, action) => {
       if (action.id !== state.id) return state
       return { ...state,
         hasElevationData: true,
-        elevationGain: action.elevationChanges.elevationGain,
-        elevationLoss: action.elevationChanges.elevationLoss,
         points: state.points.map((p, i) => point(p, {...action,
-          elevation: action.elevationChanges.elevations[i],
+          elevation: action.elevations[i],
           distanceToNextPoint: (i == 0) ? 0 : Geolib.getDistance(p.coordinates, state.points[i - 1].coordinates)
         }))
       }
