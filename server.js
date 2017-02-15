@@ -2,17 +2,15 @@ const http = require('http');
 const pg = require('pg');
 const express = require('express');
 const app = express();
-const geolib = require('geolib');
 const _ = require('underscore');
-
-const db = require('./modules/db.js')
-
-app.use(express.static('public'))
+const env = require('./environment/development');
+const db = require('./modules/db.js');
 
 var pool = new pg.Pool({
-  database: 'mountains_5',
+  database: env.databaseName,
   max: 10,
-  idleTimeoutMillis: 3000
+  idleTimeoutMillis: 3000,
+  user: env.dbUser
 });
 
 app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
@@ -35,8 +33,13 @@ app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
 })
 
 app.get('/api/trails/:id', function(request, response) {
-  const query = `
-    SELECT name, surface, ST_AsGeoJson(geog) as geog, ST_Length(geog) as distance
+  let query = `
+    SELECT
+      name,
+      surface,
+      ST_AsGeoJson(geog) as geog,
+      ST_Length(geog) as distance,
+      ST_AsGeoJson(ST_Centroid(geog::geometry)) as center
     FROM trails
     WHERE id = ${request.params.id}
     LIMIT 1
@@ -55,7 +58,8 @@ app.get('/api/trails/:id', function(request, response) {
         "id": request.params.id,
         "surface": r.surface,
         "geography": JSON.parse(r.geog),
-        "distance": r.distance
+        "distance": r.distance,
+        "center": JSON.parse(r.center).coordinates
       });
     })
   })
@@ -74,7 +78,7 @@ app.get('/api/elevation/:id', function(request, response){
 
       var data = JSON.parse(result.rows[0].geog);
       var points = (data.type == "MultiLineString") ? _.flatten(data.coordinates, true) : data.coordinates;
-      var altitudes = [], distance = 0;
+      var elevations = [], distance = 0;
 
       points.forEach(function(point, i) {
         const query = `
@@ -83,16 +87,15 @@ app.get('/api/elevation/:id', function(request, response){
               'POINT(${point[0]} ${point[1]})',
             4326), 4326)
           )
-          FROM elevation_2
+          FROM elevation
           WHERE rid=4
         `;
         client.query(query, function(err, result){
           if (err) throw err;
-          distance = (i == 0) ? 0 : distance + geolib.getDistance(point, points[i - 1]);
-          if (result) altitudes.push([result.rows[0].st_value, distance]);
+          if (result) elevations.push(result.rows[0].st_value);
           if (i + 1 >= points.length) {
             done();
-            response.json(altitudes);
+            response.json(elevations);
           }
         })
       });
