@@ -15,7 +15,8 @@ export default connect((state) => {
 
   return {
     trails: sortedTrails || [],
-    firstTrail: sortedTrails[0] || null,
+    firstTrail: sortedTrails[0] || {},
+    loading: state.trails.some(t => t.selected),
     cumulativeElevations: cumulativeElevations,
     elevationGain: cumulativeElevations.reduce((a, e) => a + e.elevationGain, 0),
     elevationLoss: cumulativeElevations.reduce((a, e) => a + e.elevationLoss, 0),

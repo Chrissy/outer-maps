@@ -12,10 +12,8 @@ export default class MapSidebar extends React.Component {
 
   render() {
 
-    if (this.props.trails.length === 0) return null;
-
     return (
-      <div className={cx(styles.body, {[styles.active]: this.props.firstTrail.selected})}>
+      <div className={cx(styles.body, {[styles.active]: this.props.loading})}>
         <div className={cx(styles.content, {[styles.active]: this.props.firstTrail.hasElevationData})}>
           length: {metersToMiles(this.props.distance)}<br/>
           elevation gain: {metersToFeet(this.props.elevationGain)} Feet<br/>
