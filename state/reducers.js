@@ -36,7 +36,8 @@ const trail = (state = {}, action) => {
         hasElevationData: true,
         points: state.points.map((p, i) => point(p, {...action,
           elevation: action.elevations[i],
-          distanceToNextPoint: (i == 0) ? 0 : Geolib.getDistance(p.coordinates, state.points[i - 1].coordinates)
+          pElevation: action.elevations[i - 1],
+          pPoint: state.points[i - 1]
         }))
       }
     case 'SET_WEATHER_DATA':
@@ -87,7 +88,9 @@ const point = (state = {}, action) => {
     case 'SET_ELEVATION_DATA':
       return {...state,
         elevation: action.elevation,
-        distanceToNextPoint: action.distanceToNextPoint
+        elevationGain: Math.max(action.elevation - action.pElevation, 0) || 0,
+        elevationLoss: Math.abs(Math.min(action.elevation - action.pElevation, 0)) || 0,
+        distanceFromPreviousPoint: (!action.pPoint) ? 0 : Geolib.getDistance(state.coordinates, action.pPoint.coordinates)
       }
     default: return state
   }

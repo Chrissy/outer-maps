@@ -6,7 +6,7 @@ export default class LineGraph extends React.Component {
   pointsToPathString() {
     var points = this.props.points;
     var elevations = points.map(e => e.elevation);
-    var distances = points.map(p => p.distanceToNextPoint).reduce((a, p) => a.concat(p + _.last(a) || 0), []);
+    var distances = points.map(p => p.distanceFromPreviousPoint).reduce((a, p) => a.concat(p + _.last(a) || 0), []);
     var maxElevation = Math.max(...elevations);
     var elevationWindow = maxElevation - Math.min(...elevations);
     var fullDistance = _.last(distances);

@@ -10,10 +10,6 @@ import spacing from './spacing.css';
 
 export default class MapSidebar extends React.Component {
 
-  compoundTrailsAttribute(attribute) {
-    return this.props.trails.reduce((accumulator, trail) => accumulator += trail[attribute], 0);
-  }
-
   render() {
 
     if (this.props.trails.length === 0) return null;
@@ -21,7 +17,7 @@ export default class MapSidebar extends React.Component {
     return (
       <div className={cx(styles.body, {[styles.active]: this.props.firstTrail.selected})}>
         <div className={cx(styles.content, {[styles.active]: this.props.firstTrail.hasElevationData})}>
-          length: {metersToMiles(this.compoundTrailsAttribute("distance"))}<br/>
+          length: {metersToMiles(this.props.distance)}<br/>
           elevation gain: {metersToFeet(this.props.elevationGain)} Feet<br/>
           elevation loss: {metersToFeet(this.props.elevationLoss)} Feet<br/>
           <div className={spacing.top_margin}>

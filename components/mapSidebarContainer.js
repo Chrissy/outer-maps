@@ -5,7 +5,7 @@ import {pathsOppose, reversePath} from '../modules/geometryUtils';
 export default connect((state) => {
   const sortedTrails = state.trails.filter(t => t.selected && t.hasElevationData).sort((a,b) => a.selectedId - b.selectedId);
 
-  const cumulativeElevations = state.trails.filter(t => t.hasElevationData).reduce((accumulator, trail) => {
+  const cumulativeElevations = sortedTrails.reduce((accumulator, trail) => {
     if (accumulator.length == 0) return trail.points;
     const shouldInvertPaths = pathsOppose(accumulator, trail.points);
     return accumulator.concat(shouldInvertPaths ? reversePath(trail.points): trail.points);
@@ -13,19 +13,12 @@ export default connect((state) => {
 
   let elevationGain = 0, elevationLoss = 0;
 
-  cumulativeElevations.forEach((point, i) => {
-    if (!cumulativeElevations[i + 1]) return;
-    let value = point.elevation - cumulativeElevations[i + 1].elevation;
-
-    if (value < 0) elevationGain += Math.abs(value);
-    if (value > 0) elevationLoss += value;
-  })
-
   return {
     trails: sortedTrails || [],
     firstTrail: sortedTrails[0] || null,
     cumulativeElevations: cumulativeElevations,
-    elevationGain: elevationGain,
-    elevationLoss: elevationLoss
+    elevationGain: cumulativeElevations.reduce((a, e) => a + e.elevationGain, 0),
+    elevationLoss: cumulativeElevations.reduce((a, e) => a + e.elevationLoss, 0),
+    distance: cumulativeElevations.reduce((a, e) => a + e.distanceFromPreviousPoint, 0)
   }
 })(MapSidebar);

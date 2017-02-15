@@ -3,7 +3,11 @@ import _ from 'underscore';
 
 export const reversePath = function(points) {
   return [...points].reverse().map((point, i) => {
-    return {...point, distance: (i == 0) ? 0 : points[i - 1].distance};
+    return {...point,
+      distance: (i == 0) ? 0 : points[i - 1].distance,
+      elevationGain: point.elevationLoss,
+      elevationLoss: point.elevationGain
+    };
   });
 }
 
