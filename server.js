@@ -6,6 +6,8 @@ const _ = require('underscore');
 const env = require('./environment/development');
 const db = require('./modules/db.js');
 
+app.use(express.static('public'));
+
 var pool = new pg.Pool({
   database: env.databaseName,
   max: 10,
@@ -105,7 +107,7 @@ app.get('/api/elevation/:id', function(request, response){
 
 app.get('/api/boundaries/:x1/:y1/:x2/:y2', function(request, response) {
   const query = `
-    SELECT gid AS id, ST_AsGeoJson(ST_Simplify(geog::geometry, 0.02)) AS geog
+    SELECT id AS id, name AS name, ST_AsGeoJson(geog) AS geog
     FROM boundaries
     WHERE ST_Intersects(geog,
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
