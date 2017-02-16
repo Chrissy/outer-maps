@@ -7,7 +7,8 @@ exports.up = function(next) {
     CREATE TABLE boundaries(
       id SERIAL PRIMARY KEY,
       name VARCHAR(200),
-      region VARCHAR(200),
+      state VARCHAR(64),
+      type VARCHAR(200),
       source varchar(200),
       geog geography(GEOMETRY,4326)
     )`;
