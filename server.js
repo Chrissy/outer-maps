@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 const _ = require('underscore');
 const env = require('./environment/development');
-const db = require('./modules/db.js');
+const geoJson = require('./modules/geoJson.js');
 
 app.use(express.static('public', {etag: false}));
 
@@ -29,7 +29,7 @@ app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
     client.query(query, function(err, result){
       done();
       if (err) throw err;
-      response.json(db.makeGeoJson(result));
+      response.json(geoJson.make(result));
     })
   })
 })
@@ -117,7 +117,7 @@ app.get('/api/boundaries/:x1/:y1/:x2/:y2', function(request, response) {
     client.query(query, function(err, result){
       done();
       if (err) throw err;
-      response.json(db.makeGeoJson(result));
+      response.json(geoJson.make(result));
     });
   });
 });

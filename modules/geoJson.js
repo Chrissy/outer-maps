@@ -1,4 +1,4 @@
-exports.makeGeoJson = (response) => {
+exports.make = (response) => {
   const formattedRows = response.rows.map(row => {
     return {
       "type": "Feature",

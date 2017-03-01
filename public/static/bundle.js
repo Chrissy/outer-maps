@@ -66070,23 +66070,11 @@ var sources = function sources() {
   var action = arguments[1];
 
   switch (action.type) {
-    case 'SET_VIEW':
-      var viewBox = {
-        sw1: action.bounds._sw.lng,
-        sw2: action.bounds._sw.lat,
-        ne1: action.bounds._ne.lng,
-        ne2: action.bounds._ne.lat
-      };
-
     case 'ADD_SOURCE':
-      return _extends({}, state, {
-        sources: [].concat(_toConsumableArray(state.sources), [source(undefined, action)])
-      });
+      return [].concat(_toConsumableArray(state), [source(undefined, action)]);
     case 'UPDATE_VIEW':
-      return _extends({}, state, {
-        sources: state.sources.map(function (l) {
-          return source(l, action);
-        })
+      return state.map(function (l) {
+        return source(l, action);
       });
     default:
       return state;
@@ -66101,18 +66089,16 @@ var source = function source() {
     case 'ADD_SOURCE':
       return {
         id: action.id,
-        data: 'api' + action.endpoint + '/' + action.viewBox.sw1 + '/' + action.viewBox.sw2 + '/' + action.viewBox.ne1 + '/' + action.viewBox.ne2,
+        data: 'api' + action.endpoint + '/' + action.viewBox[0][0] + '/' + action.viewBox[0][1] + '/' + action.viewBox[1][0] + '/' + action.viewBox[1][1],
         maxZoom: action.maxZoom,
         minZoom: action.minZoom,
-        type: 'geojson',
-        showing: action.maxZoom && action.zoom < action.maxZoom || action.minZoom && action.zoom > action.minZoom
+        endpoint: action.endpoint,
+        showing: action.zoom < action.maxZoom || action.zoom >= action.minZoom
       };
-    case 'SET_VIEW':
-      debugger;
-      if (action.id !== state.id) return state;
+    case 'UPDATE_VIEW':
       return _extends({}, state, {
-        data: 'api' + state.endpoint + '/' + action.viewBox.sw1 + '/' + action.viewBox.sw2 + '/' + action.viewBox.ne1 + '/' + action.viewBox.ne2,
-        showing: state.maxZoom && action.zoom < state.maxZoom || state.minZoom && action.zoom > state.minZoom
+        data: 'api' + state.endpoint + '/' + action.bounds[0][0] + '/' + action.bounds[0][1] + '/' + action.bounds[1][0] + '/' + action.bounds[1][1],
+        showing: action.zoom < state.maxZoom || action.zoom >= state.minZoom
       });
     default:
       return state;
@@ -66121,7 +66107,7 @@ var source = function source() {
 
 exports.default = (0, _redux.combineReducers)({
   trails: trails,
-  view: view
+  sources: sources
 });
 
 },{"geolib":56,"redux":406,"underscore":414}]},{},[1]);
