@@ -2,6 +2,7 @@ import React, { Proptypes } from 'react';
 import TooltipContainer from './tooltipContainer';
 import MapBox from './mapBox';
 import MapSidebarContainer from './mapSidebarContainer';
+import {mapBoxLayers} from '../modules/mapBoxLayers';
 
 export default class Map extends React.Component {
 
@@ -24,11 +25,24 @@ export default class Map extends React.Component {
   }
 
   onMapDrag(event) {
-    this.props.setTrailsBox(event.bounds);
+    this.props.updateView(event.bounds, event.zoom);
   }
 
   onMapLoad(event) {
-    this.props.setTrailsBox(event.bounds);
+    this.props.addSource({
+      id: 'trails-data',
+      endpoint: '',
+      minZoom: 9,
+      viewBox: event.bounds,
+      zoom: event.zoom
+    });
+    this.props.addSource({
+      id: 'boundaries-data',
+      endpoint: '/boundaries',
+      maxZoom: 9,
+      viewBox: event.bounds,
+      zoom: event.zoom
+    });
   }
 
   activeTrailIds() {
@@ -40,7 +54,8 @@ export default class Map extends React.Component {
         <div id="the-map">
           <MapBox
           activeTrailIDs={this.activeTrailIds()}
-          viewBox={this.props.viewBox}
+          sources={this.props.sources.filter(s => s.showing)}
+          layers={mapBoxLayers}
           pointer={this.props.previewTrails.length > 0}
           onClick={this.onMapClick.bind(this)}
           onLoad={this.onMapLoad.bind(this)}

@@ -197,6 +197,8 @@ var _mapSidebarContainer = require('./mapSidebarContainer');
 
 var _mapSidebarContainer2 = _interopRequireDefault(_mapSidebarContainer);
 
+var _mapBoxLayers = require('../modules/mapBoxLayers');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -249,12 +251,25 @@ var Map = function (_React$Component) {
   }, {
     key: 'onMapDrag',
     value: function onMapDrag(event) {
-      this.props.setTrailsBox(event.bounds);
+      this.props.updateView(event.bounds, event.zoom);
     }
   }, {
     key: 'onMapLoad',
     value: function onMapLoad(event) {
-      this.props.setTrailsBox(event.bounds);
+      this.props.addSource({
+        id: 'trails-data',
+        endpoint: '',
+        minZoom: 9,
+        viewBox: event.bounds,
+        zoom: event.zoom
+      });
+      this.props.addSource({
+        id: 'boundaries-data',
+        endpoint: '/boundaries',
+        maxZoom: 9,
+        viewBox: event.bounds,
+        zoom: event.zoom
+      });
     }
   }, {
     key: 'activeTrailIds',
@@ -271,7 +286,10 @@ var Map = function (_React$Component) {
         { id: 'the-map' },
         _react2.default.createElement(_mapBox2.default, {
           activeTrailIDs: this.activeTrailIds(),
-          viewBox: this.props.viewBox,
+          sources: this.props.sources.filter(function (s) {
+            return s.showing;
+          }),
+          layers: _mapBoxLayers.mapBoxLayers,
           pointer: this.props.previewTrails.length > 0,
           onClick: this.onMapClick.bind(this),
           onLoad: this.onMapLoad.bind(this),
@@ -288,7 +306,7 @@ var Map = function (_React$Component) {
 
 exports.default = Map;
 
-},{"./mapBox":5,"./mapSidebarContainer":9,"./tooltipContainer":12,"react":399}],5:[function(require,module,exports){
+},{"../modules/mapBoxLayers":17,"./mapBox":5,"./mapSidebarContainer":9,"./tooltipContainer":12,"react":399}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -307,8 +325,6 @@ var _mapboxGl2 = _interopRequireDefault(_mapboxGl);
 
 var _mapBoxStaticData = require('../modules/mapBoxStaticData');
 
-var _mapBoxLayers = require('../modules/mapBoxLayers');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -319,8 +335,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var MapBox = function (_React$Component) {
-  _inherits(MapBox, _React$Component);
+var MapBox = function (_React$PureComponent) {
+  _inherits(MapBox, _React$PureComponent);
 
   function MapBox() {
     _classCallCheck(this, MapBox);
@@ -329,6 +345,53 @@ var MapBox = function (_React$Component) {
   }
 
   _createClass(MapBox, [{
+    key: 'updateSources',
+    value: function updateSources() {
+      var oldSources = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+      var newSources = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+      var changedSources = newSources.filter(function (s) {
+        return oldSources.find(function (os) {
+          return os.id == s.id && os.data !== s.data;
+        });
+      });
+      var removedSources = oldSources.filter(function (s) {
+        return !newSources.map(function (n) {
+          return n.id;
+        }).includes(s.id);
+      });
+      var addedSources = newSources.filter(function (s) {
+        return !oldSources.map(function (n) {
+          return n.id;
+        }).includes(s.id);
+      });
+
+      changedSources.concat(removedSources).forEach(function (source) {
+        this.mapboxed.removeSource(source.id);
+      }.bind(this));
+
+      changedSources.concat(addedSources).forEach(function (source) {
+        this.mapboxed.addSource(source.id, {
+          data: source.data,
+          type: "geojson"
+        });
+      }.bind(this));
+
+      this.updateLayers();
+    }
+  }, {
+    key: 'updateLayers',
+    value: function updateLayers() {
+      this.props.layers.forEach(function (layer) {
+        if (!this.mapboxed.getLayer(layer.id) && this.mapboxed.getSource(layer.source)) {
+          this.mapboxed.addLayer(layer);
+        }
+        if (this.mapboxed.getLayer(layer.id) && !this.mapboxed.getSource(layer.source)) {
+          this.mapboxed.removeLayer(layer.id);
+        }
+      }.bind(this));
+    }
+  }, {
     key: 'handleMouseMove',
     value: function handleMouseMove(event) {
       var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails'] });
@@ -349,88 +412,25 @@ var MapBox = function (_React$Component) {
     key: 'handleDrag',
     value: function handleDrag(event) {
       this.props.onDrag(Object.assign({}, event, {
-        bounds: this.mapboxed.getBounds()
+        bounds: this.mapboxed.getBounds().toArray(),
+        zoom: this.mapboxed.getZoom()
       }));
     }
   }, {
     key: 'handleZoom',
     value: function handleZoom(event) {
       this.props.onDrag(Object.assign({}, event, {
-        bounds: this.mapboxed.getBounds()
+        bounds: this.mapboxed.getBounds().toArray(),
+        zoom: this.mapboxed.getZoom()
       }));
     }
   }, {
     key: 'handleLoad',
     value: function handleLoad(event) {
       this.props.onLoad(Object.assign({}, event, {
-        bounds: this.mapboxed.getBounds()
+        bounds: this.mapboxed.getBounds().toArray(),
+        zoom: this.mapboxed.getZoom()
       }));
-    }
-  }, {
-    key: 'drawMap',
-    value: function drawMap(viewBox) {
-      console.log(this.mapboxed.getZoom());
-      if (this.mapboxed.getZoom() > 9) {
-        this.drawTrails(viewBox);
-      } else {
-        this.drawBoundaries(viewBox);
-      }
-    }
-  }, {
-    key: 'clearMap',
-    value: function clearMap() {
-      if (this.mapboxed.getSource('trails-data')) this.clearTrails();
-      if (this.mapboxed.getSource('boundaries-data')) this.clearBoundaries();
-    }
-  }, {
-    key: 'drawTrails',
-    value: function drawTrails(viewBox) {
-      var _this2 = this;
-
-      if (!viewBox) return;
-
-      this.mapboxed.addSource('trails-data', {
-        'type': 'geojson',
-        'data': '/api/' + viewBox.sw1 + '/' + viewBox.sw2 + '/' + viewBox.ne1 + '/' + viewBox.ne2
-      });
-
-      _mapBoxLayers.trailLayers.forEach(function (layer) {
-        return _this2.mapboxed.addLayer(layer);
-      });
-    }
-  }, {
-    key: 'clearTrails',
-    value: function clearTrails() {
-      this.mapboxed.removeSource('trails-data');
-
-      _mapBoxLayers.trailLayers.forEach(function (layer) {
-        this.mapboxed.removeLayer(layer.id);
-      }.bind(this));
-    }
-  }, {
-    key: 'drawBoundaries',
-    value: function drawBoundaries(viewBox) {
-      var _this3 = this;
-
-      if (!viewBox) return;
-
-      this.mapboxed.addSource('boundaries-data', {
-        'type': 'geojson',
-        'data': '/api/boundaries/' + viewBox.sw1 + '/' + viewBox.sw2 + '/' + viewBox.ne1 + '/' + viewBox.ne2
-      });
-
-      _mapBoxLayers.boundaryLayers.forEach(function (layer) {
-        return _this3.mapboxed.addLayer(layer);
-      });
-    }
-  }, {
-    key: 'clearBoundaries',
-    value: function clearBoundaries() {
-      this.mapboxed.removeSource('boundaries-data');
-
-      _mapBoxLayers.boundaryLayers.forEach(function (layer) {
-        this.mapboxed.removeLayer(layer.id);
-      }.bind(this));
     }
   }, {
     key: 'componentDidMount',
@@ -448,24 +448,16 @@ var MapBox = function (_React$Component) {
       this.mapboxed.addControl(new _mapboxGl2.default.Navigation());
     }
   }, {
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(nextProps) {
-      var viewBox = nextProps.viewBox;
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps, q) {
+      this.updateSources(prevProps.sources, this.props.sources);
 
-      if (viewBox !== this.props.viewBox) {
-        if (this.props.viewBox) this.clearMap();
-        this.drawMap(viewBox);
-      }
-
-      if (nextProps.activeTrailIDs !== this.props.activeTrailIDs && this.mapboxed.getSource('trails-data')) {
-        this.mapboxed.setFilter("trails-active", ["in", "id"].concat(_toConsumableArray(nextProps.activeTrailIDs.map(function (t) {
+      if (this.props.activeTrailIDs !== prevProps.activeTrailIDs && this.mapboxed.getSource('trails-data') && this.mapboxed.getLayer('trails-active')) {
+        this.mapboxed.setFilter("trails-active", ["in", "id"].concat(_toConsumableArray(this.props.activeTrailIDs.map(function (t) {
           return parseInt(t);
         }))));
       }
-    }
-  }, {
-    key: 'componentDidUpdate',
-    value: function componentDidUpdate(props) {
+
       this.mapboxed.getCanvas().style.cursor = this.props.pointer ? 'pointer' : '';
     }
   }, {
@@ -475,8 +467,7 @@ var MapBox = function (_React$Component) {
         'handleLoad': 'load',
         'handleDrag': 'moveend',
         'handleMouseMove': 'mousemove',
-        'handleClick': 'click',
-        'handleZoom': 'zoomend'
+        'handleClick': 'click'
       };
 
       Object.keys(watchEvents).forEach(function (functionName) {
@@ -493,11 +484,11 @@ var MapBox = function (_React$Component) {
   }]);
 
   return MapBox;
-}(_react2.default.Component);
+}(_react2.default.PureComponent);
 
 exports.default = MapBox;
 
-},{"../modules/mapBoxLayers":17,"../modules/mapBoxStaticData":18,"mapbox-gl":128,"react":399}],6:[function(require,module,exports){
+},{"../modules/mapBoxStaticData":18,"mapbox-gl":128,"react":399}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -522,7 +513,7 @@ var mapStateToProps = function mapStateToProps(state) {
     previewTrails: state.trails.filter(function (trail) {
       return trail.previewing;
     }),
-    viewBox: state.viewBox
+    sources: state.sources
   };
 };
 
@@ -540,8 +531,11 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     onNonTrailMapClick: function onNonTrailMapClick() {
       return dispatch({ type: 'CLEAR_SELECTED' });
     },
-    setTrailsBox: function setTrailsBox(bounds) {
-      return dispatch({ type: 'SET_VIEWBOX', bounds: bounds });
+    updateView: function updateView(bounds, zoom) {
+      return dispatch({ type: 'UPDATE_VIEW', bounds: bounds, zoom: zoom });
+    },
+    addSource: function addSource(source) {
+      return dispatch((0, _actions.addSource)(source));
     }
   };
 };
@@ -1103,7 +1097,7 @@ var pathsOppose = exports.pathsOppose = function pathsOppose(pointSet1, pointSet
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var trailLayers = exports.trailLayers = [{
+var mapBoxLayers = exports.mapBoxLayers = [{
   'id': 'trails',
   'source': 'trails-data',
   'type': 'line',
@@ -1137,9 +1131,7 @@ var trailLayers = exports.trailLayers = [{
     'line-color': '#FF9100',
     'line-width': 2
   }
-}];
-
-var boundaryLayers = exports.boundaryLayers = [{
+}, {
   'id': 'boundaries-data',
   'source': 'boundaries-data',
   'type': 'fill',
@@ -65800,6 +65792,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 exports.previewTrail = previewTrail;
 exports.selectTrail = selectTrail;
+exports.addSource = addSource;
+exports.updateView = updateView;
 
 var _isomorphicFetch = require('isomorphic-fetch');
 
@@ -65885,6 +65879,18 @@ function selectTrail(id) {
       dispatch(getAltitudeData(trail));
       dispatch(getWeatherData(trail));
     });
+  };
+};
+
+function addSource(source) {
+  return function (dispatch) {
+    return dispatch(_extends({ type: 'ADD_SOURCE' }, source));
+  };
+};
+
+function updateView(viewBox, zoom) {
+  return function (dispatch) {
+    return dispatch({ type: 'UPDATE_VIEW', viewBox: viewBox, zoom: zoom });
   };
 };
 
@@ -66059,18 +66065,55 @@ var point = function point() {
   }
 };
 
-var viewBox = function viewBox() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+var sources = function sources() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
   var action = arguments[1];
 
   switch (action.type) {
-    case 'SET_VIEWBOX':
-      return {
+    case 'SET_VIEW':
+      var viewBox = {
         sw1: action.bounds._sw.lng,
         sw2: action.bounds._sw.lat,
         ne1: action.bounds._ne.lng,
         ne2: action.bounds._ne.lat
       };
+
+    case 'ADD_SOURCE':
+      return _extends({}, state, {
+        sources: [].concat(_toConsumableArray(state.sources), [source(undefined, action)])
+      });
+    case 'UPDATE_VIEW':
+      return _extends({}, state, {
+        sources: state.sources.map(function (l) {
+          return source(l, action);
+        })
+      });
+    default:
+      return state;
+  }
+};
+
+var source = function source() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  switch (action.type) {
+    case 'ADD_SOURCE':
+      return {
+        id: action.id,
+        data: 'api' + action.endpoint + '/' + action.viewBox.sw1 + '/' + action.viewBox.sw2 + '/' + action.viewBox.ne1 + '/' + action.viewBox.ne2,
+        maxZoom: action.maxZoom,
+        minZoom: action.minZoom,
+        type: 'geojson',
+        showing: action.maxZoom && action.zoom < action.maxZoom || action.minZoom && action.zoom > action.minZoom
+      };
+    case 'SET_VIEW':
+      debugger;
+      if (action.id !== state.id) return state;
+      return _extends({}, state, {
+        data: 'api' + state.endpoint + '/' + action.viewBox.sw1 + '/' + action.viewBox.sw2 + '/' + action.viewBox.ne1 + '/' + action.viewBox.ne2,
+        showing: state.maxZoom && action.zoom < state.maxZoom || state.minZoom && action.zoom > state.minZoom
+      });
     default:
       return state;
   }
@@ -66078,7 +66121,7 @@ var viewBox = function viewBox() {
 
 exports.default = (0, _redux.combineReducers)({
   trails: trails,
-  viewBox: viewBox
+  view: view
 });
 
 },{"geolib":56,"redux":406,"underscore":414}]},{},[1]);

@@ -1,4 +1,4 @@
-export const trailLayers = [
+export const mapBoxLayers = [
   {
     'id': 'trails',
     'source': 'trails-data',
@@ -36,10 +36,7 @@ export const trailLayers = [
       'line-color': '#FF9100',
       'line-width': 2,
     }
-  }
-]
-
-export const boundaryLayers = [
+  },
   {
     'id': 'boundaries-data',
     'source': 'boundaries-data',

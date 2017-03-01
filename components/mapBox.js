@@ -1,9 +1,39 @@
 import React, { Proptypes } from 'react';
 import MapboxGL from 'mapbox-gl';
 import {accessToken} from '../modules/mapBoxStaticData';
-import {boundaryLayers, trailLayers} from '../modules/mapBoxLayers';
 
-export default class MapBox extends React.Component {
+export default class MapBox extends React.PureComponent {
+
+  updateSources(oldSources = [], newSources = []) {
+    const changedSources = newSources.filter(s => oldSources.find(os => os.id == s.id && os.data !== s.data));
+    const removedSources = oldSources.filter(s => !newSources.map(n => n.id).includes(s.id));
+    const addedSources = newSources.filter(s => !oldSources.map(n => n.id).includes(s.id));
+
+    changedSources.concat(removedSources).forEach(function(source){
+      this.mapboxed.removeSource(source.id);
+    }.bind(this));
+
+    changedSources.concat(addedSources).forEach(function(source){
+      this.mapboxed.addSource(source.id, {
+        data: source.data,
+        type: "geojson"
+      });
+    }.bind(this));
+
+
+    this.updateLayers()
+  }
+
+  updateLayers() {
+    this.props.layers.forEach(function(layer){
+      if (!this.mapboxed.getLayer(layer.id) && this.mapboxed.getSource(layer.source)){
+        this.mapboxed.addLayer(layer);
+      }
+      if (this.mapboxed.getLayer(layer.id) && !this.mapboxed.getSource(layer.source)){
+        this.mapboxed.removeLayer(layer.id);
+      }
+    }.bind(this));
+  }
 
   handleMouseMove(event) {
     var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails'] });
@@ -22,72 +52,23 @@ export default class MapBox extends React.Component {
 
   handleDrag(event) {
     this.props.onDrag(Object.assign({}, event, {
-      bounds: this.mapboxed.getBounds()
+      bounds: this.mapboxed.getBounds().toArray(),
+      zoom: this.mapboxed.getZoom()
     }));
   }
 
   handleZoom(event) {
     this.props.onDrag(Object.assign({}, event, {
-      bounds: this.mapboxed.getBounds()
+      bounds: this.mapboxed.getBounds().toArray(),
+      zoom: this.mapboxed.getZoom()
     }));
   }
 
   handleLoad(event) {
     this.props.onLoad(Object.assign({}, event, {
-      bounds: this.mapboxed.getBounds()
+      bounds: this.mapboxed.getBounds().toArray(),
+      zoom: this.mapboxed.getZoom()
     }));
-  }
-
-  drawMap(viewBox) {
-    console.log(this.mapboxed.getZoom());
-    if (this.mapboxed.getZoom() > 9) {
-      this.drawTrails(viewBox)
-    } else {
-      this.drawBoundaries(viewBox);
-    }
-  }
-
-  clearMap() {
-    if (this.mapboxed.getSource('trails-data')) this.clearTrails();
-    if (this.mapboxed.getSource('boundaries-data')) this.clearBoundaries();
-  }
-
-  drawTrails(viewBox) {
-    if (!viewBox) return;
-
-    this.mapboxed.addSource('trails-data', {
-      'type': 'geojson',
-      'data': `/api/${viewBox.sw1}/${viewBox.sw2}/${viewBox.ne1}/${viewBox.ne2}`
-    });
-
-    trailLayers.forEach(layer => this.mapboxed.addLayer(layer));
-  }
-
-  clearTrails() {
-    this.mapboxed.removeSource('trails-data');
-
-    trailLayers.forEach(function(layer) {
-      this.mapboxed.removeLayer(layer.id)
-    }.bind(this));
-  }
-
-  drawBoundaries(viewBox) {
-    if (!viewBox) return;
-
-    this.mapboxed.addSource('boundaries-data', {
-      'type': 'geojson',
-      'data': `/api/boundaries/${viewBox.sw1}/${viewBox.sw2}/${viewBox.ne1}/${viewBox.ne2}`
-    });
-
-    boundaryLayers.forEach(layer => this.mapboxed.addLayer(layer));
-  }
-
-  clearBoundaries() {
-    this.mapboxed.removeSource('boundaries-data');
-
-    boundaryLayers.forEach(function(layer) {
-      this.mapboxed.removeLayer(layer.id)
-    }.bind(this));
   }
 
   componentDidMount() {
@@ -104,20 +85,13 @@ export default class MapBox extends React.Component {
     this.mapboxed.addControl(new MapboxGL.Navigation());
   }
 
-  componentWillReceiveProps(nextProps) {
-    const viewBox = nextProps.viewBox
+  componentDidUpdate(prevProps, q) {
+    this.updateSources(prevProps.sources, this.props.sources);
 
-    if (viewBox !== this.props.viewBox) {
-      if (this.props.viewBox) this.clearMap();
-      this.drawMap(viewBox);
+    if (this.props.activeTrailIDs !== prevProps.activeTrailIDs && this.mapboxed.getSource('trails-data') && this.mapboxed.getLayer('trails-active')) {
+      this.mapboxed.setFilter("trails-active", ["in", "id", ...this.props.activeTrailIDs.map(t => parseInt(t))]);
     }
 
-    if (nextProps.activeTrailIDs !== this.props.activeTrailIDs && this.mapboxed.getSource('trails-data')) {
-      this.mapboxed.setFilter("trails-active", ["in", "id", ...nextProps.activeTrailIDs.map(t => parseInt(t))]);
-    }
-  }
-
-  componentDidUpdate(props) {
     this.mapboxed.getCanvas().style.cursor = (this.props.pointer) ? 'pointer' : '';
   }
 
@@ -127,7 +101,6 @@ export default class MapBox extends React.Component {
       'handleDrag': 'moveend',
       'handleMouseMove': 'mousemove',
       'handleClick': 'click',
-      'handleZoom': 'zoomend'
     }
 
     Object.keys(watchEvents).forEach(function(functionName){
