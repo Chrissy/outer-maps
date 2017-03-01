@@ -6,7 +6,7 @@ const _ = require('underscore');
 const env = require('./environment/development');
 const geoJson = require('./modules/geoJson.js');
 
-app.use(express.static('public', {etag: false}));
+app.use(express.static('public'));
 
 var pool = new pg.Pool({
   database: env.databaseName,
