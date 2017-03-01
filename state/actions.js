@@ -73,3 +73,15 @@ export function selectTrail(id) {
     });
   };
 };
+
+export function addSource(source){
+  return dispatch => {
+    return dispatch({type: 'ADD_SOURCE', ...source});
+  };
+};
+
+export function updateView(viewBox, zoom) {
+  return dispatch => {
+    return dispatch({type: 'UPDATE_VIEW', viewBox, zoom});
+  };
+};

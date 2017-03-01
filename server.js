@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const _ = require('underscore');
 const env = require('./environment/development');
+const geoJson = require('./modules/geoJson.js');
 
 app.use(express.static('public'));
 
@@ -16,7 +17,7 @@ var pool = new pg.Pool({
 
 app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
 
-  let query = `
+  const query = `
     SELECT id, ST_AsGeoJson(geog) AS geog
     FROM trails
     WHERE ST_Intersects(geog,
@@ -27,25 +28,8 @@ app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
   pool.connect(function(err, client, done){
     client.query(query, function(err, result){
       done();
-
       if (err) throw err;
-
-      var features = []
-
-      for (var row of result.rows) {
-        features.push({
-          "type": "Feature",
-          "properties": {
-            "id": row.id
-          },
-          "geometry": JSON.parse(row.geog)
-        });
-      }
-
-      response.json({
-        "type": "FeatureCollection",
-        "features": features
-      });
+      response.json(geoJson.make(result));
     })
   })
 })
@@ -84,7 +68,7 @@ app.get('/api/trails/:id', function(request, response) {
 })
 
 app.get('/api/elevation/:id', function(request, response){
-  let query = `
+  const query = `
     select ST_AsGeoJson(geog) as geog
     FROM trails
     WHERE id = ${request.params.id}
@@ -99,7 +83,7 @@ app.get('/api/elevation/:id', function(request, response){
       var elevations = [], distance = 0;
 
       points.forEach(function(point, i) {
-        let query = `
+        const query = `
           SELECT ST_Value(rast, ST_Transform(
             ST_GeomFromText(
               'POINT(${point[0]} ${point[1]})',
@@ -117,6 +101,23 @@ app.get('/api/elevation/:id', function(request, response){
           }
         })
       });
+    });
+  });
+});
+
+app.get('/api/boundaries/:x1/:y1/:x2/:y2', function(request, response) {
+  const query = `
+    SELECT id AS id, name AS name, ST_AsGeoJson(geog) AS geog
+    FROM boundaries
+    WHERE ST_Intersects(geog,
+      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
+    )
+  `
+  pool.connect(function(err, client, done){
+    client.query(query, function(err, result){
+      done();
+      if (err) throw err;
+      response.json(geoJson.make(result));
     });
   });
 });

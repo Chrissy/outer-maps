@@ -1,4 +1,4 @@
-export default [
+export const mapBoxLayers = [
   {
     'id': 'trails',
     'source': 'trails-data',
@@ -37,4 +37,13 @@ export default [
       'line-width': 2,
     }
   },
+  {
+    'id': 'boundaries-data',
+    'source': 'boundaries-data',
+    'type': 'fill',
+    'paint': {
+      'fill-color': 'red',
+      'fill-opacity': 0.5
+    }
+  }
 ]

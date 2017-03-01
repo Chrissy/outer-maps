@@ -1,9 +1,39 @@
 import React, { Proptypes } from 'react';
 import MapboxGL from 'mapbox-gl';
 import {accessToken} from '../modules/mapBoxStaticData';
-import MapBoxLayers from '../modules/mapBoxLayers';
 
-export default class MapBox extends React.Component {
+export default class MapBox extends React.PureComponent {
+
+  updateSources(oldSources = [], newSources = []) {
+    const changedSources = newSources.filter(s => oldSources.find(os => os.id == s.id && os.data !== s.data));
+    const removedSources = oldSources.filter(s => !newSources.map(n => n.id).includes(s.id));
+    const addedSources = newSources.filter(s => !oldSources.map(n => n.id).includes(s.id));
+
+    changedSources.concat(removedSources).forEach(function(source){
+      this.mapboxed.removeSource(source.id);
+    }.bind(this));
+
+    changedSources.concat(addedSources).forEach(function(source){
+      this.mapboxed.addSource(source.id, {
+        data: source.data,
+        type: "geojson"
+      });
+    }.bind(this));
+
+
+    this.updateLayers()
+  }
+
+  updateLayers() {
+    this.props.layers.forEach(function(layer){
+      if (!this.mapboxed.getLayer(layer.id) && this.mapboxed.getSource(layer.source)){
+        this.mapboxed.addLayer(layer);
+      }
+      if (this.mapboxed.getLayer(layer.id) && !this.mapboxed.getSource(layer.source)){
+        this.mapboxed.removeLayer(layer.id);
+      }
+    }.bind(this));
+  }
 
   handleMouseMove(event) {
     var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails'] });
@@ -22,41 +52,23 @@ export default class MapBox extends React.Component {
 
   handleDrag(event) {
     this.props.onDrag(Object.assign({}, event, {
-      bounds: this.mapboxed.getBounds()
+      bounds: this.mapboxed.getBounds().toArray(),
+      zoom: this.mapboxed.getZoom()
     }));
   }
 
   handleZoom(event) {
     this.props.onDrag(Object.assign({}, event, {
-      bounds: this.mapboxed.getBounds()
+      bounds: this.mapboxed.getBounds().toArray(),
+      zoom: this.mapboxed.getZoom()
     }));
   }
 
   handleLoad(event) {
     this.props.onLoad(Object.assign({}, event, {
-      bounds: this.mapboxed.getBounds()
+      bounds: this.mapboxed.getBounds().toArray(),
+      zoom: this.mapboxed.getZoom()
     }));
-  }
-
-  clearMap() {
-    this.mapboxed.removeSource('trails-data');
-
-    MapBoxLayers.forEach(function(layer) {
-      this.mapboxed.removeLayer(layer.id)
-    }.bind(this));
-  }
-
-  drawMap(dataUrl) {
-    if (!dataUrl) return;
-
-    this.mapboxed.addSource('trails-data', {
-      'type': 'geojson',
-      'data': dataUrl
-    });
-
-    MapBoxLayers.forEach(function(layer) {
-      this.mapboxed.addLayer(layer)
-    }.bind(this));
   }
 
   componentDidMount() {
@@ -69,23 +81,17 @@ export default class MapBox extends React.Component {
       zoom: 11
     });
 
+    this.mapEvents();
     this.mapboxed.addControl(new MapboxGL.Navigation());
-
-    this.mapEvents()
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.trailsDataUrl !== this.props.trailsDataUrl) {
-      if (this.props.trailsDataUrl) this.clearMap();
-      this.drawMap(nextProps.trailsDataUrl);
+  componentDidUpdate(prevProps, q) {
+    this.updateSources(prevProps.sources, this.props.sources);
+
+    if (this.props.activeTrailIDs !== prevProps.activeTrailIDs && this.mapboxed.getSource('trails-data') && this.mapboxed.getLayer('trails-active')) {
+      this.mapboxed.setFilter("trails-active", ["in", "id", ...this.props.activeTrailIDs.map(t => parseInt(t))]);
     }
 
-    if (nextProps.activeTrailIDs !== this.props.activeTrailIDs) {
-      this.mapboxed.setFilter("trails-active", ["in", "id", ...nextProps.activeTrailIDs.map(t => parseInt(t))]);
-    }
-  }
-
-  componentDidUpdate(props) {
     this.mapboxed.getCanvas().style.cursor = (this.props.pointer) ? 'pointer' : '';
   }
 
@@ -95,7 +101,6 @@ export default class MapBox extends React.Component {
       'handleDrag': 'moveend',
       'handleMouseMove': 'mousemove',
       'handleClick': 'click',
-      'handleZoom': 'zoomend'
     }
 
     Object.keys(watchEvents).forEach(function(functionName){

@@ -96,15 +96,37 @@ const point = (state = {}, action) => {
   }
 }
 
-const trailsDataUrl = (state = false, action) => {
+const sources = (state = [], action) => {
   switch (action.type) {
-    case 'SET_TRAILS_DATA_URL_BOUNDS':
-      return `/api/${action.bounds._sw.lng}/${action.bounds._sw.lat}/${action.bounds._ne.lng}/${action.bounds._ne.lat}`
+    case 'ADD_SOURCE':
+      return [...state, source(undefined, action)]
+    case 'UPDATE_VIEW':
+      return state.map(l => source(l, action))
+    default: return state
+  }
+}
+
+const source = (state = {}, action) => {
+  switch (action.type) {
+    case 'ADD_SOURCE':
+      return {
+        id: action.id,
+        data: `api${action.endpoint}/${action.viewBox[0][0]}/${action.viewBox[0][1]}/${action.viewBox[1][0]}/${action.viewBox[1][1]}`,
+        maxZoom: action.maxZoom,
+        minZoom: action.minZoom,
+        endpoint: action.endpoint,
+        showing: action.zoom < action.maxZoom || action.zoom >= action.minZoom
+      }
+    case 'UPDATE_VIEW':
+      return {...state,
+        data: `api${state.endpoint}/${action.bounds[0][0]}/${action.bounds[0][1]}/${action.bounds[1][0]}/${action.bounds[1][1]}`,
+        showing: action.zoom < state.maxZoom || action.zoom >= state.minZoom
+      }
     default: return state
   }
 }
 
 export default combineReducers({
   trails,
-  trailsDataUrl
+  sources
 })

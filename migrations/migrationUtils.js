@@ -34,6 +34,15 @@ exports.uploadShapeFile = function({directoryName, filename, srid = '4326', tabl
   execSync(`shp2pgsql -G -c -s ${srid}:4326 ${filename}.shp public.${tableName} | psql -d ${env.databaseName} ${user}`, {cwd: pathStr});
 }
 
+exports.insertElevationRasters = function({directoryName, srid = '4326', tableName} = {}) {
+  console.log("inserting...");
+
+  const pathStr = path(env.libDirectory + "/" + directoryName);
+  const user = (env.dbUser) ? `-U ${env.dbUser}` : '';
+
+  execSync(`raster2pgsql -s ${srid} -C *.tif public.${tableName} | psql -d ${env.databaseName} ${user}`, {cwd: pathStr});
+}
+
 exports.mergeIntoTrailsTable = function({baseTableName, mergingTableName, name = 'name', surface = 'surface', sourceId='source_id', geog = 'geog', sourceUrl} = {}, callback) {
   const query = `
     CREATE TABLE ${baseTableName}__new AS SELECT * FROM ${baseTableName};
@@ -56,11 +65,24 @@ exports.mergeIntoTrailsTable = function({baseTableName, mergingTableName, name =
   return genericQuery(query, callback);
 }
 
-exports.insertElevationRasters = function({directoryName, srid = '4326', tableName} = {}) {
-  console.log("inserting...");
+exports.mergeIntoBoundariesTable = function({baseTableName, mergingTableName, name = 'name', region = 'region', geog = 'geog', sourceUrl} = {}, callback) {
+  const query = `
+    CREATE TABLE ${baseTableName}__new AS SELECT * FROM ${baseTableName};
 
-  const pathStr = path(env.libDirectory + "/" + directoryName);
-  const user = (env.dbUser) ? `-U ${env.dbUser}` : '';
+    INSERT INTO ${baseTableName}__new(name, region, geog, source)
+    SELECT ${name}, ${region}, ${geog}, '${sourceUrl}' FROM ${mergingTableName};
 
-  execSync(`raster2pgsql -s ${srid} -C *.tif public.${tableName} | psql -d ${env.databaseName} ${user}`, {cwd: pathStr});
+    DROP TABLE ${baseTableName};
+
+    ALTER TABLE ${baseTableName}__new RENAME TO ${baseTableName};
+
+    ALTER TABLE ${baseTableName} DROP COLUMN id;
+    ALTER TABLE ${baseTableName} ADD COLUMN id SERIAL PRIMARY KEY;
+
+    DROP TABLE ${mergingTableName};
+  `;
+
+  console.log("merging...")
+
+  return genericQuery(query, callback);
 }
