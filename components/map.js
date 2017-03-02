@@ -8,19 +8,17 @@ export default class Map extends React.Component {
 
   onMapMouseMove(event) {
     if (event.features.length) {
-      let trail_id = event.features[0].properties.id;
-      if (this.props.previewTrails.some(t => t.id == trail_id)) return;
-      this.props.onTrailMouseIn(trail_id);
-    } else if (this.props.previewTrails.length) {
-      this.props.onTrailMouseOut();
+      this.props.onFeatureMouseIn(event.features[0].properties.id, event.features[0].layer.id);
+    } else if (this.props.previewTrails.length || this.props.previewBoundary.length) {
+      this.props.onFeatureMouseOut();
     }
   }
 
   onMapClick(event) {
     if (event.features.length) {
-      this.props.onTrailClick(event.features[0].properties.id);
-    } else if (this.props.selectedTrails.length){
-      this.props.onNonTrailMapClick();
+      this.props.onFeatureClick(event.features[0].properties.id, event.features[0].layer.id);
+    } else if (this.props.selectedTrails.length || this.props.selectedBoundary.length){
+      this.props.onNonFeatureClick();
     }
   }
 
@@ -49,11 +47,16 @@ export default class Map extends React.Component {
     return [...this.props.previewTrails, ...this.props.selectedTrails].map(t => t.id);
   }
 
+  activeBoundaryIds() {
+    return [...this.props.previewBoundary, ...this.props.selectedBoundary].map(t => t.id);
+  }
+
   render() {
     return (
         <div id="the-map">
           <MapBox
           activeTrailIDs={this.activeTrailIds()}
+          activeBoundaryIds={this.activeBoundaryIds()}
           sources={this.props.sources.filter(s => s.showing)}
           layers={mapBoxLayers}
           pointer={this.props.previewTrails.length > 0}

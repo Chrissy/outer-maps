@@ -6,7 +6,7 @@ const trail = (state = {}, action) => {
   switch (action.type) {
     case 'ADD_TRAIL':
       return {...state, id: action.id}
-    case 'SET_BASE_DATA':
+    case 'SET_TRAIL_BASE_DATA':
       if (parseInt(action.trail.id) !== state.id) return state
       return {...state,
         name: action.trail.name,
@@ -19,16 +19,16 @@ const trail = (state = {}, action) => {
           coordinates: coordinates
         }))
       }
-    case 'TOGGLE_PREVIEWING':
+    case 'TOGGLE_TRAIL_PREVIEWING':
       return { ...state, previewing: (state.id === action.trail.id) }
-    case 'CLEAR_PREVIEWING':
+    case 'CLEAR_TRAIL_PREVIEWING':
       return { ...state, previewing: false }
-    case 'TOGGLE_SELECTED':
+    case 'TOGGLE_TRAIL_SELECTED':
       if (state.id === action.trail.id && !action.trail.selected){
         return { ...state, selected: true, selectedId: action.selectedTrailCount};
       }
       return state;
-    case 'CLEAR_SELECTED':
+    case 'CLEAR_TRAIL_SELECTED':
       return { ...state, selected: false, selectedId: null }
     case 'SET_ELEVATION_DATA':
       if (action.id !== state.id) return state
@@ -61,17 +61,17 @@ const trails = (state = [], action) => {
   switch (action.type) {
     case 'ADD_TRAIL':
       return [...state, trail(undefined, action)]
-    case 'TOGGLE_PREVIEWING':
+    case 'TOGGLE_TRAIL_PREVIEWING':
       return state.map(t => trail(t, action))
-    case 'CLEAR_PREVIEWING':
+    case 'CLEAR_TRAIL_PREVIEWING':
       return state.map(t => trail(t, action))
-    case 'TOGGLE_SELECTED':
+    case 'TOGGLE_TRAIL_SELECTED':
       return state.map(t => trail(t, {...action, selectedTrailCount: state.filter(e => e.selected).length + 1}))
-    case 'CLEAR_SELECTED':
+    case 'CLEAR_TRAIL_SELECTED':
       return state.map(t => trail(t, action))
     case 'SET_ELEVATION_DATA':
       return state.map(t => trail(t, action))
-    case 'SET_BASE_DATA':
+    case 'SET_TRAIL_BASE_DATA':
       return state.map(t => trail(t, action))
     case 'SET_WEATHER_DATA':
       return state.map(t => trail(t, action))
@@ -81,7 +81,7 @@ const trails = (state = [], action) => {
 
 const point = (state = {}, action) => {
   switch (action.type) {
-    case 'SET_BASE_DATA':
+    case 'SET_TRAIL_BASE_DATA':
       return {
         coordinates: action.coordinates
       }
@@ -92,6 +92,48 @@ const point = (state = {}, action) => {
         elevationLoss: Math.abs(Math.min(action.elevation - action.pElevation, 0)) || 0,
         distanceFromPreviousPoint: (!action.pPoint) ? 0 : Geolib.getDistance(state.coordinates, action.pPoint.coordinates)
       }
+    default: return state
+  }
+}
+
+const boundaries = (state = [], action) => {
+  switch (action.type) {
+    case 'ADD_BOUNDARY':
+      return [...state, boundary(undefined, action)]
+    case 'SET_BOUNDARY_PREVIEWING':
+      return state.map(b => boundary(b, action))
+    case 'CLEAR_BOUNDARY_PREVIEWING':
+      return state.map(b => boundary(b, action))
+    case 'SET_BOUNDARY_SELECTED':
+      return state.map(b => boundary(b, action))
+    case 'CLEAR_BOUNDARY_SELECTED':
+      return state.map(b => boundary(b, action))
+    case 'SET_BOUNDARY_BASE_DATA':
+      return state.map(b => boundary(b, action))
+    default: return state
+  }
+}
+
+const boundary = (state = {}, action) => {
+  switch (action.type) {
+    case 'ADD_BOUNDARY':
+      return {...state, id: action.id}
+    case 'SET_BOUNDARY_BASE_DATA':
+      if (action.id !== state.id) return state
+      return {...state,
+        name: action.name,
+        area: action.area,
+        center: action.center
+      }
+    case 'SET_BOUNDARY_PREVIEWING':
+      return { ...state, previewing: (state.id === action.id) }
+    case 'CLEAR_BOUNDARY_PREVIEWING':
+      return { ...state, previewing: false }
+    case 'SET_BOUNDARY_SELECTED':
+      return { ...state, selected: (state.id === action.id)};
+      return state;
+    case 'CLEAR_BOUNDARY_SELECTED':
+      return { ...state, selected: false }
     default: return state
   }
 }
@@ -128,5 +170,6 @@ const source = (state = {}, action) => {
 
 export default combineReducers({
   trails,
+  boundaries,
   sources
 })
