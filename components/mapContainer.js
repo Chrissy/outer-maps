@@ -17,7 +17,7 @@ const mapDispatchToProps = (dispatch) => {
     onFeatureMouseIn: (id, layer) => dispatch((layer == "trails") ? previewTrail(id) : previewBoundary(id)),
     onFeatureMouseOut: () => dispatch(clearPreviewing()),
     onFeatureClick: (id, layer) => dispatch((layer == "trails") ? selectTrail(id) : selectBoundary(id)),
-    onNonFeatureMapClick: () => dispatch(clearSelected()),
+    onNonFeatureClick: () => dispatch(clearSelected()),
     updateView: (bounds, zoom) => dispatch({type: 'UPDATE_VIEW', bounds, zoom}),
     addSource: (source) => dispatch(addSource(source))
   }

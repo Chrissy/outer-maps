@@ -537,7 +537,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     onFeatureClick: function onFeatureClick(id, layer) {
       return dispatch(layer == "trails" ? (0, _actions.selectTrail)(id) : (0, _actions.selectBoundary)(id));
     },
-    onNonFeatureMapClick: function onNonFeatureMapClick() {
+    onNonFeatureClick: function onNonFeatureClick() {
       return dispatch((0, _actions.clearSelected)());
     },
     updateView: function updateView(bounds, zoom) {
