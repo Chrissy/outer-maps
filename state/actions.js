@@ -33,7 +33,7 @@ function getBoundary(id) {
       return response.json();
     }).then(b => {
       const boundary = Object.assign({}, b);
-      dispatch({type: 'SET_BOUNDARY_BASE_DATA', ...boundary});
+      dispatch({type: 'SET_BOUNDARY_BASE_DATA', ...boundary, id: id});
       return boundary;
     });
   }
