@@ -124,7 +124,6 @@ export function updateView(viewBox, zoom) {
 
 export function clearPreviewing() {
   return dispatch => {
-    console.log("clearing...")
     dispatch({type: 'CLEAR_TRAIL_PREVIEWING'});
     dispatch({type: 'CLEAR_BOUNDARY_PREVIEWING'});
   }

@@ -50,6 +50,9 @@ export const mapBoxLayers = [
     'source': 'boundaries-data',
     'type': 'line',
     'filter': ["==", "id", 0],
+    'layout': {
+      'line-join': 'round'
+    },
     'paint': {
       'line-color': 'hsl(119, 77%, 100%)',
       'line-width': 2,
