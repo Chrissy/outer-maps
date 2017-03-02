@@ -5,7 +5,7 @@ import {getDataFromNearestStation} from '../modules/NOAA';
 
 function getTrail(id) {
   return (dispatch, getState) => {
-    let cachedTrail = getState().trails.find(trail => trail.id == id);
+    const cachedTrail = getState().trails.find(trail => trail.id == id);
 
     if (cachedTrail) return Promise.resolve(cachedTrail);
 
@@ -14,16 +14,16 @@ function getTrail(id) {
     return fetch(`/api/trails/${id}`).then(response => {
       return response.json();
     }).then(t => {
-        const trail = Object.assign({}, t)
-        dispatch({type: 'SET_TRAIL_BASE_DATA', trail});
-        return trail;
+      const trail = Object.assign({}, t)
+      dispatch({type: 'SET_TRAIL_BASE_DATA', trail});
+      return trail;
     });
   };
 };
 
 function getBoundary(id) {
   return (dispatch, getState) => {
-    let cachedBoundary = getState().boundaries.find(boundary => boundary.id == id);
+    const cachedBoundary = getState().boundaries.find(boundary => boundary.id == id);
 
     if (cachedBoundary) return Promise.resolve(cachedBoundary);
 

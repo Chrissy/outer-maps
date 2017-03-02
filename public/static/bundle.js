@@ -1298,8 +1298,6 @@ Object.defineProperty(exports, "__esModule", {
 var accessToken = exports.accessToken = 'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
 var styleUrl = exports.styleUrl = 'mapbox://styles/fivefourths/cizrqzobe00202spk9fqzigdf';
 
-"https://api.mapbox.com/datasets/v1/fivefourths?access_token=pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg";
-
 },{}],21:[function(require,module,exports){
 (function (global){
 'use strict';
@@ -66256,7 +66254,7 @@ var point = function point() {
   var action = arguments[1];
 
   switch (action.type) {
-    case 'SET_BASE_DATA':
+    case 'SET_TRAIL_BASE_DATA':
       return {
         coordinates: action.coordinates
       };

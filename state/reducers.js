@@ -81,7 +81,7 @@ const trails = (state = [], action) => {
 
 const point = (state = {}, action) => {
   switch (action.type) {
-    case 'SET_BASE_DATA':
+    case 'SET_TRAIL_BASE_DATA':
       return {
         coordinates: action.coordinates
       }
