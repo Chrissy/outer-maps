@@ -1,6 +1,6 @@
 import React, { Proptypes } from 'react';
 import MapboxGL from 'mapbox-gl';
-import {accessToken} from '../modules/mapBoxStaticData';
+import {accessToken, styleUrl} from '../modules/mapBoxStaticData';
 
 export default class MapBox extends React.PureComponent {
 
@@ -36,7 +36,7 @@ export default class MapBox extends React.PureComponent {
   }
 
   handleMouseMove(event) {
-    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails'] });
+    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'boundaries'] });
 
     this.props.onMouseMove(Object.assign({}, event, {
       features: features,
@@ -44,7 +44,7 @@ export default class MapBox extends React.PureComponent {
   }
 
   handleClick(event) {
-    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails'] });
+    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'boundaries'] });
     this.props.onClick(Object.assign({}, event, {
       features: features,
     }));
@@ -76,7 +76,7 @@ export default class MapBox extends React.PureComponent {
 
     this.mapboxed = new MapboxGL.Map({
       container: 'mapbox-gl-element',
-      style: 'mapbox://styles/mapbox/outdoors-v9',
+      style: styleUrl,
       center: [-113.0, 37.3],
       zoom: 11
     });
@@ -88,8 +88,13 @@ export default class MapBox extends React.PureComponent {
   componentDidUpdate(prevProps, q) {
     this.updateSources(prevProps.sources, this.props.sources);
 
-    if (this.props.activeTrailIDs !== prevProps.activeTrailIDs && this.mapboxed.getSource('trails-data') && this.mapboxed.getLayer('trails-active')) {
+    if (this.mapboxed.getSource('trails-data') && this.mapboxed.getLayer('trails-active')) {
       this.mapboxed.setFilter("trails-active", ["in", "id", ...this.props.activeTrailIDs.map(t => parseInt(t))]);
+    }
+
+    if (this.mapboxed.getSource('boundaries-data') && this.mapboxed.getLayer('boundaries-active')) {
+      this.mapboxed.setFilter("boundaries-active", ["in", "id", ...this.props.activeBoundaryIds.map(t => parseInt(t))]);
+      this.mapboxed.setFilter("boundaries-active-outline", ["in", "id", ...this.props.activeBoundaryIds.map(t => parseInt(t))]);
     }
 
     this.mapboxed.getCanvas().style.cursor = (this.props.pointer) ? 'pointer' : '';

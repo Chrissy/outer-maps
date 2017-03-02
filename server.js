@@ -67,6 +67,35 @@ app.get('/api/trails/:id', function(request, response) {
   })
 })
 
+app.get('/api/boundaries/:id', function(request, response) {
+  let query = `
+    SELECT
+      name,
+      ST_Area(geog) as area,
+      ST_AsGeoJson(ST_Centroid(geog::geometry)) as center
+    FROM boundaries
+    WHERE id = ${request.params.id}
+    LIMIT 1
+  `
+
+  pool.connect(function(err, client, done){
+    client.query(query, function(err, result){
+      done();
+
+      if (err) throw err;
+
+      let r = result.rows[0]
+
+      response.json({
+        "name": r.name,
+        "id": request.params.id,
+        "area": r.area,
+        "center": JSON.parse(r.center).coordinates
+      });
+    })
+  })
+})
+
 app.get('/api/elevation/:id', function(request, response){
   const query = `
     select ST_AsGeoJson(geog) as geog

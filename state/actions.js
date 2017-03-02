@@ -11,15 +11,33 @@ function getTrail(id) {
 
     dispatch({type: 'ADD_TRAIL', id});
 
-    return fetch(`/api/trails/${id}`)
-      .then(response => response.json())
-      .then(t => {
-        let trail = Object.assign({}, t)
-        dispatch({type: 'SET_BASE_DATA', trail});
+    return fetch(`/api/trails/${id}`).then(response => {
+      return response.json();
+    }).then(t => {
+        const trail = Object.assign({}, t)
+        dispatch({type: 'SET_TRAIL_BASE_DATA', trail});
         return trail;
-      });
+    });
   };
 };
+
+function getBoundary(id) {
+  return (dispatch, getState) => {
+    let cachedBoundary = getState().boundaries.find(boundary => boundary.id == id);
+
+    if (cachedBoundary) return Promise.resolve(cachedBoundary);
+
+    dispatch({type: 'ADD_BOUNDARY', id});
+
+    return fetch(`/api/boundaries/${id}`).then(response => {
+      return response.json();
+    }).then(b => {
+      const boundary = Object.assign({}, b);
+      dispatch({type: 'SET_BOUNDARY_BASE_DATA', ...boundary});
+      return boundary;
+    });
+  }
+}
 
 function getAltitudeData(trail) {
   return (dispatch, getState) => {
@@ -58,18 +76,36 @@ function getWeatherData(trail) {
 
 export function previewTrail(id) {
   return dispatch => {
-    dispatch(getTrail(id)).then( trail => {
-      return dispatch({type: 'TOGGLE_PREVIEWING', trail});
+    dispatch(getTrail(id)).then(trail => {
+      return dispatch({type: 'TOGGLE_TRAIL_PREVIEWING', trail});
     });
   };
 };
 
 export function selectTrail(id) {
   return dispatch => {
+    dispatch({type: 'CLEAR_BOUNDARY_SELECTED'});
     dispatch(getTrail(id)).then(trail => {
-      dispatch({type: 'TOGGLE_SELECTED', trail});
+      dispatch({type: 'TOGGLE_TRAIL_SELECTED', trail});
       dispatch(getAltitudeData(trail));
       dispatch(getWeatherData(trail));
+    });
+  };
+};
+
+export function previewBoundary(id) {
+  return dispatch => {
+    dispatch(getBoundary(id)).then(boundary => {
+      return dispatch({type: 'SET_BOUNDARY_PREVIEWING', ...boundary});
+    });
+  };
+};
+
+export function selectBoundary(id) {
+  return dispatch => {
+    dispatch({type: 'CLEAR_TRAIL_SELECTED'});
+    dispatch(getBoundary(id)).then(boundary => {
+      dispatch({type: 'SET_BOUNDARY_SELECTED', ...boundary});
     });
   };
 };
@@ -85,3 +121,18 @@ export function updateView(viewBox, zoom) {
     return dispatch({type: 'UPDATE_VIEW', viewBox, zoom});
   };
 };
+
+export function clearPreviewing() {
+  return dispatch => {
+    console.log("clearing...")
+    dispatch({type: 'CLEAR_TRAIL_PREVIEWING'});
+    dispatch({type: 'CLEAR_BOUNDARY_PREVIEWING'});
+  }
+}
+
+export function clearSelected() {
+  return dispatch => {
+    dispatch({type: 'CLEAR_TRAIL_SELECTED'});
+    dispatch({type: 'CLEAR_BOUNDARY_SELECTED'});
+  }
+}

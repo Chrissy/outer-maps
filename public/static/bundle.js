@@ -177,8 +177,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
@@ -221,31 +219,19 @@ var Map = function (_React$Component) {
   _createClass(Map, [{
     key: 'onMapMouseMove',
     value: function onMapMouseMove(event) {
-      var _this2 = this;
-
       if (event.features.length) {
-        var _ret = function () {
-          var trail_id = event.features[0].properties.id;
-          if (_this2.props.previewTrails.some(function (t) {
-            return t.id == trail_id;
-          })) return {
-              v: void 0
-            };
-          _this2.props.onTrailMouseIn(trail_id);
-        }();
-
-        if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
-      } else if (this.props.previewTrails.length) {
-        this.props.onTrailMouseOut();
+        this.props.onFeatureMouseIn(event.features[0].properties.id, event.features[0].layer.id);
+      } else if (this.props.previewTrails.length || this.props.previewBoundary.length) {
+        this.props.onFeatureMouseOut();
       }
     }
   }, {
     key: 'onMapClick',
     value: function onMapClick(event) {
       if (event.features.length) {
-        this.props.onTrailClick(event.features[0].properties.id);
-      } else if (this.props.selectedTrails.length) {
-        this.props.onNonTrailMapClick();
+        this.props.onFeatureClick(event.features[0].properties.id, event.features[0].layer.id);
+      } else if (this.props.selectedTrails.length || this.props.selectedBoundary.length) {
+        this.props.onNonFeatureClick();
       }
     }
   }, {
@@ -279,6 +265,13 @@ var Map = function (_React$Component) {
       });
     }
   }, {
+    key: 'activeBoundaryIds',
+    value: function activeBoundaryIds() {
+      return [].concat(_toConsumableArray(this.props.previewBoundary), _toConsumableArray(this.props.selectedBoundary)).map(function (t) {
+        return t.id;
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
@@ -286,6 +279,7 @@ var Map = function (_React$Component) {
         { id: 'the-map' },
         _react2.default.createElement(_mapBox2.default, {
           activeTrailIDs: this.activeTrailIds(),
+          activeBoundaryIds: this.activeBoundaryIds(),
           sources: this.props.sources.filter(function (s) {
             return s.showing;
           }),
@@ -394,7 +388,7 @@ var MapBox = function (_React$PureComponent) {
   }, {
     key: 'handleMouseMove',
     value: function handleMouseMove(event) {
-      var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails'] });
+      var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'boundaries'] });
 
       this.props.onMouseMove(Object.assign({}, event, {
         features: features
@@ -403,7 +397,7 @@ var MapBox = function (_React$PureComponent) {
   }, {
     key: 'handleClick',
     value: function handleClick(event) {
-      var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails'] });
+      var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'boundaries'] });
       this.props.onClick(Object.assign({}, event, {
         features: features
       }));
@@ -439,7 +433,7 @@ var MapBox = function (_React$PureComponent) {
 
       this.mapboxed = new _mapboxGl2.default.Map({
         container: 'mapbox-gl-element',
-        style: 'mapbox://styles/mapbox/outdoors-v9',
+        style: _mapBoxStaticData.styleUrl,
         center: [-113.0, 37.3],
         zoom: 11
       });
@@ -452,8 +446,17 @@ var MapBox = function (_React$PureComponent) {
     value: function componentDidUpdate(prevProps, q) {
       this.updateSources(prevProps.sources, this.props.sources);
 
-      if (this.props.activeTrailIDs !== prevProps.activeTrailIDs && this.mapboxed.getSource('trails-data') && this.mapboxed.getLayer('trails-active')) {
+      if (this.mapboxed.getSource('trails-data') && this.mapboxed.getLayer('trails-active')) {
         this.mapboxed.setFilter("trails-active", ["in", "id"].concat(_toConsumableArray(this.props.activeTrailIDs.map(function (t) {
+          return parseInt(t);
+        }))));
+      }
+
+      if (this.mapboxed.getSource('boundaries-data') && this.mapboxed.getLayer('boundaries-active')) {
+        this.mapboxed.setFilter("boundaries-active", ["in", "id"].concat(_toConsumableArray(this.props.activeBoundaryIds.map(function (t) {
+          return parseInt(t);
+        }))));
+        this.mapboxed.setFilter("boundaries-active-outline", ["in", "id"].concat(_toConsumableArray(this.props.activeBoundaryIds.map(function (t) {
           return parseInt(t);
         }))));
       }
@@ -513,23 +516,29 @@ var mapStateToProps = function mapStateToProps(state) {
     previewTrails: state.trails.filter(function (trail) {
       return trail.previewing;
     }),
+    selectedBoundary: state.boundaries.filter(function (boundary) {
+      return boundary.selected;
+    }),
+    previewBoundary: state.boundaries.filter(function (boundary) {
+      return boundary.previewing;
+    }),
     sources: state.sources
   };
 };
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
-    onTrailMouseIn: function onTrailMouseIn(trailID) {
-      return dispatch((0, _actions.previewTrail)(trailID));
+    onFeatureMouseIn: function onFeatureMouseIn(id, layer) {
+      return dispatch(layer == "trails" ? (0, _actions.previewTrail)(id) : (0, _actions.previewBoundary)(id));
     },
-    onTrailMouseOut: function onTrailMouseOut() {
-      return dispatch({ type: 'CLEAR_PREVIEWING' });
+    onFeatureMouseOut: function onFeatureMouseOut() {
+      return dispatch((0, _actions.clearPreviewing)());
     },
-    onTrailClick: function onTrailClick(trailID) {
-      return dispatch((0, _actions.selectTrail)(trailID));
+    onFeatureClick: function onFeatureClick(id, layer) {
+      return dispatch(layer == "trails" ? (0, _actions.selectTrail)(id) : (0, _actions.selectBoundary)(id));
     },
-    onNonTrailMapClick: function onNonTrailMapClick() {
-      return dispatch({ type: 'CLEAR_SELECTED' });
+    onNonFeatureMapClick: function onNonFeatureMapClick() {
+      return dispatch((0, _actions.clearSelected)());
     },
     updateView: function updateView(bounds, zoom) {
       return dispatch({ type: 'UPDATE_VIEW', bounds: bounds, zoom: zoom });
@@ -1132,12 +1141,30 @@ var mapBoxLayers = exports.mapBoxLayers = [{
     'line-width': 2
   }
 }, {
-  'id': 'boundaries-data',
+  'id': 'boundaries',
   'source': 'boundaries-data',
   'type': 'fill',
   'paint': {
-    'fill-color': 'red',
-    'fill-opacity': 0.5
+    'fill-color': 'rgba(0, 0, 0, 0%)'
+  }
+}, {
+  'id': 'boundaries-active-outline',
+  'source': 'boundaries-data',
+  'type': 'line',
+  'filter': ["==", "id", 0],
+  'paint': {
+    'line-color': 'hsl(119, 77%, 100%)',
+    'line-width': 2,
+    'line-opacity': 0.9
+  }
+}, {
+  'id': 'boundaries-active',
+  'source': 'boundaries-data',
+  'type': 'fill',
+  'filter': ["==", "id", 0],
+  'paint': {
+    'fill-color': 'hsl(119, 77%, 70%)',
+    'fill-opacity': 0.2
   }
 }];
 
@@ -1148,6 +1175,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 var accessToken = exports.accessToken = 'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
+var styleUrl = exports.styleUrl = 'mapbox://styles/fivefourths/cizrqzobe00202spk9fqzigdf';
+
+"https://api.mapbox.com/datasets/v1/fivefourths?access_token=pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg";
 
 },{}],19:[function(require,module,exports){
 (function (global){
@@ -65792,8 +65822,12 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 exports.previewTrail = previewTrail;
 exports.selectTrail = selectTrail;
+exports.previewBoundary = previewBoundary;
+exports.selectBoundary = selectBoundary;
 exports.addSource = addSource;
 exports.updateView = updateView;
+exports.clearPreviewing = clearPreviewing;
+exports.clearSelected = clearSelected;
 
 var _isomorphicFetch = require('isomorphic-fetch');
 
@@ -65823,11 +65857,31 @@ function getTrail(id) {
       return response.json();
     }).then(function (t) {
       var trail = Object.assign({}, t);
-      dispatch({ type: 'SET_BASE_DATA', trail: trail });
+      dispatch({ type: 'SET_TRAIL_BASE_DATA', trail: trail });
       return trail;
     });
   };
 };
+
+function getBoundary(id) {
+  return function (dispatch, getState) {
+    var cachedBoundary = getState().boundaries.find(function (boundary) {
+      return boundary.id == id;
+    });
+
+    if (cachedBoundary) return Promise.resolve(cachedBoundary);
+
+    dispatch({ type: 'ADD_BOUNDARY', id: id });
+
+    return (0, _isomorphicFetch2.default)('/api/boundaries/' + id).then(function (response) {
+      return response.json();
+    }).then(function (b) {
+      var boundary = Object.assign({}, b);
+      dispatch(_extends({ type: 'SET_BOUNDARY_BASE_DATA' }, boundary));
+      return boundary;
+    });
+  };
+}
 
 function getAltitudeData(trail) {
   return function (dispatch, getState) {
@@ -65867,17 +65921,35 @@ function getWeatherData(trail) {
 function previewTrail(id) {
   return function (dispatch) {
     dispatch(getTrail(id)).then(function (trail) {
-      return dispatch({ type: 'TOGGLE_PREVIEWING', trail: trail });
+      return dispatch({ type: 'TOGGLE_TRAIL_PREVIEWING', trail: trail });
     });
   };
 };
 
 function selectTrail(id) {
   return function (dispatch) {
+    dispatch({ type: 'CLEAR_BOUNDARY_SELECTED' });
     dispatch(getTrail(id)).then(function (trail) {
-      dispatch({ type: 'TOGGLE_SELECTED', trail: trail });
+      dispatch({ type: 'TOGGLE_TRAIL_SELECTED', trail: trail });
       dispatch(getAltitudeData(trail));
       dispatch(getWeatherData(trail));
+    });
+  };
+};
+
+function previewBoundary(id) {
+  return function (dispatch) {
+    dispatch(getBoundary(id)).then(function (boundary) {
+      return dispatch(_extends({ type: 'SET_BOUNDARY_PREVIEWING' }, boundary));
+    });
+  };
+};
+
+function selectBoundary(id) {
+  return function (dispatch) {
+    dispatch({ type: 'CLEAR_TRAIL_SELECTED' });
+    dispatch(getBoundary(id)).then(function (boundary) {
+      dispatch(_extends({ type: 'SET_BOUNDARY_SELECTED' }, boundary));
     });
   };
 };
@@ -65893,6 +65965,21 @@ function updateView(viewBox, zoom) {
     return dispatch({ type: 'UPDATE_VIEW', viewBox: viewBox, zoom: zoom });
   };
 };
+
+function clearPreviewing() {
+  return function (dispatch) {
+    console.log("clearing...");
+    dispatch({ type: 'CLEAR_TRAIL_PREVIEWING' });
+    dispatch({ type: 'CLEAR_BOUNDARY_PREVIEWING' });
+  };
+}
+
+function clearSelected() {
+  return function (dispatch) {
+    dispatch({ type: 'CLEAR_TRAIL_SELECTED' });
+    dispatch({ type: 'CLEAR_BOUNDARY_SELECTED' });
+  };
+}
 
 },{"../modules/NOAA":13,"../modules/cumulativeElevationChanges":15,"isomorphic-fetch":71,"underscore":414}],431:[function(require,module,exports){
 'use strict';
@@ -65950,7 +66037,7 @@ var trail = function trail() {
   switch (action.type) {
     case 'ADD_TRAIL':
       return _extends({}, state, { id: action.id });
-    case 'SET_BASE_DATA':
+    case 'SET_TRAIL_BASE_DATA':
       if (parseInt(action.trail.id) !== state.id) return state;
       return _extends({}, state, (_extends2 = {
         name: action.trail.name,
@@ -65961,16 +66048,16 @@ var trail = function trail() {
           coordinates: coordinates
         }));
       })), _extends2));
-    case 'TOGGLE_PREVIEWING':
+    case 'TOGGLE_TRAIL_PREVIEWING':
       return _extends({}, state, { previewing: state.id === action.trail.id });
-    case 'CLEAR_PREVIEWING':
+    case 'CLEAR_TRAIL_PREVIEWING':
       return _extends({}, state, { previewing: false });
-    case 'TOGGLE_SELECTED':
+    case 'TOGGLE_TRAIL_SELECTED':
       if (state.id === action.trail.id && !action.trail.selected) {
         return _extends({}, state, { selected: true, selectedId: action.selectedTrailCount });
       }
       return state;
-    case 'CLEAR_SELECTED':
+    case 'CLEAR_TRAIL_SELECTED':
       return _extends({}, state, { selected: false, selectedId: null });
     case 'SET_ELEVATION_DATA':
       if (action.id !== state.id) return state;
@@ -66009,21 +66096,21 @@ var trails = function trails() {
   switch (action.type) {
     case 'ADD_TRAIL':
       return [].concat(_toConsumableArray(state), [trail(undefined, action)]);
-    case 'TOGGLE_PREVIEWING':
+    case 'TOGGLE_TRAIL_PREVIEWING':
       return state.map(function (t) {
         return trail(t, action);
       });
-    case 'CLEAR_PREVIEWING':
+    case 'CLEAR_TRAIL_PREVIEWING':
       return state.map(function (t) {
         return trail(t, action);
       });
-    case 'TOGGLE_SELECTED':
+    case 'TOGGLE_TRAIL_SELECTED':
       return state.map(function (t) {
         return trail(t, _extends({}, action, { selectedTrailCount: state.filter(function (e) {
             return e.selected;
           }).length + 1 }));
       });
-    case 'CLEAR_SELECTED':
+    case 'CLEAR_TRAIL_SELECTED':
       return state.map(function (t) {
         return trail(t, action);
       });
@@ -66031,7 +66118,7 @@ var trails = function trails() {
       return state.map(function (t) {
         return trail(t, action);
       });
-    case 'SET_BASE_DATA':
+    case 'SET_TRAIL_BASE_DATA':
       return state.map(function (t) {
         return trail(t, action);
       });
@@ -66060,6 +66147,66 @@ var point = function point() {
         elevationLoss: Math.abs(Math.min(action.elevation - action.pElevation, 0)) || 0,
         distanceFromPreviousPoint: !action.pPoint ? 0 : _geolib2.default.getDistance(state.coordinates, action.pPoint.coordinates)
       });
+    default:
+      return state;
+  }
+};
+
+var boundaries = function boundaries() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  var action = arguments[1];
+
+  switch (action.type) {
+    case 'ADD_BOUNDARY':
+      return [].concat(_toConsumableArray(state), [boundary(undefined, action)]);
+    case 'SET_BOUNDARY_PREVIEWING':
+      return state.map(function (b) {
+        return boundary(b, action);
+      });
+    case 'CLEAR_BOUNDARY_PREVIEWING':
+      return state.map(function (b) {
+        return boundary(b, action);
+      });
+    case 'SET_BOUNDARY_SELECTED':
+      return state.map(function (b) {
+        return boundary(b, action);
+      });
+    case 'CLEAR_BOUNDARY_SELECTED':
+      return state.map(function (b) {
+        return boundary(b, action);
+      });
+    case 'SET_BOUNDARY_BASE_DATA':
+      return state.map(function (b) {
+        return boundary(b, action);
+      });
+    default:
+      return state;
+  }
+};
+
+var boundary = function boundary() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  switch (action.type) {
+    case 'ADD_BOUNDARY':
+      return _extends({}, state, { id: action.id });
+    case 'SET_BOUNDARY_BASE_DATA':
+      if (action.id !== state.id) return state;
+      return _extends({}, state, {
+        name: action.name,
+        area: action.area,
+        center: action.center
+      });
+    case 'SET_BOUNDARY_PREVIEWING':
+      return _extends({}, state, { previewing: state.id === action.id });
+    case 'CLEAR_BOUNDARY_PREVIEWING':
+      return _extends({}, state, { previewing: false });
+    case 'SET_BOUNDARY_SELECTED':
+      return _extends({}, state, { selected: state.id === action.id });
+      return state;
+    case 'CLEAR_BOUNDARY_SELECTED':
+      return _extends({}, state, { selected: false });
     default:
       return state;
   }
@@ -66107,6 +66254,7 @@ var source = function source() {
 
 exports.default = (0, _redux.combineReducers)({
   trails: trails,
+  boundaries: boundaries,
   sources: sources
 });
 

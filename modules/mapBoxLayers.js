@@ -38,12 +38,32 @@ export const mapBoxLayers = [
     }
   },
   {
-    'id': 'boundaries-data',
+    'id': 'boundaries',
     'source': 'boundaries-data',
     'type': 'fill',
     'paint': {
-      'fill-color': 'red',
-      'fill-opacity': 0.5
+      'fill-color': 'rgba(0, 0, 0, 0%)'
+    }
+  },
+  {
+    'id': 'boundaries-active-outline',
+    'source': 'boundaries-data',
+    'type': 'line',
+    'filter': ["==", "id", 0],
+    'paint': {
+      'line-color': 'hsl(119, 77%, 100%)',
+      'line-width': 2,
+      'line-opacity': 0.9
+    }
+  },
+  {
+    'id': 'boundaries-active',
+    'source': 'boundaries-data',
+    'type': 'fill',
+    'filter': ["==", "id", 0],
+    'paint': {
+      'fill-color': 'hsl(119, 77%, 70%)',
+      'fill-opacity': 0.2
     }
   }
 ]
