@@ -1,12 +1,22 @@
 const http = require('http');
 const pg = require('pg');
 const express = require('express');
+const browserify = require('browserify-middleware');
 const app = express();
 const _ = require('underscore');
 const env = require('./environment/development');
 const geoJson = require('./modules/geoJson.js');
 
 app.use(express.static('public'));
+
+app.get('/bundle.js', browserify(__dirname + '/components/app.js', {
+  mode: (process.env.NODE_ENV == 'production') ? 'production' : 'development',
+  transform: ['babelify'],
+  plugins: [{
+    plugin: 'css-modulesify',
+    options: { output: './public/bundle.css'}
+  }]
+}));
 
 var pool = new pg.Pool({
   database: env.databaseName,

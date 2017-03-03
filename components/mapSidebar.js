@@ -11,7 +11,6 @@ import spacing from './spacing.css';
 export default class MapSidebar extends React.Component {
 
   render() {
-
     return (
       <div className={cx(styles.body, {[styles.active]: this.props.loading})}>
         <div className={cx(styles.content, {[styles.active]: this.props.firstTrail.hasElevationData})}>
