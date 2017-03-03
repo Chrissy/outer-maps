@@ -2,14 +2,14 @@
   "name": "mountains",
   "version": "0.0.1",
   "scripts": {
-    "start": "watchify -t [babelify] -p [css-modulesify -o public/static/bundle.css] -o public/static/bundle.js components/app.js & node server.js"
+    "start": "node server.js"
   },
   "license": "ISC",
   "dependencies": {
     "babel-plugin-transform-class-properties": "^6.10.2",
     "babel-plugin-transform-object-rest-spread": "^6.8.0",
+    "browserify-middleware": "^7.1.0",
     "classnames": "^2.2.5",
-    "css-modulesify": "^0.27.1",
     "es6-promise": "^3.2.1",
     "express": "^4.14.0",
     "geolib": "^2.0.21",
