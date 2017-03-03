@@ -8,8 +8,9 @@ const env = require('./environment/development');
 const geoJson = require('./modules/geoJson.js');
 
 app.use(express.static('public'));
+
 app.get('/static/bundle.js', browserify(__dirname + '/components/app.js', {
-  cache: 'dynamic',
+  mode: (process.env.production) ? 'production' : 'development',
   transform: ['babelify'],
 }));
 
