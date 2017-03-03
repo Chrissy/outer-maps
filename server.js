@@ -6,17 +6,11 @@ const app = express();
 const _ = require('underscore');
 const env = require('./environment/development');
 const geoJson = require('./modules/geoJson.js');
-const libraries = ['react','redux','react-redux','redux-thunk','mapbox-gl','underscore','geolib'];
 
 app.use(express.static('public'));
 app.get('/static/bundle.js', browserify(__dirname + '/components/app.js', {
   cache: 'dynamic',
   transform: ['babelify'],
-  external: libraries
-}));
-app.get('/static/dependencies.js', browserify(libraries, {
-  cache: 'true',
-  transform: ['babelify']
 }));
 
 var pool = new pg.Pool({
