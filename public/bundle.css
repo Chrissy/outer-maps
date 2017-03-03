@@ -1,0 +1,41 @@
+._components_spacing__top_margin { margin-top: 1em; }
+._components_mapSidebar__body {
+  position: absolute;
+  height: calc(100% - 2em);
+  width: 25vw;
+  min-width: 300px;
+  margin: 1em;
+  padding: 1em;
+  background: #fefefe;
+  box-sizing: border-box;
+  transition: .3s all;
+  opacity: 0;
+  transform: translateX(-1em);
+  z-index: -1;
+}
+
+._components_mapSidebar__content {
+  opacity: 0;
+  font-size: 1.1em;
+  line-height: 1.5em;
+  transition: .2s all;
+}
+
+._components_mapSidebar__spinner {
+  opacity: 1;
+  transition: .2s all;
+  width: 2em;
+  height: 2em;
+  left: 50%;
+  top: 50%;
+  position: absolute;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+._components_mapSidebar__active {
+  opacity: 1;
+  transform: translateX(0);
+  z-index: 1;
+}
+
+._components_mapSidebar__hidden { opacity: 0; }
