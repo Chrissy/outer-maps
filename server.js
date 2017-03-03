@@ -10,7 +10,7 @@ const geoJson = require('./modules/geoJson.js');
 app.use(express.static('public'));
 
 app.get('/bundle.js', browserify(__dirname + '/components/app.js', {
-  mode: (process.env.production) ? 'production' : 'development',
+  mode: (process.env.NODE_ENV == 'production') ? 'production' : 'development',
   transform: ['babelify'],
   plugins: [{
     plugin: 'css-modulesify',
