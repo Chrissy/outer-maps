@@ -77,8 +77,8 @@ export default class MapBox extends React.PureComponent {
     this.mapboxed = new MapboxGL.Map({
       container: 'mapbox-gl-element',
       style: styleUrl,
-      center: [-113.0, 37.3],
-      zoom: 11
+      center: [-112, 37.9],
+      zoom: 8
     });
 
     this.mapEvents();
@@ -97,8 +97,8 @@ export default class MapBox extends React.PureComponent {
       this.mapboxed.setFilter("boundaries-active-outline", ["in", "id", ...this.props.activeBoundaryIds.map(t => parseInt(t))]);
     }
 
-    if (prevProps.fitBounds !== this.props.fitBounds) {
-      this.mapboxed.fitBounds([this.props.fitBounds[0], this.props.fitBounds[1]]);
+    if (this.props.fitBounds && prevProps.fitBounds !== this.props.fitBounds) {
+      this.mapboxed.fitBounds(this.props.fitBounds);
     }
 
     this.mapboxed.getCanvas().style.cursor = (this.props.pointer) ? 'pointer' : '';
