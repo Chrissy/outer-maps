@@ -97,6 +97,10 @@ export default class MapBox extends React.PureComponent {
       this.mapboxed.setFilter("boundaries-active-outline", ["in", "id", ...this.props.activeBoundaryIds.map(t => parseInt(t))]);
     }
 
+    if (prevProps.fitBounds !== this.props.fitBounds) {
+      this.mapboxed.fitBounds([this.props.fitBounds[0], this.props.fitBounds[1]]);
+    }
+
     this.mapboxed.getCanvas().style.cursor = (this.props.pointer) ? 'pointer' : '';
   }
 
