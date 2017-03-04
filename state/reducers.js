@@ -123,7 +123,8 @@ const boundary = (state = {}, action) => {
       return {...state,
         name: action.name,
         area: action.area,
-        center: action.center
+        center: action.center,
+        bounds: action.bounds
       }
     case 'SET_BOUNDARY_PREVIEWING':
       return { ...state, previewing: (state.id === action.id) }

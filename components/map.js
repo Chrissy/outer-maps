@@ -17,7 +17,7 @@ export default class Map extends React.Component {
   onMapClick(event) {
     if (event.features.length) {
       this.props.onFeatureClick(event.features[0].properties.id, event.features[0].layer.id);
-    } else if (this.props.selectedTrails.length || this.props.selectedBoundary.length){
+    } else if (this.props.selectedTrails.length || this.props.selectedBoundary.length) {
       this.props.onNonFeatureClick();
     }
   }
@@ -48,7 +48,7 @@ export default class Map extends React.Component {
   }
 
   activeBoundaryIds() {
-    return [...this.props.previewBoundary, ...this.props.selectedBoundary].map(t => t.id);
+    return [this.props.previewBoundary.id, this.props.selectedBoundary.id];
   }
 
   render() {
@@ -59,6 +59,7 @@ export default class Map extends React.Component {
           activeBoundaryIds={this.activeBoundaryIds()}
           sources={this.props.sources.filter(s => s.showing)}
           layers={mapBoxLayers}
+          fitBounds={this.props.selectedBoundary.bounds}
           pointer={this.props.previewTrails.length > 0}
           onClick={this.onMapClick.bind(this)}
           onLoad={this.onMapLoad.bind(this)}

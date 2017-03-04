@@ -82,7 +82,8 @@ app.get('/api/boundaries/:id', function(request, response) {
     SELECT
       name,
       ST_Area(geog) as area,
-      ST_AsGeoJson(ST_Centroid(geog::geometry)) as center
+      ST_AsGeoJson(ST_Centroid(geog::geometry)) as center,
+      ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds
     FROM boundaries
     WHERE id = ${request.params.id}
     LIMIT 1
@@ -94,13 +95,15 @@ app.get('/api/boundaries/:id', function(request, response) {
 
       if (err) throw err;
 
-      let r = result.rows[0]
+      const r = result.rows[0];
+      const envelope = JSON.parse(r.bounds).coordinates[0];
 
       response.json({
         "name": r.name,
         "id": request.params.id,
         "area": r.area,
-        "center": JSON.parse(r.center).coordinates
+        "center": JSON.parse(r.center).coordinates,
+        "bounds": [envelope[0], envelope[2]]
       });
     })
   })

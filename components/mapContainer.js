@@ -6,8 +6,8 @@ const mapStateToProps = (state) => {
   return {
     selectedTrails: state.trails.filter(trail => trail.selected),
     previewTrails: state.trails.filter(trail => trail.previewing),
-    selectedBoundary: state.boundaries.filter(boundary => boundary.selected),
-    previewBoundary: state.boundaries.filter(boundary => boundary.previewing),
+    selectedBoundary: state.boundaries.find(boundary => boundary.selected) || {},
+    previewBoundary: state.boundaries.find(boundary => boundary.previewing) || {},
     sources: state.sources
   }
 }
