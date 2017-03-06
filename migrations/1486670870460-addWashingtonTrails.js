@@ -14,7 +14,6 @@ exports.up = function(next) {
     baseTableName: 'trails',
     mergingTableName: 'washington_trails',
     name: 'tr_nm',
-    surface: 'tr_surfc',
     sourceId: 'globalid',
     geog: 'geog',
     sourceUrl: 'http://www.rco.wa.gov/maps/Data.shtml',
