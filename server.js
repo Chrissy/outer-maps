@@ -51,7 +51,8 @@ app.get('/api/trails/:id', function(request, response) {
       surface,
       ST_AsGeoJson(geog) as geog,
       ST_Length(geog) as distance,
-      ST_AsGeoJson(ST_Centroid(geog::geometry)) as center
+      ST_AsGeoJson(ST_Centroid(geog::geometry)) as center,
+      ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds
     FROM trails
     WHERE id = ${request.params.id}
     LIMIT 1
@@ -64,6 +65,7 @@ app.get('/api/trails/:id', function(request, response) {
       if (err) throw err;
 
       let r = result.rows[0]
+      const envelope = JSON.parse(r.bounds).coordinates[0];
 
       response.json({
         "name": r.name,
@@ -71,7 +73,8 @@ app.get('/api/trails/:id', function(request, response) {
         "surface": r.surface,
         "geography": JSON.parse(r.geog),
         "distance": r.distance,
-        "center": JSON.parse(r.center).coordinates
+        "center": JSON.parse(r.center).coordinates,
+        "bounds": [envelope[0], envelope[2]]
       });
     })
   })
@@ -160,6 +163,31 @@ app.get('/api/boundaries/:x1/:y1/:x2/:y2', function(request, response) {
       done();
       if (err) throw err;
       response.json(geoJson.make(result));
+    });
+  });
+});
+
+app.get('/api/hillshade/:x1/:y1/:x2/:y2', function(request, response){
+  const query = `
+    select ST_AsPng(
+      ST_Reclass(
+          ST_Clip(rast,
+            ST_Buffer(
+              ST_Centroid(
+                ST_Envelope(rast)
+              )
+            ,2)
+          )
+      , 1, '0-20000:0-200000','16BUI')
+    , 1) from elevation where rid=4;
+  `;
+
+  pool.connect(function(err, client, done){
+    client.query(query, function(err, result){
+      done();
+      if (err) throw err;
+      response.writeHead(200, {'Content-Type': 'image/png' });
+      response.end(result.rows[0].st_aspng, 'binary');
     });
   });
 });
