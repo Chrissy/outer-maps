@@ -168,18 +168,20 @@ app.get('/api/boundaries/:x1/:y1/:x2/:y2', function(request, response) {
 });
 
 app.get('/api/hillshade/:x1/:y1/:x2/:y2', function(request, response){
+  // const hillShadeQuery = `
+  //   select ST_AsPng(ST_HillShade(
+  //       ST_Reclass(ST_Clip(rast,
+  //         ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
+  //       ), 1, '0-20000:0-20000', '16BUI'), 1, '16BUI', 0, 45), 1)
+  //   from elevation where rid=4;
+  // `;
+
   const query = `
     select ST_AsPng(
-      ST_Reclass(
-          ST_Clip(rast,
-            ST_Buffer(
-              ST_Centroid(
-                ST_Envelope(rast)
-              )
-            ,2)
-          )
-      , 1, '0-20000:0-200000','16BUI')
-    , 1) from elevation where rid=4;
+        ST_Reclass(ST_Clip(rast,
+          ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
+        ), 1, '0-20000:0-400000', '16BUI'), 1)
+    from elevation where rid=4;
   `;
 
   pool.connect(function(err, client, done){
