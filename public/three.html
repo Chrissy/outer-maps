@@ -1,0 +1,38 @@
+<body>
+</body>
+<style>
+  body { margin: 0; }
+  canvas { width: 100% !important; height: 100% !important;}
+</style>
+<script src="three/build/three.js"></script>
+<script>
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.1, 20000);
+  camera.position.z = 7000;
+  camera.position.x = 500;
+  camera.position.y = -1000;
+  var renderer = new THREE.WebGLRenderer();
+  renderer.setSize(2500,2500)
+
+  fetch(new Request("/api/hillshade/-113/35.3/-115/37.3")).then(function(response){
+    return response.json()
+  }).then(function(response){
+    console.log(response)
+    var geometry = new THREE.PlaneGeometry(10000, 10000, response.length - 1, response.height - 1);
+    var material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: true});
+    var plane = new THREE.Mesh(geometry, material);
+    for ( var i = 0; i<plane.geometry.vertices.length; i++ ) {
+         plane.geometry.vertices[i].z = (response.vertices[i]) ? response.vertices[i] : response.vertices[i + 1] || response.vertices[i - 1];
+    }
+    plane.rotation.x = 5.7;
+    scene.add(plane);
+    document.body.appendChild(renderer.domElement);
+
+    function render() {
+       requestAnimationFrame(render);
+        renderer.render(scene, camera);
+    }
+
+    render()
+  })
+</script>
