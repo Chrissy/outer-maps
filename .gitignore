@@ -33,7 +33,7 @@ migrations/.migrate
 
 # Dependency directories
 node_modules
-three.js
+public/three
 jspm_packages
 lib
 public/static
