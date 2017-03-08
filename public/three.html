@@ -9,15 +9,17 @@
   var scene = new THREE.Scene();
   var camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.1, 20000);
   camera.position.z = 7000;
-  camera.position.x = 500;
-  camera.position.y = -1000;
+  camera.position.x = 0;
+  camera.position.y = 0;
   var renderer = new THREE.WebGLRenderer();
   renderer.setSize(2500,2500)
 
-  fetch(new Request("/api/hillshade/-113/35/-115/37")).then(function(response){
+  const bboxString = "/-115/30/-118/33"
+
+  fetch(new Request(`/api/hillshade${bboxString}`)).then(function(response){
     return response.json()
   }).then(function(response){
-    new THREE.TextureLoader().load("/api/natural-earth/-113/35/-115/37.png", function(texture){
+    new THREE.TextureLoader().load(`/api/natural-earth${bboxString}.png`, function(texture){
 
       console.log(response.length, response.height)
 
@@ -26,9 +28,9 @@
       var plane = new THREE.Mesh(geometry, material);
       console.log(plane.geometry.vertices.length, response.vertices.length)
       for ( var i = 0; i<plane.geometry.vertices.length; i++ ) {
-        plane.geometry.vertices[i].z = (response.vertices[i]) ? response.vertices[i] : response.vertices[i + 1] || response.vertices[i - 1];
+        plane.geometry.vertices[i].z = (response.vertices[i]) ? response.vertices[i] / 2 : response.vertices[i + 1] / 2 || response.vertices[i - 1] / 2;
       }
-      plane.rotation.x = 5.7;
+      plane.rotation.x = 6;
       scene.add(plane);
       document.body.appendChild(renderer.domElement);
 
