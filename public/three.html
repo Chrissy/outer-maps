@@ -21,14 +21,14 @@
   }).then(function(response){
     new THREE.TextureLoader().load(`/api/natural-earth${bboxString}.png`, function(texture){
 
-      console.log(response.length, response.height)
+      console.log(response)
 
       var geometry = new THREE.PlaneGeometry(10000, 10000, response.length - 1, response.height - 2);
       var material = new THREE.MeshBasicMaterial({map: texture});
       var plane = new THREE.Mesh(geometry, material);
       console.log(plane.geometry.vertices.length, response.vertices.length)
       for ( var i = 0; i<plane.geometry.vertices.length; i++ ) {
-        plane.geometry.vertices[i].z = (response.vertices[i]) ? response.vertices[i] / 2 : response.vertices[i + 1] / 2 || response.vertices[i - 1] / 2;
+        plane.geometry.vertices[i].z = response.vertices[i] * 0.5;
       }
       plane.rotation.x = 6;
       scene.add(plane);

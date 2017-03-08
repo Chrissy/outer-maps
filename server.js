@@ -168,14 +168,6 @@ app.get('/api/boundaries/:x1/:y1/:x2/:y2', function(request, response) {
 });
 
 app.get('/api/hillshade/:x1/:y1/:x2/:y2', function(request, response){
-  // const query = `
-  //   select ST_AsPng(ST_HillShade(
-  //       ST_Reclass(ST_Clip(rast,
-  //         ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
-  //       ), 1, '0-20000:0-20000', '16BUI'), 1, '16BUI', 0, 45), 1)
-  //   from elevation where rid=4;
-  // `;
-
   const query = `
     select to_json(ST_DumpValues(ST_Clip(rast,
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
@@ -189,6 +181,26 @@ app.get('/api/hillshade/:x1/:y1/:x2/:y2', function(request, response){
       if (err) throw err;
       const vertices = result.rows[0].to_json.valarray
       response.json({length: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices.slice(1))});
+    });
+  });
+});
+
+app.get('/api/natural-earth/:x1/:y1/:x2/:y2.png', function(request, response){
+  const query = `
+    select ST_AsPng(ST_Clip(ST_Union(rast),
+      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
+    )) from natural_earth
+    where ST_Intersects(rast,
+      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
+    );
+  `;
+
+  pool.connect(function(err, client, done){
+    client.query(query, function(err, result){
+      done();
+      if (err) throw err;
+      response.writeHead(200, {'Content-Type': 'image/png' });
+      response.end(result.rows[0].st_aspng, 'binary');
     });
   });
 });
