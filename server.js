@@ -189,7 +189,7 @@ app.get('/api/natural-earth/:x1/:y1/:x2/:y2.png', function(request, response){
   const query = `
     select ST_AsPng(ST_Clip(ST_Union(rast),
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
-    )) from natural_earth
+    )) from usgs_jpgs_17
     where ST_Intersects(rast,
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
     );
@@ -199,6 +199,7 @@ app.get('/api/natural-earth/:x1/:y1/:x2/:y2.png', function(request, response){
     client.query(query, function(err, result){
       done();
       if (err) throw err;
+      console.log(`ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)`)
       response.writeHead(200, {'Content-Type': 'image/png' });
       response.end(result.rows[0].st_aspng, 'binary');
     });

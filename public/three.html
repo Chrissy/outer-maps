@@ -5,32 +5,36 @@
   canvas { width: 100% !important; height: 100% !important;}
 </style>
 <script src="three/build/three.js"></script>
+<script src="geo-viewport.js"></script>
 <script>
+  const TEST_BOUNDS = [-115.3, 45.1, -115.1, 45.3]
+  const request_bounds = geoViewport.viewport(TEST_BOUNDS, [1024, 1024], 1, 17);
   var scene = new THREE.Scene();
   var camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.1, 20000);
-  camera.position.z = 7000;
+  camera.position.z = 7500;
   camera.position.x = 0;
   camera.position.y = 0;
   var renderer = new THREE.WebGLRenderer();
   renderer.setSize(2500,2500)
 
-  const bboxString = "/-115/30/-118/33"
-
-  fetch(new Request(`/api/hillshade${bboxString}`)).then(function(response){
+  fetch(new Request(`/api/hillshade/${TEST_BOUNDS[0]}/${TEST_BOUNDS[1]}/${TEST_BOUNDS[2]}/${TEST_BOUNDS[3]}`)).then(function(response){
     return response.json()
-  }).then(function(response){
-    new THREE.TextureLoader().load(`/api/natural-earth${bboxString}.png`, function(texture){
-
-      console.log(response)
-
-      var geometry = new THREE.PlaneGeometry(10000, 10000, response.length - 1, response.height - 2);
+  }).then(function(altitude){
+    fetch(new Request(`https://api.mapbox.com/v4/mapbox.satellite/${request_bounds.center[0]},${request_bounds.center[1]},${request_bounds.zoom}/1024x1024.jpg?access_token=pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg`)).then(function(response){
+      return response.blob();
+    }).then(function(earth){
+      const earthImage = new Image();
+      var objectURL = URL.createObjectURL(earth);
+      earthImage.src = objectURL;
+      const texture = new THREE.TextureLoader().load(objectURL)
+      var geometry = new THREE.PlaneGeometry(10000, 10000, altitude.length - 1, altitude.height - 2);
       var material = new THREE.MeshBasicMaterial({map: texture});
+      //var material = new THREE.MeshBasicMaterial({color: 'green', wireframe:true});
       var plane = new THREE.Mesh(geometry, material);
-      console.log(plane.geometry.vertices.length, response.vertices.length)
       for ( var i = 0; i<plane.geometry.vertices.length; i++ ) {
-        plane.geometry.vertices[i].z = response.vertices[i] * 0.5;
+        plane.geometry.vertices[i].z = altitude.vertices[i];
       }
-      plane.rotation.x = 6;
+      plane.rotation.x = 5.6;
       scene.add(plane);
       document.body.appendChild(renderer.domElement);
 
@@ -40,6 +44,6 @@
       }
 
       render()
-    });
+    })
   })
 </script>
