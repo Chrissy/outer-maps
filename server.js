@@ -172,7 +172,7 @@ app.get('/api/hillshade/:x1/:y1/:x2/:y2', function(request, response){
     select to_json(ST_DumpValues(ST_Clip(rast,
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
     )))
-    from elevation where rid=4;
+    from elevation_detailed where rid=4;
   `;
 
   pool.connect(function(err, client, done){
