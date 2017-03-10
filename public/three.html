@@ -30,8 +30,8 @@
       earthImage.src = objectURL;
       const texture = new THREE.TextureLoader().load(objectURL)
       var geometry = new THREE.PlaneGeometry(10000, 10000, altitude.height - 1, altitude.length - 1);
-      //var material = new THREE.MeshBasicMaterial({map: texture});
-      var material = new THREE.MeshBasicMaterial({color: 'green', wireframe:true});
+      var material = new THREE.MeshBasicMaterial({map: texture});
+      //var material = new THREE.MeshBasicMaterial({color: 'green', wireframe:true});
       var plane = new THREE.Mesh(geometry, material);
       for ( var i = 0; i<plane.geometry.vertices.length; i++ ) {
         plane.geometry.vertices[i].z = altitude.vertices[i] * 0.75;
