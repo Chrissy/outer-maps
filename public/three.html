@@ -7,7 +7,7 @@
 <script src="three/build/three.js"></script>
 <script src="geo-viewport.js"></script>
 <script>
-  const TEST_BOUNDS = [-116.3, 45.1, -116.2, 45.2]
+  const TEST_BOUNDS = [-117.3, 45, -117.2, 45.1]
   const request_viewport = geoViewport.viewport(TEST_BOUNDS, [1024, 1024], 1, 17);
   const bounds = geoViewport.bounds(request_viewport.center, request_viewport.zoom, [1024, 1024]);
   var scene = new THREE.Scene();
@@ -34,7 +34,7 @@
       //var material = new THREE.MeshBasicMaterial({color: 'green', wireframe:true});
       var plane = new THREE.Mesh(geometry, material);
       for ( var i = 0; i<plane.geometry.vertices.length; i++ ) {
-        plane.geometry.vertices[i].z = altitude.vertices[i] * 0.75;
+        plane.geometry.vertices[i].z = altitude.vertices[i];
       }
       plane.rotation.x = 5.8;
       scene.add(plane);
