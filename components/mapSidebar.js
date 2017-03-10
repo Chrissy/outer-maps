@@ -10,15 +10,14 @@ import spacing from './spacing.css';
 
 export default class MapSidebar extends React.Component {
 
-  elevationImage() {
-    if (this.props.firstTrail.bounds) return <img src={`/api/hillshade/${this.props.firstTrail.bounds[0][0]}/${this.props.firstTrail.bounds[0][1]}/${this.props.firstTrail.bounds[1][0]}/${this.props.firstTrail.bounds[1][1]}`}/>
-  }
+  // elevationImage() {
+  //   if (this.props.firstTrail.bounds) return <img src={`/api/hillshade/${this.props.firstTrail.bounds[0][0]}/${this.props.firstTrail.bounds[0][1]}/${this.props.firstTrail.bounds[1][0]}/${this.props.firstTrail.bounds[1][1]}`}/>
+  // }
 
   render() {
     return (
       <div className={cx(styles.body, {[styles.active]: this.props.loading})}>
         <div className={cx(styles.content, {[styles.active]: this.props.firstTrail.hasElevationData})}>
-          {this.elevationImage()}
           length: {metersToMiles(this.props.distance)}<br/>
           elevation gain: {metersToFeet(this.props.elevationGain)} Feet<br/>
           elevation loss: {metersToFeet(this.props.elevationLoss)} Feet<br/>

@@ -7,36 +7,45 @@
 <script src="three/build/three.js"></script>
 <script src="geo-viewport.js"></script>
 <script>
-  const TEST_BOUNDS = [-117.3, 45, -117.2, 45.1]
-  const request_viewport = geoViewport.viewport(TEST_BOUNDS, [1024, 1024], 1, 17);
-  const bounds = geoViewport.bounds(request_viewport.center, request_viewport.zoom, [1024, 1024]);
+  const TRAIL_ID = 9305;
   var scene = new THREE.Scene();
   var camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.1, 20000);
+  var renderer = new THREE.WebGLRenderer();
   camera.position.z = 7000;
   camera.position.x = 0;
   camera.position.y = -1000;
-  var renderer = new THREE.WebGLRenderer();
   renderer.setSize(2500,2500)
-  fetch(new Request(`/api/hillshade/${bounds[0]}/${bounds[1]}/${bounds[2]}/${bounds[3]}`)).then(function(response){
-    return response.json()
-  }).then(function(altitude){
-    fetch(new Request(`https://api.mapbox.com/v4/mapbox.satellite/${request_viewport.center[0]},${request_viewport.center[1]},${request_viewport.zoom}/1024x1024.jpg?access_token=pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg`)).then(function(response){
-      return response.blob();
-    }).then(function(earth){
-      const texture = new THREE.TextureLoader().load(URL.createObjectURL(earth))
-      var geometry = new THREE.PlaneGeometry(10000, 10000, altitude.height - 1, altitude.length - 1);
-      var material = new THREE.MeshBasicMaterial({map: texture});
-      var plane = new THREE.Mesh(geometry, material);
-      plane.geometry.vertices.map((v,i) => Object.assign(v, {z: altitude.vertices[i]}));
-      plane.rotation.x = 5.8;
-      scene.add(plane);
-      document.body.appendChild(renderer.domElement);
 
-      function render() {
-        requestAnimationFrame(render);
-        renderer.render(scene, camera);
-      }
-      render()
+  fetch(new Request(`api/trails/${TRAIL_ID}`)).then(function(response){
+    return response.json();
+  }).then(function(trail){
+    const request_viewport = geoViewport.viewport([trail.bounds[0][0],trail.bounds[0][1],trail.bounds[1][0],trail.bounds[1][1]], [1024, 1024], 1, 17);
+    const bounds = geoViewport.bounds(request_viewport.center, request_viewport.zoom, [1024, 1024]);
+    fetch(new Request(`/api/hillshade/${bounds[0]}/${bounds[1]}/${bounds[2]}/${bounds[3]}`)).then(function(response){
+      return response.json();
+    }).then(function(altitude){
+      fetch(new Request(`https://api.mapbox.com/v4/mapbox.satellite/${request_viewport.center[0]},${request_viewport.center[1]},${request_viewport.zoom}/1024x1024.jpg?access_token=pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg`)).then(function(response){
+        return response.blob();
+      }).then(function(earth){
+        renderMap(altitude, earth)
+      })
     })
   })
+
+  const renderMap = function(altitude, earth) {
+    const texture = new THREE.TextureLoader().load(URL.createObjectURL(earth))
+    var geometry = new THREE.PlaneGeometry(10000, 10000, altitude.height - 1, altitude.length - 1);
+    var material = new THREE.MeshBasicMaterial({map: texture});
+    var plane = new THREE.Mesh(geometry, material);
+    plane.geometry.vertices.map((v,i) => Object.assign(v, {z: altitude.vertices[i]}));
+    plane.rotation.x = 5.8;
+    scene.add(plane);
+    document.body.appendChild(renderer.domElement);
+
+    function render() {
+      requestAnimationFrame(render);
+      renderer.render(scene, camera);
+    }
+    render()
+  }
 </script>
