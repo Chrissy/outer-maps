@@ -12,7 +12,7 @@
   const bounds = geoViewport.bounds(request_viewport.center, request_viewport.zoom, [1024, 1024]);
   var scene = new THREE.Scene();
   var camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.1, 20000);
-  camera.position.z = 6000;
+  camera.position.z = 7000;
   camera.position.x = 0;
   camera.position.y = -1000;
   var renderer = new THREE.WebGLRenderer();
@@ -36,7 +36,7 @@
       for ( var i = 0; i<plane.geometry.vertices.length; i++ ) {
         plane.geometry.vertices[i].z = altitude.vertices[i] * 0.75;
       }
-      plane.rotation.x = 5.6;
+      plane.rotation.x = 5.8;
       scene.add(plane);
       document.body.appendChild(renderer.domElement);
 
