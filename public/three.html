@@ -22,7 +22,7 @@
     return response.json()
   }).then(function(altitude){
     console.log(altitude)
-    fetch(new Request(`https://api.mapbox.com/styles/v1/mapbox/satellite-v8/static/${request_viewport.center[0]},${request_viewport.center[1]},${request_viewport.zoom}/1024x1024?access_token=pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg`)).then(function(response){
+    fetch(new Request(`https://api.mapbox.com/v4/mapbox.satellite/${request_viewport.center[0]},${request_viewport.center[1]},${request_viewport.zoom}/1024x1024.jpg?access_token=pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg`)).then(function(response){
       return response.blob();
     }).then(function(earth){
       const earthImage = new Image();
