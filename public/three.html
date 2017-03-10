@@ -7,12 +7,12 @@
 <script src="three/build/three.js"></script>
 <script src="geo-viewport.js"></script>
 <script>
-  const TEST_BOUNDS = [-115.4, 45.1, -115.2, 45.3]
+  const TEST_BOUNDS = [-116.3, 45.1, -116.2, 45.2]
   const request_viewport = geoViewport.viewport(TEST_BOUNDS, [1024, 1024], 1, 17);
   const bounds = geoViewport.bounds(request_viewport.center, request_viewport.zoom, [1024, 1024]);
   var scene = new THREE.Scene();
   var camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.1, 20000);
-  camera.position.z = 5000;
+  camera.position.z = 6000;
   camera.position.x = 0;
   camera.position.y = -1000;
   var renderer = new THREE.WebGLRenderer();
@@ -21,21 +21,21 @@
   fetch(new Request(`/api/hillshade/${bounds[0]}/${bounds[1]}/${bounds[2]}/${bounds[3]}`)).then(function(response){
     return response.json()
   }).then(function(altitude){
-    fetch(new Request(`https://api.mapbox.com/v4/mapbox.satellite/${request_viewport.center[0]},${request_viewport.center[1]},${request_viewport.zoom}/1024x1024.jpg?access_token=pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg`)).then(function(response){
+    console.log(altitude)
+    fetch(new Request(`https://api.mapbox.com/styles/v1/mapbox/satellite-v8/static/${request_viewport.center[0]},${request_viewport.center[1]},${request_viewport.zoom}/1024x1024?access_token=pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg`)).then(function(response){
       return response.blob();
     }).then(function(earth){
       const earthImage = new Image();
       var objectURL = URL.createObjectURL(earth);
       earthImage.src = objectURL;
       const texture = new THREE.TextureLoader().load(objectURL)
-      var geometry = new THREE.PlaneGeometry(10000, 10000, altitude.length - 1, altitude.height - 2);
-      var material = new THREE.MeshBasicMaterial({map: texture});
-      //var material = new THREE.MeshBasicMaterial({color: 'green', wireframe:true});
+      var geometry = new THREE.PlaneGeometry(10000, 10000, altitude.height - 1, altitude.length - 1);
+      //var material = new THREE.MeshBasicMaterial({map: texture});
+      var material = new THREE.MeshBasicMaterial({color: 'green', wireframe:true});
       var plane = new THREE.Mesh(geometry, material);
       for ( var i = 0; i<plane.geometry.vertices.length; i++ ) {
         plane.geometry.vertices[i].z = altitude.vertices[i] * 0.75;
       }
-      console.log(plane.geometry.vertices.length)
       plane.rotation.x = 5.6;
       scene.add(plane);
       document.body.appendChild(renderer.domElement);

@@ -169,18 +169,21 @@ app.get('/api/boundaries/:x1/:y1/:x2/:y2', function(request, response) {
 
 app.get('/api/hillshade/:x1/:y1/:x2/:y2', function(request, response){
   const query = `
-    select to_json(ST_DumpValues(ST_Clip(rast,
+    select to_json(ST_DumpValues(ST_Clip(ST_Union(rast),
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
     )))
-    from elevation_detailed where rid=4;
+    from elevation_detailed where ST_Intersects(rast,
+      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
+    );
   `;
 
   pool.connect(function(err, client, done){
     client.query(query, function(err, result){
       done();
       if (err) throw err;
+      console.log(result)
       const vertices = result.rows[0].to_json.valarray
-      response.json({length: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices.slice(1))});
+      response.json({length: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices)});
     });
   });
 });
