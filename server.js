@@ -2,6 +2,8 @@ const http = require('http');
 const pg = require('pg');
 const express = require('express');
 const browserify = require('browserify-middleware');
+const geoViewport = require('geo-viewport');
+const Jimp = require("jimp");
 const app = express();
 const _ = require('underscore');
 const env = require('./environment/development');
@@ -44,7 +46,7 @@ app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
   })
 })
 
-app.get('/api/trails/:id', function(request, response) {
+const getTrail = function(id, callback) {
   let query = `
     SELECT
       name,
@@ -54,7 +56,7 @@ app.get('/api/trails/:id', function(request, response) {
       ST_AsGeoJson(ST_Centroid(geog::geometry)) as center,
       ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds
     FROM trails
-    WHERE id = ${request.params.id}
+    WHERE id = ${id}
     LIMIT 1
   `
 
@@ -66,17 +68,22 @@ app.get('/api/trails/:id', function(request, response) {
 
       let r = result.rows[0]
       const envelope = JSON.parse(r.bounds).coordinates[0];
-
-      response.json({
-        "name": r.name,
-        "id": request.params.id,
-        "surface": r.surface,
-        "geography": JSON.parse(r.geog),
-        "distance": r.distance,
-        "center": JSON.parse(r.center).coordinates,
-        "bounds": [envelope[0], envelope[2]]
-      });
+      callback(Object.assign(result.rows[0], {bounds: envelope}));
     })
+  })
+}
+
+app.get('/api/trails/:id', function(request, response) {
+  getTrail(request.params.id, function(r){
+    response.json({
+      "name": r.name,
+      "id": request.params.id,
+      "surface": r.surface,
+      "geography": JSON.parse(r.geog),
+      "distance": r.distance,
+      "center": JSON.parse(r.center).coordinates,
+      "bounds": [envelope[0], envelope[2]]
+    });
   })
 })
 
@@ -167,7 +174,7 @@ app.get('/api/boundaries/:x1/:y1/:x2/:y2', function(request, response) {
   });
 });
 
-app.get('/api/hillshade/:x1/:y1/:x2/:y2', function(request, response){
+app.get('/api/elevation-dump/:x1/:y1/:x2/:y2', function(request, response){
   const query = `
     select to_json(ST_DumpValues(ST_Clip(ST_Union(rast),
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
@@ -188,25 +195,38 @@ app.get('/api/hillshade/:x1/:y1/:x2/:y2', function(request, response){
   });
 });
 
-app.get('/api/natural-earth/:x1/:y1/:x2/:y2.png', function(request, response){
-  const query = `
-    select ST_AsPng(ST_Clip(ST_Union(rast),
-      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
-    )) from usgs_jpgs_17
-    where ST_Intersects(rast,
-      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
-    );
-  `;
+app.get('/api/trails/terrain/:id', function(request, response){
+  getTrail(request.params.id, function(trail){
+    const request_viewport = geoViewport.viewport([trail.bounds[0][0],trail.bounds[0][1],trail.bounds[1][0],trail.bounds[1][1]], [1024, 1024], 1, 17);
+    const bounds = geoViewport.bounds(request_viewport.center, request_viewport.zoom, [1024, 1024]);
+    const rgb = [255,247,0]
 
-  pool.connect(function(err, client, done){
-    client.query(query, function(err, result){
-      done();
-      if (err) throw err;
-      console.log(`ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)`)
-      response.writeHead(200, {'Content-Type': 'image/png' });
-      response.end(result.rows[0].st_aspng, 'binary');
-    });
-  });
+    const query = `
+      SELECT ST_AsPng(ST_AsRaster(geog::geometry, 1024, 1024, ARRAY['8BUI', '8BUI', '8BUI'], ARRAY[${rgb[0]},${rgb[1]},${rgb[2]}], ARRAY[0,0,0]))
+      FROM trails WHERE id=${request.params.id} LIMIT 1;
+    `;
+
+    http.get({
+      host: 'api.mapbox.com',
+      path: `/v4/mapbox.satellite/${request_viewport.center[0]},${request_viewport.center[1]},${request_viewport.zoom}/1024x1024.jpg?access_token=pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg`
+    }, function(r){
+      let body = [];
+      r.on('data', (chunk) => body.push(chunk)).on('end', () => {
+        pool.connect(function(err, client, done){
+          client.query(query, function(err, result){
+            Jimp.read(Buffer.concat(body), function(error, earth) {
+              Jimp.read(result.rows[0].st_aspng, function(error, trail) {
+                earth.composite(trail, 0, 0).getBuffer(Jimp.MIME_JPEG, function(error, composite){
+                  response.writeHead(200, {'Content-Type': 'image/jpg' });
+                  response.end(composite, 'binary');
+                });
+              });
+            })
+          });
+        });
+      })
+    })
+  })
 });
 
 app.listen(5000, function () {

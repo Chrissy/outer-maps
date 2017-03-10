@@ -6,8 +6,9 @@
 </style>
 <script src="three/build/three.js"></script>
 <script src="geo-viewport.js"></script>
+<script src="polyline.js"></script>
 <script>
-  const TRAIL_ID = 9305;
+  const TRAIL_ID = 9306;
   var scene = new THREE.Scene();
   var camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.1, 20000);
   var renderer = new THREE.WebGLRenderer();
@@ -21,7 +22,7 @@
   }).then(function(trail){
     const request_viewport = geoViewport.viewport([trail.bounds[0][0],trail.bounds[0][1],trail.bounds[1][0],trail.bounds[1][1]], [1024, 1024], 1, 17);
     const bounds = geoViewport.bounds(request_viewport.center, request_viewport.zoom, [1024, 1024]);
-    fetch(new Request(`/api/hillshade/${bounds[0]}/${bounds[1]}/${bounds[2]}/${bounds[3]}`)).then(function(response){
+    fetch(new Request(`/api/elevation-dump/${bounds[0]}/${bounds[1]}/${bounds[2]}/${bounds[3]}`)).then(function(response){
       return response.json();
     }).then(function(altitude){
       fetch(new Request(`https://api.mapbox.com/v4/mapbox.satellite/${request_viewport.center[0]},${request_viewport.center[1]},${request_viewport.zoom}/1024x1024.jpg?access_token=pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg`)).then(function(response){
