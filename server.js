@@ -67,8 +67,7 @@ const getTrail = function(id, callback) {
       if (err) throw err;
 
       let r = result.rows[0]
-      const envelope = JSON.parse(r.bounds).coordinates[0];
-      callback(Object.assign(result.rows[0], {bounds: envelope}));
+      callback(Object.assign(result.rows[0], {bounds: geoJson.boxToBounds(JSON.parse(r.bounds))}));
     })
   })
 }
@@ -82,7 +81,7 @@ app.get('/api/trails/:id', function(request, response) {
       "geography": JSON.parse(r.geog),
       "distance": r.distance,
       "center": JSON.parse(r.center).coordinates,
-      "bounds": [envelope[0], envelope[2]]
+      "bounds": [[r.bounds[0],r.bounds[1]], [r.bounds[2], r.bounds[3]]]
     });
   })
 })
@@ -197,12 +196,20 @@ app.get('/api/elevation-dump/:x1/:y1/:x2/:y2', function(request, response){
 
 app.get('/api/trails/terrain/:id', function(request, response){
   getTrail(request.params.id, function(trail){
-    const request_viewport = geoViewport.viewport([trail.bounds[0][0],trail.bounds[0][1],trail.bounds[1][0],trail.bounds[1][1]], [1024, 1024], 1, 17);
+    const request_viewport = geoViewport.viewport(trail.bounds, [1024, 1024], 1, 17);
     const bounds = geoViewport.bounds(request_viewport.center, request_viewport.zoom, [1024, 1024]);
-    const rgb = [255,247,0]
+    const rgb = [255,247,0];
+    const trailWidth = Math.abs(trail.bounds[0] - trail.bounds[2]);
+    const trailHeight = Math.abs(trail.bounds[1] - trail.bounds[3]);
+    const relTrailWidth = (trailWidth >= trailHeight) ? 1024 : parseInt(1024 * (trailWidth/trailHeight));
+    const relTrailHeight = (trailHeight >= trailWidth) ? 1024 : parseInt(1024 * (trailHeight/trailWidth));
+    const offsetX = (1024 - relTrailWidth) / 2;
+    const offsetY = (1024 - relTrailHeight) / 2;
+
+    console.log(relTrailWidth, relTrailHeight)
 
     const query = `
-      SELECT ST_AsPng(ST_AsRaster(geog::geometry, 1024, 1024, ARRAY['8BUI', '8BUI', '8BUI'], ARRAY[${rgb[0]},${rgb[1]},${rgb[2]}], ARRAY[0,0,0]))
+      SELECT ST_AsPng(ST_AsRaster(geog::geometry, ${relTrailWidth}, ${relTrailHeight}, ARRAY['8BUI', '8BUI', '8BUI'], ARRAY[${rgb[0]},${rgb[1]},${rgb[2]}], ARRAY[0,0,0]))
       FROM trails WHERE id=${request.params.id} LIMIT 1;
     `;
 
@@ -216,7 +223,7 @@ app.get('/api/trails/terrain/:id', function(request, response){
           client.query(query, function(err, result){
             Jimp.read(Buffer.concat(body), function(error, earth) {
               Jimp.read(result.rows[0].st_aspng, function(error, trail) {
-                earth.composite(trail, 0, 0).getBuffer(Jimp.MIME_JPEG, function(error, composite){
+                earth.composite(trail, offsetX, offsetY).getBuffer(Jimp.MIME_JPEG, function(error, composite){
                   response.writeHead(200, {'Content-Type': 'image/jpg' });
                   response.end(composite, 'binary');
                 });

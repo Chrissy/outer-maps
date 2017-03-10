@@ -8,7 +8,7 @@
 <script src="geo-viewport.js"></script>
 <script src="polyline.js"></script>
 <script>
-  const TRAIL_ID = 9306;
+  const TRAIL_ID = 9305;
   var scene = new THREE.Scene();
   var camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.1, 20000);
   var renderer = new THREE.WebGLRenderer();
@@ -25,7 +25,8 @@
     fetch(new Request(`/api/elevation-dump/${bounds[0]}/${bounds[1]}/${bounds[2]}/${bounds[3]}`)).then(function(response){
       return response.json();
     }).then(function(altitude){
-      fetch(new Request(`https://api.mapbox.com/v4/mapbox.satellite/${request_viewport.center[0]},${request_viewport.center[1]},${request_viewport.zoom}/1024x1024.jpg?access_token=pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg`)).then(function(response){
+      debugger
+      fetch(new Request(`/api/trails/terrain/${TRAIL_ID}`)).then(function(response){
         return response.blob();
       }).then(function(earth){
         renderMap(altitude, earth)
@@ -39,7 +40,7 @@
     var material = new THREE.MeshBasicMaterial({map: texture});
     var plane = new THREE.Mesh(geometry, material);
     plane.geometry.vertices.map((v,i) => Object.assign(v, {z: altitude.vertices[i]}));
-    plane.rotation.x = 5.8;
+    plane.rotation.x = 5.7;
     scene.add(plane);
     document.body.appendChild(renderer.domElement);
 
