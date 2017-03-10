@@ -6,7 +6,6 @@
 </style>
 <script src="three/build/three.js"></script>
 <script src="geo-viewport.js"></script>
-<script src="polyline.js"></script>
 <script>
   const TRAIL_ID = 9305;
   var scene = new THREE.Scene();
@@ -25,7 +24,7 @@
     fetch(new Request(`/api/elevation-dump/${bounds[0]}/${bounds[1]}/${bounds[2]}/${bounds[3]}`)).then(function(response){
       return response.json();
     }).then(function(altitude){
-      debugger
+      console.log(`/api/trails/terrain/${TRAIL_ID}`);
       fetch(new Request(`/api/trails/terrain/${TRAIL_ID}`)).then(function(response){
         return response.blob();
       }).then(function(earth){
@@ -40,7 +39,7 @@
     var material = new THREE.MeshBasicMaterial({map: texture});
     var plane = new THREE.Mesh(geometry, material);
     plane.geometry.vertices.map((v,i) => Object.assign(v, {z: altitude.vertices[i]}));
-    plane.rotation.x = 5.7;
+    plane.rotation.x = 5.9;
     scene.add(plane);
     document.body.appendChild(renderer.domElement);
 
