@@ -14,7 +14,6 @@
     "geo-viewport": "^0.2.1",
     "geolib": "^2.0.21",
     "isomorphic-fetch": "^2.2.1",
-    "jimp": "^0.2.27",
     "pg": "^6.0.1",
     "polyline": "^0.2.0",
     "react-redux": "^5.0.2",
