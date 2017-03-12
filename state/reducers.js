@@ -16,12 +16,11 @@ const trail = (state = {}, action) => {
         distance: action.trail.distance,
         geog: action.trail.geography,
         surface: action.trail.surface,
-        points: _.flatten(action.trail.geography.coordinates, 1).map((coordinates) => point(undefined, {...action,
+        points: action.trail.geography.coordinates.map((coordinates) => point(undefined, {...action,
           coordinates: coordinates
         }))
       }
     case 'TOGGLE_TRAIL_PREVIEWING':
-      console.log(`/api/hillshade//${state.bounds[0][0]}/${state.bounds[0][1]}/${state.bounds[1][0]}/${state.bounds[1][1]}`);
       return { ...state, previewing: (state.id === action.trail.id) }
     case 'CLEAR_TRAIL_PREVIEWING':
       return { ...state, previewing: false }
