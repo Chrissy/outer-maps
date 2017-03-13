@@ -51,7 +51,7 @@ const getTrail = function(id, callback) {
     SELECT
       name,
       surface,
-      ST_AsGeoJson(ST_Simplify(ST_LineMerge(geog::geometry), 0.0005)) as geog,
+      ST_AsGeoJson(ST_Simplify(ST_LineMerge(geog::geometry), 0.0007)) as geog,
       ST_Length(geog) as distance,
       ST_AsGeoJson(ST_Centroid(geog::geometry)) as center,
       ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds
@@ -192,25 +192,6 @@ app.get('/api/elevation-dump/:x1/:y1/:x2/:y2', function(request, response){
       response.json({length: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices)});
     });
   });
-});
-
-app.get('/api/trails/terrain/:id', function(request, response){
-  getTrail(request.params.id, function(trail){
-    const view = geoViewport.viewport(trail.bounds, [1024, 1024], 1, 17);
-    const lineStr = polyline.fromGeoJSON(JSON.parse(trail.geog));
-    const path = `/v4/mapbox.satellite/path-5+FFF700-0.75(${lineStr})/${view.center[0]},${view.center[1]},${view.zoom}/1024x1024.jpg?access_token=pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg`;
-
-    http.get({
-      host: 'api.mapbox.com',
-      path: path
-    }, function(r){
-      let body = [];
-      r.on('data', (chunk) => body.push(chunk)).on('end', () => {
-        response.writeHead(200, {'Content-Type': 'image/jpg' });
-        response.end(Buffer.concat(body), 'binary');
-      })
-    })
-  })
 });
 
 app.listen(5000, function () {
