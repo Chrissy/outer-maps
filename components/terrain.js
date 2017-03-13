@@ -14,8 +14,9 @@ export default class Terrain extends React.Component {
     const renderer = new WebGLRenderer({alpha:true, canvas: this.refs.canvas});
     const view = GeoViewport.viewport(_.flatten(this.props.trail.bounds), [1024, 1024], 1, 17);
     const bounds = GeoViewport.bounds(view.center, view.zoom, [1024, 1024]);
-    const lineStr = Polyline.fromGeoJSON(this.props.trail.geog);
-    const path = `http://api.mapbox.com/v4/mapbox.satellite/path-5+FFF700-0.75(${lineStr})/${view.center.join(",")},${view.zoom}/1024x1024.jpg?access_token=${accessToken}`;
+    //const lineStr = Polyline.fromGeoJSON(this.props.trail.geog);
+    //const path = `http://api.mapbox.com/v4/mapbox.satellite/path-5+FFF700-0.75(${lineStr})/${view.center.join(",")},${view.zoom}/1024x1024.jpg?access_token=${accessToken}`;
+    const path = `http://api.mapbox.com/v4/mapbox.satellite/${view.center.join(",")},${view.zoom}/1024x1024.jpg?access_token=${accessToken}`;
 
     renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
     renderer.setSize(this.refs.canvasContainer.offsetWidth, this.refs.canvasContainer.offsetWidth);
@@ -30,9 +31,9 @@ export default class Terrain extends React.Component {
     const renderMap = function(altitude, earth) {
       let vertices = altitude.vertices;
       const texture = new TextureLoader().load(URL.createObjectURL(earth))
-      var geometry = new PlaneGeometry(10240, 10240, altitude.height - 1, altitude.length - 1);
-      var material = new MeshBasicMaterial({map: texture});
-      var plane = new Mesh(geometry, material);
+      const geometry = new PlaneGeometry(10240, 10240, altitude.height - 1, altitude.length - 1);
+      const material = new MeshBasicMaterial({map: texture});
+      const plane = new Mesh(geometry, material);
 
       plane.geometry.vertices.map((v,i) => {
         let z = vertices[i];

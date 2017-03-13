@@ -51,7 +51,7 @@ const getTrail = function(id, callback) {
     SELECT
       name,
       surface,
-      ST_AsGeoJson(ST_Simplify(ST_LineMerge(geog::geometry), 0.0007)) as geog,
+      ST_AsGeoJson(ST_Simplify(ST_LineMerge(geog::geometry), 0.0001)) as geog,
       ST_Length(geog) as distance,
       ST_AsGeoJson(ST_Centroid(geog::geometry)) as center,
       ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds
