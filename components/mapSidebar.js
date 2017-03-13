@@ -12,19 +12,23 @@ import spacing from './spacing.css';
 export default class MapSidebar extends React.Component {
 
   terrainComponent() {
-    if (this.props.firstTrail.hasElevationData) return <Terrain trail={this.props.firstTrail}/>
+    if (this.props.firstTrail.hasBaseData) return <Terrain trail={this.props.firstTrail}/>
+  }
+
+  elevationComponent() {
+    if (this.props.firstTrail.hasElevationData) return <LineGraph points={this.props.cumulativeElevations}/>
   }
 
   render() {
     return (
       <div className={cx(styles.body, {[styles.active]: this.props.loading})}>
-        <div className={cx(styles.content, {[styles.active]: this.props.firstTrail.hasElevationData})}>
+        <div className={cx(styles.content, {[styles.active]: this.props.firstTrail.hasBaseData})}>
           {this.terrainComponent()}
           length: {metersToMiles(this.props.distance)}<br/>
           elevation gain: {metersToFeet(this.props.elevationGain)} Feet<br/>
           elevation loss: {metersToFeet(this.props.elevationLoss)} Feet<br/>
           <div className={spacing.top_margin}>
-            <LineGraph points={this.props.cumulativeElevations}/>
+            {this.elevationComponent()}
           </div>
           Weather almanac for this week: <br/>
           High temperature: {this.props.firstTrail.maxTemperature}° <br/>
@@ -37,7 +41,7 @@ export default class MapSidebar extends React.Component {
           Chance of heavy snowpack: {convertToPercent(this.props.firstTrail.chanceOfHeavySnowPack)}% <br/>
           surface: {this.props.firstTrail.surface || 'unknown'}<br/>
         </div>
-        <div className={cx(styles.spinner, {[styles.hidden]: this.props.firstTrail.hasElevationData})}>
+        <div className={cx(styles.spinner, {[styles.hidden]: this.props.firstTrail.hasBaseData})}>
           <LoadingSpinner/>
         </div>
       </div>
