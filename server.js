@@ -140,7 +140,7 @@ app.get('/api/elevation/:id', function(request, response){
           ST_Value(rast, ST_SetSRID(ST_Point(x,y), 4326)) as elevation
         FROM elevation
         CROSS JOIN pairs
-        WHERE ST_Intersects(ST_SetSRID(ST_GeomFromGeoJson(${geoJson}), 4326))
+        WHERE ST_Intersects(rast, ST_SetSRID(ST_GeomFromGeoJson('${JSON.stringify(geoJson)}'), 4326))
       `;
 
       console.log(query)
