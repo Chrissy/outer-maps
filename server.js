@@ -120,7 +120,7 @@ app.get('/api/boundaries/:id', function(request, response) {
 
 app.get('/api/elevation/:id', function(request, response){
   const query = `
-    select ST_AsGeoJson(geog) as geog
+    select ST_AsGeoJson(ST_LineMerge(geog::geometry)) as geog
     FROM trails
     WHERE id = ${request.params.id}
   `
@@ -129,28 +129,24 @@ app.get('/api/elevation/:id', function(request, response){
     client.query(query, function(err, result){
       if (err) throw err;
 
-      var data = JSON.parse(result.rows[0].geog);
-      var points = (data.type == "MultiLineString") ? _.flatten(data.coordinates, true) : data.coordinates;
-      var elevations = [], distance = 0;
+      const query = `
+        WITH pairs(x,y) AS (
+          VALUES
+          ${JSON.parse(result.rows[0].geog).coordinates.reduce((acc, el, i) => acc + `${(i == 0) ? '' : ','}(${el[0]},${el[1]})`, '')}
+        )
+        SELECT
+          ST_Value(rast, ST_SetSRID(ST_Point(x,y), 4326)) as elevation
+        FROM elevation
+        CROSS JOIN pairs
+        WHERE rid=4
+      `;
 
-      points.forEach(function(point, i) {
-        const query = `
-          SELECT ST_Value(rast, ST_Transform(
-            ST_GeomFromText(
-              'POINT(${point[0]} ${point[1]})',
-            4326), 4326)
-          )
-          FROM elevation
-          WHERE rid=4
-        `;
-        client.query(query, function(err, result){
-          if (err) throw err;
-          if (result) elevations.push(result.rows[0].st_value);
-          if (i + 1 >= points.length) {
-            done();
-            response.json(elevations);
-          }
-        })
+      console.log(query)
+
+      client.query(query, function(err, result){
+        if (err) throw err;
+        done();
+        response.json(result.rows.map(r => r.elevation));
       });
     });
   });
