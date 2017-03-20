@@ -1,7 +1,6 @@
 import React from 'react';
 import {WebGLRenderer, Scene, PerspectiveCamera, TextureLoader, PlaneGeometry, MeshBasicMaterial, Mesh} from 'three';
 import GeoViewport from 'geo-viewport';
-import Polyline from 'polyline';
 import _ from 'underscore';
 import {accessToken} from '../modules/mapboxStaticData';
 
@@ -14,8 +13,6 @@ export default class Terrain extends React.Component {
     const renderer = new WebGLRenderer({alpha:true, canvas: this.refs.canvas});
     const view = GeoViewport.viewport(_.flatten(this.props.trail.bounds), [1024, 1024], 1, 17);
     const bounds = GeoViewport.bounds(view.center, view.zoom, [1024, 1024]);
-    //const lineStr = Polyline.fromGeoJSON(this.props.trail.geog);
-    //const path = `http://api.mapbox.com/v4/mapbox.satellite/path-5+FFF700-0.75(${lineStr})/${view.center.join(",")},${view.zoom}/1024x1024.jpg?access_token=${accessToken}`;
     const path = `http://api.mapbox.com/v4/mapbox.satellite/${view.center.join(",")},${view.zoom}/1024x1024.jpg?access_token=${accessToken}`;
 
     renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
@@ -53,10 +50,6 @@ export default class Terrain extends React.Component {
       }
       render()
     }.bind(this)
-  }
-
-  componentDidUpdate() {
-
   }
 
   render() {

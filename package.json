@@ -15,7 +15,6 @@
     "geolib": "^2.0.21",
     "isomorphic-fetch": "^2.2.1",
     "pg": "^6.0.1",
-    "polyline": "^0.2.0",
     "react-redux": "^5.0.2",
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
