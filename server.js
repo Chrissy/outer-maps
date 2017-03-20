@@ -129,16 +129,18 @@ app.get('/api/elevation/:id', function(request, response){
     client.query(query, function(err, result){
       if (err) throw err;
 
+      const geoJson = JSON.parse(result.rows[0].geog);
+
       const query = `
         WITH pairs(x,y) AS (
           VALUES
-          ${JSON.parse(result.rows[0].geog).coordinates.reduce((acc, el, i) => acc + `${(i == 0) ? '' : ','}(${el[0]},${el[1]})`, '')}
+          ${geoJson.coordinates.reduce((acc, el, i) => acc + `${(i == 0) ? '' : ','}(${el[0]},${el[1]})`, '')}
         )
         SELECT
           ST_Value(rast, ST_SetSRID(ST_Point(x,y), 4326)) as elevation
         FROM elevation
         CROSS JOIN pairs
-        WHERE rid=4
+        WHERE ST_Intersects(ST_SetSRID(ST_GeomFromGeoJson(${geoJson}), 4326))
       `;
 
       console.log(query)
