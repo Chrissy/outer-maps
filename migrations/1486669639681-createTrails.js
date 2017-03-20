@@ -9,7 +9,7 @@ exports.up = function(next) {
       name VARCHAR(200),
       surface VARCHAR(64),
       source_id varchar(50),
-      source varchar(50),
+      source varchar(200),
       geog geography(GEOMETRY,4326)
     )`;
 

@@ -14,7 +14,6 @@ exports.up = function(next) {
     baseTableName: 'trails',
     mergingTableName: 'utah_trails',
     name: 'primarynam',
-    surface: 'surfacetyp',
     sourceId: 'trailid',
     geog: 'geog',
     sourceUrl: 'https://gis.utah.gov/data/recreation/trails/',
