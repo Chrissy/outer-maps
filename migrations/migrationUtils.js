@@ -43,12 +43,12 @@ exports.insertElevationRasters = function({directoryName, srid = '4326', tableNa
   execSync(`raster2pgsql -s ${srid} -t "auto" -C *.tif public.${tableName} | psql -d ${env.databaseName} ${user}`, {cwd: pathStr});
 }
 
-exports.mergeIntoTrailsTable = function({baseTableName, mergingTableName, name = 'name', surface = 'surface', sourceId='source_id', geog = 'geog', sourceUrl} = {}, callback) {
+exports.mergeIntoTrailsTable = function({baseTableName, mergingTableName, name = 'name', sourceId='source_id', geog = 'geog', sourceUrl} = {}, callback) {
   const query = `
     CREATE TABLE ${baseTableName}__new AS SELECT * FROM ${baseTableName};
 
-    INSERT INTO ${baseTableName}__new(name, surface, source_id, geog, source)
-    SELECT ${name}, ${surface}, ${sourceId}, ${geog}, '${sourceUrl}' FROM ${mergingTableName};
+    INSERT INTO ${baseTableName}__new(name, source_id, geog, source)
+    SELECT ${name}, ${sourceId}, ${geog}, '${sourceUrl}' FROM ${mergingTableName};
 
     DROP TABLE ${baseTableName};
 
