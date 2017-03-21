@@ -120,10 +120,6 @@ app.get('/api/boundaries/:id', function(request, response) {
 
 app.get('/api/elevation/:id', function(request, response){
   pool.connect(function(err, client, done){
-    if (err) throw err;
-
-    const geoJson = JSON.parse(result.rows[0].geog);
-
     const query = `
       WITH trail AS (
           SELECT ST_LineMerge(geog::geometry) AS path
