@@ -132,17 +132,18 @@ app.get('/api/elevation/:id', function(request, response){
       const geoJson = JSON.parse(result.rows[0].geog);
 
       const query = `
-        WITH pairs(x,y) AS (
-            VALUES
-            ${geoJson.coordinates.reduce((acc, el, i) => acc + `${(i == 0) ? '' : ','}(${el[0]},${el[1]})`, '')}
+        WITH points AS (
+            SELECT (ST_DumpPoints(ST_LineMerge(geog::geometry))).geom AS point
+            FROM trails
+            WHERE id = ${request.params.id}
           ), raster AS (
             SELECT ST_Union(rast) AS rast FROM elevation
             WHERE ST_Intersects(rast, ST_SetSRID(ST_GeomFromGeoJson('${JSON.stringify(geoJson)}'), 4326))
           )
         SELECT
-          ST_Value(rast, ST_SetSRID(ST_Point(x,y), 4326)) as elevation
+          ST_Value(rast, point) as elevation
         FROM raster
-        CROSS JOIN pairs
+        CROSS JOIN points
       `;
 
       console.log(query)
