@@ -6,57 +6,66 @@ import _ from 'underscore';
 
 export default class Terrain extends React.Component {
 
+  getAltitude() {
+    fetch(new Request(`/api/elevation-dump/${this.bounds.join("/")}`)).then((r) => r.json()).then(function(resp) {
+      this.altitude = resp;
+      this.drawMap();
+    }.bind(this));
+  }
+
+  getEarth() {
+    fetch(new Request(`/api/terrain/${this.view.center.join("/")}/${this.view.zoom}`)).then((r) => r.json()).then(function(resp) {
+      this.earth = resp;
+      this.drawMap();
+    }.bind(this));
+  }
+
+  drawMap() {
+    if (!this.earth || !this.altitude) return;
+
+    let vertices = this.altitude.vertices;
+    const texture = new TextureLoader().load(this.earth.url)
+    const geometry = new PlaneGeometry(10240, 10240, this.altitude.height - 1, this.altitude.length - 1);
+    const material = new MeshBasicMaterial({map: texture});
+    const plane = new Mesh(geometry, material);
+
+    plane.geometry.vertices.map((v,i) => {
+      let z = vertices[i];
+      if (z == null || z == NaN || z == undefined) {
+        z = vertices[i - 1] || vertices[i + 1] || vertices[i - this.altitude.height] || vertices[i + this.altitude.height];
+      };
+      return Object.assign(v, {z: z})
+    });
+
+    plane.rotation.x = 5.7;
+    this.scene.add(plane);
+
+    this.renderTerrain()
+  }
+
   componentDidMount() {
-    const scene = new Scene();
+    this.scene = new Scene();
     const camera = new PerspectiveCamera(60, 1000 / 1200, 1, 100000);
     const renderer = new WebGLRenderer({alpha:true, canvas: this.refs.canvas});
-    const view = GeoViewport.viewport(_.flatten(this.props.trail.bounds), [1024, 1024], 1, 17);
-    const bounds = GeoViewport.bounds(view.center, view.zoom, [1024, 1024]);
 
     renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
     renderer.setSize(this.refs.canvasContainer.offsetWidth, this.refs.canvasContainer.offsetWidth);
     camera.position.z = 11000;
 
-    let altitude = false;
-    let earth = false;
-
-    fetch(new Request(`/api/elevation-dump/${bounds.join("/")}`)).then((r) => r.json()).then((resp) => {
-      altitude = resp;
-      renderMap()
-    })
-
-    fetch(new Request(`/api/terrain/${view.center.join("/")}/${view.zoom}`)).then((r) => r.json()).then((resp) => {
-      earth = resp;
-      renderMap()
-    })
-
-    const renderMap = function() {
-      if (!earth || !altitude) return;
-
-      let vertices = altitude.vertices;
-      const texture = new TextureLoader().load(earth.url)
-      const geometry = new PlaneGeometry(10240, 10240, altitude.height - 1, altitude.length - 1);
-      const material = new MeshBasicMaterial({map: texture});
-      const plane = new Mesh(geometry, material);
-
-      plane.geometry.vertices.map((v,i) => {
-        let z = vertices[i];
-        if (z == null || z == NaN || z == undefined) {
-          z = vertices[i - 1] || vertices[i + 1] || vertices[i - altitude.height] || vertices[i + altitude.height];
-        };
-        return Object.assign(v, {z: z})
-      });
-
-      plane.rotation.x = 5.7;
-      scene.add(plane);
-
-      function render() {
-        requestAnimationFrame(render);
-        renderer.render(scene, camera);
-
-      }
-      render()
+    this.renderTerrain = function() {
+      requestAnimationFrame(this.renderTerrain);
+      renderer.render(this.scene, camera);
     }.bind(this)
+  }
+
+  componentDidUpdate(prevProps) {
+    this.view = GeoViewport.viewport(_.flatten(this.props.trail.bounds), [1024, 1024], 1, 17);
+    this.bounds = GeoViewport.bounds(this.view.center, this.view.zoom, [1024, 1024]);
+
+    if (this.props.trail.hasBaseData && this.props.trail.id !== prevProps.trail.id) {
+      this.getAltitude();
+      this.getEarth();
+    }
   }
 
   render() {
