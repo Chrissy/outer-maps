@@ -17,13 +17,22 @@ export default class Terrain extends React.Component {
     renderer.setSize(this.refs.canvasContainer.offsetWidth, this.refs.canvasContainer.offsetWidth);
     camera.position.z = 11000;
 
-    fetch(new Request(`/api/elevation-dump/${bounds.join("/")}`)).then((r) => r.json()).then((altitude) => {
-      fetch(new Request(`/api/terrain/${view.center.join("/")}/${view.zoom}`)).then((r) => r.json()).then((earth) => {
-        renderMap(altitude, earth)
-      })
+    let altitude = false;
+    let earth = false;
+
+    fetch(new Request(`/api/elevation-dump/${bounds.join("/")}`)).then((r) => r.json()).then((resp) => {
+      altitude = resp;
+      renderMap()
     })
 
-    const renderMap = function(altitude, earth) {
+    fetch(new Request(`/api/terrain/${view.center.join("/")}/${view.zoom}`)).then((r) => r.json()).then((resp) => {
+      earth = resp;
+      renderMap()
+    })
+
+    const renderMap = function() {
+      if (!earth || !altitude) return;
+
       let vertices = altitude.vertices;
       const texture = new TextureLoader().load(earth.url)
       const geometry = new PlaneGeometry(10240, 10240, altitude.height - 1, altitude.length - 1);
