@@ -119,46 +119,35 @@ app.get('/api/boundaries/:id', function(request, response) {
 })
 
 app.get('/api/elevation/:id', function(request, response){
-  const query = `
-    select ST_AsGeoJson(ST_LineMerge(geog::geometry)) as geog
-    FROM trails
-    WHERE id = ${request.params.id}
-  `
-
   pool.connect(function(err, client, done){
+    if (err) throw err;
+
+    const geoJson = JSON.parse(result.rows[0].geog);
+
+    const query = `
+      WITH trail AS (
+          SELECT ST_LineMerge(geog::geometry) AS path
+          FROM trails
+          WHERE id = ${request.params.id}
+        ),
+        points AS (
+          SELECT (ST_DumpPoints(path)).geom AS point
+          FROM trail
+        ), raster AS (
+          SELECT ST_Union(rast) AS rast FROM elevation
+          CROSS JOIN trail
+          WHERE ST_Intersects(rast, path)
+        )
+      SELECT
+        ST_Value(rast, point) as elevation
+      FROM raster
+      CROSS JOIN points
+    `;
+
     client.query(query, function(err, result){
       if (err) throw err;
-
-      const geoJson = JSON.parse(result.rows[0].geog);
-
-      const query = `
-        WITH trail AS (
-            SELECT ST_LineMerge(geog::geometry) AS path
-            FROM trails
-            WHERE id = ${request.params.id}
-          ),
-          points AS (
-            SELECT (ST_DumpPoints(ST_LineMerge(geog::geometry))).geom AS point
-            FROM trails
-            WHERE id = ${request.params.id}
-          ), raster AS (
-            SELECT ST_Union(rast) AS rast FROM elevation
-            CROSS JOIN trail
-            WHERE ST_Intersects(rast, path)
-          )
-        SELECT
-          ST_Value(rast, point) as elevation
-        FROM raster
-        CROSS JOIN points
-      `;
-
-      console.log(query)
-
-      client.query(query, function(err, result){
-        if (err) throw err;
-        done();
-        response.json(result.rows.map(r => r.elevation));
-      });
+      done();
+      response.json(result.rows.map(r => r.elevation));
     });
   });
 });
