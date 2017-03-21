@@ -152,7 +152,7 @@ app.get('/api/boundaries/:x1/:y1/:x2/:y2', function(request, response) {
 });
 
 app.get('/api/elevation-dump/:x1/:y1/:x2/:y2', function(request, response){
-  const cachedPath = path(__dirname + `/cache/elevation/elevation&${request.params.x1}&${request.params.y1}&${request.params.x2}&${request.params.y2}.json`);
+  const cachedPath = path(__dirname + `/cache/elevation/elevation-${request.params.x1}-${request.params.y1}-${request.params.x2}-${request.params.y2}.json`);
 
   if (fs.existsSync(cachedPath)) return response.json(JSON.parse(fs.readFileSync(cachedPath)));
 
@@ -178,7 +178,7 @@ app.get('/api/elevation-dump/:x1/:y1/:x2/:y2', function(request, response){
 });
 
 app.get('/api/terrain/:x/:y/:zoom', function(request, response){
-  const cachedImagePath = path(__dirname + `/cache/terrain/terrain&${request.params.x}&${request.params.y}&${request.params.zoom}.jpg`);
+  const cachedImagePath = path(__dirname + `/cache/terrain/terrain-${request.params.x}-${request.params.y}-${request.params.zoom}.jpg`);
 
   if (fs.existsSync(cachedImagePath)) return response.end(fs.readFileSync(cachedImagePath), 'binary');
 
