@@ -33,10 +33,13 @@ migrations/.migrate
 
 # Dependency directories
 node_modules
-cache
 jspm_packages
 lib
 public/static
+
+# Cache
+cache/elevation/*
+cache/terrain/*
 
 # Optional npm cache directory
 .npm
