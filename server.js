@@ -179,7 +179,6 @@ app.get('/api/elevation-dump/:x1/:y1/:x2/:y2', function(request, response){
     client.query(query, function(err, result){
       done();
       if (err) throw err;
-      console.log(result)
       const vertices = result.rows[0].to_json.valarray
       response.json({length: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices)});
     });
