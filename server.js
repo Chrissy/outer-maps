@@ -152,7 +152,7 @@ app.get('/api/boundaries/:x1/:y1/:x2/:y2', function(request, response) {
 });
 
 app.get('/api/elevation-dump/:x1/:y1/:x2/:y2', function(request, response){
-  const cachedPath = path(__dirname + `/cache/elevation/elevation-${request.params.x1}-${request.params.y1}-${request.params.x2}-${request.params.y2}.json`);
+  const cachedPath = path(__dirname + `/public/cache/elevation/elevation-${request.params.x1}-${request.params.y1}-${request.params.x2}-${request.params.y2}.json`);
 
   if (fs.existsSync(cachedPath)) return response.json(JSON.parse(fs.readFileSync(cachedPath)));
 
@@ -178,22 +178,20 @@ app.get('/api/elevation-dump/:x1/:y1/:x2/:y2', function(request, response){
 });
 
 app.get('/api/terrain/:x/:y/:zoom', function(request, response){
-  const cachedImagePath = path(__dirname + `/cache/terrain/terrain-${request.params.x}-${request.params.y}-${request.params.zoom}.jpg`);
+  const params = request.params;
+  const cachedImagePath = `/cache/terrain/terrain-${params.x}-${params.y}-${params.zoom}.jpg`;
+  const localImagePath = path(`${__dirname}/public/${cachedImagePath}`);
 
-  if (fs.existsSync(cachedImagePath)) return response.end(fs.readFileSync(cachedImagePath), 'binary');
+  if (fs.existsSync(localImagePath)) return response.json({url: cachedImagePath});
 
-  const requestPath = `/v4/mapbox.satellite/${request.params.x},${request.params.y},${request.params.zoom}/1024x1024.jpg?access_token=${accessToken}`;
-
-  return http.get({
+  http.get({
     host: 'api.mapbox.com',
-    path: requestPath
+    path: `/v4/mapbox.satellite/${params.x},${params.y},${params.zoom}/1024x1024.jpg?access_token=${accessToken}`
   }, function(r){
     let body = [];
     r.on('data', (chunk) => body.push(chunk)).on('end', () => {
-      var buff = Buffer.concat(body);
-      fs.writeFileSync(cachedImagePath, buff);
-      response.writeHead(200, {'Content-Type': 'image/jpg' });
-      response.end(buff, 'binary');
+      fs.writeFileSync(localImagePath, Buffer.concat(body));
+      response.json({url: cachedImagePath})
     })
   })
 });

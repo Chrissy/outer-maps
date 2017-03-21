@@ -38,8 +38,8 @@ lib
 public/static
 
 # Cache
-cache/elevation/*
-cache/terrain/*
+public/cache/elevation/*
+public/cache/terrain/*
 
 # Optional npm cache directory
 .npm
