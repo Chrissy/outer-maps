@@ -1,4 +1,6 @@
 const http = require('http');
+const fs = require('fs');
+const path = require('path').normalize;
 const pg = require('pg');
 const express = require('express');
 const browserify = require('browserify-middleware');
@@ -6,8 +8,11 @@ const geoViewport = require('geo-viewport');
 const polyline = require('polyline');
 const app = express();
 const _ = require('underscore');
+const GeoViewport = require('geo-viewport');
 const env = require('./environment/development');
 const geoJson = require('./modules/geoJson.js');
+const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
+
 
 app.use(express.static('public'));
 
@@ -26,25 +31,6 @@ var pool = new pg.Pool({
   idleTimeoutMillis: 3000,
   user: env.dbUser
 });
-
-app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
-
-  const query = `
-    SELECT id, ST_AsGeoJson(geog) AS geog
-    FROM trails
-    WHERE ST_Intersects(geog,
-      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
-    )
-  `
-
-  pool.connect(function(err, client, done){
-    client.query(query, function(err, result){
-      done();
-      if (err) throw err;
-      response.json(geoJson.make(result));
-    })
-  })
-})
 
 const getTrail = function(id, callback) {
   let query = `
@@ -184,6 +170,46 @@ app.get('/api/elevation-dump/:x1/:y1/:x2/:y2', function(request, response){
     });
   });
 });
+
+app.get('/api/terrain/:x/:y/:zoom', function(request, response){
+  const cachedImagePath = path(__dirname + `/cache/terrain/terrain${request.params.x}-${request.params.y}-${request.params.zoom}.jpg`);
+
+  if (fs.existsSync(cachedImagePath)) return response.end(fs.readFileSync(cachedImagePath), 'binary');
+
+  const requestPath = `/v4/mapbox.satellite/${request.params.x},${request.params.y},${request.params.zoom}/1024x1024.jpg?access_token=${accessToken}`;
+
+  return http.get({
+    host: 'api.mapbox.com',
+    path: requestPath
+  }, function(r){
+    let body = [];
+    r.on('data', (chunk) => body.push(chunk)).on('end', () => {
+      var buff = Buffer.concat(body);
+      fs.writeFileSync(cachedImagePath, buff);
+      response.writeHead(200, {'Content-Type': 'image/jpg' });
+      response.end(buff, 'binary');
+    })
+  })
+});
+
+app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
+
+  const query = `
+    SELECT id, ST_AsGeoJson(geog) AS geog
+    FROM trails
+    WHERE ST_Intersects(geog,
+      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
+    )
+  `
+
+  pool.connect(function(err, client, done){
+    client.query(query, function(err, result){
+      done();
+      if (err) throw err;
+      response.json(geoJson.make(result));
+    })
+  })
+})
 
 app.listen(5000, function () {
   console.log('listening on port 5000');

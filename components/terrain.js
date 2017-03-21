@@ -2,7 +2,6 @@ import React from 'react';
 import {WebGLRenderer, Scene, PerspectiveCamera, TextureLoader, PlaneGeometry, MeshBasicMaterial, Mesh} from 'three';
 import GeoViewport from 'geo-viewport';
 import _ from 'underscore';
-import {accessToken} from '../modules/mapboxStaticData';
 
 
 export default class Terrain extends React.Component {
@@ -13,14 +12,13 @@ export default class Terrain extends React.Component {
     const renderer = new WebGLRenderer({alpha:true, canvas: this.refs.canvas});
     const view = GeoViewport.viewport(_.flatten(this.props.trail.bounds), [1024, 1024], 1, 17);
     const bounds = GeoViewport.bounds(view.center, view.zoom, [1024, 1024]);
-    const path = `http://api.mapbox.com/v4/mapbox.satellite/${view.center.join(",")},${view.zoom}/1024x1024.jpg?access_token=${accessToken}`;
 
     renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
     renderer.setSize(this.refs.canvasContainer.offsetWidth, this.refs.canvasContainer.offsetWidth);
     camera.position.z = 11000;
 
     fetch(new Request(`/api/elevation-dump/${bounds.join("/")}`)).then((r) => r.json()).then((altitude) => {
-      fetch(new Request(path)).then((r) => r.blob()).then((earth) => {
+      fetch(new Request(`/api/terrain/${view.center.join("/")}/${view.zoom}`)).then((r) => r.blob()).then((earth) => {
         renderMap(altitude, earth)
       })
     })
