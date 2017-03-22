@@ -23,10 +23,15 @@ exports.boxToBounds = (boxShape) => {
 
 exports.makePoints = (pointsAsArray) => {
   const pointToFeature = function(point) {
-    return {type: "Feature",
+    return {
+      type: "Feature",
+      properties: {
+        id: point.id,
+        trailId: point.trailId
+      },
       geometry: {
-          type: "Point",
-          coordinates: point.coordinates
+        type: "Point",
+        coordinates: point.coordinates,
     }}
   }
 

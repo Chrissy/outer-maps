@@ -16,8 +16,10 @@ const trail = (state = {}, action) => {
         bounds: action.trail.bounds,
         geog: action.trail.geography,
         surface: action.trail.surface,
-        points: action.trail.geography.coordinates.map((coordinates) => point(undefined, {...action,
-          coordinates: coordinates
+        points: action.trail.geography.coordinates.map((coordinates, index) => point(undefined, {...action,
+          coordinates: coordinates,
+          id: state.id,
+          index: index
         }))
       }
     case 'TOGGLE_TRAIL_PREVIEWING':
@@ -84,7 +86,9 @@ const point = (state = {}, action) => {
   switch (action.type) {
     case 'SET_TRAIL_BASE_DATA':
       return {
-        coordinates: action.coordinates
+        coordinates: action.coordinates,
+        id: action.id.toString() + action.index,
+        trailId: action.id
       }
     case 'SET_ELEVATION_DATA':
       return {...state,

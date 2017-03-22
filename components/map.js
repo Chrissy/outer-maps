@@ -12,9 +12,17 @@ export default class Map extends React.Component {
     } else if (this.props.previewTrails.length || this.props.previewBoundary.length) {
       this.props.onFeatureMouseOut();
     }
+
+    if (this.draggingPoint) {
+      this.draggingPoint = Object.assign(this.draggingPoint, {
+        coordinates: [event.lngLat.lng, event.lngLat.lat]
+      });
+    }
   }
 
   onMapClick(event) {
+    if (this.draggingPoint) return;
+
     if (event.features.length) {
       this.props.onFeatureClick(event.features[0].properties.id, event.features[0].layer.id);
     } else if (this.props.selectedTrails.length || this.props.selectedBoundary.length) {
@@ -34,6 +42,7 @@ export default class Map extends React.Component {
       viewBox: event.bounds,
       zoom: event.zoom
     });
+
     this.props.addSource({
       id: 'boundaries-data',
       endpoint: '/boundaries',
@@ -41,6 +50,18 @@ export default class Map extends React.Component {
       viewBox: event.bounds,
       zoom: event.zoom
     });
+  }
+
+  onMapMouseDown(event) {
+    const firstHandle = event.features.find(f => f.layer.id == "handles");
+    if (!event.features.length || !firstHandle) return;
+    event.target.dragPan.disable();
+    this.draggingPoint = this.handles().find(h => h.id == firstHandle.properties.id && h.firstHandle == firstHandle.properties.firstHandle);
+  }
+
+  onMapMouseUp(event) {
+    this.draggingPoint = null;
+    event.target.dragPan.enable()
   }
 
   activeTrailIds() {
@@ -54,7 +75,11 @@ export default class Map extends React.Component {
   handles() {
     const firstPoints = this.props.selectedTrails.map(s => s.points[0]);
     const lastPoints = this.props.selectedTrails.map(s => s.points[s.points.length - 1])
-    return firstPoints.concat(lastPoints);
+    let collectivePoints = firstPoints.concat(lastPoints);
+    if (this.draggingPoint) {
+      collectivePoints = collectivePoints.filter(p => !(p.id == this.draggingPoint.id)).concat(this.draggingPoint);
+    }
+    return collectivePoints;
   }
 
   render() {
@@ -70,6 +95,8 @@ export default class Map extends React.Component {
           onClick={this.onMapClick.bind(this)}
           onLoad={this.onMapLoad.bind(this)}
           onMouseMove={this.onMapMouseMove.bind(this)}
+          onMouseUp={this.onMapMouseUp.bind(this)}
+          onMouseDown={this.onMapMouseDown.bind(this)}
           handles={this.handles()}
           onDrag={this.onMapDrag.bind(this)}/>
           <TooltipContainer/>

@@ -41,11 +41,23 @@ export default class MapBox extends React.PureComponent {
   }
 
   handleMouseMove(event) {
-    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'boundaries'] });
+    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'boundaries', 'handles'] });
 
     this.props.onMouseMove(Object.assign({}, event, {
+      features: features
+    }));
+  }
+
+  handleMouseDown(event) {
+    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'boundaries', 'handles'] });
+
+    this.props.onMouseDown(Object.assign({}, event, {
       features: features,
     }));
+  }
+
+  handleMouseUp(event) {
+    this.props.onMouseUp(event);
   }
 
   handleClick(event) {
@@ -98,6 +110,7 @@ export default class MapBox extends React.PureComponent {
     });
 
     this.mapEvents();
+
     this.mapboxed.addControl(new MapboxGL.Navigation());
   }
 
@@ -127,6 +140,8 @@ export default class MapBox extends React.PureComponent {
       'handleDrag': 'moveend',
       'handleMouseMove': 'mousemove',
       'handleClick': 'click',
+      'handleMouseDown': 'mousedown',
+      'handleMouseUp': 'mouseup',
     }
 
     Object.keys(watchEvents).forEach(function(functionName){
