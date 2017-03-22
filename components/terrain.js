@@ -6,14 +6,14 @@ import _ from 'underscore';
 
 export default class Terrain extends React.Component {
 
-  getAltitude() {
+  drawAltitude() {
     fetch(new Request(`/api/elevation-dump/${this.bounds.join("/")}`)).then((r) => r.json()).then(function(resp) {
       this.altitude = resp;
       this.drawMap();
     }.bind(this));
   }
 
-  getEarth() {
+  drawEarth() {
     fetch(new Request(`/api/terrain/${this.view.center.join("/")}/${this.view.zoom}`)).then((r) => r.json()).then(function(resp) {
       this.earth = resp;
       this.drawMap();
@@ -24,6 +24,7 @@ export default class Terrain extends React.Component {
     if (!this.earth || !this.altitude) return;
 
     let vertices = this.altitude.vertices;
+
     const texture = new TextureLoader().load(this.earth.url)
     const geometry = new PlaneGeometry(10240, 10240, this.altitude.height - 1, this.altitude.length - 1);
     const material = new MeshBasicMaterial({map: texture});
@@ -38,12 +39,20 @@ export default class Terrain extends React.Component {
     });
 
     plane.rotation.x = 5.7;
-    this.scene.add(plane);
 
-    this.renderTerrain()
+    this.scene.add(plane);
   }
 
-  componentDidMount() {
+  clearMap() {
+    this.earth = null;
+    this.altitude = null;
+
+    this.scene.children.forEach(function(object) {
+      this.scene.remove(object);
+    }.bind(this));
+  }
+
+  initializeCanvas() {
     this.scene = new Scene();
     const camera = new PerspectiveCamera(60, 1000 / 1200, 1, 100000);
     const renderer = new WebGLRenderer({alpha:true, canvas: this.refs.canvas});
@@ -55,17 +64,24 @@ export default class Terrain extends React.Component {
     this.renderTerrain = function() {
       requestAnimationFrame(this.renderTerrain);
       renderer.render(this.scene, camera);
-    }.bind(this)
+    }.bind(this);
+
+    this.renderTerrain();
+
+    this.initialized = true;
   }
 
   componentDidUpdate(prevProps) {
-    this.view = GeoViewport.viewport(_.flatten(this.props.trail.bounds), [1024, 1024], 1, 17);
-    this.bounds = GeoViewport.bounds(this.view.center, this.view.zoom, [1024, 1024]);
+    if (this.props.trail.id !== prevProps.trail.id && this.props.trail.hasBaseData) {
+      this.view = GeoViewport.viewport(_.flatten(this.props.trail.bounds), [1024, 1024], 1, 17);
+      this.bounds = GeoViewport.bounds(this.view.center, this.view.zoom, [1024, 1024]);
 
-    if (this.props.trail.hasBaseData && this.props.trail.id !== prevProps.trail.id) {
-      this.getAltitude();
-      this.getEarth();
-    }
+      if (!this.initialized) this.initializeCanvas();
+
+      this.clearMap()
+      this.drawAltitude();
+      this.drawEarth();
+    };
   }
 
   render() {
