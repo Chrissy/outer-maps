@@ -3,9 +3,19 @@ export const mapBoxLayers = [
     'id': 'handles',
     'source': 'handles',
     'type': 'circle',
-    "paint": {
-      "circle-radius": 7,
+    'paint': {
+      "circle-radius": 4,
       "circle-color": "#FF9100"
+    }
+  },
+  {
+    'id': 'handles-outline',
+    'source': 'handles',
+    'type': 'circle',
+    'before': 'handles',
+    'paint': {
+      "circle-radius": 6,
+      "circle-color": "#FFF"
     }
   },
   {
@@ -21,6 +31,7 @@ export const mapBoxLayers = [
     'id': 'trails-active',
     'source': 'trails-data',
     'type': 'line',
+    'before': 'handles-outline',
     'filter': ["==", "id", 0],
     'paint': {
       'line-color': '#FF9100',
