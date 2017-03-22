@@ -6,7 +6,7 @@ export default class TrailTooltip extends React.Component {
     return (
       <span>
         name: {convertToTitleCase(this.props.trail.name)}<br/>
-        distance: {metersToMiles(this.props.trail.distance)} Miles
+        distance: {metersToMiles(this.props.trail.distance)} Miles<br/>
         id: {this.props.trail.id}
       </span>
     )

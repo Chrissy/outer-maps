@@ -4,7 +4,6 @@ const path = require('path').normalize;
 const pg = require('pg');
 const express = require('express');
 const browserify = require('browserify-middleware');
-const polyline = require('polyline');
 const app = express();
 const _ = require('underscore');
 const env = require('./environment/development');
