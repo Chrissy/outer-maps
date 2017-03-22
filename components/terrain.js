@@ -1,5 +1,5 @@
 import React from 'react';
-import {WebGLRenderer, Scene, PerspectiveCamera, TextureLoader, PlaneGeometry, MeshBasicMaterial, Mesh} from 'three';
+import {WebGLRenderer, Scene, PerspectiveCamera, TextureLoader, PlaneGeometry, MeshBasicMaterial, Mesh, DefaultLoadingManager} from 'three';
 import GeoViewport from 'geo-viewport';
 import _ from 'underscore';
 
@@ -50,10 +50,12 @@ export default class Terrain extends React.Component {
     this.scene.children.forEach(function(object) {
       this.scene.remove(object);
     }.bind(this));
+
+    this.renderMap();
   }
 
   initializeCanvas() {
-    this.scene = new Scene();
+    this.scene = new Scene({autoUpdate: false});
     const camera = new PerspectiveCamera(60, 1000 / 1200, 1, 100000);
     const renderer = new WebGLRenderer({alpha:true, canvas: this.refs.canvas});
 
@@ -61,12 +63,13 @@ export default class Terrain extends React.Component {
     renderer.setSize(this.refs.canvasContainer.offsetWidth, this.refs.canvasContainer.offsetWidth);
     camera.position.z = 11000;
 
-    this.renderTerrain = function() {
-      requestAnimationFrame(this.renderTerrain);
+    this.renderMap = function() {
       renderer.render(this.scene, camera);
-    }.bind(this);
+    }
 
-    this.renderTerrain();
+    DefaultLoadingManager.onLoad = function() {
+      this.renderMap();
+    }.bind(this);
 
     this.initialized = true;
   }
