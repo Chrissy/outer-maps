@@ -1,3 +1,4 @@
+._components_spacing__top_margin { margin-top: 1em; }
 ._components_mapSidebar__body {
   position: absolute;
   height: calc(100% - 2em);
@@ -38,4 +39,3 @@
 }
 
 ._components_mapSidebar__hidden { opacity: 0; }
-._components_spacing__top_margin { margin-top: 1em; }

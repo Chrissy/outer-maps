@@ -1,5 +1,6 @@
 import React, { Proptypes } from 'react';
 import MapboxGL from 'mapbox-gl';
+import geoJson from '../modules/geoJson';
 import {accessToken, styleUrl} from '../modules/mapBoxStaticData';
 
 export default class MapBox extends React.PureComponent {
@@ -9,16 +10,20 @@ export default class MapBox extends React.PureComponent {
     const removedSources = oldSources.filter(s => !newSources.map(n => n.id).includes(s.id));
     const addedSources = newSources.filter(s => !oldSources.map(n => n.id).includes(s.id));
 
-    changedSources.concat(removedSources).forEach(function(source){
+    removedSources.forEach(function(source){
       this.mapboxed.removeSource(source.id);
     }.bind(this));
 
-    changedSources.concat(addedSources).forEach(function(source){
+    addedSources.forEach(function(source){
       this.mapboxed.addSource(source.id, {
         data: source.data,
         type: "geojson"
       });
     }.bind(this));
+
+    changedSources.forEach(function(source){
+      this.mapboxed.getSource(source.id).setData(source.data);
+    }.bind(this))
 
 
     this.updateLayers()
@@ -27,7 +32,7 @@ export default class MapBox extends React.PureComponent {
   updateLayers() {
     this.props.layers.forEach(function(layer){
       if (!this.mapboxed.getLayer(layer.id) && this.mapboxed.getSource(layer.source)){
-        this.mapboxed.addLayer(layer);
+        this.mapboxed.addLayer(layer, layer.before);
       }
       if (this.mapboxed.getLayer(layer.id) && !this.mapboxed.getSource(layer.source)){
         this.mapboxed.removeLayer(layer.id);
@@ -71,6 +76,17 @@ export default class MapBox extends React.PureComponent {
     }));
   }
 
+  updateHandles() {
+    if (!this.mapboxed.getLayer("handles") && !this.mapboxed.getSource("handles")) {
+      this.mapboxed.addSource("handles", {
+        data: geoJson.makePoints(this.props.handles),
+        type: "geojson"
+      });
+    } else if (this.mapboxed.getLayer("handles") && this.mapboxed.getSource("handles")) {
+      this.mapboxed.getSource("handles").setData(geoJson.makePoints(this.props.handles));
+    }
+  }
+
   componentDidMount() {
     MapboxGL.accessToken = accessToken;
 
@@ -87,6 +103,7 @@ export default class MapBox extends React.PureComponent {
 
   componentDidUpdate(prevProps, q) {
     this.updateSources(prevProps.sources, this.props.sources);
+    this.updateHandles()
 
     if (this.mapboxed.getSource('trails-data') && this.mapboxed.getLayer('trails-active')) {
       this.mapboxed.setFilter("trails-active", ["in", "id", ...this.props.activeTrailIDs.map(t => parseInt(t))]);

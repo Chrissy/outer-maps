@@ -51,6 +51,12 @@ export default class Map extends React.Component {
     return [this.props.previewBoundary.id, this.props.selectedBoundary.id];
   }
 
+  handles() {
+    const firstPoints = this.props.selectedTrails.map(s => s.points[0]);
+    const lastPoints = this.props.selectedTrails.map(s => s.points[s.points.length - 1])
+    return firstPoints.concat(lastPoints);
+  }
+
   render() {
     return (
         <div id="the-map">
@@ -64,6 +70,7 @@ export default class Map extends React.Component {
           onClick={this.onMapClick.bind(this)}
           onLoad={this.onMapLoad.bind(this)}
           onMouseMove={this.onMapMouseMove.bind(this)}
+          handles={this.handles()}
           onDrag={this.onMapDrag.bind(this)}/>
           <TooltipContainer/>
           <MapSidebarContainer/>

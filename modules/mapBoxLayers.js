@@ -1,30 +1,20 @@
 export const mapBoxLayers = [
   {
+    'id': 'handles',
+    'source': 'handles',
+    'type': 'circle',
+    "paint": {
+      "circle-radius": 7,
+      "circle-color": "#FF9100"
+    }
+  },
+  {
     'id': 'trails',
     'source': 'trails-data',
     'type': 'line',
     'paint': {
       'line-color': 'transparent',
       'line-width': 15
-    }
-  },
-  {
-    'id': 'trails-outline',
-    'source': 'trails-data',
-    'type': 'line',
-    'paint': {
-      'line-color': '#fff',
-      'line-width': 4,
-      'line-opacity': 0.3
-    }
-  },
-  {
-    'id': 'trails-core-line',
-    'source': 'trails-data',
-    'type': 'line',
-    'paint': {
-      'line-color': '#0DB224',
-      'line-width': 2
     }
   },
   {
@@ -38,17 +28,31 @@ export const mapBoxLayers = [
     }
   },
   {
-    'id': 'boundaries',
-    'source': 'boundaries-data',
-    'type': 'fill',
+    'id': 'trails-core-line',
+    'source': 'trails-data',
+    'type': 'line',
+    'before': 'water',
     'paint': {
-      'fill-color': 'rgba(0, 0, 0, 0%)'
+      'line-color': '#0DB224',
+      'line-width': 2
+    }
+  },
+  {
+    'id': 'trails-outline',
+    'source': 'trails-data',
+    'type': 'line',
+    'before': 'trails-core-line',
+    'paint': {
+      'line-color': '#fff',
+      'line-width': 4,
+      'line-opacity': 0.3
     }
   },
   {
     'id': 'boundaries-active-outline',
     'source': 'boundaries-data',
     'type': 'line',
+    'before': 'water',
     'filter': ["==", "id", 0],
     'layout': {
       'line-join': 'round'
@@ -63,10 +67,20 @@ export const mapBoxLayers = [
     'id': 'boundaries-active',
     'source': 'boundaries-data',
     'type': 'fill',
+    'before': 'water',
     'filter': ["==", "id", 0],
     'paint': {
       'fill-color': 'hsl(119, 77%, 70%)',
       'fill-opacity': 0.2
     }
-  }
+  },
+  {
+    'id': 'boundaries',
+    'source': 'boundaries-data',
+    'before': 'water',
+    'type': 'fill',
+    'paint': {
+      'fill-color': 'rgba(0, 0, 0, 0%)'
+    }
+  },
 ]

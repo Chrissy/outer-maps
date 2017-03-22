@@ -20,3 +20,18 @@ exports.boxToBounds = (boxShape) => {
   const yPoints = boxShape.coordinates[0].map(b => b[1]);
   return [[Math.min(...xPoints), Math.min(...yPoints)], [Math.max(...xPoints), Math.max(...yPoints)]]
 }
+
+exports.makePoints = (pointsAsArray) => {
+  const pointToFeature = function(point) {
+    return {type: "Feature",
+      geometry: {
+          type: "Point",
+          coordinates: point.coordinates
+    }}
+  }
+
+  return {
+   type: "FeatureCollection",
+   features: pointsAsArray.map(p => pointToFeature(p))
+  }
+}

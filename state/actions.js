@@ -116,12 +116,6 @@ export function addSource(source){
   };
 };
 
-export function updateView(viewBox, zoom) {
-  return dispatch => {
-    return dispatch({type: 'UPDATE_VIEW', viewBox, zoom});
-  };
-};
-
 export function clearPreviewing() {
   return dispatch => {
     dispatch({type: 'CLEAR_TRAIL_PREVIEWING'});
