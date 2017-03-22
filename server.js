@@ -4,11 +4,9 @@ const path = require('path').normalize;
 const pg = require('pg');
 const express = require('express');
 const browserify = require('browserify-middleware');
-const geoViewport = require('geo-viewport');
 const polyline = require('polyline');
 const app = express();
 const _ = require('underscore');
-const GeoViewport = require('geo-viewport');
 const env = require('./environment/development');
 const geoJson = require('./modules/geoJson.js');
 const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
@@ -32,7 +30,7 @@ var pool = new pg.Pool({
   user: env.dbUser
 });
 
-const getTrail = function(id, callback) {
+app.get('/api/trails/:id', function(request, response) {
   let query = `
     SELECT
       name,
@@ -42,7 +40,7 @@ const getTrail = function(id, callback) {
       ST_AsGeoJson(ST_Centroid(geog::geometry)) as center,
       ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds
     FROM trails
-    WHERE id = ${id}
+    WHERE id = ${request.params.id}
     LIMIT 1
   `
 
@@ -53,22 +51,16 @@ const getTrail = function(id, callback) {
       if (err) throw err;
 
       let r = result.rows[0]
-      callback(Object.assign(result.rows[0], {bounds: geoJson.boxToBounds(JSON.parse(r.bounds))}));
+      response.json({
+        "name": r.name,
+        "id": request.params.id,
+        "surface": r.surface,
+        "geography": JSON.parse(r.geog),
+        "distance": r.distance,
+        "center": JSON.parse(r.center).coordinates,
+        "bounds": geoJson.boxToBounds(JSON.parse(r.bounds))
+      });
     })
-  })
-}
-
-app.get('/api/trails/:id', function(request, response) {
-  getTrail(request.params.id, function(r){
-    response.json({
-      "name": r.name,
-      "id": request.params.id,
-      "surface": r.surface,
-      "geography": JSON.parse(r.geog),
-      "distance": r.distance,
-      "center": JSON.parse(r.center).coordinates,
-      "bounds": [[r.bounds[0],r.bounds[1]], [r.bounds[2], r.bounds[3]]]
-    });
   })
 })
 
