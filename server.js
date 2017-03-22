@@ -178,7 +178,7 @@ app.get('/api/terrain/:x/:y/:zoom', function(request, response){
 
   http.get({
     host: 'api.mapbox.com',
-    path: `/v4/mapbox.satellite/${params.x},${params.y},${params.zoom}/1024x1024.jpg?access_token=${accessToken}`
+    path: `/v4/mapbox.satellite/${params.x},${params.y},${params.zoom}/1024x1024.jpg70?access_token=${accessToken}`
   }, function(r){
     let body = [];
     r.on('data', (chunk) => body.push(chunk)).on('end', () => {
