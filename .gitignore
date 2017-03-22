@@ -37,6 +37,10 @@ jspm_packages
 lib
 public/static
 
+# Cache
+public/cache/elevation/*.json
+public/cache/terrain/*.jpg
+
 # Optional npm cache directory
 .npm
 

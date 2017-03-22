@@ -11,12 +11,14 @@
     "browserify-middleware": "^7.1.0",
     "classnames": "^2.2.5",
     "express": "^4.14.0",
+    "geo-viewport": "^0.2.1",
     "geolib": "^2.0.21",
     "isomorphic-fetch": "^2.2.1",
     "pg": "^6.0.1",
     "react-redux": "^5.0.2",
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
+    "three": "^0.84.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

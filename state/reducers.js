@@ -9,13 +9,14 @@ const trail = (state = {}, action) => {
     case 'SET_TRAIL_BASE_DATA':
       if (parseInt(action.trail.id) !== state.id) return state
       return {...state,
+        hasBaseData: true,
         name: action.trail.name,
         distance: action.trail.distance,
         center: action.trail.center,
-        distance: action.trail.distance,
+        bounds: action.trail.bounds,
         geog: action.trail.geography,
         surface: action.trail.surface,
-        points: _.flatten(action.trail.geography.coordinates, 1).map((coordinates) => point(undefined, {...action,
+        points: action.trail.geography.coordinates.map((coordinates) => point(undefined, {...action,
           coordinates: coordinates
         }))
       }
