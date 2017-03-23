@@ -1,15 +1,19 @@
 import React, { Proptypes } from 'react';
+import Geolib from 'geolib';
 import TooltipContainer from './tooltipContainer';
 import MapBox from './mapBox';
 import MapSidebarContainer from './mapSidebarContainer';
 import {mapBoxLayers} from '../modules/mapBoxLayers';
+import {coordsArrayToGeoLibObject} from '../modules/conversions';
 
 export default class Map extends React.Component {
 
   onMapMouseMove(event) {
     if (this.draggingPoint) {
       event.target.dragPan.disable();
-      this.props.updateHandle(this.draggingPoint.properties.id, [event.lngLat.lng, event.lngLat.lat]);
+      let trail = this.props.selectedTrails.find(t => t.id == this.draggingPoint.properties.trailId);
+      let snapToPoint = Geolib.findNearest(coordsArrayToGeoLibObject([event.lngLat.lng, event.lngLat.lat]), trail.points.map(p => coordsArrayToGeoLibObject(p.coordinates)));
+      this.props.updateHandle(this.draggingPoint.properties.id, trail.points[snapToPoint.key].coordinates);
     } else {
       if (event.features.length && event.features[0].layer.id !== 'handles') {
         this.props.onFeatureMouseIn(event.features[0].properties.id, event.features[0].layer.id);
