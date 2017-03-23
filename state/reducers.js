@@ -56,6 +56,23 @@ const trail = (state = {}, action) => {
         chanceOfSnowPack: action.chanceOfSnowPack,
         chanceOfHeavySnowPack: action.chanceOfHeavySnowPack
       }
+    case 'SET_HANDLES':
+      if (state.id !== action.id) return state;
+      return { ...state,
+        handles: [
+          state.points[0],
+          state.points[state.points.length - 1]
+        ]
+      }
+    case 'UPDATE_HANDLE':
+      if (!state.handles) return state;
+      return {...state,
+        handles: state.handles.map(p => point(p, action)),
+      }
+    case 'CLEAR_HANDLES':
+        return { ...state,
+        handles: []
+      }
     default: return state
   }
 }
@@ -78,9 +95,16 @@ const trails = (state = [], action) => {
       return state.map(t => trail(t, action))
     case 'SET_WEATHER_DATA':
       return state.map(t => trail(t, action))
+    case 'SET_HANDLES':
+      return state.map(t => trail(t, action))
+    case 'CLEAR_HANDLES':
+      return state.map(t => trail(t, action))
+    case 'UPDATE_HANDLE':
+      return state.map(t => trail(t, action))
     default: return state
   }
 }
+
 
 const point = (state = {}, action) => {
   switch (action.type) {
@@ -96,6 +120,11 @@ const point = (state = {}, action) => {
         elevationGain: Math.max(action.elevation - action.pElevation, 0) || 0,
         elevationLoss: Math.abs(Math.min(action.elevation - action.pElevation, 0)) || 0,
         distanceFromPreviousPoint: (!action.pPoint) ? 0 : Geolib.getDistance(state.coordinates, action.pPoint.coordinates)
+      }
+    case 'UPDATE_HANDLE':
+      if (action.id !== state.id) return state;
+      return {...state,
+        coordinates: action.coordinates
       }
     default: return state
   }

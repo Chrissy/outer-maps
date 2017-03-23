@@ -137,18 +137,18 @@ export default class MapBox extends React.PureComponent {
   mapEvents() {
     let watchEvents = {
       'handleLoad': 'load',
+      'handleMouseDown': 'mousedown',
+      'handleMouseUp': 'mouseup',
       'handleDrag': 'moveend',
       'handleMouseMove': 'mousemove',
       'handleClick': 'click',
-      'handleMouseDown': 'mousedown',
-      'handleMouseUp': 'mouseup',
     }
 
     Object.keys(watchEvents).forEach(function(functionName){
       this.mapboxed.on(watchEvents[functionName], function(event){
         this[functionName](event);
-      }.bind(this))
-    }.bind(this))
+      }.bind(this));
+    }.bind(this));
   }
 
   render() {

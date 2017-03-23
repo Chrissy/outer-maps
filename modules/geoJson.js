@@ -22,6 +22,8 @@ exports.boxToBounds = (boxShape) => {
 }
 
 exports.makePoints = (pointsAsArray) => {
+  const pointsOrEmpty = (pointsAsArray && pointsAsArray.length) ? pointsAsArray : [];
+
   const pointToFeature = function(point) {
     return {
       type: "Feature",
@@ -37,6 +39,6 @@ exports.makePoints = (pointsAsArray) => {
 
   return {
    type: "FeatureCollection",
-   features: pointsAsArray.map(p => pointToFeature(p))
+   features: pointsOrEmpty.map(p => pointToFeature(p))
   }
 }

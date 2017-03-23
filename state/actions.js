@@ -87,6 +87,7 @@ export function selectTrail(id) {
     dispatch({type: 'CLEAR_BOUNDARY_SELECTED'});
     dispatch(getTrail(id)).then(trail => {
       dispatch({type: 'TOGGLE_TRAIL_SELECTED', trail});
+      dispatch({type: 'SET_HANDLES', id})
       dispatch(getAltitudeData(trail));
       dispatch(getWeatherData(trail));
     });
@@ -127,5 +128,6 @@ export function clearSelected() {
   return dispatch => {
     dispatch({type: 'CLEAR_TRAIL_SELECTED'});
     dispatch({type: 'CLEAR_BOUNDARY_SELECTED'});
+    dispatch({type: 'CLEAR_HANDLES'})
   }
 }

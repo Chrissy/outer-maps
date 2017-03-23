@@ -8,6 +8,7 @@ const mapStateToProps = (state) => {
     previewTrails: state.trails.filter(trail => trail.previewing),
     selectedBoundary: state.boundaries.find(boundary => boundary.selected) || {},
     previewBoundary: state.boundaries.find(boundary => boundary.previewing) || {},
+    handles: state.trails.reduce((a, t) => (t.handles) ? a.concat(t.handles) : a, []),
     sources: state.sources
   }
 }
@@ -19,7 +20,8 @@ const mapDispatchToProps = (dispatch) => {
     onFeatureClick: (id, layer) => dispatch((layer == "trails") ? selectTrail(id) : selectBoundary(id)),
     onNonFeatureClick: () => dispatch(clearSelected()),
     updateView: (bounds, zoom) => dispatch({type: 'UPDATE_VIEW', bounds, zoom}),
-    addSource: (source) => dispatch(addSource(source))
+    addSource: (source) => dispatch(addSource(source)),
+    updateHandle: (id, coordinates) => dispatch({type: 'UPDATE_HANDLE', id, coordinates})
   }
 };
 

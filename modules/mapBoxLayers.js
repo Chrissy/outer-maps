@@ -1,10 +1,11 @@
 export const mapBoxLayers = [
   {
-    'id': 'handles',
+    'id': 'handles-center',
     'source': 'handles',
     'type': 'circle',
+    'before': 'handles',
     'paint': {
-      "circle-radius": 5,
+      "circle-radius": 4,
       "circle-color": "#FF9100"
     }
   },
@@ -12,7 +13,16 @@ export const mapBoxLayers = [
     'id': 'handles-outline',
     'source': 'handles',
     'type': 'circle',
-    'before': 'handles',
+    'before': 'handles-center',
+    'paint': {
+      "circle-radius": 6,
+      "circle-color": "#FFF"
+    }
+  },
+  {
+    'id': 'handles',
+    'source': 'handles',
+    'type': 'circle',
     'paint': {
       "circle-radius": 10,
       "circle-color": "rgba(0,0,0,0)"

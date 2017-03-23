@@ -7,16 +7,21 @@ import {mapBoxLayers} from '../modules/mapBoxLayers';
 export default class Map extends React.Component {
 
   onMapMouseMove(event) {
-    if (event.features.length) {
-      this.props.onFeatureMouseIn(event.features[0].properties.id, event.features[0].layer.id);
-    } else if (this.props.previewTrails.length || this.props.previewBoundary.length) {
-      this.props.onFeatureMouseOut();
+    if (this.draggingPoint) {
+      event.target.dragPan.disable();
+      this.props.updateHandle(this.draggingPoint.properties.id, [event.lngLat.lng, event.lngLat.lat]);
+    } else {
+      if (event.features.length && event.features[0].layer.id !== 'handles') {
+        this.props.onFeatureMouseIn(event.features[0].properties.id, event.features[0].layer.id);
+      } else if (this.props.previewTrails.length || this.props.previewBoundary.length) {
+        this.props.onFeatureMouseOut();
+      }
     }
 
-    if (this.draggingPoint) {
-      this.draggingPoint = Object.assign(this.draggingPoint, {
-        coordinates: [event.lngLat.lng, event.lngLat.lat]
-      });
+    if (event.features.length && event.features.some(f => f.layer.id == 'handles')) {
+      event.target.dragPan.disable();
+    } else {
+      event.target.dragPan.enable();
     }
   }
 
@@ -54,14 +59,12 @@ export default class Map extends React.Component {
 
   onMapMouseDown(event) {
     const firstHandle = event.features.find(f => f.layer.id == "handles");
-    if (!event.features.length || !firstHandle) return;
-    event.target.dragPan.disable();
-    this.draggingPoint = this.handles().find(h => h.id == firstHandle.properties.id && h.firstHandle == firstHandle.properties.firstHandle);
+    if (!firstHandle) return;
+    this.draggingPoint = firstHandle;
   }
 
   onMapMouseUp(event) {
-    this.draggingPoint = null;
-    event.target.dragPan.enable()
+    if (this.draggingPoint) this.draggingPoint = null;
   }
 
   activeTrailIds() {
@@ -70,16 +73,6 @@ export default class Map extends React.Component {
 
   activeBoundaryIds() {
     return [this.props.previewBoundary.id, this.props.selectedBoundary.id];
-  }
-
-  handles() {
-    const firstPoints = this.props.selectedTrails.map(s => s.points[0]);
-    const lastPoints = this.props.selectedTrails.map(s => s.points[s.points.length - 1])
-    let collectivePoints = firstPoints.concat(lastPoints);
-    if (this.draggingPoint) {
-      collectivePoints = collectivePoints.filter(p => !(p.id == this.draggingPoint.id)).concat(this.draggingPoint);
-    }
-    return collectivePoints;
   }
 
   render() {
@@ -97,9 +90,8 @@ export default class Map extends React.Component {
           onMouseMove={this.onMapMouseMove.bind(this)}
           onMouseUp={this.onMapMouseUp.bind(this)}
           onMouseDown={this.onMapMouseDown.bind(this)}
-          handles={this.handles()}
+          handles={this.props.handles}
           onDrag={this.onMapDrag.bind(this)}/>
-          <TooltipContainer/>
           <MapSidebarContainer/>
         </div>
     );
