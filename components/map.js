@@ -1,5 +1,6 @@
 import React, { Proptypes } from 'react';
-import Geolib from 'geolib';
+import pointOnLine from '@turf/point-on-line';
+import {point} from '@turf/helpers';
 import TooltipContainer from './tooltipContainer';
 import MapBox from './mapBox';
 import MapSidebarContainer from './mapSidebarContainer';
@@ -14,19 +15,20 @@ export default class Map extends React.Component {
   onMapMouseMove(event) {
     const feature = event.features[0];
 
-    if (!feature) {
+    if (!feature && !this.draggingPoint) {
       if (this.props.previewTrails.length || this.props.previewBoundary) {
         this.props.onFeatureMouseOut();
       }
       return;
     } else {
-      if (feature.layer.id == 'handles' || this.draggingPoint) {
+      if (this.draggingPoint || feature.layer.id == 'handles') {
         event.target.dragPan.disable();
+
         if (!this.draggingPoint) return;
 
         let trail = this.props.selectedTrails.find(t => t.id == this.draggingPoint.properties.trailId);
-        let snapToPoint = Geolib.findNearest(coordsArrayToGeoLibObject([event.lngLat.lng, event.lngLat.lat]), trail.points.map(p => coordsArrayToGeoLibObject(p.coordinates)));
-        this.props.updateHandle(this.draggingPoint.properties.id, trail.points[snapToPoint.key].coordinates);
+        let snapToPoint = pointOnLine(trail.geometry, point([event.lngLat.lng, event.lngLat.lat]));
+        this.props.updateHandle(this.draggingPoint.properties.id, snapToPoint.geometry.coordinates);
       } else if (feature.layer.id == 'trails' || feature.layer.id == 'boundaries') {
         this.props.onFeatureMouseIn({properties: feature.properties, geometry:feature.geometry}, event.features[0].layer.id);
       }
