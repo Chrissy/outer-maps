@@ -7,7 +7,7 @@ const browserify = require('browserify-middleware');
 const app = express();
 const _ = require('underscore');
 const env = require('./environment/development');
-const geoJson = require('./modules/geoJson.js');
+const boxToBounds = require('./modules/boxToBounds.js');
 const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
 
 
@@ -29,18 +29,20 @@ var pool = new pg.Pool({
   user: env.dbUser
 });
 
-app.get('/api/trails/:id', function(request, response) {
+app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
   let query = `
     SELECT
       name,
+      id,
       surface,
       ST_AsGeoJson(ST_LineMerge(geog::geometry)) as geog,
       ST_Length(geog) as distance,
       ST_AsGeoJson(ST_Centroid(geog::geometry)) as center,
       ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds
     FROM trails
-    WHERE id = ${request.params.id}
-    LIMIT 1
+    WHERE ST_Intersects(geog,
+      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
+    )
   `
 
   pool.connect(function(err, client, done){
@@ -49,30 +51,42 @@ app.get('/api/trails/:id', function(request, response) {
 
       if (err) throw err;
 
-      let r = result.rows[0]
-      response.json({
-        "name": r.name,
-        "id": request.params.id,
-        "surface": r.surface,
-        "geography": JSON.parse(r.geog),
-        "distance": r.distance,
-        "center": JSON.parse(r.center).coordinates,
-        "bounds": geoJson.boxToBounds(JSON.parse(r.bounds))
+      const features = result.rows.map(r => {
+        return {
+          "type": "Feature",
+          "properties": {
+            "name": r.name,
+            "id": r.id,
+            "surface": r.surface,
+            "distance": r.distance,
+            "center": JSON.parse(r.center).coordinates,
+            "bounds": boxToBounds.make(JSON.parse(r.bounds))
+          },
+          "geometry": JSON.parse(r.geog)
+        };
       });
-    })
-  })
-})
 
-app.get('/api/boundaries/:id', function(request, response) {
+      response.json({
+        type: "FeatureCollection",
+        features: features
+      })
+    });
+  });
+});
+
+app.get('/api/boundaries/:x1/:y1/:x2/:y2', function(request, response) {
   let query = `
     SELECT
       name,
+      id,
       ST_Area(geog) as area,
+      ST_AsGeoJson(geog) as geog,
       ST_AsGeoJson(ST_Centroid(geog::geometry)) as center,
       ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds
     FROM boundaries
-    WHERE id = ${request.params.id}
-    LIMIT 1
+    WHERE ST_Intersects(geog,
+      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
+    )
   `
 
   pool.connect(function(err, client, done){
@@ -81,27 +95,38 @@ app.get('/api/boundaries/:id', function(request, response) {
 
       if (err) throw err;
 
-      const r = result.rows[0];
-      const envelope = JSON.parse(r.bounds).coordinates[0];
+      const features = result.rows.map(r => {
+        const envelope = JSON.parse(r.bounds).coordinates[0];
+
+        return {
+          "type": "Feature",
+          "properties": {
+            "name": r.name,
+            "id": r.id,
+            "area": r.area,
+            "center": JSON.parse(r.center).coordinates,
+            "bounds": [envelope[0], envelope[2]],
+          },
+          "geometry": JSON.parse(r.geog)
+        };
+      });
 
       response.json({
-        "name": r.name,
-        "id": request.params.id,
-        "area": r.area,
-        "center": JSON.parse(r.center).coordinates,
-        "bounds": [envelope[0], envelope[2]]
-      });
-    })
-  })
-})
+        type: "FeatureCollection",
+        features: features
+      })
+    });
+  });
+});
 
-app.get('/api/elevation/:id', function(request, response){
+app.get('/api/elevation', function(request, response){
   pool.connect(function(err, client, done){
+    const points = JSON.parse(request.query.points);
+    const pointsStr = points.reduce((a, p, i) =>  a + `${(i == 0) ? '' : ','}ST_MakePoint(${p[0]},${p[1]})`, '');
+
     const query = `
       WITH trail AS (
-          SELECT ST_LineMerge(geog::geometry) AS path
-          FROM trails
-          WHERE id = ${request.params.id}
+          SELECT ST_SetSRID(ST_MakeLine(ARRAY[${pointsStr}]), 4326) AS path
         ),
         points AS (
           SELECT (ST_DumpPoints(path)).geom AS point
@@ -121,23 +146,6 @@ app.get('/api/elevation/:id', function(request, response){
       if (err) throw err;
       done();
       response.json(result.rows.map(r => r.elevation));
-    });
-  });
-});
-
-app.get('/api/boundaries/:x1/:y1/:x2/:y2', function(request, response) {
-  const query = `
-    SELECT id AS id, name AS name, ST_AsGeoJson(geog) AS geog
-    FROM boundaries
-    WHERE ST_Intersects(geog,
-      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
-    )
-  `
-  pool.connect(function(err, client, done){
-    client.query(query, function(err, result){
-      done();
-      if (err) throw err;
-      response.json(geoJson.make(result));
     });
   });
 });
@@ -186,25 +194,6 @@ app.get('/api/terrain/:x/:y/:zoom', function(request, response){
     })
   })
 });
-
-app.get('/api/:x1/:y1/:x2/:y2', function(request, response) {
-
-  const query = `
-    SELECT id, ST_AsGeoJson(geog) AS geog
-    FROM trails
-    WHERE ST_Intersects(geog,
-      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
-    )
-  `
-
-  pool.connect(function(err, client, done){
-    client.query(query, function(err, result){
-      done();
-      if (err) throw err;
-      response.json(geoJson.make(result));
-    })
-  })
-})
 
 app.listen(5000, function () {
   console.log('listening on port 5000');

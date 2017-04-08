@@ -5,29 +5,27 @@ import _ from 'underscore';
 const trail = (state = {}, action) => {
   switch (action.type) {
     case 'ADD_TRAIL':
-      return {...state, id: action.id}
-    case 'SET_TRAIL_BASE_DATA':
-      if (parseInt(action.trail.id) !== state.id) return state
       return {...state,
         hasBaseData: true,
-        name: action.trail.name,
-        distance: action.trail.distance,
-        center: action.trail.center,
-        bounds: action.trail.bounds,
-        geog: action.trail.geography,
-        surface: action.trail.surface,
-        points: action.trail.geography.coordinates.map((coordinates, index) => point(undefined, {...action,
+        id: action.properties.id,
+        name: action.properties.name,
+        distance: action.properties.distance,
+        center: JSON.parse(action.properties.center),
+        bounds: JSON.parse(action.properties.bounds),
+        surface: action.properties.surface,
+        points: action.geometry.coordinates.map((coordinates, index) => point(undefined, {...action,
           coordinates: coordinates,
-          id: state.id,
+          id: action.properties.id,
           index: index
-        }))
+        })),
+        geometry: action.geometry
       }
-    case 'TOGGLE_TRAIL_PREVIEWING':
-      return { ...state, previewing: (state.id === action.trail.id) }
+    case 'SET_TRAIL_PREVIEWING':
+      return { ...state, previewing: (state.id === action.id) }
     case 'CLEAR_TRAIL_PREVIEWING':
       return { ...state, previewing: false }
     case 'TOGGLE_TRAIL_SELECTED':
-      if (state.id === action.trail.id && !action.trail.selected){
+      if (state.id === action.id && !action.selected){
         return { ...state, selected: true, selectedId: action.selectedTrailCount};
       }
       return state;
@@ -80,8 +78,9 @@ const trail = (state = {}, action) => {
 const trails = (state = [], action) => {
   switch (action.type) {
     case 'ADD_TRAIL':
+      if (state.some(t => t.id == action.properties.id)) return state;
       return [...state, trail(undefined, action)]
-    case 'TOGGLE_TRAIL_PREVIEWING':
+    case 'SET_TRAIL_PREVIEWING':
       return state.map(t => trail(t, action))
     case 'CLEAR_TRAIL_PREVIEWING':
       return state.map(t => trail(t, action))
@@ -108,7 +107,7 @@ const trails = (state = [], action) => {
 
 const point = (state = {}, action) => {
   switch (action.type) {
-    case 'SET_TRAIL_BASE_DATA':
+    case 'ADD_TRAIL':
       return {
         coordinates: action.coordinates,
         id: action.id.toString() + action.index,
@@ -133,6 +132,7 @@ const point = (state = {}, action) => {
 const boundaries = (state = [], action) => {
   switch (action.type) {
     case 'ADD_BOUNDARY':
+      if (state.some(b => b.id == action.properties.id)) return state;
       return [...state, boundary(undefined, action)]
     case 'SET_BOUNDARY_PREVIEWING':
       return state.map(b => boundary(b, action))
@@ -142,8 +142,6 @@ const boundaries = (state = [], action) => {
       return state.map(b => boundary(b, action))
     case 'CLEAR_BOUNDARY_SELECTED':
       return state.map(b => boundary(b, action))
-    case 'SET_BOUNDARY_BASE_DATA':
-      return state.map(b => boundary(b, action))
     default: return state
   }
 }
@@ -151,17 +149,15 @@ const boundaries = (state = [], action) => {
 const boundary = (state = {}, action) => {
   switch (action.type) {
     case 'ADD_BOUNDARY':
-      return {...state, id: action.id}
-    case 'SET_BOUNDARY_BASE_DATA':
-      if (action.id !== state.id) return state
       return {...state,
-        name: action.name,
-        area: action.area,
-        center: action.center,
-        bounds: action.bounds
+        id: action.properties.id,
+        name: action.properties.name,
+        area: action.properties.area,
+        bounds: JSON.parse(action.properties.bounds),
+        geometry: action.geometry
       }
     case 'SET_BOUNDARY_PREVIEWING':
-      return { ...state, previewing: (state.id === action.id) }
+      return { ...state, previewing: (state.id === action.properties.id) }
     case 'CLEAR_BOUNDARY_PREVIEWING':
       return { ...state, previewing: false }
     case 'SET_BOUNDARY_SELECTED':
@@ -188,15 +184,14 @@ const source = (state = {}, action) => {
     case 'ADD_SOURCE':
       return {
         id: action.id,
-        data: `api${action.endpoint}/${action.viewBox[0][0]}/${action.viewBox[0][1]}/${action.viewBox[1][0]}/${action.viewBox[1][1]}`,
+        data: action.data,
         maxZoom: action.maxZoom,
         minZoom: action.minZoom,
-        endpoint: action.endpoint,
         showing: action.zoom < action.maxZoom || action.zoom >= action.minZoom
       }
-    case 'UPDATE_VIEW':
+    case 'UPDATE_SOURCE':
       return {...state,
-        data: `api${state.endpoint}/${action.bounds[0][0]}/${action.bounds[0][1]}/${action.bounds[1][0]}/${action.bounds[1][1]}`,
+        data: action.data,
         showing: action.zoom < state.maxZoom || action.zoom >= state.minZoom
       }
     default: return state

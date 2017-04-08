@@ -5,60 +5,54 @@ import MapBox from './mapBox';
 import MapSidebarContainer from './mapSidebarContainer';
 import {mapBoxLayers} from '../modules/mapBoxLayers';
 import {coordsArrayToGeoLibObject} from '../modules/conversions';
+import {wrap, makePoints} from '../modules/geoJson.js';
+
+const TRAILS_BREAKPOINT = 9;
 
 export default class Map extends React.Component {
 
   onMapMouseMove(event) {
-    if (this.draggingPoint) {
-      event.target.dragPan.disable();
-      let trail = this.props.selectedTrails.find(t => t.id == this.draggingPoint.properties.trailId);
-      let snapToPoint = Geolib.findNearest(coordsArrayToGeoLibObject([event.lngLat.lng, event.lngLat.lat]), trail.points.map(p => coordsArrayToGeoLibObject(p.coordinates)));
-      this.props.updateHandle(this.draggingPoint.properties.id, trail.points[snapToPoint.key].coordinates);
-    } else {
-      if (event.features.length && event.features[0].layer.id !== 'handles') {
-        this.props.onFeatureMouseIn(event.features[0].properties.id, event.features[0].layer.id);
-      } else if (this.props.previewTrails.length || this.props.previewBoundary.length) {
+    const feature = event.features[0];
+
+    if (!feature) {
+      if (this.props.previewTrails.length || this.props.previewBoundary) {
         this.props.onFeatureMouseOut();
       }
-    }
-
-    if (event.features.length && event.features.some(f => f.layer.id == 'handles')) {
-      event.target.dragPan.disable();
+      return;
     } else {
-      event.target.dragPan.enable();
+      if (feature.layer.id == 'handles' || this.draggingPoint) {
+        event.target.dragPan.disable();
+        if (!this.draggingPoint) return;
+
+        let trail = this.props.selectedTrails.find(t => t.id == this.draggingPoint.properties.trailId);
+        let snapToPoint = Geolib.findNearest(coordsArrayToGeoLibObject([event.lngLat.lng, event.lngLat.lat]), trail.points.map(p => coordsArrayToGeoLibObject(p.coordinates)));
+        this.props.updateHandle(this.draggingPoint.properties.id, trail.points[snapToPoint.key].coordinates);
+      } else if (feature.layer.id == 'trails' || feature.layer.id == 'boundaries') {
+        this.props.onFeatureMouseIn({properties: feature.properties, geometry:feature.geometry}, event.features[0].layer.id);
+      }
     }
   }
 
   onMapClick(event) {
     if (this.draggingPoint) return;
+    if (!event.features.length) return this.props.onNonFeatureClick();
 
-    if (event.features.length) {
-      this.props.onFeatureClick(event.features[0].properties.id, event.features[0].layer.id);
-    } else if (this.props.selectedTrails.length || this.props.selectedBoundary.length) {
-      this.props.onNonFeatureClick();
+    const feature = event.features[0];
+    const type = event.features[0].layer.id;
+
+    if (type == "trails") {
+      this.props.onTrailClick({properties: feature.properties, geometry:feature.geometry});
+    } else if (type == "boundaries") {
+      this.props.onBoundaryClick(feature.properties.id);
     }
   }
 
   onMapDrag(event) {
-    this.props.updateView(event.bounds, event.zoom);
+    this.setState({viewBox: event.bounds, zoom: event.zoom})
   }
 
   onMapLoad(event) {
-    this.props.addSource({
-      id: 'trails-data',
-      endpoint: '',
-      minZoom: 9,
-      viewBox: event.bounds,
-      zoom: event.zoom
-    });
-
-    this.props.addSource({
-      id: 'boundaries-data',
-      endpoint: '/boundaries',
-      maxZoom: 9,
-      viewBox: event.bounds,
-      zoom: event.zoom
-    });
+    this.setState({viewBox: event.bounds, zoom: event.zoom})
   }
 
   onMapMouseDown(event) {
@@ -71,21 +65,39 @@ export default class Map extends React.Component {
     if (this.draggingPoint) this.draggingPoint = null;
   }
 
-  activeTrailIds() {
-    return [...this.props.previewTrails, ...this.props.selectedTrails].map(t => t.id);
+  sources() {
+    if (!this.state.zoom || !this.state.viewBox) return [];
+    let sources = [];
+    let viewBox = this.state.viewBox;
+    let zoom = this.state.zoom;
+
+    if (this.state.zoom >= TRAILS_BREAKPOINT) {
+      sources.push({id: 'trails', data: `api/trails/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}`});
+      sources.push({id: 'trails-active', data: wrap(this.props.activeTrails || [])});
+    }
+    if (this.state.zoom < TRAILS_BREAKPOINT) {
+      sources.push({id: 'boundaries', data: `api/boundaries/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}`});
+      sources.push({id: 'boundaries-active', data: wrap(this.props.activeBoundaries || [])});
+    }
+
+    if (this.props.handles && this.props.handles.length) {
+      sources.push({id: 'handles', data: makePoints(this.props.handles)});
+    }
+
+    return sources;
   }
 
-  activeBoundaryIds() {
-    return [this.props.previewBoundary.id, this.props.selectedBoundary.id];
+  constructor(props) {
+    super(props);
+
+    this.state = {zoom: null, viewBox: null};
   }
 
   render() {
     return (
         <div id="the-map">
           <MapBox
-          activeTrailIDs={this.activeTrailIds()}
-          activeBoundaryIds={this.activeBoundaryIds()}
-          sources={this.props.sources.filter(s => s.showing)}
+          sources={this.sources()}
           layers={mapBoxLayers}
           fitBounds={this.props.selectedBoundary.bounds}
           pointer={this.props.previewTrails.length > 0}
@@ -94,9 +106,9 @@ export default class Map extends React.Component {
           onMouseMove={this.onMapMouseMove.bind(this)}
           onMouseUp={this.onMapMouseUp.bind(this)}
           onMouseDown={this.onMapMouseDown.bind(this)}
-          handles={this.props.handles}
           onDrag={this.onMapDrag.bind(this)}/>
           <MapSidebarContainer/>
+          <TooltipContainer/>
         </div>
     );
   }

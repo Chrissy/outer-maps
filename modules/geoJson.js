@@ -1,27 +1,21 @@
-exports.make = (response) => {
-  const formattedRows = response.rows.map(row => {
+export const wrap = (elements) => {
+  const formattedElements = elements.map(element => {
     return {
       "type": "Feature",
       "properties": {
-        "id": row.id
+        "id": element.id
       },
-      "geometry": JSON.parse(row.geog)
+      "geometry": element.geometry
     };
   });
 
   return {
     "type": "FeatureCollection",
-    "features": formattedRows
+    "features": formattedElements
   };
 }
 
-exports.boxToBounds = (boxShape) => {
-  const xPoints = boxShape.coordinates[0].map(b => b[0]);
-  const yPoints = boxShape.coordinates[0].map(b => b[1]);
-  return [[Math.min(...xPoints), Math.min(...yPoints)], [Math.max(...xPoints), Math.max(...yPoints)]]
-}
-
-exports.makePoints = (pointsAsArray) => {
+export const makePoints = (pointsAsArray) => {
   const pointsOrEmpty = (pointsAsArray && pointsAsArray.length) ? pointsAsArray : [];
 
   const pointToFeature = function(point) {

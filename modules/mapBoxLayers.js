@@ -30,7 +30,7 @@ export const mapBoxLayers = [
   },
   {
     'id': 'trails',
-    'source': 'trails-data',
+    'source': 'trails',
     'type': 'line',
     'paint': {
       'line-color': 'transparent',
@@ -39,10 +39,9 @@ export const mapBoxLayers = [
   },
   {
     'id': 'trails-active',
-    'source': 'trails-data',
+    'source': 'trails-active',
     'type': 'line',
     'before': 'handles-outline',
-    'filter': ["==", "id", 0],
     'paint': {
       'line-color': '#FF9100',
       'line-width': 2,
@@ -50,7 +49,7 @@ export const mapBoxLayers = [
   },
   {
     'id': 'trails-core-line',
-    'source': 'trails-data',
+    'source': 'trails',
     'type': 'line',
     'before': 'water',
     'paint': {
@@ -60,7 +59,7 @@ export const mapBoxLayers = [
   },
   {
     'id': 'trails-outline',
-    'source': 'trails-data',
+    'source': 'trails',
     'type': 'line',
     'before': 'trails-core-line',
     'paint': {
@@ -71,10 +70,9 @@ export const mapBoxLayers = [
   },
   {
     'id': 'boundaries-active-outline',
-    'source': 'boundaries-data',
+    'source': 'boundaries-active',
     'type': 'line',
     'before': 'water',
-    'filter': ["==", "id", 0],
     'layout': {
       'line-join': 'round'
     },
@@ -86,10 +84,9 @@ export const mapBoxLayers = [
   },
   {
     'id': 'boundaries-active',
-    'source': 'boundaries-data',
+    'source': 'boundaries-active',
     'type': 'fill',
     'before': 'water',
-    'filter': ["==", "id", 0],
     'paint': {
       'fill-color': 'hsl(119, 77%, 70%)',
       'fill-opacity': 0.2
@@ -97,7 +94,7 @@ export const mapBoxLayers = [
   },
   {
     'id': 'boundaries',
-    'source': 'boundaries-data',
+    'source': 'boundaries',
     'before': 'water',
     'type': 'fill',
     'paint': {

@@ -3,46 +3,10 @@ import _ from 'underscore'
 import {rollingAverage, glitchDetector} from '../modules/cumulativeElevationChanges';
 import {getDataFromNearestStation} from '../modules/NOAA';
 
-function getTrail(id) {
-  return (dispatch, getState) => {
-    const cachedTrail = getState().trails.find(trail => trail.id == id);
-
-    if (cachedTrail) return Promise.resolve(cachedTrail);
-
-    dispatch({type: 'ADD_TRAIL', id});
-
-    return fetch(`/api/trails/${id}`).then(response => {
-      return response.json();
-    }).then(t => {
-      const trail = Object.assign({}, t)
-      dispatch({type: 'SET_TRAIL_BASE_DATA', trail});
-      return trail;
-    });
-  };
-};
-
-function getBoundary(id) {
-  return (dispatch, getState) => {
-    const cachedBoundary = getState().boundaries.find(boundary => boundary.id == id);
-
-    if (cachedBoundary) return Promise.resolve(cachedBoundary);
-
-    dispatch({type: 'ADD_BOUNDARY', id});
-
-    return fetch(`/api/boundaries/${id}`).then(response => {
-      return response.json();
-    }).then(b => {
-      const boundary = Object.assign({}, b);
-      dispatch({type: 'SET_BOUNDARY_BASE_DATA', ...boundary, id: id});
-      return boundary;
-    });
-  }
-}
-
 function getAltitudeData(trail) {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     if (trail.hasElevationData) return Promise.resolve();
-    return fetch(`/api/elevation/${trail.id}`)
+    return fetch(`/api/elevation?points=${JSON.stringify(trail.points.map(p => p.coordinates))}`)
       .then(response => response.json())
       .then(elevationData => {
         const elevations = rollingAverage(glitchDetector(elevationData), 15);
@@ -54,6 +18,7 @@ function getAltitudeData(trail) {
 function getWeatherData(trail) {
   return dispatch => {
     if (trail.hasWeatherData) return Promise.resolve();
+
     getDataFromNearestStation({
       x: trail.center[1],
       y: trail.center[0],
@@ -74,40 +39,37 @@ function getWeatherData(trail) {
   }
 }
 
-export function previewTrail(id) {
+export function previewTrail(trail) {
   return dispatch => {
-    dispatch(getTrail(id)).then(trail => {
-      return dispatch({type: 'TOGGLE_TRAIL_PREVIEWING', trail});
-    });
+    dispatch({type: 'ADD_TRAIL', ...trail});
+    return dispatch({type: 'SET_TRAIL_PREVIEWING', id: trail.properties.id});
   };
 };
 
-export function selectTrail(id) {
-  return dispatch => {
+export function selectTrail(trail) {
+  return (dispatch, getState) => {
+    const cachedTrail = getState().trails.find(t => t.id == trail.properties.id);
+    if (!cachedTrail) dispatch({type: 'ADD_TRAIL', ...trail});
+    trail = getState().trails.find(t => t.id == trail.properties.id);
     dispatch({type: 'CLEAR_BOUNDARY_SELECTED'});
-    dispatch(getTrail(id)).then(trail => {
-      dispatch({type: 'TOGGLE_TRAIL_SELECTED', trail});
-      dispatch({type: 'SET_HANDLES', id})
-      dispatch(getAltitudeData(trail));
-      dispatch(getWeatherData(trail));
-    });
+    dispatch({type: 'TOGGLE_TRAIL_SELECTED', ...trail});
+    dispatch({type: 'SET_HANDLES', ...trail})
+    dispatch(getAltitudeData(trail));
+    dispatch(getWeatherData(trail));
   };
 };
 
-export function previewBoundary(id) {
+export function previewBoundary(boundary) {
   return dispatch => {
-    dispatch(getBoundary(id)).then(boundary => {
-      return dispatch({type: 'SET_BOUNDARY_PREVIEWING', ...boundary});
-    });
+    dispatch({type: 'ADD_BOUNDARY', ...boundary});
+    return dispatch({type: 'SET_BOUNDARY_PREVIEWING', ...boundary});
   };
 };
 
 export function selectBoundary(id) {
   return dispatch => {
     dispatch({type: 'CLEAR_TRAIL_SELECTED'});
-    dispatch(getBoundary(id)).then(boundary => {
-      dispatch({type: 'SET_BOUNDARY_SELECTED', ...boundary});
-    });
+    return dispatch({type: 'SET_BOUNDARY_SELECTED', id});
   };
 };
 

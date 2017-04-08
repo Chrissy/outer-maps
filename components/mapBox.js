@@ -1,6 +1,6 @@
 import React, { Proptypes } from 'react';
 import MapboxGL from 'mapbox-gl';
-import geoJson from '../modules/geoJson';
+import {makePoints} from '../modules/geoJson';
 import {accessToken, styleUrl} from '../modules/mapBoxStaticData';
 
 export default class MapBox extends React.PureComponent {
@@ -17,7 +17,8 @@ export default class MapBox extends React.PureComponent {
     addedSources.forEach(function(source){
       this.mapboxed.addSource(source.id, {
         data: source.data,
-        type: "geojson"
+        type: "geojson",
+        tolerance: 0.15
       });
     }.bind(this));
 
@@ -82,22 +83,15 @@ export default class MapBox extends React.PureComponent {
   }
 
   handleLoad(event) {
+    this.updateSources([], this.props.sources);
+
     this.props.onLoad(Object.assign({}, event, {
       bounds: this.mapboxed.getBounds().toArray(),
       zoom: this.mapboxed.getZoom()
     }));
   }
 
-  updateHandles() {
-    if (!this.mapboxed.getLayer("handles") && !this.mapboxed.getSource("handles")) {
-      this.mapboxed.addSource("handles", {
-        data: geoJson.makePoints(this.props.handles),
-        type: "geojson"
-      });
-    } else if (this.mapboxed.getLayer("handles") && this.mapboxed.getSource("handles")) {
-      this.mapboxed.getSource("handles").setData(geoJson.makePoints(this.props.handles));
-    }
-  }
+
 
   componentDidMount() {
     MapboxGL.accessToken = accessToken;
@@ -105,18 +99,16 @@ export default class MapBox extends React.PureComponent {
     this.mapboxed = new MapboxGL.Map({
       container: 'mapbox-gl-element',
       style: styleUrl,
-      center: [-112, 37.9],
+      center: [-111 , 37.9],
       zoom: 8
-    });
+    })
 
     this.mapEvents();
-
     this.mapboxed.addControl(new MapboxGL.Navigation());
   }
 
   componentDidUpdate(prevProps, q) {
     this.updateSources(prevProps.sources, this.props.sources);
-    this.updateHandles()
 
     if (this.mapboxed.getSource('trails-data') && this.mapboxed.getLayer('trails-active')) {
       this.mapboxed.setFilter("trails-active", ["in", "id", ...this.props.activeTrailIDs.map(t => parseInt(t))]);
