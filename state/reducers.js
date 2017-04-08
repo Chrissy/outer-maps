@@ -1,5 +1,7 @@
 import { combineReducers } from 'redux';
-import Geolib from 'geolib';
+import distance from '@turf/distance';
+import centroid from '@turf/centroid';
+import bbox from '@turf/bbox';
 import _ from 'underscore';
 
 const trail = (state = {}, action) => {
@@ -10,8 +12,8 @@ const trail = (state = {}, action) => {
         id: action.properties.id,
         name: action.properties.name,
         distance: action.properties.distance,
-        center: JSON.parse(action.properties.center),
-        bounds: JSON.parse(action.properties.bounds),
+        center: centroid(action.geometry).geometry.coordinates,
+        bounds: bbox(action.geometry),
         surface: action.properties.surface,
         points: action.geometry.coordinates.map((coordinates, index) => point(undefined, {...action,
           coordinates: coordinates,
@@ -118,7 +120,7 @@ const point = (state = {}, action) => {
         elevation: action.elevation,
         elevationGain: Math.max(action.elevation - action.pElevation, 0) || 0,
         elevationLoss: Math.abs(Math.min(action.elevation - action.pElevation, 0)) || 0,
-        distanceFromPreviousPoint: (!action.pPoint) ? 0 : Geolib.getDistance(state.coordinates, action.pPoint.coordinates)
+        distanceFromPreviousPoint: (!action.pPoint) ? 0 : distance(state.coordinates, action.pPoint.coordinates) * 1000
       }
     case 'UPDATE_HANDLE':
       if (action.id !== state.id) return state;

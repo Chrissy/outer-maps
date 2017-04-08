@@ -34,11 +34,8 @@ app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
     SELECT
       name,
       id,
-      surface,
       ST_AsGeoJson(ST_LineMerge(geog::geometry)) as geog,
-      ST_Length(geog) as distance,
-      ST_AsGeoJson(ST_Centroid(geog::geometry)) as center,
-      ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds
+      ST_Length(geog) as distance
     FROM trails
     WHERE ST_Intersects(geog,
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
@@ -57,10 +54,7 @@ app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
           "properties": {
             "name": r.name,
             "id": r.id,
-            "surface": r.surface,
-            "distance": r.distance,
-            "center": JSON.parse(r.center).coordinates,
-            "bounds": boxToBounds.make(JSON.parse(r.bounds))
+            "distance": r.distance
           },
           "geometry": JSON.parse(r.geog)
         };
