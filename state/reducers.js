@@ -170,37 +170,7 @@ const boundary = (state = {}, action) => {
   }
 }
 
-const sources = (state = [], action) => {
-  switch (action.type) {
-    case 'ADD_SOURCE':
-      return [...state, source(undefined, action)]
-    case 'UPDATE_VIEW':
-      return state.map(l => source(l, action))
-    default: return state
-  }
-}
-
-const source = (state = {}, action) => {
-  switch (action.type) {
-    case 'ADD_SOURCE':
-      return {
-        id: action.id,
-        data: action.data,
-        maxZoom: action.maxZoom,
-        minZoom: action.minZoom,
-        showing: action.zoom < action.maxZoom || action.zoom >= action.minZoom
-      }
-    case 'UPDATE_SOURCE':
-      return {...state,
-        data: action.data,
-        showing: action.zoom < state.maxZoom || action.zoom >= state.minZoom
-      }
-    default: return state
-  }
-}
-
 export default combineReducers({
   trails,
-  boundaries,
-  sources
+  boundaries
 })
