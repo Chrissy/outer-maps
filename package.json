@@ -12,7 +12,6 @@
     "classnames": "^2.2.5",
     "express": "^4.14.0",
     "geo-viewport": "^0.2.1",
-    "geolib": "^2.0.21",
     "isomorphic-fetch": "^2.2.1",
     "pg": "^6.0.1",
     "react-redux": "^5.0.2",

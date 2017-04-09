@@ -5,7 +5,6 @@ import TooltipContainer from './tooltipContainer';
 import MapBox from './mapBox';
 import MapSidebarContainer from './mapSidebarContainer';
 import {mapBoxLayers} from '../modules/mapBoxLayers';
-import {coordsArrayToGeoLibObject} from '../modules/conversions';
 import {wrap, makePoints} from '../modules/geoJson.js';
 
 const TRAILS_BREAKPOINT = 9;

@@ -1,4 +1,4 @@
-import Geolib from 'geolib';
+import distance from '@turf/distance';
 import _ from 'underscore';
 
 export const reversePath = function(points) {
@@ -11,9 +11,6 @@ export const reversePath = function(points) {
   });
 }
 
-export const pathsOppose = function(pointSet1, pointSet2) {
-  const distanceToFirstPoint = Geolib.getDistance(_.last(pointSet1).coordinates, _.first(pointSet2).coordinates);
-  const distanceToLastPoint = Geolib.getDistance(_.last(pointSet1).coordinates, _.last(pointSet2).coordinates);
-
-  return distanceToFirstPoint > distanceToLastPoint;
+export const pathsOppose = function(p1, p2) {
+  return distance(_.last(p1).coordinates, _.first(p2).coordinates) > distance(_.last(p1).coordinates, _.last(p2).coordinates);
 }
