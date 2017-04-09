@@ -14,7 +14,6 @@ const trail = (state = {}, action) => {
         distance: action.properties.distance,
         center: centroid(action.geometry).geometry.coordinates,
         bounds: bbox(action.geometry),
-        surface: action.properties.surface,
         points: action.geometry.coordinates.map((coordinates, index) => point(undefined, {...action,
           coordinates: coordinates,
           id: action.properties.id,
