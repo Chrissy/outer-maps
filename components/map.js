@@ -13,24 +13,22 @@ export default class Map extends React.Component {
   onMapMouseMove(event) {
     const feature = event.features[0];
 
-    if (!feature && !this.draggingPoint) {
-      if (this.props.previewTrails.length || this.props.previewBoundary) {
-        this.props.onFeatureMouseOut();
-      }
-      return;
-    } else {
-      if (this.draggingPoint || feature.layer.id == 'handles') {
-        event.target.dragPan.disable();
+    if (!feature && !this.draggingPoint) return this.props.onFeatureMouseOut();
 
-        if (!this.draggingPoint) return;
-
-        let trail = this.props.selectedTrails.find(t => t.id == this.draggingPoint.properties.trailId);
-        let snapToPoint = pointOnLine(trail.geometry, point([event.lngLat.lng, event.lngLat.lat]));
-        this.props.updateHandle(this.draggingPoint.properties.id, snapToPoint.geometry.coordinates);
-      } else if (feature.layer.id == 'trails' || feature.layer.id == 'boundaries') {
-        this.props.onFeatureMouseIn({properties: feature.properties, geometry:feature.geometry}, event.features[0].layer.id);
-      }
+    if (this.draggingPoint || feature.layer.id == 'handles') {
+      this.handleDrag(event);
+    } else if (feature.layer.id == 'trails' || feature.layer.id == 'boundaries') {
+      this.props.onFeatureMouseIn({properties: feature.properties, geometry: feature.geometry}, event.features[0].layer.id);
     }
+  }
+
+  handleDrag(event) {
+    event.target.dragPan.disable();
+
+    if (!this.draggingPoint) return;
+
+    let snapToPoint = pointOnLine(this.draggingPoint.trail.geometry, point([event.lngLat.lng, event.lngLat.lat]));
+    this.props.updateHandle(this.draggingPoint.properties.id, snapToPoint.geometry.coordinates);
   }
 
   onMapClick(event) {
@@ -58,7 +56,7 @@ export default class Map extends React.Component {
   onMapMouseDown(event) {
     const firstHandle = event.features.find(f => f.layer.id == "handles");
     if (!firstHandle) return;
-    this.draggingPoint = firstHandle;
+    this.draggingPoint = {...firstHandle, trail: this.props.selectedTrails.find(t => t.id == firstHandle.properties.trailId)};
   }
 
   onMapMouseUp(event) {
