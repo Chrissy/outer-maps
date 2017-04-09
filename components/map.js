@@ -1,11 +1,10 @@
 import React, { Proptypes } from 'react';
 import pointOnLine from '@turf/point-on-line';
-import {point} from '@turf/helpers';
+import {point, feature, featureCollection} from '@turf/helpers';
 import TooltipContainer from './tooltipContainer';
 import MapBox from './mapBox';
 import MapSidebarContainer from './mapSidebarContainer';
 import {mapBoxLayers} from '../modules/mapBoxLayers';
-import {wrap, makePoints} from '../modules/geoJson.js';
 
 const TRAILS_BREAKPOINT = 9;
 
@@ -74,15 +73,19 @@ export default class Map extends React.Component {
 
     if (this.state.zoom >= TRAILS_BREAKPOINT) {
       sources.push({id: 'trails', data: `api/trails/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}`});
-      sources.push({id: 'trails-active', data: wrap(this.props.activeTrails || [])});
+      sources.push({id: 'trails-active', data: featureCollection(this.props.activeTrails)});
     }
     if (this.state.zoom < TRAILS_BREAKPOINT) {
       sources.push({id: 'boundaries', data: `api/boundaries/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}`});
-      sources.push({id: 'boundaries-active', data: wrap(this.props.activeBoundaries || [])});
+      sources.push({id: 'boundaries-active', data: featureCollection(this.props.activeBoundaries)});
     }
 
     if (this.props.handles && this.props.handles.length) {
-      sources.push({id: 'handles', data: makePoints(this.props.handles)});
+      sources.push({id: 'handles', data: featureCollection(
+        this.props.handles.map(h => {
+          return {...point(h.coordinates), properties: h};
+        })
+      )});
     }
 
     return sources;

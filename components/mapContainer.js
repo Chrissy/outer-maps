@@ -12,7 +12,6 @@ import {
 } from '../state/actions'
 
 const mapStateToProps = (state) => {
-
   return {
     selectedTrails: state.trails.filter(trail => trail.selected),
     previewTrails: state.trails.filter(trail => trail.previewing),
