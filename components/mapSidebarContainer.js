@@ -20,6 +20,6 @@ export default connect((state) => {
     cumulativeElevations: cumulativeElevations,
     elevationGain: cumulativeElevations.reduce((a, e) => a + e.elevationGain, 0),
     elevationLoss: cumulativeElevations.reduce((a, e) => a + e.elevationLoss, 0),
-    distance: sortedTrails.reduce((a, e) => a + e.distance, 0)
+    distance: cumulativeElevations.reduce((a, e) => a + e.distanceFromPreviousPoint, 0)
   }
 })(MapSidebar);

@@ -1,6 +1,5 @@
 import React, { Proptypes } from 'react';
 import MapboxGL from 'mapbox-gl';
-import {makePoints} from '../modules/geoJson';
 import {accessToken, styleUrl} from '../modules/mapBoxStaticData';
 
 export default class MapBox extends React.PureComponent {
@@ -18,7 +17,7 @@ export default class MapBox extends React.PureComponent {
       this.mapboxed.addSource(source.id, {
         data: source.data,
         type: "geojson",
-        tolerance: 0.15
+        tolerance: 0.05
       });
     }.bind(this));
 

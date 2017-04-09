@@ -25,6 +25,7 @@
     "@turf/centroid": "^4.0.2",
     "@turf/distance": "^4.0.1",
     "@turf/helpers": "^4.0.1",
+    "@turf/line-distance": "^4.0.2",
     "@turf/point-on-line": "^4.0.2",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-react": "^6.11.1",
