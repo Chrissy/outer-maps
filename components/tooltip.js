@@ -22,7 +22,7 @@ export default class Tooltip extends React.Component {
     return (
       <div
       className={'tooltip' + (this.props.trail || this.props.boundary ? '' : ' hidden')}
-      style={{top: this.y + 5 + 'px', left: this.x + 5 + 'px'}}>
+      style={{top: this.y + 10 + 'px', left: this.x + 10 + 'px'}}>
         {this.tooltipContent()}
       </div>
     )

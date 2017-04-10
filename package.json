@@ -12,7 +12,6 @@
     "classnames": "^2.2.5",
     "express": "^4.14.0",
     "geo-viewport": "^0.2.1",
-    "geolib": "^2.0.21",
     "isomorphic-fetch": "^2.2.1",
     "pg": "^6.0.1",
     "react-redux": "^5.0.2",
@@ -22,6 +21,13 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "@turf/bbox": "^4.0.2",
+    "@turf/centroid": "^4.0.2",
+    "@turf/distance": "^4.0.1",
+    "@turf/helpers": "^4.0.1",
+    "@turf/line-slice": "^4.0.2",
+    "@turf/nearest": "^4.0.1",
+    "@turf/point-on-line": "^4.0.2",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-react": "^6.11.1",
     "babelify": "^7.3.0",

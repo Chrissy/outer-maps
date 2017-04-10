@@ -1,31 +1,27 @@
 import { combineReducers } from 'redux';
-import Geolib from 'geolib';
+import distance from '@turf/distance';
+import centroid from '@turf/centroid';
+import bbox from '@turf/bbox';
 import _ from 'underscore';
 
 const trail = (state = {}, action) => {
   switch (action.type) {
     case 'ADD_TRAIL':
-      return {...state, id: action.id}
-    case 'SET_TRAIL_BASE_DATA':
-      if (parseInt(action.trail.id) !== state.id) return state
       return {...state,
         hasBaseData: true,
-        name: action.trail.name,
-        distance: action.trail.distance,
-        center: action.trail.center,
-        bounds: action.trail.bounds,
-        geog: action.trail.geography,
-        surface: action.trail.surface,
-        points: action.trail.geography.coordinates.map((coordinates) => point(undefined, {...action,
-          coordinates: coordinates
-        }))
+        id: action.properties.id,
+        name: action.properties.name,
+        distance: action.properties.distance,
+        center: centroid(action.geometry).geometry.coordinates,
+        bounds: bbox(action.geometry),
+        geometry: action.geometry
       }
-    case 'TOGGLE_TRAIL_PREVIEWING':
-      return { ...state, previewing: (state.id === action.trail.id) }
+    case 'SET_TRAIL_PREVIEWING':
+      return { ...state, previewing: (state.id === action.id) }
     case 'CLEAR_TRAIL_PREVIEWING':
       return { ...state, previewing: false }
     case 'TOGGLE_TRAIL_SELECTED':
-      if (state.id === action.trail.id && !action.trail.selected){
+      if (state.id === action.id && !action.selected){
         return { ...state, selected: true, selectedId: action.selectedTrailCount};
       }
       return state;
@@ -35,11 +31,19 @@ const trail = (state = {}, action) => {
       if (action.id !== state.id) return state
       return { ...state,
         hasElevationData: true,
-        points: state.points.map((p, i) => point(p, {...action,
-          elevation: action.elevations[i],
-          pElevation: action.elevations[i - 1],
-          pPoint: state.points[i - 1]
-        }))
+        points: action.elevations.map((e, i) => {
+          const p = action.elevations[i - 1];
+
+          return {
+            coordinates: e.coordinates,
+            id: action.id,
+            index: i,
+            elevation: e.elevation,
+            elevationGain: (p) ? Math.max(e.elevation - p.elevation, 0) : 0,
+            elevationLoss: (p) ? Math.abs(Math.min(e.elevation - p.elevation, 0)) : 0,
+            distanceFromPreviousPoint: (p) ? distance(e.coordinates, p.coordinates) * 1000 : 0
+          }
+        })
       }
     case 'SET_WEATHER_DATA':
       if (action.id !== state.id) return state
@@ -54,6 +58,28 @@ const trail = (state = {}, action) => {
         chanceOfSnowPack: action.chanceOfSnowPack,
         chanceOfHeavySnowPack: action.chanceOfHeavySnowPack
       }
+    case 'SET_HANDLES':
+      if (state.id !== action.id) return state;
+      return { ...state,
+        handles: [
+          handle(null, action, 0),
+          handle(null, action, 1)
+        ]
+      }
+    case 'UPDATE_HANDLE':
+      if (!state.handles) return state;
+      return {...state,
+        handles: state.handles.map(p => handle(p, action)),
+      }
+    case 'SET_HANDLE_INDEX':
+      if (!state.handles) return state;
+      return {...state,
+        handles: state.handles.map(p => handle(p, action)),
+      }
+    case 'CLEAR_HANDLES':
+        return { ...state,
+        handles: null
+      }
     default: return state
   }
 }
@@ -61,8 +87,9 @@ const trail = (state = {}, action) => {
 const trails = (state = [], action) => {
   switch (action.type) {
     case 'ADD_TRAIL':
+      if (state.some(t => t.id == action.properties.id)) return state;
       return [...state, trail(undefined, action)]
-    case 'TOGGLE_TRAIL_PREVIEWING':
+    case 'SET_TRAIL_PREVIEWING':
       return state.map(t => trail(t, action))
     case 'CLEAR_TRAIL_PREVIEWING':
       return state.map(t => trail(t, action))
@@ -76,22 +103,37 @@ const trails = (state = [], action) => {
       return state.map(t => trail(t, action))
     case 'SET_WEATHER_DATA':
       return state.map(t => trail(t, action))
+    case 'SET_HANDLES':
+      return state.map(t => trail(t, action))
+    case 'CLEAR_HANDLES':
+      return state.map(t => trail(t, action))
+    case 'UPDATE_HANDLE':
+      return state.map(t => trail(t, action))
+    case 'SET_HANDLE_INDEX':
+      return state.map(t => trail(t, action))
     default: return state
   }
 }
 
-const point = (state = {}, action) => {
+const handle = (state = {}, action, handleId) => {
   switch (action.type) {
-    case 'SET_TRAIL_BASE_DATA':
+    case 'SET_HANDLES':
+      const index = (handleId == 0) ? 0 : action.geometry.coordinates.length - 1;
       return {
+        coordinates: action.geometry.coordinates[index],
+        id: action.id + '-' + handleId,
+        index: index,
+        trailId: action.id
+      }
+    case 'UPDATE_HANDLE':
+      if (action.id !== state.id) return state;
+      return {...state,
         coordinates: action.coordinates
       }
-    case 'SET_ELEVATION_DATA':
+    case 'SET_HANDLE_INDEX':
+      if (action.id !== state.id) return state;
       return {...state,
-        elevation: action.elevation,
-        elevationGain: Math.max(action.elevation - action.pElevation, 0) || 0,
-        elevationLoss: Math.abs(Math.min(action.elevation - action.pElevation, 0)) || 0,
-        distanceFromPreviousPoint: (!action.pPoint) ? 0 : Geolib.getDistance(state.coordinates, action.pPoint.coordinates)
+        index: action.index
       }
     default: return state
   }
@@ -100,6 +142,7 @@ const point = (state = {}, action) => {
 const boundaries = (state = [], action) => {
   switch (action.type) {
     case 'ADD_BOUNDARY':
+      if (state.some(b => b.id == action.properties.id)) return state;
       return [...state, boundary(undefined, action)]
     case 'SET_BOUNDARY_PREVIEWING':
       return state.map(b => boundary(b, action))
@@ -109,8 +152,6 @@ const boundaries = (state = [], action) => {
       return state.map(b => boundary(b, action))
     case 'CLEAR_BOUNDARY_SELECTED':
       return state.map(b => boundary(b, action))
-    case 'SET_BOUNDARY_BASE_DATA':
-      return state.map(b => boundary(b, action))
     default: return state
   }
 }
@@ -118,17 +159,15 @@ const boundaries = (state = [], action) => {
 const boundary = (state = {}, action) => {
   switch (action.type) {
     case 'ADD_BOUNDARY':
-      return {...state, id: action.id}
-    case 'SET_BOUNDARY_BASE_DATA':
-      if (action.id !== state.id) return state
       return {...state,
-        name: action.name,
-        area: action.area,
-        center: action.center,
-        bounds: action.bounds
+        id: action.properties.id,
+        name: action.properties.name,
+        area: action.properties.area,
+        bounds: JSON.parse(action.properties.bounds),
+        geometry: action.geometry
       }
     case 'SET_BOUNDARY_PREVIEWING':
-      return { ...state, previewing: (state.id === action.id) }
+      return { ...state, previewing: (state.id === action.properties.id) }
     case 'CLEAR_BOUNDARY_PREVIEWING':
       return { ...state, previewing: false }
     case 'SET_BOUNDARY_SELECTED':
@@ -140,38 +179,7 @@ const boundary = (state = {}, action) => {
   }
 }
 
-const sources = (state = [], action) => {
-  switch (action.type) {
-    case 'ADD_SOURCE':
-      return [...state, source(undefined, action)]
-    case 'UPDATE_VIEW':
-      return state.map(l => source(l, action))
-    default: return state
-  }
-}
-
-const source = (state = {}, action) => {
-  switch (action.type) {
-    case 'ADD_SOURCE':
-      return {
-        id: action.id,
-        data: `api${action.endpoint}/${action.viewBox[0][0]}/${action.viewBox[0][1]}/${action.viewBox[1][0]}/${action.viewBox[1][1]}`,
-        maxZoom: action.maxZoom,
-        minZoom: action.minZoom,
-        endpoint: action.endpoint,
-        showing: action.zoom < action.maxZoom || action.zoom >= action.minZoom
-      }
-    case 'UPDATE_VIEW':
-      return {...state,
-        data: `api${state.endpoint}/${action.bounds[0][0]}/${action.bounds[0][1]}/${action.bounds[1][0]}/${action.bounds[1][1]}`,
-        showing: action.zoom < state.maxZoom || action.zoom >= state.minZoom
-      }
-    default: return state
-  }
-}
-
 export default combineReducers({
   trails,
-  boundaries,
-  sources
+  boundaries
 })

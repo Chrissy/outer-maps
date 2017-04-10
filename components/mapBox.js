@@ -9,16 +9,21 @@ export default class MapBox extends React.PureComponent {
     const removedSources = oldSources.filter(s => !newSources.map(n => n.id).includes(s.id));
     const addedSources = newSources.filter(s => !oldSources.map(n => n.id).includes(s.id));
 
-    changedSources.concat(removedSources).forEach(function(source){
+    removedSources.forEach(function(source){
       this.mapboxed.removeSource(source.id);
     }.bind(this));
 
-    changedSources.concat(addedSources).forEach(function(source){
+    addedSources.forEach(function(source){
       this.mapboxed.addSource(source.id, {
         data: source.data,
-        type: "geojson"
+        type: "geojson",
+        tolerance: 0.05
       });
     }.bind(this));
+
+    changedSources.forEach(function(source){
+      this.mapboxed.getSource(source.id).setData(source.data);
+    }.bind(this))
 
 
     this.updateLayers()
@@ -27,7 +32,7 @@ export default class MapBox extends React.PureComponent {
   updateLayers() {
     this.props.layers.forEach(function(layer){
       if (!this.mapboxed.getLayer(layer.id) && this.mapboxed.getSource(layer.source)){
-        this.mapboxed.addLayer(layer);
+        this.mapboxed.addLayer(layer, layer.before);
       }
       if (this.mapboxed.getLayer(layer.id) && !this.mapboxed.getSource(layer.source)){
         this.mapboxed.removeLayer(layer.id);
@@ -36,11 +41,23 @@ export default class MapBox extends React.PureComponent {
   }
 
   handleMouseMove(event) {
-    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'boundaries'] });
+    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'boundaries', 'handles'] });
 
     this.props.onMouseMove(Object.assign({}, event, {
+      features: features
+    }));
+  }
+
+  handleMouseDown(event) {
+    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'boundaries', 'handles'] });
+
+    this.props.onMouseDown(Object.assign({}, event, {
       features: features,
     }));
+  }
+
+  handleMouseUp(event) {
+    this.props.onMouseUp(event);
   }
 
   handleClick(event) {
@@ -65,11 +82,15 @@ export default class MapBox extends React.PureComponent {
   }
 
   handleLoad(event) {
+    this.updateSources([], this.props.sources);
+
     this.props.onLoad(Object.assign({}, event, {
       bounds: this.mapboxed.getBounds().toArray(),
       zoom: this.mapboxed.getZoom()
     }));
   }
+
+
 
   componentDidMount() {
     MapboxGL.accessToken = accessToken;
@@ -77,9 +98,9 @@ export default class MapBox extends React.PureComponent {
     this.mapboxed = new MapboxGL.Map({
       container: 'mapbox-gl-element',
       style: styleUrl,
-      center: [-112, 37.9],
+      center: [-111 , 37.9],
       zoom: 8
-    });
+    })
 
     this.mapEvents();
     this.mapboxed.addControl(new MapboxGL.Navigation());
@@ -107,6 +128,8 @@ export default class MapBox extends React.PureComponent {
   mapEvents() {
     let watchEvents = {
       'handleLoad': 'load',
+      'handleMouseDown': 'mousedown',
+      'handleMouseUp': 'mouseup',
       'handleDrag': 'moveend',
       'handleMouseMove': 'mousemove',
       'handleClick': 'click',
@@ -115,8 +138,8 @@ export default class MapBox extends React.PureComponent {
     Object.keys(watchEvents).forEach(function(functionName){
       this.mapboxed.on(watchEvents[functionName], function(event){
         this[functionName](event);
-      }.bind(this))
-    }.bind(this))
+      }.bind(this));
+    }.bind(this));
   }
 
   render() {

@@ -1,25 +1,41 @@
 import { connect } from 'react-redux';
-import { previewTrail, previewBoundary, selectTrail, selectBoundary, addSource, refreshSourcesForZoomLevel, clearPreviewing, clearSelected } from '../state/actions'
 import Map from '../components/map';
+import {
+  previewTrail,
+  previewBoundary,
+  selectTrail,
+  selectBoundary,
+  clearPreviewing,
+  clearSelected,
+  getTrails,
+  getBoundaries
+} from '../state/actions'
 
 const mapStateToProps = (state) => {
   return {
     selectedTrails: state.trails.filter(trail => trail.selected),
-    previewTrails: state.trails.filter(trail => trail.previewing),
-    selectedBoundary: state.boundaries.find(boundary => boundary.selected) || {},
-    previewBoundary: state.boundaries.find(boundary => boundary.previewing) || {},
-    sources: state.sources
+    previewTrail: state.trails.find(trail => trail.previewing),
+    activeTrails: [...state.trails.filter(trail => trail.previewing), ...state.trails.filter(trail => trail.selected)],
+    trails: state.trails,
+    boundaries: state.boundaries,
+    selectedBoundary: state.boundaries.find(boundary => boundary.selected),
+    previewBoundary: state.boundaries.find(boundary => boundary.previewing),
+    activeBoundaries: [...state.boundaries.filter(boundary => boundary.selected), ...state.boundaries.filter(boundary => boundary.previewing)],
+    handles: state.trails.reduce((a, t) => (t.handles) ? a.concat(t.handles) : a, []),
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onFeatureMouseIn: (id, layer) => dispatch((layer == "trails") ? previewTrail(id) : previewBoundary(id)),
+    onFeatureMouseIn: (feature, layer) => dispatch((layer == "trails") ? previewTrail(feature) : previewBoundary(feature)),
     onFeatureMouseOut: () => dispatch(clearPreviewing()),
-    onFeatureClick: (id, layer) => dispatch((layer == "trails") ? selectTrail(id) : selectBoundary(id)),
+    onTrailClick: (trail) => dispatch(selectTrail(trail)),
+    onBoundaryClick: (id) => dispatch(selectBoundary(id)),
     onNonFeatureClick: () => dispatch(clearSelected()),
-    updateView: (bounds, zoom) => dispatch({type: 'UPDATE_VIEW', bounds, zoom}),
-    addSource: (source) => dispatch(addSource(source))
+    getTrails: (viewBox) => dispatch(getTrails(viewBox)),
+    getBoundaries: (viewBox) => dispatch(getBoundaries(viewBox)),
+    updateHandle: (id, coordinates) => dispatch({type: 'UPDATE_HANDLE', id, coordinates}),
+    setHandleIndex: (id, index) => dispatch({type: 'SET_HANDLE_INDEX', id, index})
   }
 };
 
