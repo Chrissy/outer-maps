@@ -39,7 +39,6 @@ export default class Map extends React.Component {
     if (!this.draggingPoint) return;
 
     let snapToPoint = pointOnLine(this.draggingPoint.trail.geometry, point([event.lngLat.lng, event.lngLat.lat]));
-    console.log(snapToPoint)
     this.props.updateHandle(this.draggingPoint.properties.id, snapToPoint.geometry.coordinates);
     this.draggingPoint.currentPointOnLine = snapToPoint;
   }
@@ -77,6 +76,7 @@ export default class Map extends React.Component {
 
   onMapMouseUp(event) {
     if (!this.draggingPoint) return;
+    event.target.dragPan.enable();
     const features = pointsToFeatureCollection(this.draggingPoint.trail.points);
     let snapToPoint = nearest(this.draggingPoint.currentPointOnLine, features);
     this.props.updateHandle(this.draggingPoint.properties.id, snapToPoint.properties.coordinates);
