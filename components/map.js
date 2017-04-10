@@ -16,12 +16,14 @@ export default class Map extends React.Component {
     const feature = event.features[0];
 
     if (!feature && !this.draggingPoint) {
+      event.target.dragPan.enable();
       if (this.props.previewTrail && this.props.previewTrail.id) return this.props.onFeatureMouseOut();
       if (this.props.previewBoundary && this.props.previewBoundary.id) return this.props.onFeatureMouseOut();
     } else {
       if (this.draggingPoint || feature.layer.id == 'handles') {
         this.handleDrag(event);
       } else if (feature.layer.id == 'trails' || feature.layer.id == 'boundaries') {
+        event.target.dragPan.enable();
         this.handleFeature(feature);
       }
     }
@@ -76,12 +78,12 @@ export default class Map extends React.Component {
 
   onMapMouseUp(event) {
     if (!this.draggingPoint) return;
-    event.target.dragPan.enable();
     const features = pointsToFeatureCollection(this.draggingPoint.trail.points);
     let snapToPoint = nearest(this.draggingPoint.currentPointOnLine, features);
     this.props.updateHandle(this.draggingPoint.properties.id, snapToPoint.properties.coordinates);
     this.props.setHandleIndex(this.draggingPoint.properties.id, snapToPoint.properties.index);
     this.draggingPoint = null;
+    event.target.dragPan.enable();
   }
 
   fitBounds() {

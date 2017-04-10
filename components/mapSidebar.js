@@ -14,7 +14,7 @@ export default class MapSidebar extends React.Component {
   }
 
   elevationComponent() {
-    if (this.props.firstTrail.hasElevationData) return <ElevationData trails={this.props.trails}/>
+    if (this.props.firstTrail.hasElevationData) return <ElevationData trails={this.props.trails.filter(t => t.hasElevationData)}/>
   }
 
   render() {
