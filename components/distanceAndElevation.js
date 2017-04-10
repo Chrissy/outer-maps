@@ -4,7 +4,7 @@ import distance from '@turf/distance';
 import LineGraph from './lineGraph';
 import {metersToFeet, metersToMiles} from '../modules/conversions';
 
-export default class elevationData extends React.Component {
+export default class distanceAndElevation extends React.Component {
 
   reversePoints(points) {
     return [...points].reverse().map((point, i) => {

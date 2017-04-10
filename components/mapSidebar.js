@@ -1,6 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
-import ElevationData from './elevationData';
+import distanceAndElevation from './distanceAndElevation';
 import Terrain from './terrain';
 import LoadingSpinner from './loadingSpinner';
 import {convertToPercent} from '../modules/NOAA'
@@ -14,7 +14,7 @@ export default class MapSidebar extends React.Component {
   }
 
   elevationComponent() {
-    if (this.props.firstTrail.hasElevationData) return <ElevationData trails={this.props.trails.filter(t => t.hasElevationData)}/>
+    if (this.props.firstTrail.hasElevationData) return <distanceAndElevation trails={this.props.trails.filter(t => t.hasElevationData)}/>
   }
 
   render() {
