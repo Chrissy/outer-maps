@@ -7,7 +7,6 @@ const browserify = require('browserify-middleware');
 const app = express();
 const _ = require('underscore');
 const env = require('./environment/development');
-const boxToBounds = require('./modules/boxToBounds.js');
 const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
 const statUtils = require('./modules/statUtils');
 
