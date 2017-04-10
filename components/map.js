@@ -15,13 +15,22 @@ export default class Map extends React.Component {
   onMapMouseMove(event) {
     const feature = event.features[0];
 
-    if (!feature && !this.draggingPoint) return this.props.onFeatureMouseOut();
-
-    if (this.draggingPoint || feature.layer.id == 'handles') {
-      this.handleDrag(event);
-    } else if (feature.layer.id == 'trails' || feature.layer.id == 'boundaries') {
-      this.props.onFeatureMouseIn({properties: feature.properties, geometry: feature.geometry}, event.features[0].layer.id);
+    if (!feature && !this.draggingPoint) {
+      if (this.props.previewTrail && this.props.previewTrail.id) return this.props.onFeatureMouseOut();
+      if (this.props.previewBoundary && this.props.previewBoundary.id) return this.props.onFeatureMouseOut();
+    } else {
+      if (this.draggingPoint || feature.layer.id == 'handles') {
+        this.handleDrag(event);
+      } else if (feature.layer.id == 'trails' || feature.layer.id == 'boundaries') {
+        this.handleFeature(feature);
+      }
     }
+  }
+
+  handleFeature(feature) {
+    if (this.props.previewBoundary && feature.properties.id == this.props.previewBoundary.id) return;
+    if (this.props.previewTrail && feature.properties.id == this.props.previewTrail.id) return;
+    this.props.onFeatureMouseIn({properties: feature.properties, geometry: feature.geometry}, feature.layer.id);
   }
 
   handleDrag(event) {
@@ -74,6 +83,10 @@ export default class Map extends React.Component {
     this.draggingPoint = null;
   }
 
+  fitBounds() {
+    if (this.props.selectedBoundary) return this.props.selectedBoundary.bounds;
+  }
+
   sources() {
     if (!this.state.zoom || !this.state.viewBox) return [];
     let sources = [];
@@ -110,8 +123,8 @@ export default class Map extends React.Component {
           <MapBox
           sources={this.sources()}
           layers={mapBoxLayers}
-          fitBounds={this.props.selectedBoundary.bounds}
-          pointer={this.props.previewTrails.length > 0}
+          fitBounds={this.fitBounds()}
+          pointer={this.props.previewTrail}
           onClick={this.onMapClick.bind(this)}
           onLoad={this.onMapLoad.bind(this)}
           onMouseMove={this.onMapMouseMove.bind(this)}
