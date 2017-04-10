@@ -9,6 +9,7 @@ const _ = require('underscore');
 const env = require('./environment/development');
 const boxToBounds = require('./modules/boxToBounds.js');
 const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
+const statUtils = require('./modules/statUtils');
 
 
 app.use(express.static('public'));
@@ -137,7 +138,13 @@ app.get('/api/elevation', function(request, response){
     client.query(query, function(err, result){
       if (err) throw err;
       done();
-      response.json(result.rows.map(r => r.elevation));
+      const elevations = statUtils.rollingAverage(statUtils.glitchDetector(result.rows.map(r => r.elevation)), 15);
+      response.json(elevations.map((r, i) => {
+        return {
+          elevation: r,
+          coordinates: points[i]
+        };
+      }));
     });
   });
 });

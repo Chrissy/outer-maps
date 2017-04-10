@@ -1,9 +1,8 @@
 import React from 'react';
 import cx from 'classnames';
-import LineGraph from './lineGraph';
+import ElevationData from './elevationData';
 import Terrain from './terrain';
 import LoadingSpinner from './loadingSpinner';
-import {metersToFeet, metersToMiles} from '../modules/conversions';
 import {convertToPercent} from '../modules/NOAA'
 
 import styles from './mapSidebar.css';
@@ -15,7 +14,7 @@ export default class MapSidebar extends React.Component {
   }
 
   elevationComponent() {
-    if (this.props.firstTrail.hasElevationData) return <LineGraph points={this.props.cumulativeElevations}/>
+    if (this.props.firstTrail.hasElevationData) return <ElevationData trails={this.props.trails}/>
   }
 
   render() {
@@ -24,12 +23,7 @@ export default class MapSidebar extends React.Component {
         <div className={cx(styles.content, {[styles.active]: this.props.firstTrail.hasBaseData})}>
           name: {this.props.firstTrail.name}<br/>
           {this.terrainComponent()}
-          length: {metersToMiles(this.props.distance)}<br/>
-          elevation gain: {metersToFeet(this.props.elevationGain)} Feet<br/>
-          elevation loss: {metersToFeet(this.props.elevationLoss)} Feet<br/>
-          <div className={spacing.top_margin}>
-            {this.elevationComponent()}
-          </div>
+          {this.elevationComponent()}
           Weather almanac for this week: <br/>
           High temperature: {this.props.firstTrail.maxTemperature}° <br/>
           Low Temperature: {this.props.firstTrail.minTemperature}° <br/>
@@ -39,7 +33,6 @@ export default class MapSidebar extends React.Component {
           Chance of heavy snow: {convertToPercent(this.props.firstTrail.chanceOfHeavySnow)}% <br/>
           Chance of snowpack: {convertToPercent(this.props.firstTrail.chanceOfSnowPack)}% <br/>
           Chance of heavy snowpack: {convertToPercent(this.props.firstTrail.chanceOfHeavySnowPack)}% <br/>
-          surface: {this.props.firstTrail.surface || 'unknown'}<br/>
         </div>
         <div className={cx(styles.spinner, {[styles.hidden]: this.props.firstTrail.hasBaseData})}>
           <LoadingSpinner/>

@@ -14,11 +14,6 @@ const trail = (state = {}, action) => {
         distance: action.properties.distance,
         center: centroid(action.geometry).geometry.coordinates,
         bounds: bbox(action.geometry),
-        points: action.geometry.coordinates.map((coordinates, index) => point(undefined, {...action,
-          coordinates: coordinates,
-          id: action.properties.id,
-          index: index
-        })),
         geometry: action.geometry
       }
     case 'SET_TRAIL_PREVIEWING':
@@ -36,11 +31,19 @@ const trail = (state = {}, action) => {
       if (action.id !== state.id) return state
       return { ...state,
         hasElevationData: true,
-        points: state.points.map((p, i) => point(p, {...action,
-          elevation: action.elevations[i],
-          pElevation: action.elevations[i - 1],
-          pPoint: state.points[i - 1]
-        }))
+        points: action.elevations.map((e, i) => {
+          const p = action.elevations[i - 1];
+
+          return {
+            coordinates: e.coordinates,
+            id: action.id,
+            index: i,
+            elevation: e.elevation,
+            elevationGain: (p) ? Math.max(e.elevation - p.elevation, 0) : 0,
+            elevationLoss: (p) ? Math.abs(Math.min(e.elevation - p.elevation, 0)) : 0,
+            distanceFromPreviousPoint: (p) ? distance(e.coordinates, p.coordinates) * 1000 : 0
+          }
+        })
       }
     case 'SET_WEATHER_DATA':
       if (action.id !== state.id) return state
@@ -59,19 +62,19 @@ const trail = (state = {}, action) => {
       if (state.id !== action.id) return state;
       return { ...state,
         handles: [
-          state.points[0],
-          state.points[state.points.length - 1]
+          handle(null, action, 0),
+          handle(null, action, 1)
         ]
       }
     case 'UPDATE_HANDLE':
       if (!state.handles) return state;
       return {...state,
-        handles: state.handles.map(p => point(p, {...action, points: state.points})),
+        handles: state.handles.map(p => handle(p, action)),
       }
     case 'SET_HANDLE_INDEX':
       if (!state.handles) return state;
       return {...state,
-        handles: state.handles.map(p => point(p, action)),
+        handles: state.handles.map(p => handle(p, action)),
       }
     case 'CLEAR_HANDLES':
         return { ...state,
@@ -112,22 +115,15 @@ const trails = (state = [], action) => {
   }
 }
 
-
-const point = (state = {}, action) => {
+const handle = (state = {}, action, handleId) => {
   switch (action.type) {
-    case 'ADD_TRAIL':
+    case 'SET_HANDLES':
+      const index = (handleId == 0) ? 0 : action.geometry.coordinates.length - 1;
       return {
-        coordinates: action.coordinates,
-        id: action.id.toString() + action.index,
-        trailId: action.id,
-        index: action.index
-      }
-    case 'SET_ELEVATION_DATA':
-      return {...state,
-        elevation: action.elevation,
-        elevationGain: Math.max(action.elevation - action.pElevation, 0) || 0,
-        elevationLoss: Math.abs(Math.min(action.elevation - action.pElevation, 0)) || 0,
-        distanceFromPreviousPoint: (!action.pPoint) ? 0 : distance(state.coordinates, action.pPoint.coordinates) * 1000
+        coordinates: action.geometry.coordinates[index],
+        id: action.id + '-' + handleId,
+        index: index,
+        trailId: action.id
       }
     case 'UPDATE_HANDLE':
       if (action.id !== state.id) return state;

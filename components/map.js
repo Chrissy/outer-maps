@@ -39,6 +39,7 @@ export default class Map extends React.Component {
     if (!this.draggingPoint) return;
 
     let snapToPoint = pointOnLine(this.draggingPoint.trail.geometry, point([event.lngLat.lng, event.lngLat.lat]));
+    console.log(snapToPoint)
     this.props.updateHandle(this.draggingPoint.properties.id, snapToPoint.geometry.coordinates);
     this.draggingPoint.currentPointOnLine = snapToPoint;
   }

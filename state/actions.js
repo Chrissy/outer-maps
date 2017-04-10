@@ -1,15 +1,13 @@
 import fetch from 'isomorphic-fetch';
 import _ from 'underscore'
-import {rollingAverage, glitchDetector} from '../modules/cumulativeElevationChanges';
 import {getDataFromNearestStation} from '../modules/NOAA';
 
-function getAltitudeData(trail) {
+function getElevationData(trail) {
   return (dispatch) => {
     if (trail.hasElevationData) return Promise.resolve();
-    return fetch(`/api/elevation?points=${JSON.stringify(trail.points.map(p => p.coordinates))}`)
+    return fetch(`/api/elevation?points=${JSON.stringify(trail.geometry.coordinates)}`)
       .then(response => response.json())
-      .then(elevationData => {
-        const elevations = rollingAverage(glitchDetector(elevationData), 15);
+      .then(elevations => {
         return dispatch({type: 'SET_ELEVATION_DATA', elevations, id: trail.id});
       });
   };
@@ -53,8 +51,8 @@ export function selectTrail(trail) {
     trail = getState().trails.find(t => t.id == trail.properties.id);
     dispatch({type: 'CLEAR_BOUNDARY_SELECTED'});
     dispatch({type: 'TOGGLE_TRAIL_SELECTED', ...trail});
+    dispatch(getElevationData(trail));
     dispatch({type: 'SET_HANDLES', ...trail})
-    dispatch(getAltitudeData(trail));
     dispatch(getWeatherData(trail));
   };
 };
