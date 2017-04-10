@@ -75,7 +75,7 @@ const trail = (state = {}, action) => {
       }
     case 'CLEAR_HANDLES':
         return { ...state,
-        handles: []
+        handles: null
       }
     default: return state
   }
