@@ -66,6 +66,11 @@ const trail = (state = {}, action) => {
     case 'UPDATE_HANDLE':
       if (!state.handles) return state;
       return {...state,
+        handles: state.handles.map(p => point(p, {...action, points: state.points})),
+      }
+    case 'SET_HANDLE_INDEX':
+      if (!state.handles) return state;
+      return {...state,
         handles: state.handles.map(p => point(p, action)),
       }
     case 'CLEAR_HANDLES':
@@ -101,6 +106,8 @@ const trails = (state = [], action) => {
       return state.map(t => trail(t, action))
     case 'UPDATE_HANDLE':
       return state.map(t => trail(t, action))
+    case 'SET_HANDLE_INDEX':
+      return state.map(t => trail(t, action))
     default: return state
   }
 }
@@ -112,7 +119,8 @@ const point = (state = {}, action) => {
       return {
         coordinates: action.coordinates,
         id: action.id.toString() + action.index,
-        trailId: action.id
+        trailId: action.id,
+        index: action.index
       }
     case 'SET_ELEVATION_DATA':
       return {...state,
@@ -125,6 +133,11 @@ const point = (state = {}, action) => {
       if (action.id !== state.id) return state;
       return {...state,
         coordinates: action.coordinates
+      }
+    case 'SET_HANDLE_INDEX':
+      if (action.id !== state.id) return state;
+      return {...state,
+        index: action.index
       }
     default: return state
   }

@@ -1,6 +1,8 @@
 import React, { Proptypes } from 'react';
 import pointOnLine from '@turf/point-on-line';
-import {point, feature, featureCollection} from '@turf/helpers';
+import nearest from '@turf/nearest';
+import {point, featureCollection} from '@turf/helpers';
+import {pointToPoint, pointsToFeatureCollection, trailsToFeatureCollection} from '../modules/stateToGeoJson'
 import TooltipContainer from './tooltipContainer';
 import MapBox from './mapBox';
 import MapSidebarContainer from './mapSidebarContainer';
@@ -29,6 +31,7 @@ export default class Map extends React.Component {
 
     let snapToPoint = pointOnLine(this.draggingPoint.trail.geometry, point([event.lngLat.lng, event.lngLat.lat]));
     this.props.updateHandle(this.draggingPoint.properties.id, snapToPoint.geometry.coordinates);
+    this.draggingPoint.currentPointOnLine = snapToPoint;
   }
 
   onMapClick(event) {
@@ -56,11 +59,19 @@ export default class Map extends React.Component {
   onMapMouseDown(event) {
     const firstHandle = event.features.find(f => f.layer.id == "handles");
     if (!firstHandle) return;
-    this.draggingPoint = {...firstHandle, trail: this.props.selectedTrails.find(t => t.id == firstHandle.properties.trailId)};
+    this.draggingPoint = {...firstHandle,
+      trail: this.props.selectedTrails.find(t => t.id == firstHandle.properties.trailId),
+      geometry: firstHandle.geometry
+    };
   }
 
   onMapMouseUp(event) {
-    if (this.draggingPoint) this.draggingPoint = null;
+    if (!this.draggingPoint) return;
+    const features = pointsToFeatureCollection(this.draggingPoint.trail.points);
+    let snapToPoint = nearest(this.draggingPoint.currentPointOnLine, features);
+    this.props.updateHandle(this.draggingPoint.properties.id, snapToPoint.properties.coordinates);
+    this.props.setHandleIndex(this.draggingPoint.properties.id, snapToPoint.properties.index);
+    this.draggingPoint = null;
   }
 
   sources() {
@@ -71,7 +82,7 @@ export default class Map extends React.Component {
 
     if (this.state.zoom >= TRAILS_BREAKPOINT) {
       sources.push({id: 'trails', data: `api/trails/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}`});
-      sources.push({id: 'trails-active', data: featureCollection(this.props.activeTrails)});
+      sources.push({id: 'trails-active', data: trailsToFeatureCollection(this.props.activeTrails)});
     }
     if (this.state.zoom < TRAILS_BREAKPOINT) {
       sources.push({id: 'boundaries', data: `api/boundaries/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}`});
@@ -80,9 +91,7 @@ export default class Map extends React.Component {
 
     if (this.props.handles && this.props.handles.length) {
       sources.push({id: 'handles', data: featureCollection(
-        this.props.handles.map(h => {
-          return {...point(h.coordinates), properties: h};
-        })
+        this.props.handles.map(p => pointToPoint(p))
       )});
     }
 

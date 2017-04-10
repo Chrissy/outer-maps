@@ -1,6 +1,9 @@
 import { connect } from 'react-redux';
 import MapSidebar from './mapSidebar';
 import {pathsOppose, reversePath} from '../modules/geometryUtils';
+import lineSlice from '@turf/line-slice';
+import lineDistance from '@turf/line-distance';
+import {point} from '@turf/helpers';
 
 export default connect((state) => {
   const sortedTrails = state.trails.filter(t => t.selected && t.hasBaseData).sort((a,b) => a.selectedId - b.selectedId);
