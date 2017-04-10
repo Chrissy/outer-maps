@@ -106,9 +106,10 @@ export default class Map extends React.Component {
     }
 
     if (this.props.handles && this.props.handles.length) {
-      sources.push({id: 'handles', data: featureCollection(
-        this.props.handles.map(p => pointToPoint(p));
-      )});
+      sources.push({
+        id: 'handles',
+        data: featureCollection(this.props.handles.map(p => pointToPoint(p)))
+      });
     }
 
     return sources;

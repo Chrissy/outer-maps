@@ -40,15 +40,23 @@ export default class distanceAndElevation extends React.Component {
   }
 
   elevationGain() {
-    return this.cumulativeElevations().reduce((a, e) => a + e.elevationGain, 0);
+    return this.elevations.reduce((a, e) => a + e.elevationGain, 0);
   }
 
   elevationLoss() {
-    return this.cumulativeElevations().reduce((a, e) => a + e.elevationLoss, 0);
+    return this.elevations.reduce((a, e) => a + e.elevationLoss, 0);
   }
 
   distance() {
-    return this.cumulativeElevations().reduce((a, e) => a + e.distanceFromPreviousPoint, 0);
+    return this.elevations.reduce((a, e) => a + e.distanceFromPreviousPoint, 0);
+  }
+
+  componentWillMount() {
+    this.elevations = this.cumulativeElevations();
+  }
+
+  componentWillUpdate() {
+    this.elevations = this.cumulativeElevations();
   }
 
   render() {
