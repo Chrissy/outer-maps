@@ -16,7 +16,6 @@ export const trailToLine = (toConvert, opts) => {
   delete props.geometry;
   const asFeature = (props.handles) ? cropToHandles(toConvert) : feature(toConvert.geometry);
 
-  console.log(asFeature)
   return {...asFeature, properties: props};
 }
 

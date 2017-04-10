@@ -10,7 +10,6 @@ import styles from './mapSidebar.css';
 import spacing from './spacing.css';
 
 export default class MapSidebar extends React.Component {
-
   terrainComponent() {
     return <Terrain trail={this.props.firstTrail}/>
   }
@@ -23,6 +22,7 @@ export default class MapSidebar extends React.Component {
     return (
       <div className={cx(styles.body, {[styles.active]: this.props.loading})}>
         <div className={cx(styles.content, {[styles.active]: this.props.firstTrail.hasBaseData})}>
+          name: {this.props.firstTrail.name}<br/>
           {this.terrainComponent()}
           length: {metersToMiles(this.props.distance)}<br/>
           elevation gain: {metersToFeet(this.props.elevationGain)} Feet<br/>

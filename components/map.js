@@ -132,7 +132,6 @@ export default class Map extends React.Component {
           onMouseDown={this.onMapMouseDown.bind(this)}
           onDrag={this.onMapDrag.bind(this)}/>
           <MapSidebarContainer/>
-          <TooltipContainer/>
         </div>
     );
   }
