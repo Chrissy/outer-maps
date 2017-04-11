@@ -7,9 +7,7 @@ exports.up = function(next) {
     directoryName: 'elevation_rasters',
     srid: '4326',
     tableName: 'elevation'
-  });
-
-  next();
+  }, next);
 };
 
 exports.down = function(next) {

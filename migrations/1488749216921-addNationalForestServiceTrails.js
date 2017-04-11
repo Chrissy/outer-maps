@@ -10,12 +10,27 @@ exports.up = function(next) {
     srid: '4269'
   });
 
+  utils.genericQuery(`
+    ALTER TABLE national_forest_service_trails ADD type text;
+    UPDATE national_forest_service_trails SET
+      type = CASE
+      WHEN allowed_te like '%6%' then 'road'
+      WHEN allowed_te like '%5%' THEN 'atv'
+      WHEN allowed_te like '%4%' THEN 'motorcycle'
+      WHEN allowed_te like '%3%' THEN 'bike'
+      WHEN allowed_te like '%2%' THEN 'horse'
+      WHEN allowed_te like '%1%' THEN 'hike'
+      WHEN allowed_sn like 'N/A' THEN 'snow'
+      END;
+  `)
+
   utils.mergeIntoTrailsTable({
     baseTableName: 'trails',
     mergingTableName: 'national_forest_service_trails',
     name: 'trail_name',
     sourceId: 'trail_cn',
     geog: 'geog',
+    type: 'type',
     sourceUrl: 'https://data.fs.usda.gov/geodata/edw/edw_resources/meta/S_USA.TrailNFS_Publish.xml',
   }, next);
 };

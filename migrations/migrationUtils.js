@@ -3,7 +3,7 @@ const env = require('../environment/development');
 const execSync = require('child_process').execSync;
 const path = require('path').normalize;
 
-const genericQuery = function(query, callback) {
+const genericQuery = function(query, cb) {
     var pool = new pg.Pool({
       database: env.databaseName,
       max: 10,
@@ -18,37 +18,41 @@ const genericQuery = function(query, callback) {
         done();
 
         console.log(result);
-        callback();
+        if (cb) cb();
       });
     });
 }
 
 exports.genericQuery = genericQuery;
 
-exports.uploadShapeFile = function({directoryName, filename, srid = '4326', tableName} = {}) {
+exports.uploadShapeFile = function({directoryName, filename, srid = '4326', tableName} = {}, cb) {
   console.log("uploading...");
 
   const pathStr = path(env.libDirectory + "/" + directoryName);
   const user = (env.dbUser) ? `-U ${env.dbUser}` : '';
 
   execSync(`shp2pgsql -G -c -s ${srid}:4326 ${filename}.shp public.${tableName} | psql -d ${env.databaseName} ${user}`, {cwd: pathStr});
+
+  if (cb) cb();
 }
 
-exports.insertElevationRasters = function({directoryName, srid = '4326', tableName} = {}) {
+exports.insertElevationRasters = function({directoryName, srid = '4326', tableName} = {}, cb) {
   console.log("inserting...");
 
   const pathStr = path(env.libDirectory + "/" + directoryName);
   const user = (env.dbUser) ? `-U ${env.dbUser}` : '';
 
   execSync(`raster2pgsql -s ${srid} -t "auto" -C *.tif public.${tableName} | psql -d ${env.databaseName} ${user}`, {cwd: pathStr});
+
+  if (cb) cb()
 }
 
-exports.mergeIntoTrailsTable = function({baseTableName, mergingTableName, name = 'name', sourceId='source_id', geog = 'geog', sourceUrl} = {}, callback) {
+exports.mergeIntoTrailsTable = function({baseTableName, mergingTableName, name = 'name', sourceId='source_id', geog = 'geog', sourceUrl, type = 'type'} = {}, callback) {
   const query = `
     CREATE TABLE ${baseTableName}__new AS SELECT * FROM ${baseTableName};
 
-    INSERT INTO ${baseTableName}__new(name, source_id, geog, source)
-    SELECT ${name}, ${sourceId}, ${geog}, '${sourceUrl}' FROM ${mergingTableName};
+    INSERT INTO ${baseTableName}__new(name, source_id, geog, type, source)
+    SELECT ${name}, ${sourceId}, ${geog}, ${type}, '${sourceUrl}' FROM ${mergingTableName};
 
     DROP TABLE ${baseTableName};
 
