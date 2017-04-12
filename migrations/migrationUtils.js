@@ -52,7 +52,21 @@ exports.mergeIntoTrailsTable = function({baseTableName, mergingTableName, name =
     CREATE TABLE ${baseTableName}__new AS SELECT * FROM ${baseTableName};
 
     INSERT INTO ${baseTableName}__new(name, source_id, geog, type, source)
-    SELECT ${name}, ${sourceId}, ${geog}, ${type}, '${sourceUrl}' FROM ${mergingTableName};
+    SELECT
+      simple.${name},
+      simple.${sourceId},
+      simple.simple_geom,
+      simple.${type},
+      '${sourceUrl}'
+    FROM (
+      SELECT
+        dumped.*,
+        (dumped.geom_dump).geom as simple_geom,
+        (dumped.geom_dump).path as path
+      FROM (
+        SELECT *, ST_Dump(${geog}::geometry) AS geom_dump FROM ${mergingTableName}
+      ) AS dumped
+    ) AS simple;
 
     DROP TABLE ${baseTableName};
 

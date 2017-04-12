@@ -24,7 +24,7 @@ export const mapBoxLayers = [
     'source': 'handles',
     'type': 'circle',
     'paint': {
-      "circle-radius": 10,
+      "circle-radius": 8,
       "circle-color": "rgba(0,0,0,0)"
     }
   },
