@@ -34,6 +34,7 @@ app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
     SELECT
       name,
       id,
+      type,
       ST_AsGeoJson(geog) as geog
     FROM trails
     WHERE ST_Intersects(geog,
@@ -53,6 +54,7 @@ app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
           "properties": {
             "name": r.name,
             "id": r.id,
+            "type": r.type
           },
           "geometry": JSON.parse(r.geog)
         };

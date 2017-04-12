@@ -53,7 +53,7 @@ export const mapBoxLayers = [
     },
     'paint': {
       'line-color': 'rgba(0,155,1,1)',
-      'line-width': 2
+      'line-width': 2,
     },
     "filter": ["in", "type", "hike"]
   },
@@ -69,7 +69,7 @@ export const mapBoxLayers = [
     },
     'paint': {
       'line-color': 'rgba(120,125,120,1)',
-      'line-width': 2
+      'line-width': 2,
     },
     "filter": ["in", "type", "horse", "bike"]
   },
@@ -100,9 +100,9 @@ export const mapBoxLayers = [
       'line-join': 'bevel'
     },
     'paint': {
-      'line-color': 'rgba(100,100,100,1)',
+      'line-color': 'rgba(150,150,150,1)',
       'line-width': 1,
-      'line-dasharray': 5
+      'line-dasharray': [2, 1]
     },
     "filter": ["in", "type", "atv", "motorcycle", "mixed"]
   },
