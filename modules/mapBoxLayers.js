@@ -9,6 +9,7 @@ export const mapBoxLayers = [
       "circle-color": "#FF9100"
     }
   },
+
   {
     'id': 'handles-outline',
     'source': 'handles',
@@ -19,6 +20,7 @@ export const mapBoxLayers = [
       "circle-color": "#FFF"
     }
   },
+
   {
     'id': 'handles',
     'source': 'handles',
@@ -28,6 +30,7 @@ export const mapBoxLayers = [
       "circle-color": "rgba(0,0,0,0)"
     }
   },
+
   {
     'id': 'trails',
     'source': 'trails',
@@ -35,8 +38,75 @@ export const mapBoxLayers = [
     'paint': {
       'line-color': 'transparent',
       'line-width': 15
-    }
+    },
+    "filter": ["!=", "type", "unknown"]
   },
+
+  {
+    'id': 'trails-core-line',
+    'source': 'trails',
+    'type': 'line',
+    'before': 'hedges',
+    'line': {
+      'line-cap': 'round',
+      'line-join': 'bevel'
+    },
+    'paint': {
+      'line-color': 'rgba(0,155,1,1)',
+      'line-width': 2
+    },
+    "filter": ["in", "type", "hike"]
+  },
+
+  {
+    'id': 'horse-and-bike-core-line',
+    'source': 'trails',
+    'type': 'line',
+    'before': 'hedges',
+    'line': {
+      'line-cap': 'round',
+      'line-join': 'bevel'
+    },
+    'paint': {
+      'line-color': 'rgba(120,125,120,1)',
+      'line-width': 2
+    },
+    "filter": ["in", "type", "horse", "bike"]
+  },
+
+  {
+    'id': 'trails-outline',
+    'source': 'trails',
+    'type': 'line',
+    'before': 'trails-core-line',
+    'line': {
+      'line-cap': 'round',
+      'line-join': 'bevel'
+    },
+    'paint': {
+      'line-color': 'rgba(250,250,250,1)',
+      'line-width': 4
+    },
+    "filter": ["in", "type", "hike", "horse", "bike"]
+  },
+
+  {
+    'id': 'atv-and-motorcycle-core-line',
+    'source': 'trails',
+    'type': 'line',
+    'before': 'roads',
+    'line': {
+      'line-cap': 'round',
+      'line-join': 'bevel'
+    },
+    'paint': {
+      'line-color': 'rgba(100,100,100,1)',
+      'line-width': 1,
+      'line-dasharray': 5
+    },
+    "filter": ["in", "type", "atv", "motorcycle", "mixed"]
+  },
+
   {
     'id': 'trails-active',
     'source': 'trails-active',
@@ -47,27 +117,7 @@ export const mapBoxLayers = [
       'line-width': 2,
     }
   },
-  {
-    'id': 'trails-core-line',
-    'source': 'trails',
-    'type': 'line',
-    'before': 'water',
-    'paint': {
-      'line-color': '#0DB224',
-      'line-width': 2
-    }
-  },
-  {
-    'id': 'trails-outline',
-    'source': 'trails',
-    'type': 'line',
-    'before': 'trails-core-line',
-    'paint': {
-      'line-color': '#fff',
-      'line-width': 4,
-      'line-opacity': 0.3
-    }
-  },
+
   {
     'id': 'boundaries-active-outline',
     'source': 'boundaries-active',
@@ -82,6 +132,7 @@ export const mapBoxLayers = [
       'line-opacity': 0.9
     }
   },
+
   {
     'id': 'boundaries-active',
     'source': 'boundaries-active',
@@ -92,6 +143,7 @@ export const mapBoxLayers = [
       'fill-opacity': 0.2
     }
   },
+
   {
     'id': 'boundaries',
     'source': 'boundaries',
@@ -100,5 +152,5 @@ export const mapBoxLayers = [
     'paint': {
       'fill-color': 'rgba(0, 0, 0, 0%)'
     }
-  },
+  }
 ]
