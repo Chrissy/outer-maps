@@ -29,6 +29,7 @@ exports.up = function(next) {
     name: 'primarynam',
     sourceId: 'trailid',
     geog: 'geog',
+    type: 'type',
     sourceUrl: 'https://gis.utah.gov/data/recreation/trails/',
   }, next);
 };
