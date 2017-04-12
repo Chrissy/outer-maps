@@ -10,12 +10,29 @@ exports.up = function(next) {
     srid: "2927"
   });
 
+  utils.genericQuery(`
+    ALTER TABLE washington_trails ADD type text;
+    UPDATE washington_trails SET
+      type = CASE
+      WHEN four_wheel = 'Yes' then 'road'
+      WHEN atv = 'Yes' THEN 'atv'
+      WHEN motorcycle = 'Yes' THEN 'motorcycle'
+      WHEN bicycle = 'Yes' THEN 'bike'
+      WHEN pack_and_s = 'Yes' THEN 'horse'
+      WHEN hiker_pede = 'Yes' THEN 'hike'
+      WHEN snowshoe = 'Yes' THEN 'snow'
+      WHEN cross_coun = 'Yes' THEN 'snow'
+      WHEN snowmobile = 'Yes' THEN 'snow'
+      END;
+  `)
+
   utils.mergeIntoTrailsTable({
     baseTableName: 'trails',
     mergingTableName: 'washington_trails',
     name: 'tr_nm',
     sourceId: 'globalid',
     geog: 'geog',
+    type: 'type',
     sourceUrl: 'http://www.rco.wa.gov/maps/Data.shtml',
   }, next);
 };

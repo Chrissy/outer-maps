@@ -1,6 +1,3 @@
-'use strict'
-
-const utils = require('./migrationUtils');
 const xml2js = require('xml2js');
 const fs = require('fs');
 const path = require('path').normalize;
@@ -9,35 +6,7 @@ const env = require('../environment/development');
 const directoryName = "idaho_trails"
 const workingDir = path(env.libDirectory + "/" + directoryName);
 
-exports.up = function(next) {
-  convertCrazyKmlAttributes();
-
-  if (!fs.existsSync(path(workingDir + "/idaho-nonmotorized.shp"))) {
-    execSync(`ogr2ogr -nlt LINESTRING -skipfailures idaho-nonmotorized.shp idaho-nonmotorized-converted.geojson`, {cwd: workingDir});
-  };
-
-  utils.uploadShapeFile({
-    tableName: 'idaho_trails',
-    directoryName: 'idaho_trails',
-    filename: 'idaho-nonmotorized',
-    srid: '4326'
-  });
-
-  utils.mergeIntoTrailsTable({
-    baseTableName: 'trails',
-    mergingTableName: 'idaho_trails',
-    name: 'name',
-    sourceId: 'sourceId',
-    geog: 'geog',
-    sourceUrl: 'http://data.gis.idaho.gov/datasets?q=trails',
-  }, next);
-};
-
-exports.down = function(next) {
-  utils.genericQuery("DELETE FROM trails WHERE source = 'http://data.gis.idaho.gov/datasets?q=trails'", next);
-};
-
-const convertCrazyKmlAttributes = function() {
+export const convertCrazyKmlAttributes = function() {
   const readPath = path(env.libDirectory + "/" + directoryName + "/idaho-nonmotorized.geojson");
   const writePath = path(env.libDirectory + "/" + directoryName + "/idaho-nonmotorized-converted.geojson");
 

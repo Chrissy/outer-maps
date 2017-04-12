@@ -10,12 +10,26 @@ exports.up = function(next) {
     srid: '26912'
   });
 
+  utils.genericQuery(`
+    ALTER TABLE utah_trails ADD type text;
+    UPDATE utah_trails SET
+      type = CASE
+      WHEN designated like '%4WD%' THEN 'road'
+      WHEN designated like '%ATV%' THEN 'atv'
+      WHEN designated like '%MOTORCYCLE%' THEN 'motorcycle'
+      WHEN designated like '%BIKE%' THEN 'bike'
+      WHEN designated like '%HORSE%' THEN 'horse'
+      WHEN designated like '%HIKE%' THEN 'hike'
+      END;
+  `)
+
   utils.mergeIntoTrailsTable({
     baseTableName: 'trails',
     mergingTableName: 'utah_trails',
     name: 'primarynam',
     sourceId: 'trailid',
     geog: 'geog',
+    type: 'type',
     sourceUrl: 'https://gis.utah.gov/data/recreation/trails/',
   }, next);
 };

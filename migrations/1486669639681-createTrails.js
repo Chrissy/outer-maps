@@ -8,8 +8,9 @@ exports.up = function(next) {
       id SERIAL PRIMARY KEY,
       name VARCHAR(200),
       surface VARCHAR(64),
-      source_id varchar(50),
-      source varchar(200),
+      source_id VARCHAR(50),
+      source VARCHAR(200),
+      type VARCHAR(100),
       geog geography(GEOMETRY,4326)
     )`;
 
