@@ -17,7 +17,7 @@ export default class MapBox extends React.PureComponent {
       this.mapboxed.addSource(source.id, {
         data: source.data,
         type: "geojson",
-        tolerance: 0.5
+        tolerance: 0.3
       });
     }.bind(this));
 
@@ -98,7 +98,7 @@ export default class MapBox extends React.PureComponent {
     this.mapboxed = new MapboxGL.Map({
       container: 'mapbox-gl-element',
       style: styleUrl,
-      center: [-111 , 37.9],
+      center: [-110.37, 40.77],
       zoom: 8
     })
 

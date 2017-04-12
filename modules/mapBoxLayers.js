@@ -39,7 +39,7 @@ export const mapBoxLayers = [
       'line-color': 'transparent',
       'line-width': 15
     },
-    "filter": ["!=", "type", "unknown"]
+    "filter": ["all", ["in", "type", "hike", "horse", "bike", "atv", "motorcycle", "trail"]]
   },
 
   {
@@ -52,14 +52,15 @@ export const mapBoxLayers = [
       'line-join': 'bevel'
     },
     'paint': {
-      'line-color': 'rgba(0,155,1,1)',
-      'line-width': 2,
+      'line-color': 'rgba(0,123,14,1)',
+      'line-width': 1,
+      'line-dasharray': [4, 1]
     },
-    "filter": ["in", "type", "hike"]
+    "filter": ["all", ["in", "type", "hike", "trail"], ["!=", "name", ""]]
   },
 
   {
-    'id': 'horse-and-bike-core-line',
+    'id': 'horse-core-line',
     'source': 'trails',
     'type': 'line',
     'before': 'hedges',
@@ -68,10 +69,11 @@ export const mapBoxLayers = [
       'line-join': 'bevel'
     },
     'paint': {
-      'line-color': 'rgba(120,125,120,1)',
-      'line-width': 2,
+      'line-color': 'rgba(160,115,120,1)',
+      'line-width': 1,
+      'line-dasharray': [4, 1]
     },
-    "filter": ["in", "type", "horse", "bike"]
+    "filter": ["all", ["in", "type", "horse"], ["!=", "name", ""]]
   },
 
   {
@@ -85,9 +87,9 @@ export const mapBoxLayers = [
     },
     'paint': {
       'line-color': 'rgba(250,250,250,1)',
-      'line-width': 4
+      'line-width': 3
     },
-    "filter": ["in", "type", "hike", "horse", "bike"]
+    "filter": ["all", ["in", "type", "hike", "horse", "trail"], ["!=", "name", ""]]
   },
 
   {
@@ -100,11 +102,11 @@ export const mapBoxLayers = [
       'line-join': 'bevel'
     },
     'paint': {
-      'line-color': 'rgba(150,150,150,1)',
+      'line-color': 'rgba(180,180,180,1)',
       'line-width': 1,
       'line-dasharray': [2, 1]
     },
-    "filter": ["in", "type", "atv", "motorcycle", "mixed"]
+    "filter": ["any", ["in", "type", "bike", "atv", "motorcycle", "mixed"], ["==", "name", ""]]
   },
 
   {

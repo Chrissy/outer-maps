@@ -15,7 +15,7 @@ exports.up = function(next) {
 
   utils.genericQuery(`
     ALTER TABLE sawtooth ADD type text;
-    UPDATE sawtooth SET type = 'trail';
+    UPDATE sawtooth SET type = 'hike';
   `)
 
   utils.mergeIntoTrailsTable({
