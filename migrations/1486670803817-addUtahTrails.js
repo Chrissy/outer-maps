@@ -14,6 +14,7 @@ exports.up = function(next) {
     ALTER TABLE utah_trails ADD type text;
     UPDATE utah_trails SET
       type = CASE
+      WHEN cartocode like '%4%' THEN 'road'
       WHEN designated like '%4WD%' THEN 'road'
       WHEN designated like '%ATV%' THEN 'atv'
       WHEN designated like '%MOTORCYCLE%' THEN 'motorcycle'
@@ -27,7 +28,6 @@ exports.up = function(next) {
     baseTableName: 'trails',
     mergingTableName: 'utah_trails',
     name: 'primarynam',
-    sourceId: 'trailid',
     geog: 'geog',
     type: 'type',
     sourceUrl: 'https://gis.utah.gov/data/recreation/trails/',

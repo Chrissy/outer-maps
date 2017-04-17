@@ -47,14 +47,18 @@ exports.insertElevationRasters = function({directoryName, srid = '4326', tableNa
   if (cb) cb()
 }
 
-exports.mergeIntoTrailsTable = function({baseTableName, mergingTableName, name = 'name', sourceId='source_id', geog = 'geog', sourceUrl, type = 'type'} = {}, callback) {
+exports.mergeIntoTrailsTable = function({baseTableName, mergingTableName, name = 'name', geog = 'geog', sourceUrl, type = 'type'} = {}, callback) {
   const query = `
     CREATE TABLE ${baseTableName}__new AS SELECT * FROM ${baseTableName};
 
-    INSERT INTO ${baseTableName}__new(name, source_id, geog, type, source)
+    CREATE TABLE ${mergingTableName}__new AS
+    SELECT ${type} as ${type}, ${name} as ${name},
+    ST_LineMerge(ST_Union(${geog}::geometry)) as ${geog}
+    FROM ${mergingTableName} group by ${name}, ${type};
+
+    INSERT INTO ${baseTableName}__new(name, geog, type, source)
     SELECT
       simple.${name},
-      simple.${sourceId},
       simple.simple_geom,
       simple.${type},
       '${sourceUrl}'
@@ -64,7 +68,7 @@ exports.mergeIntoTrailsTable = function({baseTableName, mergingTableName, name =
         (dumped.geom_dump).geom as simple_geom,
         (dumped.geom_dump).path as path
       FROM (
-        SELECT *, ST_Dump(${geog}::geometry) AS geom_dump FROM ${mergingTableName}
+        SELECT *, ST_Dump(ST_LineMerge(${geog}::geometry)) AS geom_dump FROM ${mergingTableName}__new
       ) AS dumped
     ) AS simple;
 
@@ -76,6 +80,7 @@ exports.mergeIntoTrailsTable = function({baseTableName, mergingTableName, name =
     ALTER TABLE ${baseTableName} ADD COLUMN id SERIAL PRIMARY KEY;
 
     DROP TABLE ${mergingTableName};
+    DROP TABLE ${mergingTableName}__new;
   `;
 
   console.log("merging...")
