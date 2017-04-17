@@ -32,6 +32,32 @@ export const mapBoxLayers = [
   },
 
   {
+    'id': 'trails-labels',
+    'source': 'trails-for-labels',
+    'type': 'symbol',
+    "layout": {
+      "text-field": "{name}",
+      'symbol-placement': 'line',
+      'symbol-spacing': 100,
+      'text-size': 8,
+      'text-letter-spacing': .25,
+      'text-offset': [0, 1],
+      'text-transform': 'uppercase',
+      "text-font": [
+        "DIN Offc Pro Medium",
+        "Arial Unicode MS Bold"
+      ],
+    },
+    "paint": {
+      "text-color": "rgba(0,104,14,1)",
+      'text-halo-color': 'hsla(0, 0%, 100%, 80%)',
+      'text-halo-width': 1.5,
+      'text-halo-blur': .5
+    },
+    "filter": ["all", ["in", "type", "hike", "horse"], ["!=", "name", ""]]
+  },
+
+  {
     'id': 'trails',
     'source': 'trails',
     'type': 'line',
@@ -39,7 +65,7 @@ export const mapBoxLayers = [
       'line-color': 'transparent',
       'line-width': 15
     },
-    "filter": ["all", ["in", "type", "hike", "horse", "bike", "atv", "motorcycle", "trail"]]
+    "filter": ["in", "type", "hike", "horse", "bike", "atv", "motorcycle", "trail"]
   },
 
   {
@@ -52,15 +78,15 @@ export const mapBoxLayers = [
       'line-join': 'bevel'
     },
     'paint': {
-      'line-color': 'rgba(0,123,14,1)',
+      'line-color': 'rgba(0,103,14,1)',
       'line-width': 1,
       'line-dasharray': [4, 1]
     },
-    "filter": ["all", ["in", "type", "hike", "trail"], ["!=", "name", ""]]
+    "filter": ["all", ["in", "type", "hike", "trail", "horse"], ["!=", "name", ""]]
   },
 
   {
-    'id': 'horse-core-line',
+    'id': 'bike-core-line',
     'source': 'trails',
     'type': 'line',
     'before': 'hedges',
@@ -69,11 +95,11 @@ export const mapBoxLayers = [
       'line-join': 'bevel'
     },
     'paint': {
-      'line-color': 'rgba(160,115,120,1)',
+      'line-color': 'rgba(160,160,160,1)',
       'line-width': 1,
       'line-dasharray': [4, 1]
     },
-    "filter": ["all", ["in", "type", "horse"], ["!=", "name", ""]]
+    "filter": ["all", ["in", "type", "bike"], ["!=", "name", ""]]
   },
 
   {
@@ -89,7 +115,7 @@ export const mapBoxLayers = [
       'line-color': 'rgba(250,250,250,1)',
       'line-width': 3
     },
-    "filter": ["all", ["in", "type", "hike", "horse", "trail"], ["!=", "name", ""]]
+    "filter": ["all", ["in", "type", "hike", "horse", "bike", "trail"], ["!=", "name", ""]]
   },
 
   {
@@ -106,7 +132,7 @@ export const mapBoxLayers = [
       'line-width': 1,
       'line-dasharray': [2, 1]
     },
-    "filter": ["any", ["in", "type", "bike", "atv", "motorcycle", "mixed"], ["==", "name", ""]]
+    "filter": ["any", ["in", "type", "atv", "motorcycle", "mixed"], ["==", "name", ""]]
   },
 
   {
@@ -114,6 +140,10 @@ export const mapBoxLayers = [
     'source': 'trails-active',
     'type': 'line',
     'before': 'handles-outline',
+    'line': {
+      'line-cap': 'round',
+      'line-join': 'bevel'
+    },
     'paint': {
       'line-color': '#FF9100',
       'line-width': 2,
