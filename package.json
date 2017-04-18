@@ -29,6 +29,7 @@
     "@turf/line-slice": "^4.0.2",
     "@turf/nearest": "^4.0.1",
     "@turf/point-on-line": "^4.0.2",
+    "@turf/simplify": "^4.1.0",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-react": "^6.11.1",
     "babelify": "^7.3.0",
