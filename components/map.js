@@ -32,6 +32,7 @@ export default class Map extends React.Component {
   handleFeature(feature) {
     if (this.props.previewBoundary && feature.properties.id == this.props.previewBoundary.id) return;
     if (this.props.previewTrail && feature.properties.id == this.props.previewTrail.id) return;
+    console.log(feature.properties)
     this.props.onFeatureMouseIn({properties: feature.properties, geometry: feature.geometry}, feature.layer.id);
   }
 
@@ -98,7 +99,7 @@ export default class Map extends React.Component {
 
     if (this.state.zoom >= TRAILS_BREAKPOINT) {
       sources.push({id: 'trails', data: `api/trails/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}`});
-      sources.push({id: 'trails-for-labels', data: `api/trails/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}`, tolerance: 7});
+      sources.push({id: 'trails-for-labels', data: `api/trails/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}`, tolerance: 5});
       sources.push({id: 'trails-active', data: trailsToFeatureCollection(this.props.activeTrails)});
     }
     if (this.state.zoom < TRAILS_BREAKPOINT) {

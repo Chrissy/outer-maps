@@ -18,22 +18,22 @@ exports.up = function(next) {
       type = CASE
       WHEN designed_u like '%ATV%' THEN 'atv'
       WHEN designed_u like '%MTRCYCL%' THEN 'motorcycle'
-      WHEN designed_u like '%PACK%' THEN 'horse'
+      WHEN designed_u like '%PACK%' THEN 'hike'
       WHEN designed_u like '%HIKE%' THEN 'hike'
       END;
     ALTER TABLE bitterroot ADD geog2d geography;
     UPDATE bitterroot SET geog2d = ST_Force2D(geog::geometry);
-  `)
-
-  utils.mergeIntoTrailsTable({
-    baseTableName: 'trails',
-    mergingTableName: 'bitterroot',
-    name: 'name',
-    sourceId: 'id',
-    geog: 'geog2d',
-    type: 'type',
-    sourceUrl: 'https://www.fs.usda.gov/detailfull/bitterroot/landmanagement/gis/?cid=fseprd523955&width=full',
-  }, next);
+  `, function(){
+    utils.mergeIntoTrailsTable({
+      baseTableName: 'trails',
+      mergingTableName: 'bitterroot',
+      name: 'name',
+      sourceId: 'id',
+      geog: 'geog2d',
+      type: 'type',
+      sourceUrl: 'https://www.fs.usda.gov/detailfull/bitterroot/landmanagement/gis/?cid=fseprd523955&width=full',
+    }, next);
+  })
 };
 
 exports.down = function(next) {

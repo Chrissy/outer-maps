@@ -18,17 +18,17 @@ exports.up = function(next) {
     UPDATE clearwater SET type = 'mixed';
     ALTER TABLE clearwater ADD geog2d geography;
     UPDATE clearwater SET geog2d = ST_Force2D(geog::geometry);
-  `)
-
-  utils.mergeIntoTrailsTable({
-    baseTableName: 'trails',
-    mergingTableName: 'clearwater',
-    name: 'name',
-    sourceId: 'rte_cn',
-    geog: 'geog2d',
-    type: 'type',
-    sourceUrl: 'https://www.fs.usda.gov/main/nezperceclearwater/landmanagement/gis#clearwater',
-  }, next);
+  `, function(){
+    utils.mergeIntoTrailsTable({
+      baseTableName: 'trails',
+      mergingTableName: 'clearwater',
+      name: 'name',
+      sourceId: 'rte_cn',
+      geog: 'geog2d',
+      type: 'type',
+      sourceUrl: 'https://www.fs.usda.gov/main/nezperceclearwater/landmanagement/gis#clearwater',
+    }, next);
+  })
 };
 
 exports.down = function(next) {

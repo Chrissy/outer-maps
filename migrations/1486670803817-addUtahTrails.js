@@ -19,19 +19,19 @@ exports.up = function(next) {
       WHEN designated like '%ATV%' THEN 'atv'
       WHEN designated like '%MOTORCYCLE%' THEN 'motorcycle'
       WHEN designated like '%BIKE%' THEN 'bike'
-      WHEN designated like '%HORSE%' THEN 'horse'
+      WHEN designated like '%HORSE%' THEN 'hike'
       WHEN designated like '%HIKE%' THEN 'hike'
       END;
-  `)
-
-  utils.mergeIntoTrailsTable({
-    baseTableName: 'trails',
-    mergingTableName: 'utah_trails',
-    name: 'primarynam',
-    geog: 'geog',
-    type: 'type',
-    sourceUrl: 'https://gis.utah.gov/data/recreation/trails/',
-  }, next);
+  `, function(){
+    utils.mergeIntoTrailsTable({
+      baseTableName: 'trails',
+      mergingTableName: 'utah_trails',
+      name: 'primarynam',
+      geog: 'geog',
+      type: 'type',
+      sourceUrl: 'https://gis.utah.gov/data/recreation/trails/',
+    }, next);
+  })
 };
 
 exports.down = function(next) {

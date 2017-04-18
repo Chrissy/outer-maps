@@ -18,21 +18,21 @@ exports.up = function(next) {
       WHEN allowed_te like '%5%' THEN 'atv'
       WHEN allowed_te like '%4%' THEN 'motorcycle'
       WHEN allowed_te like '%3%' THEN 'bike'
-      WHEN allowed_te like '%2%' THEN 'horse'
+      WHEN allowed_te like '%2%' THEN 'hike'
       WHEN allowed_te like '%1%' THEN 'hike'
       WHEN allowed_sn like 'N/A' THEN 'snow'
       END;
-  `)
-
-  utils.mergeIntoTrailsTable({
-    baseTableName: 'trails',
-    mergingTableName: 'national_forest_service_trails',
-    name: 'trail_name',
-    sourceId: 'trail_cn',
-    geog: 'geog',
-    type: 'type',
-    sourceUrl: 'https://data.fs.usda.gov/geodata/edw/edw_resources/meta/S_USA.TrailNFS_Publish.xml',
-  }, next);
+  `, function(){
+    utils.mergeIntoTrailsTable({
+      baseTableName: 'trails',
+      mergingTableName: 'national_forest_service_trails',
+      name: 'trail_name',
+      sourceId: 'trail_cn',
+      geog: 'geog',
+      type: 'type',
+      sourceUrl: 'https://data.fs.usda.gov/geodata/edw/edw_resources/meta/S_USA.TrailNFS_Publish.xml',
+    }, next);
+  })
 };
 
 exports.down = function(next) {
