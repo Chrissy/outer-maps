@@ -16,17 +16,14 @@ exports.up = function(next) {
   utils.genericQuery(`
     ALTER TABLE caribou_targhee ADD type text;
     UPDATE caribou_targhee SET type = 'mixed';
-  `)
-
-  utils.mergeIntoTrailsTable({
-    baseTableName: 'trails',
-    mergingTableName: 'caribou_targhee',
-    name: 'name',
-    sourceId: 'sourceId',
-    geog: 'geog',
-    type: 'type',
-    sourceUrl: 'http://data.gis.idaho.gov/datasets?q=trails#caribou-targhee',
-  }, next);
+  `, function(){
+    utils.packandExplodeTrails('caribou_targhee', () => {
+      utils.mergeIntoTrailsTable({
+        mergingTableName: 'caribou_targhee',
+        sourceUrl: 'http://data.gis.idaho.gov/datasets?q=trails#caribou-targhee',
+      }, next);
+    });
+  })
 };
 
 exports.down = function(next) {

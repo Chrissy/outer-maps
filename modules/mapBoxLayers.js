@@ -38,10 +38,14 @@ export const mapBoxLayers = [
     "layout": {
       "text-field": "{name}",
       'symbol-placement': 'line',
-      'symbol-spacing': 100,
-      'text-size': 8,
+      'symbol-spacing': 500,
+      'text-offset': [0, 1.5],
+      'text-size': {
+        "stops": [[10, 7], [12, 9], [14, 11]]
+      },
       'text-letter-spacing': .25,
-      'text-offset': [0, 1],
+      'text-max-width': 1000,
+      'text-max-angle': 20,
       'text-transform': 'uppercase',
       "text-font": [
         "DIN Offc Pro Medium",
@@ -49,10 +53,10 @@ export const mapBoxLayers = [
       ],
     },
     "paint": {
-      "text-color": "rgba(0,104,14,1)",
-      'text-halo-color': 'hsla(0, 0%, 100%, 80%)',
-      'text-halo-width': 1.5,
-      'text-halo-blur': .5
+      "text-color": "rgba(50, 150, 50, 1)",
+      'text-halo-color': 'hsla(0, 0%, 100%, 100%)',
+      'text-halo-width': 1.25,
+      'text-halo-blur': .25
     },
     "filter": ["all", ["in", "type", "hike", "horse"], ["!=", "name", ""]]
   },

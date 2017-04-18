@@ -18,17 +18,15 @@ exports.up = function(next) {
     UPDATE nez_perce SET type = 'mixed';
     ALTER TABLE nez_perce ADD geog2d geography;
     UPDATE nez_perce SET geog2d = ST_Force2D(geog::geometry);
-  `)
-
-  utils.mergeIntoTrailsTable({
-    baseTableName: 'trails',
-    mergingTableName: 'nez_perce',
-    name: 'name',
-    sourceId: 'rte_cn',
-    geog: 'geog2d',
-    type: 'type',
-    sourceUrl: 'https://www.fs.usda.gov/main/nezperceclearwater/landmanagement/gis#nezperce',
-  }, next);
+    ALTER TABLE nez_perce RENAME COLUMN geog2d TO geog;
+  `, function(){
+    utils.packandExplodeTrails('nez_perce', () => {
+      utils.mergeIntoTrailsTable({
+        mergingTableName: 'nez_perce',
+        sourceUrl: 'https://www.fs.usda.gov/main/nezperceclearwater/landmanagement/gis#nezperce',
+      }, next);
+    });
+  })
 };
 
 exports.down = function(next) {

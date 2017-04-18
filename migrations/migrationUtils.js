@@ -47,40 +47,92 @@ exports.insertElevationRasters = function({directoryName, srid = '4326', tableNa
   if (cb) cb()
 }
 
-exports.mergeIntoTrailsTable = function({baseTableName, mergingTableName, name = 'name', geog = 'geog', sourceUrl, type = 'type'} = {}, callback) {
+exports.packTrails = function(baseTableName, callback) {
   const query = `
-    CREATE TABLE ${baseTableName}__new AS SELECT * FROM ${baseTableName};
+    CREATE TABLE merge_line_attempt(name, geog, type) AS
+    SELECT name, ST_LineMerge(ST_Union(geog::geometry)) as geog, type
+    FROM ${baseTableName} group by name, type;
 
-    CREATE TABLE ${mergingTableName}__new AS
-    SELECT ${type} as ${type}, ${name} as ${name},
-    ST_LineMerge(ST_Union(${geog}::geometry)) as ${geog}
-    FROM ${mergingTableName} group by ${name}, ${type};
+    DROP TABLE ${baseTableName};
+    ALTER TABLE merge_line_attempt RENAME TO ${baseTableName};
+    `
+    console.log("packing trails...");
 
-    INSERT INTO ${baseTableName}__new(name, geog, type, source)
+    return genericQuery(query, callback);
+}
+
+
+exports.explodeTrails = function(baseTableName, callback) {
+  const query = `
+    CREATE TABLE explode_attempt(name, geog, type) AS
     SELECT
-      simple.${name},
+      simple.name,
       simple.simple_geom,
-      simple.${type},
-      '${sourceUrl}'
+      simple.type
     FROM (
       SELECT
         dumped.*,
         (dumped.geom_dump).geom as simple_geom,
         (dumped.geom_dump).path as path
       FROM (
-        SELECT *, ST_Dump(ST_LineMerge(${geog}::geometry)) AS geom_dump FROM ${mergingTableName}__new
+        SELECT *, ST_Dump(ST_LineMerge(geog::geometry)) AS geom_dump FROM ${baseTableName}
       ) AS dumped
     ) AS simple;
 
     DROP TABLE ${baseTableName};
+    ALTER TABLE explode_attempt RENAME TO ${baseTableName};
+    `
 
-    ALTER TABLE ${baseTableName}__new RENAME TO ${baseTableName};
+    console.log("exploding trails...")
 
-    ALTER TABLE ${baseTableName} DROP COLUMN id;
+    return genericQuery(query, callback);
+}
+
+exports.packandExplodeTrails = function(baseTableName, callback) {
+  exports.packTrails(baseTableName, function(){
+    exports.explodeTrails(baseTableName, callback);
+  })
+}
+
+exports.patchDisconnectedTrails = function(baseTableName, callback) {
+  const query = `
     ALTER TABLE ${baseTableName} ADD COLUMN id SERIAL PRIMARY KEY;
 
+    WITH pool AS
+      (SELECT id, name, geog, type FROM ${baseTableName}),
+    values AS
+      (SELECT distinct ON (geom) p1.name AS name, p1.type AS type, p1.geog AS geog1, p2.geog AS geog2, p1.id AS id1, p2.id AS id2,
+        ST_ShortestLine(
+          ST_Collect(ST_StartPoint(p1.geog::geometry), ST_EndPoint(p1.geog::geometry)),
+          ST_Collect(ST_StartPoint(p2.geog::geometry), ST_EndPoint(p2.geog::geometry))
+        ) AS geom
+      from pool p1, pool p2 WHERE p1.name = p2.name AND p1.type = p2.type AND p1.id != p2.id)
+    INSERT INTO ${baseTableName}(name, geog, type)
+    SELECT name, geom, type from values where ST_Length(geom) < 0.001;
+    `
+
+    console.log("connecting broken trails...")
+
+    genericQuery(query, function(){
+      exports.packTrails(baseTableName, function(){
+        exports.explodeTrails(baseTableName, callback);
+      })
+    });
+}
+
+exports.mergeIntoTrailsTable = function({mergingTableName, sourceUrl} = {}, callback) {
+  const query = `
+    CREATE TABLE merge_table AS SELECT * FROM trails;
+
+    INSERT INTO merge_table(name, geog, type, source)
+    SELECT name, geog, type, '${sourceUrl}' from ${mergingTableName};
+
+    DROP TABLE trails;
     DROP TABLE ${mergingTableName};
-    DROP TABLE ${mergingTableName}__new;
+    ALTER TABLE merge_table RENAME TO trails;
+
+    ALTER TABLE trails DROP COLUMN id;
+    ALTER TABLE trails ADD COLUMN id SERIAL PRIMARY KEY;
   `;
 
   console.log("merging...")
