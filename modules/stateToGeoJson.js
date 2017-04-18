@@ -14,7 +14,7 @@ export const pointsToFeatureCollection = (points) => {
 export const trailToLine = (toConvert, opts) => {
   let props = {...toConvert};
   delete props.geometry;
-  const asFeature = (props.handles) ? cropToHandles(toConvert) : toConvert.geometry;
+  const asFeature = (props.handles) ? cropToHandles(toConvert) : feature(toConvert.geometry);
 
   return {...asFeature, properties: props};
 }
