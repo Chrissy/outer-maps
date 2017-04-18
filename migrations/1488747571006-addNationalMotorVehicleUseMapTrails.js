@@ -19,15 +19,12 @@ exports.up = function(next) {
       WHEN motorcycle = 'open' THEN 'motorcycle'
       END;
   `, function(){
-    utils.mergeIntoTrailsTable({
-      baseTableName: 'trails',
-      mergingTableName: 'national_mvum_trails',
-      name: 'name',
-      sourceId: 'id',
-      geog: 'geog',
-      type: 'type',
-      sourceUrl: 'https://data.fs.usda.gov/geodata/edw/edw_resources/meta/S_USA.Road_MVUM.xml',
-    }, next);
+    utils.packandExplodeTrails('national_mvum_trails', () => {
+      utils.mergeIntoTrailsTable({
+        mergingTableName: 'national_mvum_trails',
+        sourceUrl: 'https://data.fs.usda.gov/geodata/edw/edw_resources/meta/S_USA.Road_MVUM.xml',
+      }, next);
+    });
   })
 };
 

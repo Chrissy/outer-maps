@@ -22,15 +22,16 @@ exports.up = function(next) {
       WHEN designated like '%HORSE%' THEN 'hike'
       WHEN designated like '%HIKE%' THEN 'hike'
       END;
+      ALTER TABLE utah_trails RENAME COLUMN primarynam TO name;
   `, function(){
-    utils.mergeIntoTrailsTable({
-      baseTableName: 'trails',
-      mergingTableName: 'utah_trails',
-      name: 'primarynam',
-      geog: 'geog',
-      type: 'type',
-      sourceUrl: 'https://gis.utah.gov/data/recreation/trails/',
-    }, next);
+    utils.packandExplodeTrails('utah_trails', () => {
+      utils.patchDisconnectedTrails('utah_trails', () => {
+        utils.mergeIntoTrailsTable({
+          mergingTableName: 'utah_trails',
+          sourceUrl: 'https://gis.utah.gov/data/recreation/trails/'
+        }, next);
+      });
+    });
   })
 };
 

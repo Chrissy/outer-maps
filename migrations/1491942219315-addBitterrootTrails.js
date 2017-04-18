@@ -23,16 +23,14 @@ exports.up = function(next) {
       END;
     ALTER TABLE bitterroot ADD geog2d geography;
     UPDATE bitterroot SET geog2d = ST_Force2D(geog::geometry);
+    ALTER TABLE bitterroot RENAME COLUMN geog2d TO geog;
   `, function(){
-    utils.mergeIntoTrailsTable({
-      baseTableName: 'trails',
-      mergingTableName: 'bitterroot',
-      name: 'name',
-      sourceId: 'id',
-      geog: 'geog2d',
-      type: 'type',
-      sourceUrl: 'https://www.fs.usda.gov/detailfull/bitterroot/landmanagement/gis/?cid=fseprd523955&width=full',
-    }, next);
+    utils.packandExplodeTrails('bitterroot', () => {
+      utils.mergeIntoTrailsTable({
+        mergingTableName: 'bitterroot',
+        sourceUrl: 'https://www.fs.usda.gov/detailfull/bitterroot/landmanagement/gis/?cid=fseprd523955&width=full',
+      }, next);
+    });
   })
 };
 

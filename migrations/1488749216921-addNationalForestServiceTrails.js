@@ -22,16 +22,14 @@ exports.up = function(next) {
       WHEN allowed_te like '%1%' THEN 'hike'
       WHEN allowed_sn like 'N/A' THEN 'snow'
       END;
+      ALTER TABLE national_forest_service_trails RENAME COLUMN trail_name TO name;
   `, function(){
-    utils.mergeIntoTrailsTable({
-      baseTableName: 'trails',
-      mergingTableName: 'national_forest_service_trails',
-      name: 'trail_name',
-      sourceId: 'trail_cn',
-      geog: 'geog',
-      type: 'type',
-      sourceUrl: 'https://data.fs.usda.gov/geodata/edw/edw_resources/meta/S_USA.TrailNFS_Publish.xml',
-    }, next);
+    utils.packandExplodeTrails('national_forest_service_trails', () => {
+      utils.mergeIntoTrailsTable({
+        mergingTableName: 'national_forest_service_trails',
+        sourceUrl: 'https://data.fs.usda.gov/geodata/edw/edw_resources/meta/S_USA.TrailNFS_Publish.xml'
+      }, next);
+    });
   })
 };
 

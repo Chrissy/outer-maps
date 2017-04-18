@@ -24,15 +24,18 @@ exports.up = function(next) {
       WHEN cross_coun = 'Yes' THEN 'snow'
       WHEN snowmobile = 'Yes' THEN 'snow'
       END;
+
+      ALTER TABLE washington_trails RENAME COLUMN tr_nm TO name;
   `, function(){
-    utils.mergeIntoTrailsTable({
-      baseTableName: 'trails',
-      mergingTableName: 'washington_trails',
-      name: 'tr_nm',
-      geog: 'geog',
-      type: 'type',
-      sourceUrl: 'http://www.rco.wa.gov/maps/Data.shtml',
-    }, next);
+
+    utils.packandExplodeTrails('washington_trails', () => {
+      utils.patchDisconnectedTrails('washington_trails', () => {
+        utils.mergeIntoTrailsTable({
+          mergingTableName: 'washington_trails',
+          sourceUrl: 'http://www.rco.wa.gov/maps/Data.shtml'
+        }, next)
+      });
+    });
   })
 };
 

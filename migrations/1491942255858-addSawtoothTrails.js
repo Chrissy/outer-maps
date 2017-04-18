@@ -17,15 +17,12 @@ exports.up = function(next) {
     ALTER TABLE sawtooth ADD type text;
     UPDATE sawtooth SET type = 'hike';
   `, function(){
-    utils.mergeIntoTrailsTable({
-      baseTableName: 'trails',
-      mergingTableName: 'sawtooth',
-      name: 'name',
-      sourceId: 'sourceId',
-      geog: 'geog',
-      type: 'type',
-      sourceUrl: 'http://data.gis.idaho.gov/datasets?q=trails#sawtooth',
-    }, next);
+    utils.packandExplodeTrails('sawtooth', () => {
+      utils.mergeIntoTrailsTable({
+        mergingTableName: 'sawtooth',
+        sourceUrl: 'http://data.gis.idaho.gov/datasets?q=trails#sawtooth',
+      }, next);
+    });
   })
 };
 
