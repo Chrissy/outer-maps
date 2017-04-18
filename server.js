@@ -2,6 +2,8 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path').normalize;
 const pg = require('pg');
+const bezier = require ('@turf/bezier');
+const helpers = require('@turf/helpers');
 const express = require('express');
 const browserify = require('browserify-middleware');
 const app = express();
@@ -36,7 +38,7 @@ app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
       id,
       type,
       ST_Length(geog) as distance,
-      ST_AsGeoJson(ST_LineToCurve(geog::geometry)) as geog
+      ST_AsGeoJson(geog::geometry) as geog
     FROM trails
     WHERE ST_Intersects(geog,
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
@@ -48,8 +50,9 @@ app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
       done();
 
       if (err) throw err;
-
       const features = result.rows.map(r => {
+        const geom = JSON.parse(r.geog);
+
         return {
           "type": "Feature",
           "properties": {
@@ -58,7 +61,7 @@ app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
             "type": r.type,
             "distance": r.distance
           },
-          "geometry": JSON.parse(r.geog)
+          "geometry": bezier(helpers.feature(geom), 1000, 0.1).geometry
         };
       });
 

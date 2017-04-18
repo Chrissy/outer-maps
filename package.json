@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@turf/bbox": "^4.0.2",
+    "@turf/bezier": "^4.1.0",
     "@turf/centroid": "^4.0.2",
     "@turf/distance": "^4.0.1",
     "@turf/helpers": "^4.0.1",
