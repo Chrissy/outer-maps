@@ -94,7 +94,7 @@ app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2', function(request, respons
 
       const labelPaths = result.rows.map(r => {
         const geom = JSON.parse(r.geog);
-        const curvedGeom = bezier(simplify(helpers.feature(geom), 0.004, true), 10000, 1);
+        const curvedGeom = bezier(simplify(helpers.feature(geom), 0.007, true), 10000, 1);
 
         return Object.assign({}, curvedGeom, {
           "properties": {
