@@ -9,8 +9,8 @@ import MapSidebarContainer from './mapSidebarContainer';
 import {mapBoxLayers} from '../modules/mapBoxLayers';
 
 const TRAILS_BREAKPOINT = 9;
-const SMALL_LABELS_BREAKPOINT = 10;
-const LARGE_LABELS_BREAKPOINT = 12;
+const LABELS_BREAKPOINT = 10;
+const ZOOMED_IN_LABELS_BREAKPOINT = 12;
 
 export default class Map extends React.Component {
 
@@ -107,11 +107,11 @@ export default class Map extends React.Component {
       sources.push({id: 'boundaries', data: `api/boundaries/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}`});
       sources.push({id: 'boundaries-active', data: featureCollection(this.props.activeBoundaries)});
     }
-    if (this.state.zoom > SMALL_LABELS_BREAKPOINT && this.state.zoom < LARGE_LABELS_BREAKPOINT) {
-      sources.push({id: 'trails-for-labels-high-zoom', data: `api/trail-paths-for-labels/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}`});
+    if (this.state.zoom > LABELS_BREAKPOINT && this.state.zoom < ZOOMED_IN_LABELS_BREAKPOINT) {
+      sources.push({id: 'trails-for-labels', data: `api/trail-paths-for-labels/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}/20`});
     }
-    if (this.state.zoom > LARGE_LABELS_BREAKPOINT) {
-      sources.push({id: 'trails-for-labels', data: `api/trail-paths-for-labels/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}`});
+    if (this.state.zoom > ZOOMED_IN_LABELS_BREAKPOINT) {
+      sources.push({id: 'trails-for-labels-zoomed-in', data: `api/trail-paths-for-labels/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}/15`});
     }
 
     if (this.props.handles && this.props.handles.length) {

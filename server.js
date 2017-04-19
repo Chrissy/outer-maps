@@ -5,6 +5,7 @@ const pg = require('pg');
 const bezier = require ('@turf/bezier');
 const lineSegment = require ('@turf/line-segment');
 const lineDistance = require('@turf/line-distance');
+const distance = require('@turf/distance');
 const simplify = require ('vis-why');
 const helpers = require('@turf/helpers');
 const express = require('express');
@@ -74,14 +75,16 @@ app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
   });
 });
 
-app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2', function(request, response) {
+app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:threshold', function(request, response) {
+  const threshold = request.params.threshold / 10;
+
   let query = `
     SELECT
       name,
       id,
       type,
       ST_Length(geog) as distance,
-      ST_AsGeoJson(ST_SimplifyVW(geog::geometry,0.0001)) as geog
+      ST_AsGeoJson(ST_SimplifyVW(geog::geometry, ${threshold * 0.00005})) as geog
     FROM trails
     WHERE ST_Intersects(geog,
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
@@ -99,17 +102,16 @@ app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2', function(request, respons
       result.rows.forEach(r => {
         const feature = helpers.feature(JSON.parse(r.geog));
         const segmentized = lineSegment(feature);
-        const filtered = segmentized.features.filter(f => lineDistance(f) > 2);
+        const filtered = segmentized.features.filter(f => lineDistance(f) > threshold);
 
         if (filtered.length == 0) return;
 
         let multi = helpers.multiLineString(filtered.map(f => f.geometry.coordinates));
 
         if (multi.geometry.coordinates.length > 1) {
-          const arr = [multi.geometry.coordinates[0]]
-
+          let arr = [multi.geometry.coordinates[0]]
           multi.geometry.coordinates.slice(1).forEach(f => {
-            if (arr[arr.length - 1][1][0] == f[0][0] && arr[arr.length - 1][1][1] == f[0][1]) {
+            if (distance(helpers.point(arr[arr.length - 1][1]), helpers.point(f[0])) < 2) {
               arr[arr.length - 1].push(f[1]);
             } else {
               arr.push(f)

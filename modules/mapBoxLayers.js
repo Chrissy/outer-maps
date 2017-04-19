@@ -38,10 +38,10 @@ export const mapBoxLayers = [
     "layout": {
       "text-field": "{name}",
       'symbol-placement': 'line',
-      'symbol-spacing': 500000,
-      'text-size': 10,
+      'text-size': 8,
       'text-letter-spacing': .25,
-      'text-max-angle': 100,
+      'text-max-angle': 120,
+      'symbol-spacing': 500,
       'text-transform': 'uppercase',
       'text-anchor': 'bottom',
       'text-offset': [0, -1],
@@ -51,7 +51,7 @@ export const mapBoxLayers = [
       ],
     },
     "paint": {
-      "text-color": "rgba(50, 150, 50, 1)",
+      "text-color": "rgba(0,103,14, .85)",
       'text-halo-color': 'hsla(0, 0%, 100%, 100%)',
       'text-halo-width': 1
     },
@@ -59,25 +59,26 @@ export const mapBoxLayers = [
   },
 
   {
-    'id': 'trails-labels-high-zoom',
-    'source': 'trails-for-labels-high-zoom',
+    'id': 'trails-labels-zoomed-in',
+    'source': 'trails-for-labels-zoomed-in',
     'type': 'symbol',
     "layout": {
       "text-field": "{name}",
       'symbol-placement': 'line',
-      'text-size': 8,
+      'text-size': 10,
       'text-letter-spacing': .25,
       'text-max-angle': 120,
       'text-transform': 'uppercase',
       'text-anchor': 'bottom',
-      'text-offset': [0, -1],
+      'symbol-spacing': 500,
+      'text-offset': [0, -3],
       "text-font": [
         "DIN Offc Pro Medium",
         "Arial Unicode MS Bold"
       ],
     },
     "paint": {
-      "text-color": "rgba(50, 150, 50, 1)",
+      "text-color": "rgba(0,103,14, .85)",
       'text-halo-color': 'hsla(0, 0%, 100%, 100%)',
       'text-halo-width': 1
     },
@@ -86,7 +87,18 @@ export const mapBoxLayers = [
 
   // {
   //   'id': 'trails-for-labels-helper',
-  //   'source': 'trails-for-labels-high-zoom',
+  //   'source': 'trails-for-labels',
+  //   'type': 'line',
+  //   'paint': {
+  //     'line-color': 'rgba(200,0,50,1)',
+  //     'line-width': 1,
+  //   },
+  //   "filter": ["all", ["in", "type", "hike", "trail", "horse"], ["!=", "name", ""]]
+  // },
+  //
+  // {
+  //   'id': 'trails-for-labels-helper-2',
+  //   'source': 'trails-for-labels-zoomed-in',
   //   'type': 'line',
   //   'paint': {
   //     'line-color': 'rgba(200,0,50,1)',
