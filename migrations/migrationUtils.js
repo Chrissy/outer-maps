@@ -47,6 +47,18 @@ exports.insertElevationRasters = function({directoryName, srid = '4326', tableNa
   if (cb) cb()
 }
 
+exports.deleteDuplicateTrails = function({from, using}) {
+  const query = `
+    WITH t1 AS (select geog::geometry as geom FROM trails WHERE source = '${using}'),
+    t2 AS (select geog::geometry as geom, id FROM trails WHERE source = '${from}')
+    DELETE FROM trails WHERE id IN
+    (SELECT t2.id AS id FROM t1, t2 WHERE ST_Intersects(t1.geom, t2.geom) AND ST_NumGeometries(ST_Intersection(t1.geom, t2.geom)) > 5);
+  `
+  console.log("deleting duplicates. this job takes a while and will continue to run asynchonously");
+
+  return genericQuery(query);
+}
+
 exports.packTrails = function(baseTableName, callback) {
   const query = `
     CREATE TABLE merge_line_attempt(name, geog, type) AS

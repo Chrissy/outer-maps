@@ -45,7 +45,7 @@ export const mapBoxLayers = [
       },
       'text-letter-spacing': .25,
       'text-max-width': 1000,
-      'text-max-angle': 20,
+      'text-max-angle': 100,
       'text-transform': 'uppercase',
       "text-font": [
         "DIN Offc Pro Medium",

@@ -28,7 +28,17 @@ exports.up = function(next) {
       utils.mergeIntoTrailsTable({
         mergingTableName: 'national_forest_service_trails',
         sourceUrl: 'https://data.fs.usda.gov/geodata/edw/edw_resources/meta/S_USA.TrailNFS_Publish.xml'
-      }, next);
+      }, function(){
+        utils.deleteDuplicateTrails({
+          from:'https://data.fs.usda.gov/geodata/edw/edw_resources/meta/S_USA.TrailNFS_Publish.xml',
+          using:'https://gis.utah.gov/data/recreation/trails/'
+        });
+        utils.deleteDuplicateTrails({
+          from: 'https://data.fs.usda.gov/geodata/edw/edw_resources/meta/S_USA.TrailNFS_Publish.xml',
+          using: 'http://www.rco.wa.gov/maps/Data.shtml'
+        });
+        next();
+      });
     });
   })
 };
