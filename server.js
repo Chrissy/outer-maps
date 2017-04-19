@@ -83,7 +83,7 @@ app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2', function(request, respons
     FROM trails
     WHERE ST_Intersects(geog,
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
-    ) AND type = 'hike';
+    ) AND type = 'hike' AND name != 'trail' AND name != 'Trail' AND name != 'TRAIL';
   `
 
   pool.connect(function(err, client, done){
