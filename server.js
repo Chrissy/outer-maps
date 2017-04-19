@@ -3,7 +3,9 @@ const fs = require('fs');
 const path = require('path').normalize;
 const pg = require('pg');
 const bezier = require ('@turf/bezier');
-const simplify = require ('@turf/simplify');
+const lineSegment = require ('@turf/line-segment');
+const lineDistance = require('@turf/line-distance');
+const simplify = require ('vis-why');
 const helpers = require('@turf/helpers');
 const express = require('express');
 const browserify = require('browserify-middleware');
@@ -79,7 +81,7 @@ app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2', function(request, respons
       id,
       type,
       ST_Length(geog) as distance,
-      ST_AsGeoJson(geog::geometry) as geog
+      ST_AsGeoJson(ST_SimplifyVW(geog::geometry,0.0001)) as geog
     FROM trails
     WHERE ST_Intersects(geog,
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
@@ -92,11 +94,38 @@ app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2', function(request, respons
 
       if (err) throw err;
 
-      const labelPaths = result.rows.map(r => {
-        const geom = JSON.parse(r.geog);
-        const curvedGeom = bezier(simplify(helpers.feature(geom), 0.007, true), 10000, 1);
+      const labelPaths = []
 
-        return Object.assign({}, curvedGeom, {
+      result.rows.forEach(r => {
+        const feature = helpers.feature(JSON.parse(r.geog));
+        const segmentized = lineSegment(feature);
+        const filtered = segmentized.features.filter(f => lineDistance(f) > 2);
+
+        if (filtered.length == 0) return;
+
+        let multi = helpers.multiLineString(filtered.map(f => f.geometry.coordinates));
+
+        if (multi.geometry.coordinates.length > 1) {
+          const arr = [multi.geometry.coordinates[0]]
+
+          multi.geometry.coordinates.slice(1).forEach(f => {
+            if (arr[arr.length - 1][1][0] == f[0][0] && arr[arr.length - 1][1][1] == f[0][1]) {
+              arr[arr.length - 1].push(f[1]);
+            } else {
+              arr.push(f)
+            }
+          });
+
+          multi = Object.assign({}, multi, {
+            geometry: Object.assign({}, multi.geometry, {
+              coordinates: arr.map(p => {
+                return (p.length > 1) ? bezier(helpers.lineString(p), 10000, 0.75).geometry.coordinates : p;
+              })
+            })
+          });
+        }
+
+        const feat = Object.assign({}, multi, {
           "properties": {
             "name": r.name,
             "id": r.id,
@@ -104,6 +133,8 @@ app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2', function(request, respons
             "distance": r.distance
           }
         });
+
+        labelPaths.push(feat);
       });
 
       response.json(helpers.featureCollection(labelPaths));
