@@ -38,15 +38,15 @@ export const mapBoxLayers = [
     "layout": {
       "text-field": "{name}",
       'symbol-placement': 'line',
-      'symbol-spacing': 500,
-      'text-offset': [0, 1.5],
+      'symbol-spacing': 500000,
       'text-size': {
-        "stops": [[10, 7], [12, 9], [14, 11]]
+        "stops": [[10, 8], [12, 10], [14, 12]]
       },
       'text-letter-spacing': .25,
-      'text-max-width': 1000,
       'text-max-angle': 100,
       'text-transform': 'uppercase',
+      'text-anchor': 'bottom',
+      'text-offset': [0, -1],
       "text-font": [
         "DIN Offc Pro Medium",
         "Arial Unicode MS Bold"
@@ -59,6 +59,17 @@ export const mapBoxLayers = [
       'text-halo-blur': .25
     },
     "filter": ["all", ["in", "type", "hike", "horse"], ["!=", "name", ""]]
+  },
+
+  {
+    'id': 'trails-for-labels-helper',
+    'source': 'trails-for-labels',
+    'type': 'line',
+    'paint': {
+      'line-color': 'rgba(200,0,50,1)',
+      'line-width': 1,
+    },
+    "filter": ["all", ["in", "type", "hike", "trail", "horse"], ["!=", "name", ""]]
   },
 
   {
