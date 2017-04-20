@@ -34,7 +34,7 @@ export default class Map extends React.Component {
   handleFeature(feature) {
     if (this.props.previewBoundary && feature.properties.id == this.props.previewBoundary.id) return;
     if (this.props.previewTrail && feature.properties.id == this.props.previewTrail.id) return;
-    console.log(feature.properties)
+    console.log(feature)
     this.props.onFeatureMouseIn({properties: feature.properties, geometry: feature.geometry}, feature.layer.id);
   }
 
