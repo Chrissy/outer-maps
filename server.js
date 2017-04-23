@@ -75,9 +75,10 @@ app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
   });
 });
 
-app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:threshold', function(request, response) {
+app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:minangle/:threshold/:minlength', function(request, response) {
   const threshold = request.params.threshold / 10;
-  const MIN_ANGLE = 150;
+  const minAngle = ((request.params.minangle / 180) * 3.14159);
+  const minLength = request.params.minlength
 
   let query = `
     SELECT
@@ -103,12 +104,16 @@ app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:threshold', function(reque
         const feature = helpers.feature(JSON.parse(r.geog));
         const coords = feature.geometry.coordinates;
 
+        if (coords.length == 1 || coords.length == 0) return;
+
         const multiPoints = [];
 
         coords.forEach((p, i) => {
-          if (!coords[i - 1] || !coords[i + 1]) return multiPoints.push([p]);
+          if (i == 0) return multiPoints.push([p]);
+          if (i == coords.length - 1) return multiPoints[multiPoints.length - 1].push(p);
+
           const angle = statUtils.threePointsToAngle(coords[i - 1], p, coords[i + 1]);
-          if (angle > ((MIN_ANGLE / 180) * 3.14159)) {
+          if (angle > minAngle) {
             multiPoints[multiPoints.length - 1].push(p)
           } else {
             multiPoints.push([p])
@@ -116,7 +121,7 @@ app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:threshold', function(reque
         });
 
         const filteredLines = multiPoints.filter(c => {
-          return (lineDistance(helpers.lineString(c)) > threshold * 2);
+          return (lineDistance(helpers.lineString(c)) > minLength);
         })
 
         const multiLineString = helpers.multiLineString(filteredLines.map(f => {

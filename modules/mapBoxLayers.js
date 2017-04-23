@@ -40,7 +40,7 @@ export const mapBoxLayers = [
       'symbol-placement': 'line',
       'text-size': 8,
       'text-letter-spacing': .25,
-      'text-max-angle': 120,
+      'text-max-angle': 180,
       'symbol-spacing': 500,
       'text-transform': 'uppercase',
       'text-anchor': 'bottom',
@@ -65,13 +65,13 @@ export const mapBoxLayers = [
     "layout": {
       "text-field": "{name}",
       'symbol-placement': 'line',
-      'text-size': 10,
+      'text-size': 9,
       'text-letter-spacing': .25,
-      'text-max-angle': 120,
+      'text-max-angle': 180,
       'text-transform': 'uppercase',
       'text-anchor': 'bottom',
       'symbol-spacing': 500,
-      'text-offset': [0, -3],
+      'text-offset': [0, -2],
       "text-font": [
         "DIN Offc Pro Medium",
         "Arial Unicode MS Bold"
@@ -83,28 +83,6 @@ export const mapBoxLayers = [
       'text-halo-width': 1
     },
     "filter": ["all", ["in", "type", "hike", "horse", "mixed"], ["!=", "name", ""]]
-  },
-
-  {
-    'id': 'trails-for-labels-helper',
-    'source': 'trails-for-labels',
-    'type': 'line',
-    'paint': {
-      'line-color': 'rgba(200,0,50,1)',
-      'line-width': 1,
-    },
-    "filter": ["all", ["in", "type", "hike", "trail", "horse"], ["!=", "name", ""]]
-  },
-
-  {
-    'id': 'trails-for-labels-helper-2',
-    'source': 'trails-for-labels-zoomed-in',
-    'type': 'line',
-    'paint': {
-      'line-color': 'rgba(200,0,50,1)',
-      'line-width': 1,
-    },
-    "filter": ["all", ["in", "type", "hike", "trail", "horse"], ["!=", "name", ""]]
   },
 
   {
