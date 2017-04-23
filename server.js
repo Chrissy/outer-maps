@@ -77,13 +77,13 @@ app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
 
 app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:threshold', function(request, response) {
   const threshold = request.params.threshold / 10;
+  const MIN_ANGLE = 150;
 
   let query = `
     SELECT
       name,
       id,
       type,
-      ST_Length(geog) as distance,
       ST_AsGeoJson(ST_SimplifyVW(geog::geometry, ${threshold * 0.00005})) as geog
     FROM trails
     WHERE ST_Intersects(geog,
@@ -101,38 +101,34 @@ app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:threshold', function(reque
 
       result.rows.forEach(r => {
         const feature = helpers.feature(JSON.parse(r.geog));
-        const segmentized = lineSegment(feature);
-        const filtered = segmentized.features.filter(f => lineDistance(f) > threshold);
+        const coords = feature.geometry.coordinates;
 
-        if (filtered.length == 0) return;
+        const multiPoints = [];
 
-        let multi = helpers.multiLineString(filtered.map(f => f.geometry.coordinates));
+        coords.forEach((p, i) => {
+          if (!coords[i - 1] || !coords[i + 1]) return multiPoints.push([p]);
+          const angle = statUtils.threePointsToAngle(coords[i - 1], p, coords[i + 1]);
+          if (angle > ((MIN_ANGLE / 180) * 3.14159)) {
+            multiPoints[multiPoints.length - 1].push(p)
+          } else {
+            multiPoints.push([p])
+          }
+        });
 
-        if (multi.geometry.coordinates.length > 1) {
-          let arr = [multi.geometry.coordinates[0]]
-          multi.geometry.coordinates.slice(1).forEach(f => {
-            if (distance(helpers.point(arr[arr.length - 1][1]), helpers.point(f[0])) < 2) {
-              arr[arr.length - 1].push(f[1]);
-            } else {
-              arr.push(f)
-            }
-          });
+        const filteredLines = multiPoints.filter(c => {
+          return (lineDistance(helpers.lineString(c)) > threshold * 2);
+        })
 
-          multi = Object.assign({}, multi, {
-            geometry: Object.assign({}, multi.geometry, {
-              coordinates: arr.map(p => {
-                return (p.length > 1) ? bezier(helpers.lineString(p), 10000, 0.75).geometry.coordinates : p;
-              })
-            })
-          });
-        }
+        const multiLineString = helpers.multiLineString(filteredLines.map(f => {
+          var curvedLine = bezier(helpers.lineString(f), 1000, 0.5);
+          return curvedLine.geometry.coordinates
+        }));
 
-        const feat = Object.assign({}, multi, {
+        const feat = Object.assign({}, multiLineString, {
           "properties": {
             "name": r.name,
             "id": r.id,
             "type": r.type,
-            "distance": r.distance
           }
         });
 

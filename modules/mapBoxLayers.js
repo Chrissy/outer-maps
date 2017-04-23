@@ -85,27 +85,27 @@ export const mapBoxLayers = [
     "filter": ["all", ["in", "type", "hike", "horse", "mixed"], ["!=", "name", ""]]
   },
 
-  // {
-  //   'id': 'trails-for-labels-helper',
-  //   'source': 'trails-for-labels',
-  //   'type': 'line',
-  //   'paint': {
-  //     'line-color': 'rgba(200,0,50,1)',
-  //     'line-width': 1,
-  //   },
-  //   "filter": ["all", ["in", "type", "hike", "trail", "horse"], ["!=", "name", ""]]
-  // },
-  //
-  // {
-  //   'id': 'trails-for-labels-helper-2',
-  //   'source': 'trails-for-labels-zoomed-in',
-  //   'type': 'line',
-  //   'paint': {
-  //     'line-color': 'rgba(200,0,50,1)',
-  //     'line-width': 1,
-  //   },
-  //   "filter": ["all", ["in", "type", "hike", "trail", "horse"], ["!=", "name", ""]]
-  // },
+  {
+    'id': 'trails-for-labels-helper',
+    'source': 'trails-for-labels',
+    'type': 'line',
+    'paint': {
+      'line-color': 'rgba(200,0,50,1)',
+      'line-width': 1,
+    },
+    "filter": ["all", ["in", "type", "hike", "trail", "horse"], ["!=", "name", ""]]
+  },
+
+  {
+    'id': 'trails-for-labels-helper-2',
+    'source': 'trails-for-labels-zoomed-in',
+    'type': 'line',
+    'paint': {
+      'line-color': 'rgba(200,0,50,1)',
+      'line-width': 1,
+    },
+    "filter": ["all", ["in", "type", "hike", "trail", "horse"], ["!=", "name", ""]]
+  },
 
   {
     'id': 'trails',
