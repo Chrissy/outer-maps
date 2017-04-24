@@ -51,7 +51,7 @@ export const mapBoxLayers = [
       'text-halo-width': 1,
       'text-halo-blur': 0.5,
     },
-    "filter": ["all", ["in", "type", "hike", "horse", "mixed"], ["!=", "name", ""]]
+    "filter": ["all", ["in", "type", "hike", "horse"], ["!=", "name", ""]]
   },
 
   // {
@@ -84,7 +84,7 @@ export const mapBoxLayers = [
       'text-halo-width': 1,
       'text-halo-blur': 0.5,
     },
-    "filter": ["all", ["in", "type", "hike", "horse", "mixed"], ["!=", "name", ""]]
+    "filter": ["all", ["in", "type", "hike", "horse"], ["!=", "name", ""]]
   },
 
   {
@@ -95,7 +95,7 @@ export const mapBoxLayers = [
       'line-color': 'transparent',
       'line-width': 15
     },
-    "filter": ["in", "type", "hike", "horse", "bike", "atv", "motorcycle", "trail", "mixed"]
+    "filter": ["in", "type", "hike", "horse", "bike", "atv", "motorcycle", "trail"]
   },
 
   {
@@ -112,7 +112,7 @@ export const mapBoxLayers = [
       'line-width': 1,
       'line-dasharray': [4, 1]
     },
-    "filter": ["all", ["in", "type", "hike", "trail", "horse", "mixed"], ["!=", "name", ""]]
+    "filter": ["all", ["in", "type", "hike", "trail", "horse"], ["!=", "name", ""]]
   },
 
   {
@@ -145,7 +145,7 @@ export const mapBoxLayers = [
       'line-color': 'rgba(250,250,250,1)',
       'line-width': 3
     },
-    "filter": ["all", ["in", "type", "hike", "horse", "bike", "trail", "mixed"], ["!=", "name", ""]]
+    "filter": ["all", ["in", "type", "hike", "horse", "bike", "trail"], ["!=", "name", ""]]
   },
 
   {
