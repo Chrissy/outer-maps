@@ -1,5 +1,11 @@
 const helpers = require('@turf/helpers');
-const threePointsToAngle = require('./statUtils').threePointsToAngle;
+
+const threePointsToAngle = (a, b, c) => {
+  var ab = Math.sqrt(Math.pow(b[0]-a[0],2)+ Math.pow(b[1]-a[1],2));
+  var bc = Math.sqrt(Math.pow(b[0]-c[0],2)+ Math.pow(b[1]-c[1],2));
+  var ac = Math.sqrt(Math.pow(a[0]-c[0],2)+ Math.pow(a[1]-c[1],2));
+  return Math.acos((bc*bc+ab*ab-ac*ac)/(2*bc*ab));
+}
 
 exports.explodeLineStringByAngles = (line, threshold) => {
   const coords = line.coordinates;
