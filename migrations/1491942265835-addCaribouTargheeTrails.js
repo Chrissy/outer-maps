@@ -15,7 +15,7 @@ exports.up = function(next) {
 
   utils.genericQuery(`
     ALTER TABLE caribou_targhee ADD type text;
-    UPDATE caribou_targhee SET type = 'mixed';
+    UPDATE caribou_targhee SET type = 'hike';
   `, function(){
     utils.packandExplodeTrails('caribou_targhee', () => {
       utils.mergeIntoTrailsTable({

@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path').normalize;
 const pg = require('pg');
 const bezier = require ('@turf/bezier');
-const simplify = require ('@turf/simplify');
+const lineDistance = require('@turf/line-distance');
 const helpers = require('@turf/helpers');
 const express = require('express');
 const browserify = require('browserify-middleware');
@@ -12,6 +12,7 @@ const _ = require('underscore');
 const env = require('./environment/development');
 const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
 const statUtils = require('./modules/statUtils');
+const explodeLineByAngle = require('./modules/explodeLineStringByAngles').explodeLineStringByAngles;
 
 
 app.use(express.static('public'));
@@ -72,18 +73,14 @@ app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
   });
 });
 
-app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2', function(request, response) {
+app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:threshold/:minlength', function(request, response) {
   let query = `
-    SELECT
-      name,
-      id,
-      type,
-      ST_Length(geog) as distance,
-      ST_AsGeoJson(geog::geometry) as geog
+    SELECT name, id, type,
+      ST_AsGeoJson(ST_Translate(ST_SimplifyVW(geog::geometry, ${(request.params.threshold / 100 ) * 0.00005}), 0.000075, 0.000075)) as geog
     FROM trails
     WHERE ST_Intersects(geog,
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
-    ) AND type = 'hike' AND name != 'trail' AND name != 'Trail' AND name != 'TRAIL';
+    ) AND (type = 'hike' OR type = 'bike') AND name != 'trail' AND name != 'Trail' AND name != 'TRAIL';
   `
 
   pool.connect(function(err, client, done){
@@ -92,19 +89,27 @@ app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2', function(request, respons
 
       if (err) throw err;
 
-      const labelPaths = result.rows.map(r => {
-        const geom = JSON.parse(r.geog);
-        const curvedGeom = bezier(simplify(helpers.feature(geom), 0.007), 10000, 2);
+      const labelPaths = result.rows.reduce((a, r) => {
+        const geog = JSON.parse(r.geog);
 
-        return Object.assign({}, curvedGeom, {
+        if (geog.coordinates.length <= 1) return a;
+
+        const multiArray = explodeLineByAngle(geog, 150);
+        const filteredLines = multiArray.filter(c => lineDistance(c) > request.params.minlength);
+
+        if (filteredLines.length == 0) return a;
+
+        const bezierLines = filteredLines.map(f => bezier(f, 1000, 0.5));
+        const multiLineString = helpers.multiLineString(bezierLines.map(l => l.geometry.coordinates));
+
+        return [...a, Object.assign({}, multiLineString, {
           "properties": {
             "name": r.name,
             "id": r.id,
             "type": r.type,
-            "distance": r.distance
           }
-        });
-      });
+        })];
+      }, []);
 
       response.json(helpers.featureCollection(labelPaths));
     });

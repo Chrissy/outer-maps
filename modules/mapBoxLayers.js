@@ -32,31 +32,21 @@ export const mapBoxLayers = [
   },
 
   {
-    'id': 'trails-labels',
-    'source': 'trails-for-labels',
+    'id': 'labels',
+    'source': 'labels',
     'type': 'symbol',
     "layout": {
       "text-field": "{name}",
       'symbol-placement': 'line',
-      'symbol-spacing': 500,
-      'text-offset': [0, 1.5],
-      'text-size': {
-        "stops": [[10, 7], [12, 9], [14, 11]]
-      },
-      'text-letter-spacing': .25,
-      'text-max-width': 1000,
-      'text-max-angle': 100,
-      'text-transform': 'uppercase',
-      "text-font": [
-        "DIN Offc Pro Medium",
-        "Arial Unicode MS Bold"
-      ],
+      'text-size': {'stops': [[10, 9], [12, 11]]},
+      'text-max-angle': 180,
+      'symbol-spacing': 500
     },
     "paint": {
-      "text-color": "rgba(50, 150, 50, 1)",
+      "text-color": "rgba(0,33,4,1)",
       'text-halo-color': 'hsla(0, 0%, 100%, 100%)',
-      'text-halo-width': 1.25,
-      'text-halo-blur': .25
+      'text-halo-width': 1,
+      'text-halo-blur': 0.5,
     },
     "filter": ["all", ["in", "type", "hike", "horse"], ["!=", "name", ""]]
   },
@@ -136,7 +126,7 @@ export const mapBoxLayers = [
       'line-width': 1,
       'line-dasharray': [2, 1]
     },
-    "filter": ["any", ["in", "type", "atv", "motorcycle", "mixed"], ["==", "name", ""]]
+    "filter": ["any", ["in", "type", "atv", "motorcycle"], ["==", "name", ""]]
   },
 
   {

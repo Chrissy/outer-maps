@@ -15,9 +15,15 @@ exports.up = function(next) {
 
   utils.genericQuery(`
     ALTER TABLE nez_perce ADD type text;
-    UPDATE nez_perce SET type = 'mixed';
+    UPDATE nez_perce SET
+      type = CASE
+      WHEN TRL_NO like '%T%' THEN 'road'
+      WHEN TRL_NO like '%SNO%' THEN 'snow'
+      ELSE 'horse'
+      END;
     ALTER TABLE nez_perce ADD geog2d geography;
     UPDATE nez_perce SET geog2d = ST_Force2D(geog::geometry);
+    ALTER TABLE nez_perce DROP geog;
     ALTER TABLE nez_perce RENAME COLUMN geog2d TO geog;
   `, function(){
     utils.packandExplodeTrails('nez_perce', () => {
