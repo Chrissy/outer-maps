@@ -73,7 +73,7 @@ app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
   });
 });
 
-app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:minangle/:threshold/:minlength', function(request, response) {
+app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:threshold/:minlength', function(request, response) {
   let query = `
     SELECT name, id, type,
       ST_AsGeoJson(ST_Translate(ST_SimplifyVW(geog::geometry, ${(request.params.threshold / 100 ) * 0.00005}), 0.000075, 0.000075)) as geog
@@ -94,7 +94,7 @@ app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:minangle/:threshold/:minle
 
         if (geog.coordinates.length <= 1) return a;
 
-        const multiArray = explodeLineByAngle(geog, request.params.minangle);
+        const multiArray = explodeLineByAngle(geog, 150);
         const filteredLines = multiArray.filter(c => lineDistance(c) > request.params.minlength);
 
         if (filteredLines.length == 0) return a;
