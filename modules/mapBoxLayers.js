@@ -32,54 +32,18 @@ export const mapBoxLayers = [
   },
 
   {
-    'id': 'trails-labels',
-    'source': 'trails-for-labels',
+    'id': 'labels',
+    'source': 'labels',
     'type': 'symbol',
     "layout": {
       "text-field": "{name}",
       'symbol-placement': 'line',
-      'text-size': 8,
+      'text-size': {'stops': [[10, 9], [12, 11]]},
       'text-max-angle': 180,
-      'symbol-spacing': 500,
-      "text-font": [
-        "Arial Unicode MS Bold"
-      ],
+      'symbol-spacing': 500
     },
     "paint": {
-      "text-color": "rgba(0,103,14,1)",
-      'text-halo-color': 'hsla(0, 0%, 100%, 100%)',
-      'text-halo-width': 1,
-      'text-halo-blur': 0.5,
-    },
-    "filter": ["all", ["in", "type", "hike", "horse"], ["!=", "name", ""]]
-  },
-
-  // {
-  //   'id': 'trails-labels-line',
-  //   'source': 'trails-for-labels',
-  //   'type': 'line',
-  //   'paint': {
-  //     'line-color': 'red',
-  //     'line-width': 1,
-  //   },
-  // },
-
-  {
-    'id': 'trails-labels-zoomed-in',
-    'source': 'trails-for-labels-zoomed-in',
-    'type': 'symbol',
-    "layout": {
-      "text-field": "{name}",
-      'symbol-placement': 'line',
-      'text-size': 9,
-      'text-max-angle': 180,
-      'symbol-spacing': 500,
-      "text-font": [
-        "Arial Unicode MS Bold"
-      ],
-    },
-    "paint": {
-      "text-color": "rgba(0,103,14,1)",
+      "text-color": "rgba(0,33,4,1)",
       'text-halo-color': 'hsla(0, 0%, 100%, 100%)',
       'text-halo-width': 1,
       'text-halo-blur': 0.5,
