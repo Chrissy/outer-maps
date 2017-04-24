@@ -15,10 +15,16 @@ exports.up = function(next) {
 
   utils.genericQuery(`
     ALTER TABLE clearwater ADD type text;
-    UPDATE clearwater SET type = 'mixed';
+    UPDATE clearwater SET
+      type = CASE
+      WHEN TRL_NO like '%T%' THEN 'road'
+      WHEN TRL_NO like '%SNO%' THEN 'snow'
+      ELSE 'horse'
+      END;
     ALTER TABLE clearwater ADD geog2d geography;
     UPDATE clearwater SET geog2d = ST_Force2D(geog::geometry);
-    ALTER bitterroot RENAME COLUMN geog2d TO geog;
+    ALTER TABLE clearwater DROP geog;
+    ALTER TABLE clearwater RENAME COLUMN geog2d TO geog;
   `, function(){
     utils.packandExplodeTrails('clearwater', () => {
       utils.mergeIntoTrailsTable({

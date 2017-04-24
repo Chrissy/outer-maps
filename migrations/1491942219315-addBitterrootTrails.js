@@ -23,6 +23,7 @@ exports.up = function(next) {
       END;
     ALTER TABLE bitterroot ADD geog2d geography;
     UPDATE bitterroot SET geog2d = ST_Force2D(geog::geometry);
+    ALTER TABLE bitterroot DROP geog;
     ALTER TABLE bitterroot RENAME COLUMN geog2d TO geog;
   `, function(){
     utils.packandExplodeTrails('bitterroot', () => {

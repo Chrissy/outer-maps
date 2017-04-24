@@ -39,21 +39,16 @@ export const mapBoxLayers = [
       "text-field": "{name}",
       'symbol-placement': 'line',
       'text-size': 8,
-      'text-letter-spacing': .25,
       'text-max-angle': 180,
-      'symbol-spacing': 500,
-      'text-transform': 'uppercase',
-      'text-anchor': 'bottom',
-      'text-offset': [0, -1],
       "text-font": [
-        "DIN Offc Pro Medium",
         "Arial Unicode MS Bold"
       ],
     },
     "paint": {
-      "text-color": "rgba(0,103,14, .85)",
+      "text-color": "rgba(0,103,14,1)",
       'text-halo-color': 'hsla(0, 0%, 100%, 100%)',
-      'text-halo-width': 1
+      'text-halo-width': 1,
+      'text-halo-blur': 0.5,
     },
     "filter": ["all", ["in", "type", "hike", "horse", "mixed"], ["!=", "name", ""]]
   },
@@ -66,21 +61,16 @@ export const mapBoxLayers = [
       "text-field": "{name}",
       'symbol-placement': 'line',
       'text-size': 9,
-      'text-letter-spacing': .25,
       'text-max-angle': 180,
-      'text-transform': 'uppercase',
-      'text-anchor': 'bottom',
-      'symbol-spacing': 500,
-      'text-offset': [0, -2],
       "text-font": [
-        "DIN Offc Pro Medium",
         "Arial Unicode MS Bold"
       ],
     },
     "paint": {
-      "text-color": "rgba(0,103,14, .85)",
+      "text-color": "rgba(0,103,14,1)",
       'text-halo-color': 'hsla(0, 0%, 100%, 100%)',
-      'text-halo-width': 1
+      'text-halo-width': 1,
+      'text-halo-blur': 0.5,
     },
     "filter": ["all", ["in", "type", "hike", "horse", "mixed"], ["!=", "name", ""]]
   },
@@ -110,7 +100,7 @@ export const mapBoxLayers = [
       'line-width': 1,
       'line-dasharray': [4, 1]
     },
-    "filter": ["all", ["in", "type", "hike", "trail", "horse"], ["!=", "name", ""]]
+    "filter": ["all", ["in", "type", "hike", "trail", "horse", "mixed"], ["!=", "name", ""]]
   },
 
   {
@@ -127,7 +117,7 @@ export const mapBoxLayers = [
       'line-width': 1,
       'line-dasharray': [4, 1]
     },
-    "filter": ["all", ["in", "type", "bike", "mixed"], ["!=", "name", ""]]
+    "filter": ["all", ["in", "type", "bike"], ["!=", "name", ""]]
   },
 
   {
@@ -160,7 +150,7 @@ export const mapBoxLayers = [
       'line-width': 1,
       'line-dasharray': [2, 1]
     },
-    "filter": ["any", ["in", "type", "atv", "motorcycle", "mixed"], ["==", "name", ""]]
+    "filter": ["any", ["in", "type", "atv", "motorcycle"], ["==", "name", ""]]
   },
 
   {

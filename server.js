@@ -76,7 +76,7 @@ app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
 });
 
 app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:minangle/:threshold/:minlength', function(request, response) {
-  const threshold = request.params.threshold / 10;
+  const threshold = request.params.threshold / 100;
   const minAngle = ((request.params.minangle / 180) * 3.14159);
   const minLength = request.params.minlength
 
@@ -85,7 +85,7 @@ app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:minangle/:threshold/:minle
       name,
       id,
       type,
-      ST_AsGeoJson(ST_SimplifyVW(geog::geometry, ${threshold * 0.00005})) as geog
+      ST_AsGeoJson(ST_Translate(ST_SimplifyVW(geog::geometry, ${threshold * 0.00005}), 0.000075, 0.000075)) as geog
     FROM trails
     WHERE ST_Intersects(geog,
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
