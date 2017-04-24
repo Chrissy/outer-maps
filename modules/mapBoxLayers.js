@@ -54,6 +54,16 @@ export const mapBoxLayers = [
   },
 
   {
+    'id': 'trails-labels-line',
+    'source': 'trails-for-labels',
+    'type': 'line',
+    'paint': {
+      'line-color': 'red',
+      'line-width': 1,
+    },
+  },
+
+  {
     'id': 'trails-labels-zoomed-in',
     'source': 'trails-for-labels-zoomed-in',
     'type': 'symbol',

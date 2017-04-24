@@ -3,10 +3,7 @@ const fs = require('fs');
 const path = require('path').normalize;
 const pg = require('pg');
 const bezier = require ('@turf/bezier');
-const lineSegment = require ('@turf/line-segment');
 const lineDistance = require('@turf/line-distance');
-const distance = require('@turf/distance');
-const simplify = require ('vis-why');
 const helpers = require('@turf/helpers');
 const express = require('express');
 const browserify = require('browserify-middleware');
@@ -15,6 +12,7 @@ const _ = require('underscore');
 const env = require('./environment/development');
 const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
 const statUtils = require('./modules/statUtils');
+const explodeLineByAngle = require('./modules/explodeLineStringByAngles').explodeLineStringByAngles;
 
 
 app.use(express.static('public'));
@@ -76,20 +74,13 @@ app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
 });
 
 app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:minangle/:threshold/:minlength', function(request, response) {
-  const threshold = request.params.threshold / 100;
-  const minAngle = ((request.params.minangle / 180) * 3.14159);
-  const minLength = request.params.minlength
-
   let query = `
-    SELECT
-      name,
-      id,
-      type,
-      ST_AsGeoJson(ST_Translate(ST_SimplifyVW(geog::geometry, ${threshold * 0.00005}), 0.000075, 0.000075)) as geog
+    SELECT name, id, type,
+      ST_AsGeoJson(ST_Translate(ST_SimplifyVW(geog::geometry, ${(request.params.threshold / 100 ) * 0.00005}), 0.000075, 0.000075)) as geog
     FROM trails
     WHERE ST_Intersects(geog,
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
-    ) AND type = 'hike' AND name != 'trail' AND name != 'Trail' AND name != 'TRAIL';
+    ) AND (type = 'hike' OR type = 'bike') AND name != 'trail' AND name != 'Trail' AND name != 'TRAIL';
   `
 
   pool.connect(function(err, client, done){
@@ -98,47 +89,27 @@ app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:minangle/:threshold/:minle
 
       if (err) throw err;
 
-      const labelPaths = []
+      const labelPaths = result.rows.reduce((a, r) => {
+        const geog = JSON.parse(r.geog);
 
-      result.rows.forEach(r => {
-        const feature = helpers.feature(JSON.parse(r.geog));
-        const coords = feature.geometry.coordinates;
+        if (geog.coordinates.length <= 1) return a;
 
-        if (coords.length == 1 || coords.length == 0) return;
+        const multiArray = explodeLineByAngle(geog, request.params.minangle);
+        const filteredLines = multiArray.filter(c => lineDistance(c) > request.params.minlength);
 
-        const multiPoints = [];
+        if (filteredLines.length == 0) return a;
 
-        coords.forEach((p, i) => {
-          if (i == 0) return multiPoints.push([p]);
-          if (i == coords.length - 1) return multiPoints[multiPoints.length - 1].push(p);
+        const bezierLines = filteredLines.map(f => bezier(f, 1000, 0.5));
+        const multiLineString = helpers.multiLineString(bezierLines.map(l => l.geometry.coordinates));
 
-          const angle = statUtils.threePointsToAngle(coords[i - 1], p, coords[i + 1]);
-          if (angle > minAngle) {
-            multiPoints[multiPoints.length - 1].push(p)
-          } else {
-            multiPoints.push([p])
-          }
-        });
-
-        const filteredLines = multiPoints.filter(c => {
-          return (lineDistance(helpers.lineString(c)) > minLength);
-        })
-
-        const multiLineString = helpers.multiLineString(filteredLines.map(f => {
-          var curvedLine = bezier(helpers.lineString(f), 1000, 0.5);
-          return curvedLine.geometry.coordinates
-        }));
-
-        const feat = Object.assign({}, multiLineString, {
+        return [...a, Object.assign({}, multiLineString, {
           "properties": {
             "name": r.name,
             "id": r.id,
             "type": r.type,
           }
-        });
-
-        labelPaths.push(feat);
-      });
+        })];
+      }, []);
 
       response.json(helpers.featureCollection(labelPaths));
     });
