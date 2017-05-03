@@ -16,7 +16,7 @@ export default class MapBox extends React.PureComponent {
     addedSources.forEach(function(source){
       this.mapboxed.addSource(source.id, {
         data: source.data,
-        type: "geojson",
+        type: source.type || "geojson",
         tolerance: source.tolerance || 0.3
       });
     }.bind(this));

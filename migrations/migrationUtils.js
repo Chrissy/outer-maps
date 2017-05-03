@@ -120,7 +120,7 @@ exports.patchDisconnectedTrails = function(baseTableName, callback) {
         ) AS geom
       from pool p1, pool p2 WHERE p1.name = p2.name AND p1.type = p2.type AND p1.id != p2.id)
     INSERT INTO ${baseTableName}(name, geog, type)
-    SELECT name, geom, type from values where ST_Length(geom) < 0.001;
+    SELECT name, geom, type from values where ST_Length(geom) < 0.002;
     `
 
     console.log("connecting broken trails...")

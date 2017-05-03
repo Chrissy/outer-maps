@@ -33,46 +33,6 @@ var pool = new pg.Pool({
   user: env.dbUser
 });
 
-app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
-  let query = `
-    SELECT
-      name,
-      id,
-      type,
-      source,
-      ST_Length(geog) as distance,
-      ST_AsGeoJson(geog::geometry) as geog
-    FROM trails
-    WHERE ST_Intersects(geog,
-      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
-    ) AND type != 'road'
-  `
-
-  pool.connect(function(err, client, done){
-    client.query(query, function(err, result){
-      done();
-
-      if (err) throw err;
-
-      const trails = result.rows.map(r => {
-        const feature = helpers.feature(JSON.parse(r.geog));
-
-        return Object.assign({}, feature, {
-          "properties": {
-            "name": r.name,
-            "id": r.id,
-            "type": r.type,
-            "distance": r.distance,
-            "source": r.source
-          }
-        });
-      });
-
-      response.json(helpers.featureCollection(trails));
-    });
-  });
-});
-
 app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:threshold/:minlength', function(request, response) {
   let query = `
     SELECT name, id, type,
