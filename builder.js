@@ -1,8 +1,6 @@
-const query = require('./modules/genericQuery');
 const fs = require('fs');
 const jsonfile = require('jsonfile')
 const helpers = require('@turf/helpers');
-const pool = query.genericPool();
 const execSync = require('child_process').execSync;
 const path = require('path').normalize;
 
