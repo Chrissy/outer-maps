@@ -7,23 +7,18 @@ const gQuery = require('./modules/genericQuery');
 
 const pool = gQuery.pool();
 
-buildTrails = () => {
-  console.log('building trails...');
-
-  gQuery.query(`
-    SELECT
-      name, id, type, ST_SimplifyVW(geog::geometry, 0.0000005) as geom
-    FROM trails
-    WHERE type = 'hike' OR type = 'horse' AND name != ''
-  `, pool, (result) => {
-
-    console.log('writing geojson...');
-
-    gQuery.geoJson(result, (result) => {
-      jsonfile.writeFileSync('trails.geojson', result);
-      execSync(`mapbox upload trails trails.geojson`, {stdio:[0,1,2]});
-    });
+build = (name, result) => {
+  console.log('building...');
+  gQuery.geoJson(result, (result) => {
+    jsonfile.writeFileSync(`_temp_${name}.geojson`, result);
+    execSync(`mapbox upload ${name} _temp_${name}.geojson`, {stdio:[0,1,2]});
+    fs.unlink(`_temp_${name}.geojson`);
   });
 };
 
-buildTrails();
+gQuery.query(`
+  SELECT
+    name, id, type, ST_SimplifyVW(geog::geometry, 0.0000005) as geom
+  FROM trails
+  WHERE type = 'hike' OR type = 'horse' AND name != ''
+`, pool, (result) => build("trails-hike-horse", result));
