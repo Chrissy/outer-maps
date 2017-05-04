@@ -162,8 +162,6 @@ const boundary = (state = {}, action) => {
       return {...state,
         id: action.properties.id,
         name: action.properties.name,
-        area: action.properties.area,
-        bounds: JSON.parse(action.properties.bounds),
         geometry: action.geometry
       }
     case 'SET_BOUNDARY_PREVIEWING':
