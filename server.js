@@ -36,7 +36,7 @@ app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
     WHERE ST_Intersects(geog,
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
     )
-    AND type != 'road' AND name != '' AND name != 'Null' AND name != 'null'
+    AND type != 'road' AND name != ''
   `;
 
   gQuery.query(query, pool, (result) => {
