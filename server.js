@@ -31,7 +31,7 @@ const pool = gQuery.pool();
 app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
   const query = `
     SELECT
-      name, id, type, source, ST_Simplify(geog::geometry, 0.000003) as geom
+      name, id, type, ST_SimplifyVW(geog::geometry, 0.0000005) as geom
     FROM trails
     WHERE ST_Intersects(geog,
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
@@ -42,12 +42,13 @@ app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
   gQuery.query(query, pool, (result) => {
     gQuery.geoJson(result, (result) => response.json(result));
   });
+
 });
 
 app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:threshold/:minlength', function(request, response) {
   let query = `
     SELECT name, id, type,
-      ST_AsGeoJson(ST_Translate(ST_SimplifyVW(geog::geometry, ${(request.params.threshold / 100 ) * 0.00005}), 0.000075, 0.000075)) as geog
+      ST_AsGeoJson(ST_SimplifyVW(geog::geometry, ${(request.params.threshold / 100 ) * 0.00005})) as geog
     FROM trails
     WHERE ST_Intersects(geog,
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
@@ -83,7 +84,7 @@ app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:threshold/:minlength', fun
 
 app.get('/api/boundaries/:x1/:y1/:x2/:y2', function(request, response) {
   let query = `
-    SELECT name, id, ST_Simplify(geog::geometry, 0.000003) as geom
+    SELECT name, id, ST_Simplify(geog::geometry, 0.0003) as geom
     FROM boundaries
     WHERE ST_Intersects(geog,
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
