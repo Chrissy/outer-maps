@@ -8,9 +8,6 @@ const gQuery = require('./modules/genericQuery');
 const pool = gQuery.pool();
 
 buildTrails = () => {
-  const inputPath = path(__dirname + '/trails.geojson');
-  const outputPath = path(__dirname + '/trails.mbtiles');
-
   console.log('building trails...');
 
   gQuery.query(`
@@ -24,7 +21,7 @@ buildTrails = () => {
 
     gQuery.geoJson(result, (result) => {
       jsonfile.writeFileSync('trails.geojson', result);
-      execSync(`mapbox upload trails ${inputPath}`, {stdio:[0,1,2]});
+      execSync(`mapbox upload trails trails.geojson`, {stdio:[0,1,2]});
     });
   });
 };
