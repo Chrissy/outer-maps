@@ -1,12 +1,31 @@
 {
   "sources": {
-    "composite": {
-        "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.cizrvaprz00hf32l9td10bl9v-868js",
-        "type": "vector"
-    },
     "boundaries": {
-      "data": "/dist/park-boundaries.geojson",
-      "type": "geojson"
+    "data": "/dist/park-boundaries.geojson",
+    "type": "geojson"
     }
-  }
+  },
+  "layers": [
+    {
+      "id": "custom-parks",
+      "type": "fill",
+      "source": "composite",
+      "source-layer": "custom-parks",
+      "before": "bridge-piste-bg",
+      "filter": ["==", "$type", "Polygon"],
+      "layout": {
+        "visibility": "visible"
+      },
+      "paint": {
+        "fill-color": {
+          "base": 1.04,
+          "stops": [[0, "hsl(119, 57%, 74%)"],[5, "hsl(119, 56%, 80%)"],[10, "hsl(119, 46%, 85%)"]]
+        },
+        "fill-outline-color": {
+          "base": 1,
+          "stops": [[0,"hsl(0, 0%, 100%)"],[7,"hsl(116, 100%, 97%)"],[9,"hsl(116, 100%, 90%)"]]
+        }
+      }
+    }
+  ]
 }

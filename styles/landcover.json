@@ -1,0 +1,511 @@
+{"layers": [
+{
+  "id": "background",
+  "type": "background",
+  "layout": {},
+  "paint": {
+    "background-color": {
+      "base": 1,
+      "stops": [[11, "hsl(35, 12%, 89%)"],[13, "hsl(35, 12%, 89%)"]]
+    }
+  }
+},
+{
+  "id": "landcover_crop",
+  "type": "fill",
+  "metadata": {
+    "mapbox:group": "1444855831248.8289"
+  },
+  "source": "composite",
+  "source-layer": "landcover",
+  "maxzoom": 12,
+  "filter": ["==", "class", "crop"],
+  "layout": {},
+  "paint": {
+    "fill-color": "hsl(75, 62%, 81%)",
+    "fill-opacity": {
+      "base": 1.5,
+      "stops": [[2, 0.3],[12, 0]]
+    },
+    "fill-antialias": false
+  }
+},
+{
+  "id": "landcover_grass",
+  "type": "fill",
+  "metadata": {
+    "mapbox:group": "1444855831248.8289"
+  },
+  "source": "composite",
+  "source-layer": "landcover",
+  "maxzoom": 12,
+  "filter": ["==", "class", "grass"],
+  "layout": {},
+  "paint": {
+    "fill-color": "hsl(75, 62%, 81%)",
+    "fill-opacity": {
+      "base": 1.5,
+      "stops": [[2, 0.3],[12, 0]]
+    },
+    "fill-antialias": false
+  }
+},
+{
+  "id": "landcover_scrub",
+  "type": "fill",
+  "metadata": {
+    "mapbox:group": "1444855831248.8289"
+  },
+  "source": "composite",
+  "source-layer": "landcover",
+  "maxzoom": 12,
+  "filter": ["==", "class", "scrub"],
+  "layout": {},
+  "paint": {
+    "fill-color": "hsl(75, 62%, 81%)",
+    "fill-opacity": {
+      "base": 1.5,
+      "stops": [[2, 0.3],[12, 0]]
+    },
+    "fill-antialias": false
+  }
+},
+{
+  "id": "landcover_wood",
+  "type": "fill",
+  "metadata": {
+    "mapbox:group": "1444855831248.8289"
+  },
+  "source": "composite",
+  "source-layer": "landcover",
+  "maxzoom": 12,
+  "filter": ["==", "class", "wood"],
+  "layout": {},
+  "paint": {
+    "fill-color": "hsl(75, 62%, 81%)",
+    "fill-opacity": {
+      "base": 1.5,
+      "stops": [[2, 0.3],[12, 0]]
+    },
+    "fill-antialias": false
+  }
+},
+{
+  "id": "landcover_snow",
+  "type": "fill",
+  "metadata": {
+    "mapbox:group": "1444855831248.8289"
+  },
+  "source": "composite",
+  "source-layer": "landcover",
+  "filter": ["==", "class", "snow"],
+  "layout": {},
+  "paint": {
+    "fill-color": "hsl(0, 0%, 100%)",
+    "fill-opacity": 0.2,
+    "fill-antialias": false
+  }
+},
+{
+  "id": "national_park",
+  "type": "fill",
+  "source": "composite",
+  "source-layer": "landuse_overlay",
+  "filter": ["==", "class", "national_park"],
+  "layout": {
+    "visibility": "none"
+  },
+  "paint": {
+    "fill-color": "hsl(100, 59%, 76%)",
+    "fill-opacity": {
+      "base": 1,
+      "stops": [[5, 0],[5.5, 0.75],[9, 0.75],[10, 0.35]]
+    }
+  }
+},
+{
+  "id": "scrub",
+  "type": "fill",
+  "source": "composite",
+  "source-layer": "landuse",
+  "minzoom": 9,
+  "filter": ["==", "class", "scrub"],
+  "layout": {},
+  "paint": {
+    "fill-color": "hsl(75, 41%, 74%)",
+    "fill-opacity": {
+      "base": 1,
+      "stops": [[9, 0],[15, 0.2]]
+    }
+  }
+},
+{
+  "id": "grass",
+  "type": "fill",
+  "source": "composite",
+  "source-layer": "landuse",
+  "minzoom": 9,
+  "filter": ["==", "class", "grass"],
+  "layout": {
+    "visibility": "visible"
+  },
+  "paint": {
+    "fill-color": "hsl(75, 41%, 74%)",
+    "fill-opacity": {
+      "base": 1,
+      "stops": [[9, 0],[15, 0.4]]
+    }
+  }
+},
+{
+  "id": "wood",
+  "type": "fill",
+  "source": "composite",
+  "source-layer": "landuse",
+  "minzoom": 6,
+  "filter": ["==", "class", "wood"],
+  "layout": {},
+  "paint": {
+    "fill-color": "hsl(75, 41%, 74%)",
+    "fill-opacity": {
+      "base": 1,
+      "stops": [[7, 0],[15, 0.5]]
+    }
+  }
+},
+{
+  "id": "agriculture",
+  "type": "fill",
+  "source": "composite",
+  "source-layer": "landuse",
+  "minzoom": 11,
+  "filter": ["==", "class", "agriculture"],
+  "layout": {
+    "visibility": "visible"
+  },
+  "paint": {
+    "fill-opacity": {
+      "base": 1,
+      "stops": [[11, 0],[14, 0.75]]
+    },
+    "fill-color": "hsl(75, 37%, 81%)",
+    "fill-outline-color": "hsl(75, 32%, 68%)"
+  }
+},
+{
+  "id": "national_park-tint-band",
+  "type": "line",
+  "source": "composite",
+  "source-layer": "landuse_overlay",
+  "minzoom": 9,
+  "filter": ["==", "class", "national_park"],
+  "layout": {
+    "line-cap": "round",
+    "visibility": "none"
+  },
+  "paint": {
+    "line-color": "hsl(100, 62%, 74%)",
+    "line-width": {
+      "base": 1.4,
+      "stops": [[9, 1],[14, 8]]
+    },
+    "line-offset": {
+      "base": 1.4,
+      "stops": [[9, 0],[14, -2.5]]
+    },
+    "line-opacity": {
+      "base": 1,
+      "stops": [[9, 0],[10, 0.75]]
+    },
+    "line-blur": 3
+  }
+},
+{
+  "id": "hospital",
+  "type": "fill",
+  "source": "composite",
+  "source-layer": "landuse",
+  "filter": ["==", "class", "hospital"],
+  "layout": {},
+  "paint": {
+    "fill-color": {
+      "base": 1,
+      "stops": [[15.5, "hsl(340, 37%, 87%)"],[16, "hsl(340, 63%, 89%)"]]
+    }
+  }
+},
+{
+  "id": "school",
+  "type": "fill",
+  "source": "composite",
+  "source-layer": "landuse",
+  "filter": ["==", "class", "school"],
+  "layout": {},
+  "paint": {
+    "fill-color": {
+      "base": 1,
+      "stops": [[15.5, "hsl(50, 47%, 81%)"],[16, "hsl(50, 63%, 84%)"]]
+    }
+  }
+},
+{
+  "id": "park",
+  "type": "fill",
+  "source": "composite",
+  "source-layer": "landuse",
+  "filter": ["all", ["!in", "type", "garden", "golf_course", "playground", "zoo"],["==", "class", "park"]],
+  "layout": {
+    "visibility": "none"
+  },
+  "paint": {
+    "fill-color": "hsl(100, 59%, 76%)",
+    "fill-opacity": {
+      "base": 1,
+      "stops": [[5, 0],[6, 1]]
+    }
+  }
+},
+{
+  "id": "other-green-areas",
+  "type": "fill",
+  "source": "composite",
+  "source-layer": "landuse",
+  "filter": ["all", ["==", "class", "park"],["in", "type", "garden", "golf_course", "playground", "zoo"]],
+  "layout": {
+    "visibility": "none"
+  },
+  "paint": {
+    "fill-color": "hsl(100, 59%, 81%)",
+    "fill-opacity": {
+      "base": 1,
+      "stops": [[5, 0],[6, 1]]
+    }
+  }
+},
+{
+  "id": "glacier",
+  "type": "fill",
+  "source": "composite",
+  "source-layer": "landuse",
+  "minzoom": 9,
+  "filter": ["==", "class", "glacier"],
+  "layout": {},
+  "paint": {
+    "fill-color": "hsl(196, 71%, 93%)",
+    "fill-opacity": {
+      "base": 1,
+      "stops": [[9, 0],[10, 0.5]]
+    }
+  }
+},
+{
+  "id": "pitch",
+  "type": "fill",
+  "source": "composite",
+  "source-layer": "landuse",
+  "filter": ["==", "class", "pitch"],
+  "layout": {},
+  "paint": {
+    "fill-color": "hsl(100, 57%, 72%)"
+  }
+},
+{
+  "id": "pitch-line",
+  "type": "line",
+  "source": "composite",
+  "source-layer": "landuse",
+  "minzoom": 15,
+  "filter": ["==", "class", "pitch"],
+  "layout": {
+    "line-join": "miter"
+  },
+  "paint": {
+    "line-color": "hsl(75, 57%, 84%)"
+  }
+},
+{
+  "id": "sand",
+  "type": "fill",
+  "source": "composite",
+  "source-layer": "landuse",
+  "filter": ["==", "class", "sand"],
+  "layout": {},
+  "paint": {
+    "fill-color": "hsl(60, 46%, 87%)"
+  }
+},
+{
+  "id": "waterway-river-canal-shadow",
+  "type": "line",
+  "source": "composite",
+  "source-layer": "waterway",
+  "minzoom": 8,
+  "filter": ["in", "class", "canal", "river"],
+  "layout": {
+    "line-cap": {
+      "base": 1,
+      "stops": [[0, "butt"],[11, "round"]]
+    },
+    "line-join": "round"
+  },
+  "paint": {
+    "line-color": "hsl(215, 84%, 69%)",
+    "line-width": {
+      "base": 1.3,
+      "stops": [[8.5, 0.4],[20, 8]]
+    },
+    "line-opacity": {
+      "base": 1,
+      "stops": [[8, 0],[8.5, 1]]
+    },
+    "line-translate": {
+      "base": 1.2,
+      "stops": [[
+          7,
+          [0, 0]],[
+          16,
+          [
+            -1,
+            -1
+          ]]
+      ]
+    },
+    "line-translate-anchor": "viewport"
+  }
+},
+{
+  "id": "waterway-river-canal",
+  "ref": "waterway-river-canal-shadow",
+  "paint": {
+    "line-color": "hsl(205, 87%, 76%)",
+    "line-width": {
+      "base": 1.3,
+      "stops": [[8.5, 0.4],[20, 8]]
+    },
+    "line-opacity": {
+      "base": 1,
+      "stops": [[8, 0],[8.5, 1]]
+    }
+  }
+},
+{
+  "id": "waterway-small",
+  "type": "line",
+  "source": "composite",
+  "source-layer": "waterway",
+  "minzoom": 13,
+  "filter": ["!in", "class", "canal", "river"],
+  "layout": {
+    "line-join": "round",
+    "line-cap": "round"
+  },
+  "paint": {
+    "line-color": "hsl(205, 87%, 76%)",
+    "line-width": {
+      "base": 1.35,
+      "stops": [[13.5, 0.4],[20, 3]]
+    },
+    "line-opacity": {
+      "base": 1,
+      "stops": [[13, 0],[13.5, 1]]
+    }
+  }
+},
+{
+  "id": "water-shadow",
+  "type": "fill",
+  "source": "composite",
+  "source-layer": "water",
+  "layout": {},
+  "paint": {
+    "fill-color": "hsl(215, 84%, 69%)",
+    "fill-translate": {
+      "base": 1.2,
+      "stops": [[
+          7,
+          [0, 0]],[
+          16,
+          [
+            -1,
+            -1
+          ]]
+      ]
+    },
+    "fill-translate-anchor": "viewport",
+    "fill-opacity": 1
+  }
+},
+{
+  "id": "water",
+  "ref": "water-shadow",
+  "paint": {
+    "fill-color": "hsl(196, 80%, 70%)"
+  }
+},
+{
+  "id": "wetlands",
+  "type": "fill",
+  "metadata": {
+    "mapbox:group": "1444934749452.0452"
+  },
+  "source": "composite",
+  "source-layer": "landuse_overlay",
+  "filter": ["in", "class", "wetland", "wetland_noveg"],
+  "layout": {},
+  "paint": {
+    "fill-color": "hsl(185, 43%, 74%)",
+    "fill-opacity": {
+      "base": 1,
+      "stops": [[10, 0.25],[10.5, 0.15]]
+    }
+  }
+},
+{
+  "id": "wetlands-pattern",
+  "metadata": {
+    "mapbox:group": "1444934749452.0452"
+  },
+  "ref": "wetlands",
+  "paint": {
+    "fill-color": "hsl(185, 43%, 74%)",
+    "fill-opacity": {
+      "base": 1,
+      "stops": [[10, 0],[10.5, 1]]
+    },
+    "fill-pattern": "wetland",
+    "fill-translate-anchor": "viewport"
+  }
+},
+{
+  "id": "barrier_line-land-polygon",
+  "type": "fill",
+  "source": "composite",
+  "source-layer": "barrier_line",
+  "filter": [
+    "all",
+    ["==", "$type", "Polygon"],["==", "class", "land"]],
+  "layout": {},
+  "paint": {
+    "fill-color": "hsl(35, 12%, 89%)"
+  }
+},
+{
+  "id": "barrier_line-land-line",
+  "type": "line",
+  "source": "composite",
+  "source-layer": "barrier_line",
+  "filter": [
+    "all",
+    ["==", "$type", "LineString"],["==", "class", "land"]],
+  "layout": {
+    "line-cap": "round"
+  },
+  "paint": {
+    "line-width": {
+      "base": 1.99,
+      "stops": [[14, 0.75],[20, 40]]
+    },
+    "line-color": "hsl(35, 12%, 89%)"
+  }
+}
+]}
