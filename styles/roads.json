@@ -523,7 +523,7 @@
   "paint": {
     "line-width": {
       "base": 1.5,
-      "stops": [[14, 1],[16, 2]]
+      "stops": [[13, 1],[16, 2]]
     },
     "line-color": "hsl(0, 0%, 100%)",
     "line-gap-width": {

@@ -14,7 +14,7 @@
 			"type": "vector"
 		}
 	},
-	"sprite": "mapbox://sprites/fivefourths/cj1fdtp1f00002sttxerc303x",
+	"sprite": "/sprite",
 	"glyphs": "mapbox://fonts/fivefourths/{fontstack}/{range}.pbf",
 	"layers": [
 		{
@@ -2485,7 +2485,7 @@
 					"base": 1.5,
 					"stops": [
 						[
-							14,
+							13,
 							1
 						],
 						[

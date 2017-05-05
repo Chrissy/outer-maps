@@ -90,14 +90,12 @@ export default class MapBox extends React.PureComponent {
     }));
   }
 
-
-
   componentDidMount() {
     MapboxGL.accessToken = accessToken;
 
     this.mapboxed = new MapboxGL.Map({
       container: 'mapbox-gl-element',
-      style: '/mbstyles.json',
+      style: '/dist/mapbox-styles.json',
       center: [-123.6, 47.8],
       zoom: 8
     })
