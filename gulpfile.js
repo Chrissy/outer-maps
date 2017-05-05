@@ -1,7 +1,7 @@
 const gulp = require('gulp');
 const merge = require('gulp-merge-json');
 
-gulp.task('mapbox-styles', function(){
+gulp.task('mapify', () => {
   return gulp.src([
       'styles/base.json',
       'styles/metadata.json',
@@ -16,4 +16,5 @@ gulp.task('mapbox-styles', function(){
     .pipe(gulp.dest('public'))
 });
 
-gulp.task('default', ['mapbox-styles']);
+gulp.task('watch', () => gulp.watch('styles/*.json', ['mapify']));
+gulp.task('default', ['watch']);
