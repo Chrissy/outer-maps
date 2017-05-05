@@ -36,6 +36,7 @@ node_modules
 jspm_packages
 lib
 public/static
+map_dist/*.geojson
 
 # Cache
 public/cache/elevation/*.json
