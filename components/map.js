@@ -104,7 +104,6 @@ export default class Map extends React.Component {
       sources.push({id: 'trails-active', data: trailsToFeatureCollection(this.props.activeTrails)});
     }
     if (this.state.zoom < TRAILS_BREAKPOINT) {
-      sources.push({id: 'boundaries', data: `api/boundaries/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}`});
       sources.push({id: 'boundaries-active', data: featureCollection(this.props.activeBoundaries)});
     }
     if (this.state.zoom > LABELS_BREAKPOINT) {
