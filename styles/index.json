@@ -2,9 +2,9 @@
   "files": [
     "styles/base.json",
     "styles/metadata.json",
-    "styles/parks.json",
     "styles/landcover.json",
     "styles/elevation.json",
-    "styles/roads.json"
+    "styles/roads.json",
+    "styles/trails.json"
   ]
 }

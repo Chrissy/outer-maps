@@ -634,59 +634,7 @@
     "line-color": "hsl(0, 0%, 100%)",
     "line-dasharray": {
       "base": 1,
-      "stops": [[
-          14,
-          [4, 0.4]],[
-          15,
-          [3, 0.4]],[
-          16,
-          [3, 0.35]],[
-          17,
-          [3, 0.35]]
-      ]
-    },
-    "line-opacity": {
-      "base": 1,
-      "stops": [[13, 0],[13.25, 1]]
-    }
-  }
-},
-{
-  "id": "road-path-rough",
-  "type": "line",
-  "metadata": {
-    "mapbox:group": "1444855786460.0557"
-  },
-  "source": "composite",
-  "source-layer": "road",
-  "filter": [
-    "all",
-    ["==", "$type", "LineString"],[
-      "all",
-      ["!in", "structure", "bridge", "tunnel"],["==", "class", "path"],["in", "type", "hiking", "mountain_bike", "trail"]]
-  ],
-  "layout": {
-    "line-join": "round",
-    "visibility": "none"
-  },
-  "paint": {
-    "line-width": {
-      "base": 1.5,
-      "stops": [[15, 1],[18, 4]]
-    },
-    "line-color": "hsl(0, 0%, 100%)",
-    "line-dasharray": {
-      "base": 1,
-      "stops": [[
-          14,
-          [4, 0.4]],[
-          15,
-          [1.75, 0.4]],[
-          16,
-          [1, 0.4]],[
-          17,
-          [1, 0.35]]
-      ]
+      "stops": [[14,[4, 0.4]],[15,[3, 0.4]],[16,[3, 0.35]],[17,[3, 0.35]]]
     },
     "line-opacity": {
       "base": 1,
@@ -737,16 +685,7 @@
     "line-color": "hsl(0, 0%, 100%)",
     "line-dasharray": {
       "base": 1,
-      "stops": [[
-          14,
-          [4, 0.4]],[
-          15,
-          [1.75, 0.4]],[
-          16,
-          [0.75, 0.4]],[
-          17,
-          [0.3, 0.3]]
-      ]
+      "stops": [[14,[4, 0.4]],[15,[1.75, 0.4]],[16,[0.75, 0.4]],[17,[0.3, 0.3]]]
     },
     "line-opacity": {
       "base": 1,

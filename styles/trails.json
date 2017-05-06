@@ -1,0 +1,96 @@
+{"layers": [
+{
+  "id": "trails-outline",
+  "source": "composite",
+  "source-layer": "trails",
+  "type": "line",
+  "before": "trails-core-line",
+  "line": {
+    "line-cap": "round",
+    "line-join": "bevel"
+  },
+  "paint": {
+    "line-color": "rgba(250,250,250,1)",
+    "line-width": 3
+  },
+  "filter": ["all", ["in", "type", "hike", "horse", "bike", "trail"], ["!=", "name", ""]]
+},
+{
+  "id": "trails-core-line",
+  "source": "composite",
+  "source-layer": "trails",
+  "type": "line",
+  "before": "hedges",
+  "line": {
+    "line-cap": "round",
+    "line-join": "bevel"
+  },
+  "paint": {
+    "line-color": "rgba(0,103,14,1)",
+    "line-width": 1,
+    "line-dasharray": [4, 1]
+  },
+  "filter": ["all", ["in", "type", "hike", "trail", "horse"], ["!=", "name", ""]]
+},
+{
+  "id": "bike-core-line",
+  "source": "composite",
+  "source-layer": "trails",
+  "type": "line",
+  "before": "hedges",
+  "line": {
+    "line-cap": "round",
+    "line-join": "bevel"
+  },
+  "paint": {
+    "line-color": "rgba(160,160,160,1)",
+    "line-width": 1,
+    "line-dasharray": [4, 1]
+  },
+  "filter": ["all", ["in", "type", "bike"], ["!=", "name", ""]]
+},
+{
+  "id": "atv-and-motorcycle-core-line",
+  "source": "composite",
+  "source-layer": "trails",
+  "type": "line",
+  "before": "roads",
+  "line": {
+    "line-cap": "round",
+    "line-join": "bevel"
+  },
+  "paint": {
+    "line-color": "rgba(180,180,180,1)",
+    "line-width": 1,
+    "line-dasharray": [2, 1]
+  },
+  "filter": ["any", ["in", "type", "atv", "motorcycle"], ["==", "name", ""]]
+},
+{
+  "id": "trails-active",
+  "source": "composite",
+  "source-layer": "trails",
+  "filter": ["in", "id", 0],
+  "type": "line",
+  "before": "handles-outline",
+  "line": {
+    "line-cap": "round",
+    "line-join": "bevel"
+  },
+  "paint": {
+    "line-color": "#FF9100",
+    "line-width": 2
+  }
+},
+{
+  "id": "trails",
+  "source": "composite",
+  "source-layer": "trails",
+  "type": "line",
+  "paint": {
+    "line-color": "transparent",
+    "line-width": 15
+  },
+  "filter": ["in", "type", "hike", "horse", "bike", "atv", "motorcycle", "trail"]
+}
+]}
