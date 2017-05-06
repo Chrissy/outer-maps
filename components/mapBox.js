@@ -41,7 +41,7 @@ export default class MapBox extends React.PureComponent {
   }
 
   handleMouseMove(event) {
-    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'boundaries', 'handles'] });
+    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'national-parks', 'handles'] });
 
     this.props.onMouseMove(Object.assign({}, event, {
       features: features
@@ -49,7 +49,7 @@ export default class MapBox extends React.PureComponent {
   }
 
   handleMouseDown(event) {
-    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'boundaries', 'handles'] });
+    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'national-parks', 'handles'] });
 
     this.props.onMouseDown(Object.assign({}, event, {
       features: features,
@@ -61,7 +61,7 @@ export default class MapBox extends React.PureComponent {
   }
 
   handleClick(event) {
-    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'boundaries'] });
+    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'national-parks'] });
     this.props.onClick(Object.assign({}, event, {
       features: features,
     }));
