@@ -142,41 +142,5 @@ export const mapBoxLayers = [
       'line-color': '#FF9100',
       'line-width': 2,
     }
-  },
-
-  {
-    'id': 'boundaries-active-outline',
-    'source': 'boundaries-active',
-    'type': 'line',
-    'before': 'water',
-    'layout': {
-      'line-join': 'round'
-    },
-    'paint': {
-      'line-color': 'hsl(119, 77%, 100%)',
-      'line-width': 2,
-      'line-opacity': 0.9
-    }
-  },
-
-  {
-    'id': 'boundaries-active',
-    'source': 'boundaries-active',
-    'type': 'fill',
-    'before': 'water',
-    'paint': {
-      'fill-color': 'hsl(119, 77%, 70%)',
-      'fill-opacity': 0.2
-    }
-  },
-
-  {
-    'id': 'boundaries',
-    'source': 'boundaries',
-    'before': 'water',
-    'type': 'fill',
-    'paint': {
-      'fill-color': 'rgba(0, 0, 0, 0%)'
-    }
   }
 ]

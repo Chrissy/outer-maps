@@ -103,9 +103,6 @@ export default class Map extends React.Component {
       sources.push({id: 'trails', data: `api/trails/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}`});
       sources.push({id: 'trails-active', data: trailsToFeatureCollection(this.props.activeTrails)});
     }
-    if (this.state.zoom < TRAILS_BREAKPOINT) {
-      sources.push({id: 'boundaries-active', data: featureCollection(this.props.activeBoundaries)});
-    }
     if (this.state.zoom > LABELS_BREAKPOINT) {
       const params = (this.state.zoom < ZOOMED_IN_LABELS_BREAKPOINT) ? '8/5' : '2/1';
       sources.push({id: 'labels', data: `api/trail-paths-for-labels/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}/${params}`});
@@ -132,6 +129,7 @@ export default class Map extends React.Component {
         <div id="the-map">
           <MapBox
           sources={this.sources()}
+          activeBoundaryIds={this.props.activeBoundaries.map(b => b.id)}
           layers={mapBoxLayers}
           fitBounds={this.fitBounds()}
           pointer={this.props.previewTrail}
