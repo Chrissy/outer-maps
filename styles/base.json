@@ -10,10 +10,11 @@
   "pitch": 0,
   "sources": {
     "composite": {
-      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.park-boundaries,fivefourths.trails",
+      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.park-boundaries,fivefourths.trails,fivefourths.trail-labels",
       "type": "vector"
     }
   },
+  "glyphs": "mapbox://fonts/fivefourths/{fontstack}/{range}.pbf",
   "sprite": "/sprite",
   "layers": [],
   "created": "2017-04-12T19:41:53.385Z",

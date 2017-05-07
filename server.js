@@ -12,7 +12,6 @@ const _ = require('underscore');
 const env = require('./environment/development');
 const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
 const statUtils = require('./modules/statUtils');
-const explodeLineByAngle = require('./modules/explodeLineStringByAngles').explodeLineStringByAngles;
 const gQuery = require('./modules/genericQuery');
 
 app.use(express.static('public'));

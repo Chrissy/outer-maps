@@ -11,7 +11,7 @@
     "symbol-placement": "line",
     "text-max-angle": 25,
     "text-padding": 5,
-    "text-font": ["Helvetica Neue", "Helvetica", "Arial"],
+    "text-font": ["DIN Offc Pro Italic","Arial Unicode MS Regular"],
     "text-size": {
       "base": 1,
       "stops": [[15, 9.5],[20, 12]]
@@ -85,7 +85,7 @@
     "icon-image": "{maki}-11",
     "text-max-angle": 38,
     "symbol-spacing": 250,
-    "text-font": ["Helvetica Neue", "Helvetica", "Arial"],
+    "text-font": ["DIN Offc Pro Italic","Arial Unicode MS Regular"],
     "text-padding": 1,
     "text-offset": [0, 0.65],
     "text-rotation-alignment": "viewport",
@@ -137,7 +137,7 @@
     "icon-image": "{maki}-11",
     "text-max-angle": 38,
     "symbol-spacing": 250,
-    "text-font": ["Helvetica Neue", "Helvetica", "Arial"],
+    "text-font": ["DIN Offc Pro Italic","Arial Unicode MS Regular"],
     "text-padding": 1,
     "text-offset": [0, 0.65],
     "text-rotation-alignment": "viewport",
@@ -189,7 +189,7 @@
     "icon-image": "{maki}-11",
     "text-max-angle": 38,
     "symbol-spacing": 250,
-    "text-font": ["Helvetica Neue", "Helvetica", "Arial"],
+    "text-font": ["DIN Offc Pro Italic","Arial Unicode MS Regular"],
     "text-padding": 2,
     "text-offset": [0, 0.65],
     "text-rotation-alignment": "viewport",
@@ -561,7 +561,7 @@
     "icon-image": "{maki}-11",
     "text-max-angle": 38,
     "symbol-spacing": 250,
-    "text-font": ["Helvetica Neue", "Helvetica", "Arial"],
+    "text-font": ["DIN Offc Pro Italic","Arial Unicode MS Regular"],
     "text-padding": 2,
     "visibility": "visible",
     "text-offset": [0, 0.65],
@@ -590,7 +590,7 @@
       "stops": [[10, 11],[18, 14]]
     },
     "icon-image": "{maki}-15",
-    "text-font": ["Helvetica Neue", "Helvetica", "Arial"],
+    "text-font": ["DIN Offc Pro Italic","Arial Unicode MS Regular"],
     "text-offset": [0, 0.65],
     "text-anchor": "top",
     "text-field": "{name_en}",
@@ -621,7 +621,7 @@
       "stops": [[10, 11],[18, 14]]
     },
     "icon-image": "{maki}-15",
-    "text-font": ["Helvetica Neue", "Helvetica", "Arial"],
+    "text-font": ["DIN Offc Pro Italic","Arial Unicode MS Regular"],
     "text-offset": [0, 0.65],
     "text-anchor": "top",
     "text-field": "{name_en}, {elevation_m}m",
@@ -673,7 +673,7 @@
     },
     "text-max-angle": 38,
     "symbol-spacing": 250,
-    "text-font": ["Helvetica Neue", "Helvetica", "Arial"],
+    "text-font": ["DIN Offc Pro Italic","Arial Unicode MS Regular"],
     "text-padding": 2,
     "text-offset": [0, 0.65],
     "text-rotation-alignment": "viewport",
@@ -727,7 +727,7 @@
     },
     "text-max-angle": 38,
     "symbol-spacing": 250,
-    "text-font": ["Helvetica Neue", "Helvetica", "Arial"],
+    "text-font": ["DIN Offc Pro Italic","Arial Unicode MS Regular"],
     "text-padding": 2,
     "text-offset": [0, 0.65],
     "text-rotation-alignment": "viewport",
@@ -758,7 +758,7 @@
     },
     "icon-image": "{network}",
     "symbol-spacing": 250,
-    "text-font": ["Helvetica Neue", "Helvetica", "Arial"],
+    "text-font": ["DIN Offc Pro Italic","Arial Unicode MS Regular"],
     "text-offset": [0, 0.85],
     "text-rotation-alignment": "viewport",
     "text-anchor": "top",
@@ -875,7 +875,7 @@
     },
     "text-max-angle": 38,
     "symbol-spacing": 250,
-    "text-font": ["Helvetica Neue", "Helvetica", "Arial"],
+    "text-font": ["DIN Offc Pro Italic","Arial Unicode MS Regular"],
     "text-padding": 2,
     "text-offset": [0, 0.65],
     "text-rotation-alignment": "viewport",
@@ -929,7 +929,7 @@
     },
     "text-max-angle": 38,
     "symbol-spacing": 250,
-    "text-font": ["Helvetica Neue", "Helvetica", "Arial"],
+    "text-font": ["DIN Offc Pro Italic","Arial Unicode MS Regular"],
     "text-padding": 2,
     "text-offset": [0, 0.65],
     "text-rotation-alignment": "viewport",
@@ -966,7 +966,7 @@
       "stops": [[12, "{maki}-11"],[13, "{maki}-15"]]
     },
     "symbol-spacing": 250,
-    "text-font": ["Helvetica Neue", "Helvetica", "Arial"],
+    "text-font": ["DIN Offc Pro Italic","Arial Unicode MS Regular"],
     "text-padding": 2,
     "text-offset": [0, 0.75],
     "text-rotation-alignment": "viewport",
@@ -1155,7 +1155,7 @@
     "icon-image": "dot-9",
     "text-font": {
       "base": 1,
-      "stops": [[11,["DIN Offc Pro Regular", "Arial Unicode MS Regular"]],[12,["Helvetica Neue", "Helvetica", "Arial"]]]
+      "stops": [[11,["DIN Offc Pro Regular", "Arial Unicode MS Regular"]],[12,["DIN Offc Pro Italic","Arial Unicode MS Regular"]]]
     },
     "text-offset": {
       "base": 1,
@@ -1229,7 +1229,7 @@
     "icon-image": "dot-9",
     "text-font": {
       "base": 1,
-      "stops": [[7,["DIN Offc Pro Regular", "Arial Unicode MS Regular"]],[8,["Helvetica Neue", "Helvetica", "Arial"]]]
+      "stops": [[7,["DIN Offc Pro Regular", "Arial Unicode MS Regular"]],[8,["DIN Offc Pro Italic","Arial Unicode MS Regular"]]]
     },
     "text-offset": {
       "base": 1,
@@ -1292,7 +1292,7 @@
           7,
           ["DIN Offc Pro Regular", "Arial Unicode MS Regular"]],[
           8,
-          ["Helvetica Neue", "Helvetica", "Arial"]]
+          ["DIN Offc Pro Italic","Arial Unicode MS Regular"]]
       ]
     },
     "text-size": {
@@ -1337,7 +1337,7 @@
           7,
           ["DIN Offc Pro Regular", "Arial Unicode MS Regular"]],[
           8,
-          ["Helvetica Neue", "Helvetica", "Arial"]]
+          ["DIN Offc Pro Italic","Arial Unicode MS Regular"]]
       ]
     },
     "text-offset": {
@@ -1396,7 +1396,7 @@
           7,
           ["DIN Offc Pro Regular", "Arial Unicode MS Regular"]],[
           8,
-          ["Helvetica Neue", "Helvetica", "Arial"]]
+          ["DIN Offc Pro Italic","Arial Unicode MS Regular"]]
       ]
     },
     "text-offset": {
@@ -1455,7 +1455,7 @@
           7,
           ["DIN Offc Pro Regular", "Arial Unicode MS Regular"]],[
           8,
-          ["Helvetica Neue", "Helvetica", "Arial"]]
+          ["DIN Offc Pro Italic","Arial Unicode MS Regular"]]
       ]
     },
     "text-offset": {
@@ -1778,7 +1778,7 @@
   "layout": {
     "text-field": "{name_en}",
     "text-max-width": 6,
-    "text-font": ["Helvetica Neue", "Helvetica", "Arial"],
+    "text-font": ["DIN Offc Pro Italic","Arial Unicode MS Regular"],
     "text-size": {
       "base": 0.9,
       "stops": [[5, 14],[9, 22]]
@@ -1815,7 +1815,7 @@
       "stops": [[0, "{code}"],[2, "{name_en}"]]
     },
     "text-max-width": 6,
-    "text-font": ["Helvetica Neue", "Helvetica", "Arial"],
+    "text-font": ["DIN Offc Pro Italic","Arial Unicode MS Regular"],
     "text-size": {
       "base": 1,
       "stops": [[3, 10],[8, 24]]
@@ -1847,7 +1847,7 @@
       "base": 1,
       "stops": [[0, 5],[3, 6]]
     },
-    "text-font": ["Helvetica Neue", "Helvetica", "Arial"],
+    "text-font": ["DIN Offc Pro Italic","Arial Unicode MS Regular"],
     "text-size": {
       "base": 1,
       "stops": [[1, 10],[6, 24]]
