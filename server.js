@@ -42,7 +42,6 @@ app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
   gQuery.query(query, pool, (result) => {
     gQuery.geoJson(result, (result) => response.json(result));
   });
-
 });
 
 app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:threshold/:minlength', function(request, response) {
@@ -57,17 +56,7 @@ app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:threshold/:minlength', fun
 
   gQuery.query(query, pool, (result) => {
     const labelPaths = result.rows.reduce((a, r) => {
-      const geog = JSON.parse(r.geog);
-
-      if (geog.coordinates.length <= 1) return a;
-
-      const multiArray = explodeLineByAngle(geog, 150);
-      const filteredLines = multiArray.filter(c => lineDistance(c) > request.params.minlength);
-
-      if (filteredLines.length == 0) return a;
-
-      const bezierLines = filteredLines.map(f => bezier(f, 1000, 0.5));
-      const multiLineString = helpers.multiLineString(bezierLines.map(l => l.geometry.coordinates));
+      const multiLineString = geomToLabelMultiLineString(JSON.parse(r.geog));
 
       return [...a, Object.assign({}, multiLineString, {
         "properties": {
@@ -79,7 +68,7 @@ app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:threshold/:minlength', fun
     }, []);
 
     response.json(helpers.featureCollection(labelPaths));
-  })
+  });
 });
 
 app.get('/api/boundaries/:x1/:y1/:x2/:y2', function(request, response) {

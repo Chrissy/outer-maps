@@ -1,32 +1,33 @@
 const fs = require('fs');
 const jsonfile = require('jsonfile')
 const helpers = require('@turf/helpers');
-const exec = require('child_process').spawn;
 const path = require('path').normalize;
 const gQuery = require('./modules/genericQuery');
+const labelMaker = require('./modules/labelMaker').labelMaker;
 
 const pool = gQuery.pool();
 
 build = (name, result) => {
   const tempFileName = `./public/dist/${name}.geojson`;
-  console.log(`building ${name}...`);
-
-  gQuery.geoJson(result, (result) => {
-    jsonfile.writeFile(tempFileName, result, () => {
-      const proc = exec('mapbox', ['upload', name, tempFileName], {stdio: [0,1,2]});
-      proc.on('close', () => console.log(`${name} uploaded!`));
-    });
-  });
+  jsonfile.writeFile(tempFileName, result, () => console.log(`${name} done!`));
 };
 
 gQuery.query(`
-  SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.0000005) as geom
+  SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.000001) as geom
   FROM trails
   WHERE type = 'hike' OR type = 'horse' OR type = 'bike' OR
   type = 'motorcycle' OR type = 'atv' AND name != ''
-`, pool, (result) => build("trails", result));
+`, pool, (result) => gQuery.geoJson(result, (result) => build("trails", result)));
 
 gQuery.query(`
   SELECT name, id, ST_Simplify(geog::geometry, 0.0005) as geom
   FROM boundaries
-`, pool, (result) => build("park-boundaries", result));
+`, pool, (result) => gQuery.geoJson(result, (result) => build("park-boundaries", result)));
+
+gQuery.query(`
+  SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.000001) as geom
+  FROM trails
+  WHERE (type = 'hike' OR type = 'horse' OR type = 'bike') AND name != ''
+`, pool, (result) => {
+    gQuery.geoJson(result, (result) => build('trail-labels', labelMaker(result)));
+});

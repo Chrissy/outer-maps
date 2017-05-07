@@ -1,4 +1,6 @@
 const helpers = require('@turf/helpers');
+const lineDistance = require('@turf/line-distance');
+const bezier = require ('@turf/bezier');
 
 const threePointsToAngle = (a, b, c) => {
   var ab = Math.sqrt(Math.pow(b[0]-a[0],2)+ Math.pow(b[1]-a[1],2));
@@ -7,7 +9,7 @@ const threePointsToAngle = (a, b, c) => {
   return Math.acos((bc*bc+ab*ab-ac*ac)/(2*bc*ab));
 }
 
-exports.explodeLineStringByAngles = (line, threshold) => {
+explodeLineByAngle = (line, threshold) => {
   const coords = line.coordinates;
 
   if (coords.length == 1 || coords.length == 0) return line;
@@ -24,4 +26,23 @@ exports.explodeLineStringByAngles = (line, threshold) => {
   });
 
   return multiArray.map(l => helpers.lineString(l));
+}
+
+const lineStringToLabelMultiLineString = (geom, minlength) => {
+  const multiArray = explodeLineByAngle(geom, 150);
+  const filteredLines = multiArray.filter(c => lineDistance(c) > minlength);
+
+  if (filteredLines.length == 0) return helpers.lineString([]);
+
+  const bezierLines = filteredLines.map(f => bezier(f, 400, 0.5));
+  return helpers.multiLineString(bezierLines.map(l => l.geometry.coordinates));
+}
+
+exports.labelMaker = (geojson, minLength) => {
+  const features = geojson.features.map((r) => {
+    return Object.assign({}, lineStringToLabelMultiLineString(r.geometry, 1), {
+      properties: r.properties
+    });
+  });
+  return helpers.featureCollection(features.filter(r => r.geometry.coordinates.length > 1));
 }
