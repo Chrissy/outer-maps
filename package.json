@@ -37,6 +37,7 @@
     "css-modulesify": "^0.27.1",
     "gulp": "^3.9.1",
     "gulp-merge-json": "^1.0.0",
+    "gulp-plumber": "^1.1.0",
     "jsonfile": "^3.0.0",
     "mapbox-gl": "^0.20.1",
     "moment": "^2.17.1",
