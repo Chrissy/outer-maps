@@ -99,11 +99,6 @@ export default class Map extends React.Component {
     let viewBox = this.state.viewBox;
     let zoom = this.state.zoom;
 
-    if (this.state.zoom > LABELS_BREAKPOINT) {
-      const params = (this.state.zoom < ZOOMED_IN_LABELS_BREAKPOINT) ? '8/5' : '2/1';
-      sources.push({id: 'labels', data: `api/trail-paths-for-labels/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}/${params}`});
-    }
-
     if (this.props.handles && this.props.handles.length) {
       sources.push({
         id: 'handles',

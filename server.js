@@ -27,63 +27,6 @@ app.get('/bundle.js', browserify(__dirname + '/components/app.js', {
 
 const pool = gQuery.pool();
 
-app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
-  const query = `
-    SELECT
-      name, id, type, ST_SimplifyVW(geog::geometry, 0.0000005) as geom
-    FROM trails
-    WHERE ST_Intersects(geog,
-      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
-    )
-    AND type != 'road' AND name != ''
-  `;
-
-  gQuery.query(query, pool, (result) => {
-    gQuery.geoJson(result, (result) => response.json(result));
-  });
-});
-
-app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:threshold/:minlength', function(request, response) {
-  let query = `
-    SELECT name, id, type,
-      ST_AsGeoJson(ST_SimplifyVW(geog::geometry, ${(request.params.threshold / 100 ) * 0.00005})) as geog
-    FROM trails
-    WHERE ST_Intersects(geog,
-      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
-    ) AND (type = 'hike' OR type = 'bike') AND name != 'trail' AND name != 'Trail' AND name != 'TRAIL';
-  `
-
-  gQuery.query(query, pool, (result) => {
-    const labelPaths = result.rows.reduce((a, r) => {
-      const multiLineString = geomToLabelMultiLineString(JSON.parse(r.geog));
-
-      return [...a, Object.assign({}, multiLineString, {
-        "properties": {
-          "name": r.name,
-          "id": r.id,
-          "type": r.type,
-        }
-      })];
-    }, []);
-
-    response.json(helpers.featureCollection(labelPaths));
-  });
-});
-
-app.get('/api/boundaries/:x1/:y1/:x2/:y2', function(request, response) {
-  let query = `
-    SELECT name, id, ST_Simplify(geog::geometry, 0.0003) as geom
-    FROM boundaries
-    WHERE ST_Intersects(geog,
-      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
-    )
-  `
-
-  gQuery.query(query, pool, (result) => {
-    gQuery.geoJson(result, (result) => response.json(result));
-  });
-});
-
 app.get('/api/elevation', function(request, response){
   const points = JSON.parse(request.query.points);
   const pointsStr = points.reduce((a, p, i) =>  a + `${(i == 0) ? '' : ','}ST_MakePoint(${p[0]},${p[1]})`, '');
