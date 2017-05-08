@@ -15,12 +15,10 @@ const mapStateToProps = (state) => {
   return {
     selectedTrails: state.trails.filter(trail => trail.selected),
     previewTrail: state.trails.find(trail => trail.previewing),
-    activeTrails: [...state.trails.filter(trail => trail.previewing), ...state.trails.filter(trail => trail.selected)],
     trails: state.trails,
     boundaries: state.boundaries,
     selectedBoundary: state.boundaries.find(boundary => boundary.selected),
     previewBoundary: state.boundaries.find(boundary => boundary.previewing),
-    activeBoundaries: [...state.boundaries.filter(boundary => boundary.selected), ...state.boundaries.filter(boundary => boundary.previewing)],
     handles: state.trails.reduce((a, t) => (t.handles) ? a.concat(t.handles) : a, []),
   }
 }

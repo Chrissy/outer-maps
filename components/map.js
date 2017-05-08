@@ -122,8 +122,8 @@ export default class Map extends React.Component {
         <div id="the-map">
           <MapBox
           sources={this.sources()}
-          activeBoundaryIds={this.props.activeBoundaries.map(b => b.id)}
-          activeTrailIDs={this.props.activeTrails.map(b => b.id)}
+          previewBoundary={this.props.previewBoundary}
+          previewTrail={this.props.previewTrail}
           layers={mapBoxLayers}
           fitBounds={this.fitBounds()}
           pointer={this.props.previewTrail}
