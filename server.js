@@ -12,7 +12,8 @@ const _ = require('underscore');
 const env = require('./environment/development');
 const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
 const statUtils = require('./modules/statUtils');
-const gQuery = require('./modules/genericQuery');
+const query = require('./modules/genericQuery').query;
+const createPool = require('./modules/genericQuery').pool;
 
 app.use(express.static('public'));
 
@@ -25,13 +26,13 @@ app.get('/bundle.js', browserify(__dirname + '/components/app.js', {
   }]
 }));
 
-const pool = gQuery.pool();
+const pool = createPool();
 
 app.get('/api/elevation', function(request, response){
   const points = JSON.parse(request.query.points);
   const pointsStr = points.reduce((a, p, i) =>  a + `${(i == 0) ? '' : ','}ST_MakePoint(${p[0]},${p[1]})`, '');
 
-  const query = `
+  const sql = `
     WITH trail AS (
         SELECT ST_SetSRID(ST_MakeLine(ARRAY[${pointsStr}]), 4326) AS path
       ),
@@ -49,7 +50,7 @@ app.get('/api/elevation', function(request, response){
     CROSS JOIN points
   `;
 
-  query(query, pool, (result) => {
+  query(sql, pool, (result) => {
     const elevations = statUtils.rollingAverage(statUtils.glitchDetector(result.rows.map(r => r.elevation)), 15);
     response.json(elevations.map((r, i) => {
       return {
@@ -65,7 +66,7 @@ app.get('/api/elevation-dump/:x1/:y1/:x2/:y2', function(request, response){
 
   if (fs.existsSync(cachedPath)) return response.json(JSON.parse(fs.readFileSync(cachedPath)));
 
-  const query = `
+  const sql = `
     select to_json(ST_DumpValues(ST_Clip(ST_Union(rast),
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
     )))
@@ -74,7 +75,7 @@ app.get('/api/elevation-dump/:x1/:y1/:x2/:y2', function(request, response){
     );
   `;
 
-  query(query, pool, (result) => {
+  query(sql, pool, (result) => {
     const vertices = result.rows[0].to_json.valarray
     const json = {length: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices)}
     fs.writeFileSync(cachedPath, JSON.stringify(json));

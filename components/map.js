@@ -99,11 +99,13 @@ export default class Map extends React.Component {
     let viewBox = this.state.viewBox;
     let zoom = this.state.zoom;
 
+    if (this.props.selectedTrails.length) {
+      console.log(trailsToFeatureCollection(this.props.selectedTrails))
+      sources.push({id: 'trails-active', data: trailsToFeatureCollection(this.props.selectedTrails)})
+    }
+
     if (this.props.handles && this.props.handles.length) {
-      sources.push({
-        id: 'handles',
-        data: featureCollection(this.props.handles.map(p => pointToPoint(p)))
-      });
+      sources.push({ id: 'handles', data: featureCollection(this.props.handles.map(p => pointToPoint(p)))});
     }
 
     return sources;
@@ -121,6 +123,7 @@ export default class Map extends React.Component {
           <MapBox
           sources={this.sources()}
           activeBoundaryIds={this.props.activeBoundaries.map(b => b.id)}
+          activeTrailIDs={this.props.activeTrails.map(b => b.id)}
           layers={mapBoxLayers}
           fitBounds={this.fitBounds()}
           pointer={this.props.previewTrail}
