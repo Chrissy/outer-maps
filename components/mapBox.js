@@ -107,13 +107,10 @@ export default class MapBox extends React.PureComponent {
   componentDidUpdate(prevProps, q) {
     this.updateSources(prevProps.sources, this.props.sources);
 
-    if (this.props.previewTrail) {
-      this.mapboxed.setFilter("trails-active", ["in", "id", this.props.previewTrail.id]);
-    }
-    if (this.props.previewBoundary) {
-      this.mapboxed.setFilter("national-parks-active", ["in", "id", this.props.previewBoundary.id]);
-      this.mapboxed.setFilter("national-parks-active-outline", ["in", "id", this.props.previewBoundary.id]);
-    }
+    console.log(this.props.previewTrail)
+    this.mapboxed.setFilter("trails-active", ["in", "id", (this.props.previewTrail) ? this.props.previewTrail.id : 0]);
+    this.mapboxed.setFilter("national-parks-active", ["in", "id", (this.props.previewBoundary) ? this.props.previewBoundary.id : 0]);
+    this.mapboxed.setFilter("national-parks-active-outline", ["in", "id", (this.props.previewBoundary) ? this.props.previewBoundary.id : 0]);
 
     if (this.props.fitBounds && prevProps.fitBounds !== this.props.fitBounds) {
       this.mapboxed.fitBounds(this.props.fitBounds);

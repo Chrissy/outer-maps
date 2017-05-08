@@ -57,7 +57,7 @@ export default class Map extends React.Component {
 
     if (type == "trails") {
       this.props.onTrailClick({properties: feature.properties, geometry:feature.geometry});
-    } else if (type == "boundaries") {
+    } else if (type == "national-parks") {
       this.props.onBoundaryClick(feature.properties.id);
     }
   }
@@ -100,7 +100,6 @@ export default class Map extends React.Component {
     let zoom = this.state.zoom;
 
     if (this.props.selectedTrails.length) {
-      console.log(trailsToFeatureCollection(this.props.selectedTrails))
       sources.push({id: 'trails-active', data: trailsToFeatureCollection(this.props.selectedTrails)})
     }
 

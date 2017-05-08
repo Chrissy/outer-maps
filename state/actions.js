@@ -39,6 +39,7 @@ function getWeatherData(trail) {
 
 export function previewTrail(trail) {
   return dispatch => {
+    dispatch({type: 'CLEAR_BOUNDARY_PREVIEWING'});
     dispatch({type: 'ADD_TRAIL', ...trail});
     return dispatch({type: 'SET_TRAIL_PREVIEWING', id: trail.properties.id});
   };
@@ -59,6 +60,7 @@ export function selectTrail(trail) {
 
 export function previewBoundary(boundary) {
   return dispatch => {
+    dispatch({type: 'CLEAR_TRAIL_PREVIEWING'});
     dispatch({type: 'ADD_BOUNDARY', ...boundary});
     return dispatch({type: 'SET_BOUNDARY_PREVIEWING', ...boundary});
   };
@@ -67,6 +69,7 @@ export function previewBoundary(boundary) {
 export function selectBoundary(id) {
   return dispatch => {
     dispatch({type: 'CLEAR_TRAIL_SELECTED'});
+    dispatch({type: 'CLEAR_HANDLES'})
     return dispatch({type: 'SET_BOUNDARY_SELECTED', id});
   };
 };
