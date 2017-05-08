@@ -29,5 +29,13 @@ gQuery.query(`
   FROM trails
   WHERE (type = 'hike' OR type = 'horse' OR type = 'bike') AND name != ''
 `, pool, (result) => {
-    gQuery.geoJson(result, (result) => build('trail-labels', labelMaker(result)));
+    gQuery.geoJson(result, (result) => build('trail-labels', labelMaker(result, 1)));
+});
+
+gQuery.query(`
+  SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.000004) as geom
+  FROM trails
+  WHERE (type = 'hike' OR type = 'horse' OR type = 'bike') AND name != ''
+`, pool, (result) => {
+    gQuery.geoJson(result, (result) => build('trail-labels-zoomed-out', labelMaker(result, 2)));
 });

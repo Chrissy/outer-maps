@@ -109,7 +109,32 @@
     "text-color": "rgba(0,33,4,1)",
     "text-halo-color": "hsla(0, 0%, 100%, 100%)",
     "text-halo-width": 1,
-    "text-halo-blur": 0.5
+    "text-opacity": {
+      "stops": [[12, 0], [12.25, 1]]
+    }
+  },
+  "filter": ["all", ["in", "type", "hike", "horse"], ["!=", "name", ""]]
+},
+{
+  "id": "trail-labels-zoomed-out",
+  "source": "composite",
+  "source-layer": "trail-labels-zoomed-out",
+  "type": "symbol",
+  "layout": {
+    "text-field": "{name}",
+    "symbol-placement": "line",
+    "text-size": {"stops": [[11, 9], [12, 11]]},
+    "text-max-angle": 180,
+    "symbol-spacing": 500
+  },
+  "paint": {
+    "text-color": "rgba(0,33,4,1)",
+    "text-halo-color": "hsla(0, 0%, 100%, 100%)",
+    "text-halo-width": 1,
+    "text-halo-blur": 0.5,
+    "text-opacity": {
+      "stops": [[9, 0], [9.25, 1], [12, 1], [12.25, 0]]
+    }
   },
   "filter": ["all", ["in", "type", "hike", "horse"], ["!=", "name", ""]]
 }

@@ -11,15 +11,9 @@
     "all",
     ["==", "$type", "LineString"],[
       "all",
-      ["!in", "structure", "bridge", "tunnel"],[
-        "!in",
-        "type",
-        "corridor",
-        "crossing",
-        "piste",
-        "sidewalk",
-        "steps"
-      ],["==", "class", "path"]]
+      ["!in", "structure", "bridge", "tunnel"],
+      ["!in","type","corridor","crossing","piste","sidewalk","steps"],
+      ["==", "class", "path"]]
   ],
   "layout": {
     "line-join": "round",

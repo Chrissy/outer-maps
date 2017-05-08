@@ -34,13 +34,13 @@ const lineStringToLabelMultiLineString = (geom, minlength) => {
 
   if (filteredLines.length == 0) return helpers.lineString([]);
 
-  const bezierLines = filteredLines.map(f => bezier(f, 400, 0.5));
+  const bezierLines = filteredLines.map(f => bezier(f, 500, 0.5));
   return helpers.multiLineString(bezierLines.map(l => l.geometry.coordinates));
 }
 
 exports.labelMaker = (geojson, minLength) => {
   const features = geojson.features.map((r) => {
-    return Object.assign({}, lineStringToLabelMultiLineString(r.geometry, 1), {
+    return Object.assign({}, lineStringToLabelMultiLineString(r.geometry, minLength), {
       properties: r.properties
     });
   });
