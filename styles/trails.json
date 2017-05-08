@@ -67,7 +67,7 @@
   "filter": ["any", ["in", "type", "atv", "motorcycle"], ["==", "name", ""]]
 },
 {
-  "id": "trails-active",
+  "id": "trails-preview",
   "source": "composite",
   "source-layer": "trails",
   "filter": ["in", "id", 0],

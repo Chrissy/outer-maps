@@ -27,5 +27,19 @@ export const mapBoxLayers = [
       "circle-radius": 8,
       "circle-color": "rgba(0,0,0,0)"
     }
+  },
+  {
+    "id": "trails-selected",
+    "source": "trails-selected",
+    "type": "line",
+    "before": "handles-outline",
+    "line": {
+      "line-cap": "round",
+      "line-join": "bevel"
+    },
+    "paint": {
+      "line-color": "#FF9100",
+      "line-width": 2
+    }
   }
 ]

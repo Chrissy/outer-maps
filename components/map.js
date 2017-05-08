@@ -34,7 +34,6 @@ export default class Map extends React.Component {
   handleFeature(feature) {
     if (this.props.previewBoundary && feature.properties.id == this.props.previewBoundary.id) return;
     if (this.props.previewTrail && feature.properties.id == this.props.previewTrail.id) return;
-    console.log(feature)
     this.props.onFeatureMouseIn({properties: feature.properties, geometry: feature.geometry}, feature.layer.id);
   }
 
@@ -100,7 +99,8 @@ export default class Map extends React.Component {
     let zoom = this.state.zoom;
 
     if (this.props.selectedTrails.length) {
-      sources.push({id: 'trails-active', data: trailsToFeatureCollection(this.props.selectedTrails)})
+      console.log(this.props.selectedTrails)
+      sources.push({id: 'trails-selected', data: trailsToFeatureCollection(this.props.selectedTrails)})
     }
 
     if (this.props.handles && this.props.handles.length) {
