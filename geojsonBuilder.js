@@ -43,7 +43,7 @@ gQuery.query(`
     build({
       name: "trails-zoomed-out",
       data: result,
-      minZoom: 6,
+      minZoom: 8,
       maxZoom: 9.75
     });
   });
