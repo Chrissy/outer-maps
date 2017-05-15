@@ -4,12 +4,13 @@ const helpers = require('@turf/helpers');
 const path = require('path').normalize;
 const gQuery = require('./modules/genericQuery');
 const labelMaker = require('./modules/labelMaker').labelMaker;
+const exec = require('child_process').execSync;
 
 const pool = gQuery.pool();
 
 build = (name, result) => {
-  const tempFileName = `./public/dist/${name}.geojson`;
-  jsonfile.writeFile(tempFileName, result, () => console.log(`${name} done!`));
+  const tempFileName = `./tiles/${name}.geojson`;
+  jsonfile.writeFile(tempFileName, result);
 };
 
 gQuery.query(`

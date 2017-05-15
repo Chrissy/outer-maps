@@ -1,8 +1,8 @@
 {"layers": [
 {
   "id": "trails-outline",
-  "source": "composite",
-  "source-layer": "trails",
+  "source": "local",
+  "source-layer": "trailsgeojson",
   "type": "line",
   "before": "trails-core-line",
   "line": {
@@ -17,8 +17,8 @@
 },
 {
   "id": "trails-core-line",
-  "source": "composite",
-  "source-layer": "trails",
+  "source": "local",
+  "source-layer": "trailsgeojson",
   "type": "line",
   "before": "hedges",
   "line": {
@@ -34,8 +34,8 @@
 },
 {
   "id": "bike-core-line",
-  "source": "composite",
-  "source-layer": "trails",
+  "source": "local",
+  "source-layer": "trailsgeojson",
   "type": "line",
   "before": "hedges",
   "line": {
@@ -51,8 +51,8 @@
 },
 {
   "id": "atv-and-motorcycle-core-line",
-  "source": "composite",
-  "source-layer": "trails",
+  "source": "local",
+  "source-layer": "trailsgeojson",
   "type": "line",
   "before": "roads",
   "line": {
@@ -68,8 +68,8 @@
 },
 {
   "id": "trails-preview",
-  "source": "composite",
-  "source-layer": "trails",
+  "source": "local",
+  "source-layer": "trailsgeojson",
   "filter": ["in", "id", 0],
   "type": "line",
   "before": "handles-outline",
@@ -84,8 +84,8 @@
 },
 {
   "id": "trails",
-  "source": "composite",
-  "source-layer": "trails",
+  "source": "local",
+  "source-layer": "trailsgeojson",
   "type": "line",
   "paint": {
     "line-color": "transparent",
@@ -95,8 +95,8 @@
 },
 {
   "id": "trail-labels",
-  "source": "composite",
-  "source-layer": "trail-labels",
+  "source": "local",
+  "source-layer": "traillabelsgeojson",
   "type": "symbol",
   "layout": {
     "text-field": "{name}",
@@ -117,8 +117,8 @@
 },
 {
   "id": "trail-labels-zoomed-out",
-  "source": "composite",
-  "source-layer": "trail-labels-zoomed-out",
+  "source": "local",
+  "source-layer": "traillabelszoomedoutgeojson",
   "type": "symbol",
   "layout": {
     "text-field": "{name}",

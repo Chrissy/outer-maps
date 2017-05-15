@@ -10,7 +10,11 @@
   "pitch": 0,
   "sources": {
     "composite": {
-      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.park-boundaries,fivefourths.trails,fivefourths.trail-labels,fivefourths.trail-labels-zoomed-out",
+      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7",
+      "type": "vector"
+    },
+    "local": {
+      "tiles": ["http://0.0.0.0:5000/tiles/{z}/{x}/{y}.pbf"],
       "type": "vector"
     }
   },
