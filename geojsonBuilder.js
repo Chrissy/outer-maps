@@ -27,8 +27,24 @@ gQuery.query(`
     build({
       name: "trails",
       data: result,
-      minZoom: 6,
+      minZoom: 10,
       maxZoom: 15
+    });
+  });
+});
+
+gQuery.query(`
+  SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.000005) as geom
+  FROM trails
+  WHERE type = 'hike' OR type = 'horse' OR type = 'bike' OR
+  type = 'motorcycle' OR type = 'atv' AND name != ''
+`, pool, (result) => {
+  gQuery.geoJson(result, (result) => {
+    build({
+      name: "trails-zoomed-out",
+      data: result,
+      minZoom: 6,
+      maxZoom: 9.75
     });
   });
 });
@@ -55,8 +71,8 @@ gQuery.query(`
   gQuery.geoJson(result, (result) => {
     build({
       name: "trail-labels",
-      data: result,
-      minZoom: 12,
+      data: labelMaker(result, 1),
+      minZoom: 12.25,
       maxZoom: 15
     });
   });
@@ -70,8 +86,8 @@ gQuery.query(`
   gQuery.geoJson(result, (result) => {
     build({
       name: "trail-labels-zoomed-out",
-      data: result,
-      minZoom: 6,
+      data: labelMaker(result, 2),
+      minZoom: 10,
       maxZoom: 12
     });
   });

@@ -20,7 +20,6 @@
   "source": "$source",
   "source-layer": "trailsgeojson",
   "type": "line",
-  "before": "hedges",
   "line": {
     "line-cap": "round",
     "line-join": "bevel"
@@ -94,6 +93,22 @@
   "filter": ["in", "type", "hike", "horse", "bike", "atv", "motorcycle", "trail"]
 },
 {
+  "id": "trails-zoomed-out",
+  "source": "$source",
+  "source-layer": "trailszoomedoutgeojson",
+  "type": "line",
+  "line": {
+    "line-cap": "round",
+    "line-join": "bevel",
+    "line-opacity": {"stops": [[0, 0.3], [7, 0.5], [9, 0.75]]}
+  },
+  "paint": {
+    "line-color": "rgba(150,190,150,1)",
+    "line-width": 1
+  },
+  "filter": ["in", "type", "hike", "horse"]
+},
+{
   "id": "trail-labels",
   "source": "$source",
   "source-layer": "traillabelsgeojson",
@@ -108,10 +123,7 @@
   "paint": {
     "text-color": "rgba(0,33,4,1)",
     "text-halo-color": "hsla(0, 0%, 100%, 100%)",
-    "text-halo-width": 1,
-    "text-opacity": {
-      "stops": [[12, 0], [12.25, 1]]
-    }
+    "text-halo-width": 1
   },
   "filter": ["all", ["in", "type", "hike", "horse"], ["!=", "name", ""]]
 },
@@ -131,10 +143,7 @@
     "text-color": "rgba(0,33,4,1)",
     "text-halo-color": "hsla(0, 0%, 100%, 100%)",
     "text-halo-width": 1,
-    "text-halo-blur": 0.5,
-    "text-opacity": {
-      "stops": [[9, 0], [9.25, 1], [12, 1], [12.25, 0]]
-    }
+    "text-halo-blur": 0.5
   },
   "filter": ["all", ["in", "type", "hike", "horse"], ["!=", "name", ""]]
 }
