@@ -1,7 +1,7 @@
 {"layers": [
 {
   "id": "trails-outline",
-  "source": "local",
+  "source": "$source",
   "source-layer": "trailsgeojson",
   "type": "line",
   "before": "trails-core-line",
@@ -17,7 +17,7 @@
 },
 {
   "id": "trails-core-line",
-  "source": "local",
+  "source": "$source",
   "source-layer": "trailsgeojson",
   "type": "line",
   "before": "hedges",
@@ -34,7 +34,7 @@
 },
 {
   "id": "bike-core-line",
-  "source": "local",
+  "source": "$source",
   "source-layer": "trailsgeojson",
   "type": "line",
   "before": "hedges",
@@ -51,7 +51,7 @@
 },
 {
   "id": "atv-and-motorcycle-core-line",
-  "source": "local",
+  "source": "$source",
   "source-layer": "trailsgeojson",
   "type": "line",
   "before": "roads",
@@ -68,7 +68,7 @@
 },
 {
   "id": "trails-preview",
-  "source": "local",
+  "source": "$source",
   "source-layer": "trailsgeojson",
   "filter": ["in", "id", 0],
   "type": "line",
@@ -84,7 +84,7 @@
 },
 {
   "id": "trails",
-  "source": "local",
+  "source": "$source",
   "source-layer": "trailsgeojson",
   "type": "line",
   "paint": {
@@ -95,7 +95,7 @@
 },
 {
   "id": "trail-labels",
-  "source": "local",
+  "source": "$source",
   "source-layer": "traillabelsgeojson",
   "type": "symbol",
   "layout": {
@@ -117,7 +117,7 @@
 },
 {
   "id": "trail-labels-zoomed-out",
-  "source": "local",
+  "source": "$source",
   "source-layer": "traillabelszoomedoutgeojson",
   "type": "symbol",
   "layout": {

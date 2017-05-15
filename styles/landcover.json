@@ -109,7 +109,7 @@
 {
   "id": "national-parks",
   "type": "fill",
-  "source": "local",
+  "source": "$source",
   "source-layer": "parkboundariesgeojson",
   "filter": ["==", "$type", "Polygon"],
   "paint": {
@@ -125,7 +125,7 @@
 },
 {
   "id": "national-parks-active-outline",
-  "source": "local",
+  "source": "$source",
   "source-layer": "parkboundariesgeojson",
   "type": "line",
   "filter": ["in", "id", 0],
@@ -137,7 +137,7 @@
 },
 {
   "id": "national-parks-active",
-  "source": "local",
+  "source": "$source",
   "source-layer": "parkboundariesgeojson",
   "type": "fill",
   "filter": ["in", "id", 0],

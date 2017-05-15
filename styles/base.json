@@ -8,13 +8,19 @@
   "zoom": 11.636893140472495,
   "bearing": 0,
   "pitch": 0,
-  "sources": {
+  "local": {
     "composite": {
       "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7",
       "type": "vector"
     },
     "local": {
       "tiles": ["http://0.0.0.0:5000/tiles/{z}/{x}/{y}.pbf"],
+      "type": "vector"
+    }
+  },
+  "remote": {
+    "composite": {
+      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.local",
       "type": "vector"
     }
   },
