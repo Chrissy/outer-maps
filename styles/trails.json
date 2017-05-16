@@ -2,7 +2,7 @@
 {
   "id": "trails-outline",
   "source": "$source",
-  "source-layer": "trailsgeojson",
+  "source-layer": "trails",
   "type": "line",
   "before": "trails-core-line",
   "line": {
@@ -18,7 +18,22 @@
 {
   "id": "trails-core-line",
   "source": "$source",
-  "source-layer": "trailsgeojson",
+  "source-layer": "trails",
+  "type": "line",
+  "line": {
+    "line-cap": "round",
+    "line-join": "bevel"
+  },
+  "paint": {
+    "line-color": "rgba(0,103,14,1)",
+    "line-width": 1
+  },
+  "filter": ["all", ["in", "type", "hike", "trail", "horse"], ["!=", "name", ""]]
+},
+{
+  "id": "trails-zoomed-out",
+  "source": "$source",
+  "source-layer": "trails-zoomed-out",
   "type": "line",
   "line": {
     "line-cap": "round",
@@ -27,14 +42,17 @@
   "paint": {
     "line-color": "rgba(0,103,14,1)",
     "line-width": 1,
-    "line-dasharray": [4, 1]
+    "line-opacity": {
+      "base": 1,
+      "stops": [[0, 0.2], [7, 0.4], [9, 0.6]]
+    }
   },
-  "filter": ["all", ["in", "type", "hike", "trail", "horse"], ["!=", "name", ""]]
+  "filter": ["all", ["in", "type", "hike", "horse"], [">", "distance", 3000]]
 },
 {
   "id": "bike-core-line",
   "source": "$source",
-  "source-layer": "trailsgeojson",
+  "source-layer": "trails",
   "type": "line",
   "before": "hedges",
   "line": {
@@ -42,16 +60,30 @@
     "line-join": "bevel"
   },
   "paint": {
-    "line-color": "rgba(160,160,160,1)",
-    "line-width": 1,
-    "line-dasharray": [4, 1]
+    "line-color": "rgb(160,160,160)",
+    "line-width": 1
   },
   "filter": ["all", ["in", "type", "bike"], ["!=", "name", ""]]
 },
 {
+  "id": "bike-zoomed-out",
+  "source": "$source",
+  "source-layer": "trails-zoomed-out",
+  "type": "line",
+  "line": {
+    "line-cap": "round",
+    "line-join": "bevel"
+  },
+  "paint": {
+    "line-color": "rgb(160,160,160)",
+    "line-width": 1
+  },
+  "filter": ["all", ["in", "type", "bike"], [">", "distance", 3000]]
+},
+{
   "id": "atv-and-motorcycle-core-line",
   "source": "$source",
-  "source-layer": "trailsgeojson",
+  "source-layer": "trails",
   "type": "line",
   "before": "roads",
   "line": {
@@ -68,7 +100,7 @@
 {
   "id": "trails-preview",
   "source": "$source",
-  "source-layer": "trailsgeojson",
+  "source-layer": "trails",
   "filter": ["in", "id", 0],
   "type": "line",
   "before": "handles-outline",
@@ -84,7 +116,7 @@
 {
   "id": "trails",
   "source": "$source",
-  "source-layer": "trailsgeojson",
+  "source-layer": "trails",
   "type": "line",
   "paint": {
     "line-color": "transparent",
@@ -93,25 +125,9 @@
   "filter": ["in", "type", "hike", "horse", "bike", "atv", "motorcycle", "trail"]
 },
 {
-  "id": "trails-zoomed-out",
-  "source": "$source",
-  "source-layer": "trailszoomedoutgeojson",
-  "type": "line",
-  "line": {
-    "line-cap": "round",
-    "line-join": "bevel",
-    "line-opacity": {"stops": [[0, 0.3], [7, 0.5], [9, 0.75]]}
-  },
-  "paint": {
-    "line-color": "rgba(150,190,150,1)",
-    "line-width": 1
-  },
-  "filter": ["in", "type", "hike", "horse"]
-},
-{
   "id": "trail-labels",
   "source": "$source",
-  "source-layer": "traillabelsgeojson",
+  "source-layer": "trail-labels",
   "type": "symbol",
   "layout": {
     "text-field": "{name}",
@@ -130,7 +146,7 @@
 {
   "id": "trail-labels-zoomed-out",
   "source": "$source",
-  "source-layer": "traillabelszoomedoutgeojson",
+  "source-layer": "trail-labels-zoomed-out",
   "type": "symbol",
   "layout": {
     "text-field": "{name}",
