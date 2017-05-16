@@ -56,8 +56,8 @@ gQuery.query(`
     build({
       name: "trail-labels-zoomed-out",
       data: labelMaker(result, 2),
-      minZoom: 8,
-      maxZoom: 10
+      minZoom: 10,
+      maxZoom: 11.75
     });
   });
 });
@@ -71,7 +71,7 @@ gQuery.query(`
     build({
       name: "trail-labels",
       data: labelMaker(result, 1),
-      minZoom: 10.25,
+      minZoom: 12,
       maxZoom: 14
     });
   });
