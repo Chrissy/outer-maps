@@ -18,7 +18,7 @@ build = ({name, data, minZoom = 0, maxZoom = 99} = {}) => {
 };
 
 gQuery.query(`
-  SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.000001) as geom
+  SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.0000001) as geom
   FROM trails
   WHERE type = 'hike' OR type = 'horse' OR type = 'bike' OR
   type = 'motorcycle' OR type = 'atv' AND name != ''
@@ -28,7 +28,7 @@ gQuery.query(`
       name: "trails",
       data: result,
       minZoom: 10,
-      maxZoom: 15
+      maxZoom: 12
     });
   });
 });
@@ -58,7 +58,7 @@ gQuery.query(`
       name: "park-boundaries",
       data: result,
       minZoom: 0,
-      maxZoom: 15
+      maxZoom: 12
     });
   });
 });
@@ -73,7 +73,7 @@ gQuery.query(`
       name: "trail-labels",
       data: labelMaker(result, 1),
       minZoom: 12.25,
-      maxZoom: 15
+      maxZoom: 12
     });
   });
 });
