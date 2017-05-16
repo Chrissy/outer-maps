@@ -40,8 +40,11 @@
     "line-join": "bevel"
   },
   "paint": {
-    "line-color": "rgba(0,103,14,1)",
+    "line-color": "rgb(0,103,14)",
     "line-width": 1,
+    "line-dasharray": {
+      "stops": [[6, [1, 1]], [8, [2, 1]], [9, [1, 0]]]
+    },
     "line-opacity": {
       "base": 1,
       "stops": [[0, 0.2], [7, 0.4], [9, 0.6]]
@@ -76,7 +79,14 @@
   },
   "paint": {
     "line-color": "rgb(160,160,160)",
-    "line-width": 1
+    "line-width": 1,
+    "line-dasharray": {
+      "stops": [[6, [1, 1]], [8, [2, 1]], [9, [1, 0]]]
+    },
+    "line-opacity": {
+      "base": 1,
+      "stops": [[0, 0.2], [7, 0.4], [9, 0.6]]
+    }
   },
   "filter": ["all", ["in", "type", "bike"], [">", "distance", 3000]]
 },

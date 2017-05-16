@@ -1,0 +1,33 @@
+{"layers": [
+{
+  "id": "national-parks-label-zoomed-out",
+  "type": "symbol",
+  "source": "composite",
+  "source-layer": "park-boundary-labels",
+  "layout": {
+    "icon-image": "park-11",
+    "icon-size": 0.8,
+    "text-line-height": 1.1,
+    "text-size": {
+      "base": 1,
+      "stops": [[10, 11],[18, 14]]
+    },
+    "text-offset": [0, 0.5],
+    "text-anchor": "top",
+    "text-max-angle": 38,
+    "symbol-spacing": 5000,
+    "text-font": ["DIN Offc Pro Medium","Arial Unicode MS Regular"],
+    "text-padding": 2,
+    "text-field": "{name}",
+    "text-letter-spacing": 0.01,
+    "text-max-width": 8
+  },
+  "paint": {
+    "text-color": "hsl(100, 100%, 20%)",
+    "text-halo-color": "hsl(0, 0%, 100%)",
+    "text-halo-width": 0.5,
+    "text-halo-blur": 0.5
+  },
+  "filter": [">", "area", 500000000]
+}
+]}

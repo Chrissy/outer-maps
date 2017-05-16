@@ -7,28 +7,6 @@ const exec = require('child_process').execSync;
 const tempFileName = 'temp-trails.geojson';
 const fs = require('fs');
 
-addTippecanoeProps = (data, props) => {
-  return Object.assign({}, data, {
-    features: data.features.map(f => Object.assign({}, f, {
-      "tippecanoe" : props
-    }))
-  });
-}
-
-build = (data, {name, minZoom = 0, maxZoom = 99, labelLength} = {}, resolve) => {
-
-  const newObj = addTippecanoeProps(data, {
-    "maxzoom" : maxZoom,
-    "minzoom" : minZoom,
-    layer: name
-  });
-
-  jsonfile.writeFile("./" + tempFileName, newObj, {flag: 'a'}, () => {
-    console.log(name + " done!");
-    resolve();
-  });
-};
-
 const queries = [
   {
     name: "trails-zoomed-out",
@@ -76,6 +54,28 @@ const queries = [
   }
 ]
 
+addTippecanoeProps = (data, props) => {
+  return Object.assign({}, data, {
+    features: data.features.map(f => Object.assign({}, f, {
+      "tippecanoe" : props
+    }))
+  });
+}
+
+build = (data, {name, minZoom = 0, maxZoom = 99, labelLength} = {}, resolve) => {
+
+  const newObj = addTippecanoeProps(data, {
+    "maxzoom" : maxZoom,
+    "minzoom" : minZoom,
+    layer: name
+  });
+
+  jsonfile.writeFile("./" + tempFileName, newObj, {flag: 'a'}, () => {
+    console.log(name + " done!");
+    resolve();
+  });
+};
+
 const pool = gQuery.pool();
 
 const processes = queries.map(q => {
@@ -92,6 +92,6 @@ Promise.all(processes).then(() => {
   console.log("making tiles...")
   exec(`tippecanoe --quiet -f -P -M 100000 -as -an -al -ap -o tiles/local.mbtiles ${tempFileName}`);
   fs.unlink("./" + tempFileName, () => {
-    console.log("Done! Tiles are cached into memory by the server. You will need to restart.")    
+    console.log("Done! Tiles are cached into memory by the server. You will need to restart.")
   });
 })

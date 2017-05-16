@@ -5,6 +5,7 @@
     "styles/landcover.json",
     "styles/elevation.json",
     "styles/roads.json",
-    "styles/trails.json"
+    "styles/trails.json",
+    "styles/park-labels.json"
   ]
 }

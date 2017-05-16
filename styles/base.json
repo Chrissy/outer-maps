@@ -10,7 +10,7 @@
   "pitch": 0,
   "local": {
     "composite": {
-      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.54ouy1ho",
+      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.park-boundaries,fivefourths.park-boundary-labels",
       "type": "vector"
     },
     "local": {
@@ -25,7 +25,7 @@
     }
   },
   "glyphs": "mapbox://fonts/fivefourths/{fontstack}/{range}.pbf",
-  "sprite": "/sprite",
+  "sprite": "mapbox://sprites/fivefourths/cj1fdtp1f00002sttxerc303x",
   "layers": [],
   "created": "2017-04-12T19:41:53.385Z",
   "id": "cj1fdtp1f00002sttxerc303x",
