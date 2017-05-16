@@ -98,7 +98,7 @@ export default class MapBox extends React.PureComponent {
       style: '/dist/mapbox-styles.json',
       center: [-123.6, 47.8],
       zoom: 8,
-      maxZoom: 12
+      maxZoom: 14
     })
 
     this.mapEvents();

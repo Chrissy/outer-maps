@@ -3,9 +3,10 @@
   "version": "0.0.1",
   "scripts": {
     "start": "node server.js",
-    "geojson": "node geojsonBuilder.js",
-    "tiles": "node tileBuilder.js",
-    "upload": "node tileUploader.js"
+    "trails": "node trailsBuilder.js",
+    "parks": "node parksBuilder.js",
+    "tiles": "node tilesBuilder.js",
+    "upload": "node uploader.js"
   },
   "license": "ISC",
   "dependencies": {

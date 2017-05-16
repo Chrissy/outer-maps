@@ -10,7 +10,7 @@
   "pitch": 0,
   "local": {
     "composite": {
-      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7",
+      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.54ouy1ho",
       "type": "vector"
     },
     "local": {
@@ -20,7 +20,7 @@
   },
   "remote": {
     "composite": {
-      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.local",
+      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.54ouy1ho,fivefourths.local",
       "type": "vector"
     }
   },

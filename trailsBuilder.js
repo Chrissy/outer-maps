@@ -1,11 +1,9 @@
-const fs = require('fs');
 const jsonfile = require('jsonfile')
 const helpers = require('@turf/helpers');
 const path = require('path').normalize;
 const gQuery = require('./modules/genericQuery');
 const labelMaker = require('./modules/labelMaker').labelMaker;
 const exec = require('child_process').execSync;
-
 const pool = gQuery.pool();
 
 build = ({name, data, minZoom = 0, maxZoom = 99} = {}) => {
@@ -18,6 +16,22 @@ build = ({name, data, minZoom = 0, maxZoom = 99} = {}) => {
 };
 
 gQuery.query(`
+  SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.000005) as geom
+  FROM trails
+  WHERE type = 'hike' OR type = 'horse' OR type = 'bike' OR
+  type = 'motorcycle' OR type = 'atv' AND name != ''
+`, pool, (result) => {
+  gQuery.geoJson(result, (result) => {
+    build({
+      name: "trails-zoomed-out",
+      data: result,
+      minZoom: 6,
+      maxZoom: 9.75
+    });
+  });
+});
+
+gQuery.query(`
   SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.0000001) as geom
   FROM trails
   WHERE type = 'hike' OR type = 'horse' OR type = 'bike' OR
@@ -28,52 +42,7 @@ gQuery.query(`
       name: "trails",
       data: result,
       minZoom: 10,
-      maxZoom: 12
-    });
-  });
-});
-
-gQuery.query(`
-  SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.000005) as geom
-  FROM trails
-  WHERE type = 'hike' OR type = 'horse' OR type = 'bike' OR
-  type = 'motorcycle' OR type = 'atv' AND name != ''
-`, pool, (result) => {
-  gQuery.geoJson(result, (result) => {
-    build({
-      name: "trails-zoomed-out",
-      data: result,
-      minZoom: 8,
-      maxZoom: 9.75
-    });
-  });
-});
-
-gQuery.query(`
-  SELECT name, id, ST_Simplify(geog::geometry, 0.0005) as geom
-  FROM boundaries
-`, pool, (result) => {
-  gQuery.geoJson(result, (result) => {
-    build({
-      name: "park-boundaries",
-      data: result,
-      minZoom: 0,
-      maxZoom: 12
-    });
-  });
-});
-
-gQuery.query(`
-  SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.000001) as geom
-  FROM trails
-  WHERE (type = 'hike' OR type = 'horse' OR type = 'bike') AND name != ''
-`, pool, (result) => {
-  gQuery.geoJson(result, (result) => {
-    build({
-      name: "trail-labels",
-      data: labelMaker(result, 1),
-      minZoom: 12.25,
-      maxZoom: 12
+      maxZoom: 14
     });
   });
 });
@@ -87,8 +56,23 @@ gQuery.query(`
     build({
       name: "trail-labels-zoomed-out",
       data: labelMaker(result, 2),
-      minZoom: 10,
-      maxZoom: 12
+      minZoom: 8,
+      maxZoom: 10
+    });
+  });
+});
+
+gQuery.query(`
+  SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.000001) as geom
+  FROM trails
+  WHERE (type = 'hike' OR type = 'horse' OR type = 'bike') AND name != ''
+`, pool, (result) => {
+  gQuery.geoJson(result, (result) => {
+    build({
+      name: "trail-labels",
+      data: labelMaker(result, 1),
+      minZoom: 10.25,
+      maxZoom: 14
     });
   });
 });

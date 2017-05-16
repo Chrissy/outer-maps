@@ -109,8 +109,8 @@
 {
   "id": "national-parks",
   "type": "fill",
-  "source": "$source",
-  "source-layer": "parkboundariesgeojson",
+  "source": "composite",
+  "source-layer": "park-boundaries-ahcjq8",
   "filter": ["==", "$type", "Polygon"],
   "paint": {
     "fill-color": {
@@ -121,8 +121,8 @@
 },
 {
   "id": "national-parks-active-outline",
-  "source": "$source",
-  "source-layer": "parkboundariesgeojson",
+  "source": "composite",
+  "source-layer": "park-boundaries-ahcjq8",
   "type": "line",
   "filter": ["in", "id", 0],
   "paint": {
@@ -133,8 +133,8 @@
 },
 {
   "id": "national-parks-active",
-  "source": "$source",
-  "source-layer": "parkboundariesgeojson",
+  "source": "composite",
+  "source-layer": "park-boundaries-ahcjq8",
   "type": "fill",
   "filter": ["in", "id", 0],
   "paint": {
