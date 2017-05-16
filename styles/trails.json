@@ -2,7 +2,7 @@
 {
   "id": "trails-outline",
   "source": "$source",
-  "source-layer": "trailsgeojson",
+  "source-layer": "trails",
   "type": "line",
   "before": "trails-core-line",
   "line": {
@@ -18,7 +18,7 @@
 {
   "id": "trails-core-line",
   "source": "$source",
-  "source-layer": "trailsgeojson",
+  "source-layer": "trails",
   "type": "line",
   "line": {
     "line-cap": "round",
@@ -33,7 +33,7 @@
 {
   "id": "trails-zoomed-out",
   "source": "$source",
-  "source-layer": "trailszoomedoutgeojson",
+  "source-layer": "trails-zoomed-out",
   "type": "line",
   "line": {
     "line-cap": "round",
@@ -52,7 +52,7 @@
 {
   "id": "bike-core-line",
   "source": "$source",
-  "source-layer": "trailsgeojson",
+  "source-layer": "trails",
   "type": "line",
   "before": "hedges",
   "line": {
@@ -68,7 +68,7 @@
 {
   "id": "bike-zoomed-out",
   "source": "$source",
-  "source-layer": "trailszoomedoutgeojson",
+  "source-layer": "trails-zoomed-out",
   "type": "line",
   "line": {
     "line-cap": "round",
@@ -83,7 +83,7 @@
 {
   "id": "atv-and-motorcycle-core-line",
   "source": "$source",
-  "source-layer": "trailsgeojson",
+  "source-layer": "trails",
   "type": "line",
   "before": "roads",
   "line": {
@@ -100,7 +100,7 @@
 {
   "id": "trails-preview",
   "source": "$source",
-  "source-layer": "trailsgeojson",
+  "source-layer": "trails",
   "filter": ["in", "id", 0],
   "type": "line",
   "before": "handles-outline",
@@ -116,7 +116,7 @@
 {
   "id": "trails",
   "source": "$source",
-  "source-layer": "trailsgeojson",
+  "source-layer": "trails",
   "type": "line",
   "paint": {
     "line-color": "transparent",
@@ -127,7 +127,7 @@
 {
   "id": "trail-labels",
   "source": "$source",
-  "source-layer": "traillabelsgeojson",
+  "source-layer": "trail-labels",
   "type": "symbol",
   "layout": {
     "text-field": "{name}",
@@ -146,7 +146,7 @@
 {
   "id": "trail-labels-zoomed-out",
   "source": "$source",
-  "source-layer": "traillabelszoomedoutgeojson",
+  "source-layer": "trail-labels-zoomed-out",
   "type": "symbol",
   "layout": {
     "text-field": "{name}",
