@@ -99,7 +99,6 @@ export default class Map extends React.Component {
     let zoom = this.state.zoom;
 
     if (this.props.selectedTrails.length) {
-      console.log(this.props.selectedTrails)
       sources.push({id: 'trails-selected', data: trailsToFeatureCollection(this.props.selectedTrails)})
     }
 
