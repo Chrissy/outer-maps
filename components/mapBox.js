@@ -16,7 +16,7 @@ export default class MapBox extends React.PureComponent {
     addedSources.forEach(function(source){
       this.mapboxed.addSource(source.id, {
         data: source.data,
-        type: "geojson",
+        type: source.type || "geojson",
         tolerance: source.tolerance || 0.3
       });
     }.bind(this));
@@ -41,7 +41,7 @@ export default class MapBox extends React.PureComponent {
   }
 
   handleMouseMove(event) {
-    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'boundaries', 'handles'] });
+    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'national-parks', 'handles'] });
 
     this.props.onMouseMove(Object.assign({}, event, {
       features: features
@@ -49,7 +49,7 @@ export default class MapBox extends React.PureComponent {
   }
 
   handleMouseDown(event) {
-    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'boundaries', 'handles'] });
+    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'national-parks', 'handles'] });
 
     this.props.onMouseDown(Object.assign({}, event, {
       features: features,
@@ -61,7 +61,7 @@ export default class MapBox extends React.PureComponent {
   }
 
   handleClick(event) {
-    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'boundaries'] });
+    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'national-parks'] });
     this.props.onClick(Object.assign({}, event, {
       features: features,
     }));
@@ -90,16 +90,15 @@ export default class MapBox extends React.PureComponent {
     }));
   }
 
-
-
   componentDidMount() {
     MapboxGL.accessToken = accessToken;
 
     this.mapboxed = new MapboxGL.Map({
       container: 'mapbox-gl-element',
-      style: styleUrl,
+      style: '/dist/mapbox-styles.json',
       center: [-123.6, 47.8],
-      zoom: 8
+      zoom: 8,
+      maxZoom: 14
     })
 
     this.mapEvents();
@@ -109,14 +108,9 @@ export default class MapBox extends React.PureComponent {
   componentDidUpdate(prevProps, q) {
     this.updateSources(prevProps.sources, this.props.sources);
 
-    if (this.mapboxed.getSource('trails-data') && this.mapboxed.getLayer('trails-active')) {
-      this.mapboxed.setFilter("trails-active", ["in", "id", ...this.props.activeTrailIDs.map(t => parseInt(t))]);
-    }
-
-    if (this.mapboxed.getSource('boundaries-data') && this.mapboxed.getLayer('boundaries-active')) {
-      this.mapboxed.setFilter("boundaries-active", ["in", "id", ...this.props.activeBoundaryIds.map(t => parseInt(t))]);
-      this.mapboxed.setFilter("boundaries-active-outline", ["in", "id", ...this.props.activeBoundaryIds.map(t => parseInt(t))]);
-    }
+    this.mapboxed.setFilter("trails-preview", ["in", "id", (this.props.previewTrail) ? this.props.previewTrail.id : 0]);
+    this.mapboxed.setFilter("national-parks-active", ["in", "id", (this.props.previewBoundary) ? this.props.previewBoundary.id : 0]);
+    this.mapboxed.setFilter("national-parks-active-outline", ["in", "id", (this.props.previewBoundary) ? this.props.previewBoundary.id : 0]);
 
     if (this.props.fitBounds && prevProps.fitBounds !== this.props.fitBounds) {
       this.mapboxed.fitBounds(this.props.fitBounds);

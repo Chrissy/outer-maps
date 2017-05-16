@@ -2,9 +2,6 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path').normalize;
 const pg = require('pg');
-const bezier = require ('@turf/bezier');
-const lineDistance = require('@turf/line-distance');
-const helpers = require('@turf/helpers');
 const express = require('express');
 const browserify = require('browserify-middleware');
 const app = express();
@@ -12,8 +9,10 @@ const _ = require('underscore');
 const env = require('./environment/development');
 const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
 const statUtils = require('./modules/statUtils');
-const explodeLineByAngle = require('./modules/explodeLineStringByAngles').explodeLineStringByAngles;
-
+const query = require('./modules/genericQuery').query;
+const createPool = require('./modules/genericQuery').pool;
+const tilelive = require('tilelive');
+require('mbtiles').registerProtocols(tilelive);
 
 app.use(express.static('public'));
 
@@ -26,175 +25,38 @@ app.get('/bundle.js', browserify(__dirname + '/components/app.js', {
   }]
 }));
 
-var pool = new pg.Pool({
-  database: env.databaseName,
-  max: 10,
-  idleTimeoutMillis: 3000,
-  user: env.dbUser
-});
-
-app.get('/api/trails/:x1/:y1/:x2/:y2', function(request, response) {
-  let query = `
-    SELECT
-      name,
-      id,
-      type,
-      source,
-      ST_Length(geog) as distance,
-      ST_AsGeoJson(geog::geometry) as geog
-    FROM trails
-    WHERE ST_Intersects(geog,
-      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
-    ) AND type != 'road'
-  `
-
-  pool.connect(function(err, client, done){
-    client.query(query, function(err, result){
-      done();
-
-      if (err) throw err;
-
-      const trails = result.rows.map(r => {
-        const feature = helpers.feature(JSON.parse(r.geog));
-
-        return Object.assign({}, feature, {
-          "properties": {
-            "name": r.name,
-            "id": r.id,
-            "type": r.type,
-            "distance": r.distance,
-            "source": r.source
-          }
-        });
-      });
-
-      response.json(helpers.featureCollection(trails));
-    });
-  });
-});
-
-app.get('/api/trail-paths-for-labels/:x1/:y1/:x2/:y2/:threshold/:minlength', function(request, response) {
-  let query = `
-    SELECT name, id, type,
-      ST_AsGeoJson(ST_Translate(ST_SimplifyVW(geog::geometry, ${(request.params.threshold / 100 ) * 0.00005}), 0.000075, 0.000075)) as geog
-    FROM trails
-    WHERE ST_Intersects(geog,
-      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
-    ) AND (type = 'hike' OR type = 'bike') AND name != 'trail' AND name != 'Trail' AND name != 'TRAIL';
-  `
-
-  pool.connect(function(err, client, done){
-    client.query(query, function(err, result){
-      done();
-
-      if (err) throw err;
-
-      const labelPaths = result.rows.reduce((a, r) => {
-        const geog = JSON.parse(r.geog);
-
-        if (geog.coordinates.length <= 1) return a;
-
-        const multiArray = explodeLineByAngle(geog, 150);
-        const filteredLines = multiArray.filter(c => lineDistance(c) > request.params.minlength);
-
-        if (filteredLines.length == 0) return a;
-
-        const bezierLines = filteredLines.map(f => bezier(f, 1000, 0.5));
-        const multiLineString = helpers.multiLineString(bezierLines.map(l => l.geometry.coordinates));
-
-        return [...a, Object.assign({}, multiLineString, {
-          "properties": {
-            "name": r.name,
-            "id": r.id,
-            "type": r.type,
-          }
-        })];
-      }, []);
-
-      response.json(helpers.featureCollection(labelPaths));
-    });
-  });
-});
-
-app.get('/api/boundaries/:x1/:y1/:x2/:y2', function(request, response) {
-  let query = `
-    SELECT
-      name,
-      id,
-      ST_Area(geog) as area,
-      ST_AsGeoJson(geog) as geog,
-      ST_AsGeoJson(ST_Centroid(geog::geometry)) as center,
-      ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds
-    FROM boundaries
-    WHERE ST_Intersects(geog,
-      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2})
-    )
-  `
-
-  pool.connect(function(err, client, done){
-    client.query(query, function(err, result){
-      done();
-
-      if (err) throw err;
-
-      const features = result.rows.map(r => {
-        const envelope = JSON.parse(r.bounds).coordinates[0];
-
-        return {
-          "type": "Feature",
-          "properties": {
-            "name": r.name,
-            "id": r.id,
-            "area": r.area,
-            "center": JSON.parse(r.center).coordinates,
-            "bounds": [envelope[0], envelope[2]],
-          },
-          "geometry": JSON.parse(r.geog)
-        };
-      });
-
-      response.json({
-        type: "FeatureCollection",
-        features: features
-      })
-    });
-  });
-});
+const pool = createPool();
 
 app.get('/api/elevation', function(request, response){
-  pool.connect(function(err, client, done){
-    const points = JSON.parse(request.query.points);
-    const pointsStr = points.reduce((a, p, i) =>  a + `${(i == 0) ? '' : ','}ST_MakePoint(${p[0]},${p[1]})`, '');
+  const points = JSON.parse(request.query.points);
+  const pointsStr = points.reduce((a, p, i) =>  a + `${(i == 0) ? '' : ','}ST_MakePoint(${p[0]},${p[1]})`, '');
 
-    const query = `
-      WITH trail AS (
-          SELECT ST_SetSRID(ST_MakeLine(ARRAY[${pointsStr}]), 4326) AS path
-        ),
-        points AS (
-          SELECT (ST_DumpPoints(path)).geom AS point
-          FROM trail
-        ), raster AS (
-          SELECT ST_Union(rast) AS rast FROM elevation
-          CROSS JOIN trail
-          WHERE ST_Intersects(rast, path)
-        )
-      SELECT
-        ST_Value(rast, point) as elevation
-      FROM raster
-      CROSS JOIN points
-    `;
+  const sql = `
+    WITH trail AS (
+        SELECT ST_SetSRID(ST_MakeLine(ARRAY[${pointsStr}]), 4326) AS path
+      ),
+      points AS (
+        SELECT (ST_DumpPoints(path)).geom AS point
+        FROM trail
+      ), raster AS (
+        SELECT ST_Union(rast) AS rast FROM elevation
+        CROSS JOIN trail
+        WHERE ST_Intersects(rast, path)
+      )
+    SELECT
+      ST_Value(rast, point) as elevation
+    FROM raster
+    CROSS JOIN points
+  `;
 
-    client.query(query, function(err, result){
-      if (err) throw err;
-      done();
-      const elevations = statUtils.rollingAverage(statUtils.glitchDetector(result.rows.map(r => r.elevation)), 15);
-      response.json(elevations.map((r, i) => {
-        return {
-          elevation: r,
-          coordinates: points[i]
-        };
-      }));
-    });
+  query(sql, pool, (result) => {
+    const elevations = statUtils.rollingAverage(statUtils.glitchDetector(result.rows.map(r => r.elevation)), 15);
+    response.json(elevations.map((r, i) => {
+      return {
+        elevation: r,
+        coordinates: points[i]
+      };
+    }));
   });
 });
 
@@ -203,7 +65,7 @@ app.get('/api/elevation-dump/:x1/:y1/:x2/:y2', function(request, response){
 
   if (fs.existsSync(cachedPath)) return response.json(JSON.parse(fs.readFileSync(cachedPath)));
 
-  const query = `
+  const sql = `
     select to_json(ST_DumpValues(ST_Clip(ST_Union(rast),
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
     )))
@@ -212,15 +74,11 @@ app.get('/api/elevation-dump/:x1/:y1/:x2/:y2', function(request, response){
     );
   `;
 
-  pool.connect(function(err, client, done){
-    client.query(query, function(err, result){
-      done();
-      if (err) throw err;
-      const vertices = result.rows[0].to_json.valarray
-      const json = {length: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices)}
-      fs.writeFileSync(cachedPath, JSON.stringify(json));
-      response.json(json);
-    });
+  query(sql, pool, (result) => {
+    const vertices = result.rows[0].to_json.valarray
+    const json = {length: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices)}
+    fs.writeFileSync(cachedPath, JSON.stringify(json));
+    response.json(json);
   });
 });
 
@@ -241,6 +99,16 @@ app.get('/api/terrain/:x/:y/:zoom', function(request, response){
       response.json({url: cachedImagePath})
     })
   })
+});
+
+tilelive.load('mbtiles://./tiles/local.mbtiles', function(err, source) {
+  if (err) throw err;
+  app.get('/tiles/:z/:x/:y.*', function(request, response) {
+    source.getTile(request.params.z, request.params.x, request.params.y, function(err, tile, headers) {
+      response.setHeader('Content-Encoding', 'gzip');
+      response.send(tile);
+    });
+  });
 });
 
 app.listen(5000, function () {

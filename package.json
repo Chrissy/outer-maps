@@ -2,7 +2,11 @@
   "name": "mountains",
   "version": "0.0.1",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "trails": "node trailsBuilder.js",
+    "parks": "node parksBuilder.js",
+    "tiles": "node tilesBuilder.js",
+    "upload": "node uploader.js"
   },
   "license": "ISC",
   "dependencies": {
@@ -35,11 +39,18 @@
     "babelify": "^7.3.0",
     "browserify": "^13.0.1",
     "css-modulesify": "^0.27.1",
+    "glob": "^7.1.1",
+    "gulp": "^3.9.1",
+    "gulp-merge-json": "^1.0.0",
+    "gulp-plumber": "^1.1.0",
+    "jsonfile": "^3.0.0",
     "mapbox-gl": "^0.20.1",
+    "mbtiles": "^0.9.0",
     "moment": "^2.17.1",
     "r-dom": "^2.2.3",
     "react": "15.x",
     "react-dom": "15.x",
+    "tilelive": "^5.12.3",
     "vis-why": "^1.2.2",
     "xml2js": "^0.4.17"
   }

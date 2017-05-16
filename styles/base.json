@@ -1,0 +1,36 @@
+{
+  "version": 8,
+  "name": "trails-up",
+  "center": [
+    -112.94482284499875,
+    37.23927485044308
+  ],
+  "zoom": 11.636893140472495,
+  "bearing": 0,
+  "pitch": 0,
+  "local": {
+    "composite": {
+      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.54ouy1ho",
+      "type": "vector"
+    },
+    "local": {
+      "tiles": ["http://0.0.0.0:5000/tiles/{z}/{x}/{y}.pbf"],
+      "type": "vector"
+    }
+  },
+  "remote": {
+    "composite": {
+      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.54ouy1ho,fivefourths.local",
+      "type": "vector"
+    }
+  },
+  "glyphs": "mapbox://fonts/fivefourths/{fontstack}/{range}.pbf",
+  "sprite": "/sprite",
+  "layers": [],
+  "created": "2017-04-12T19:41:53.385Z",
+  "id": "cj1fdtp1f00002sttxerc303x",
+  "modified": "2017-04-16T15:38:31.633Z",
+  "owner": "fivefourths",
+  "visibility": "private",
+  "draft": false
+}

@@ -27,6 +27,7 @@ coverage
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 public/static/*
+tiles/*
 environment
 migrations/.migrate
 
@@ -36,6 +37,7 @@ node_modules
 jspm_packages
 lib
 public/static
+public/dist/*
 
 # Cache
 public/cache/elevation/*.json

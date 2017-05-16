@@ -24,7 +24,7 @@ export default class Map extends React.Component {
     } else {
       if (this.draggingPoint || feature.layer.id == 'handles') {
         this.handleDrag(event);
-      } else if (feature.layer.id == 'trails' || feature.layer.id == 'boundaries') {
+      } else if (feature.layer.id == 'trails' || feature.layer.id == 'national-parks') {
         event.target.dragPan.enable();
         this.handleFeature(feature);
       }
@@ -34,7 +34,6 @@ export default class Map extends React.Component {
   handleFeature(feature) {
     if (this.props.previewBoundary && feature.properties.id == this.props.previewBoundary.id) return;
     if (this.props.previewTrail && feature.properties.id == this.props.previewTrail.id) return;
-    console.log(feature)
     this.props.onFeatureMouseIn({properties: feature.properties, geometry: feature.geometry}, feature.layer.id);
   }
 
@@ -57,7 +56,7 @@ export default class Map extends React.Component {
 
     if (type == "trails") {
       this.props.onTrailClick({properties: feature.properties, geometry:feature.geometry});
-    } else if (type == "boundaries") {
+    } else if (type == "national-parks") {
       this.props.onBoundaryClick(feature.properties.id);
     }
   }
@@ -99,24 +98,12 @@ export default class Map extends React.Component {
     let viewBox = this.state.viewBox;
     let zoom = this.state.zoom;
 
-    if (this.state.zoom >= TRAILS_BREAKPOINT) {
-      sources.push({id: 'trails', data: `api/trails/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}`});
-      sources.push({id: 'trails-active', data: trailsToFeatureCollection(this.props.activeTrails)});
-    }
-    if (this.state.zoom < TRAILS_BREAKPOINT) {
-      sources.push({id: 'boundaries', data: `api/boundaries/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}`});
-      sources.push({id: 'boundaries-active', data: featureCollection(this.props.activeBoundaries)});
-    }
-    if (this.state.zoom > LABELS_BREAKPOINT) {
-      const params = (this.state.zoom < ZOOMED_IN_LABELS_BREAKPOINT) ? '8/5' : '2/1';
-      sources.push({id: 'labels', data: `api/trail-paths-for-labels/${viewBox[0][0]}/${viewBox[0][1]}/${viewBox[1][0]}/${viewBox[1][1]}/${params}`});
+    if (this.props.selectedTrails.length) {
+      sources.push({id: 'trails-selected', data: trailsToFeatureCollection(this.props.selectedTrails)})
     }
 
     if (this.props.handles && this.props.handles.length) {
-      sources.push({
-        id: 'handles',
-        data: featureCollection(this.props.handles.map(p => pointToPoint(p)))
-      });
+      sources.push({ id: 'handles', data: featureCollection(this.props.handles.map(p => pointToPoint(p)))});
     }
 
     return sources;
@@ -133,6 +120,8 @@ export default class Map extends React.Component {
         <div id="the-map">
           <MapBox
           sources={this.sources()}
+          previewBoundary={this.props.previewBoundary}
+          previewTrail={this.props.previewTrail}
           layers={mapBoxLayers}
           fitBounds={this.fitBounds()}
           pointer={this.props.previewTrail}
