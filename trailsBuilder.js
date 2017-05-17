@@ -11,7 +11,7 @@ const queries = [
   {
     name: "trails-zoomed-out",
     minZoom: 6,
-    maxZoom: 9.75,
+    maxZoom: 11.75,
     query: `
       SELECT name, id, type, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.000005) as geom
       FROM trails
@@ -21,10 +21,10 @@ const queries = [
   },
   {
     name: "trails",
-    minZoom: 10,
+    minZoom: 12,
     maxZoom: 14,
     query: `
-      SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.00000005) as geom
+      SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.00000001) as geom
       FROM trails
       WHERE type = 'hike' OR type = 'horse' OR type = 'bike' OR
       type = 'motorcycle' OR type = 'atv' AND name != ''
@@ -47,7 +47,7 @@ const queries = [
     minZoom: 12,
     maxZoom: 14,
     query: `
-      SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.000001) as geom
+      SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.0000005) as geom
       FROM trails
       WHERE (type = 'hike' OR type = 'horse' OR type = 'bike') AND name != ''
     `

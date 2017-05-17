@@ -61,7 +61,7 @@
     "line-color": "rgb(0,103,14)",
     "line-width": 1,
     "line-dasharray": {
-      "stops": [[6, [1, 1]], [8, [2, 1]], [9, [3, 1]]]
+      "stops": [[6, [1, 1]], [8, [2, 1]], [10, [10000, 0]]]
     },
     "line-opacity": {
       "base": 1,
