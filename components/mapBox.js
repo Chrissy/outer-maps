@@ -1,5 +1,7 @@
 import React, { Proptypes } from 'react';
 import MapboxGL from 'mapbox-gl';
+import bbox from '@turf/bbox';
+import helpers from '@turf/helpers';
 import {accessToken, styleUrl} from '../modules/mapBoxStaticData';
 
 export default class MapBox extends React.PureComponent {
@@ -41,7 +43,7 @@ export default class MapBox extends React.PureComponent {
   }
 
   handleMouseMove(event) {
-    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'national-parks', 'handles'] });
+    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'national-park-labels', 'handles'] });
 
     this.props.onMouseMove(Object.assign({}, event, {
       features: features
@@ -49,7 +51,7 @@ export default class MapBox extends React.PureComponent {
   }
 
   handleMouseDown(event) {
-    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'national-parks', 'handles'] });
+    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'national-park-labels', 'handles'] });
 
     this.props.onMouseDown(Object.assign({}, event, {
       features: features,
@@ -61,7 +63,7 @@ export default class MapBox extends React.PureComponent {
   }
 
   handleClick(event) {
-    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'national-parks'] });
+    var features = this.mapboxed.queryRenderedFeatures(event.point, { layers: ['trails', 'national-park-labels'] });
     this.props.onClick(Object.assign({}, event, {
       features: features,
     }));
@@ -90,6 +92,13 @@ export default class MapBox extends React.PureComponent {
     }));
   }
 
+  fitToFilter(filterObj) {
+    const elements = this.mapboxed.queryRenderedFeatures(filterObj);
+    if (!elements.length) return;
+    const combinedFeatures = helpers.featureCollection(elements);
+    this.mapboxed.fitBounds(bbox(combinedFeatures));
+  }
+
   componentDidMount() {
     MapboxGL.accessToken = accessToken;
 
@@ -110,8 +119,8 @@ export default class MapBox extends React.PureComponent {
 
     this.mapboxed.setFilter("trails-preview", ["in", "id", (this.props.previewTrail) ? this.props.previewTrail.id : 0]);
 
-    if (this.props.fitBounds && prevProps.fitBounds !== this.props.fitBounds) {
-      this.mapboxed.fitBounds(this.props.fitBounds);
+    if (this.props.fitToFilter && prevProps.fitToFilter !== this.props.fitToFilter) {
+      this.fitToFilter(this.props.fitToFilter)
     }
 
     this.mapboxed.getCanvas().style.cursor = (this.props.pointer) ? 'pointer' : '';

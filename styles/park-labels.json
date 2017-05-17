@@ -1,6 +1,6 @@
 {"layers": [
 {
-  "id": "national-parks-labels",
+  "id": "national-park-labels",
   "type": "symbol",
   "source": "composite",
   "source-layer": "park-boundary-labels",

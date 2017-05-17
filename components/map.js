@@ -24,7 +24,7 @@ export default class Map extends React.Component {
     } else {
       if (this.draggingPoint || feature.layer.id == 'handles') {
         this.handleDrag(event);
-      } else if (feature.layer.id == 'trails' || feature.layer.id == 'national-parks') {
+      } else if (feature.layer.id == 'trails' || feature.layer.id == 'national-park-labels') {
         event.target.dragPan.enable();
         this.handleFeature(feature);
       }
@@ -56,8 +56,13 @@ export default class Map extends React.Component {
 
     if (type == "trails") {
       this.props.onTrailClick({properties: feature.properties, geometry:feature.geometry});
-    } else if (type == "national-parks") {
-      this.props.onBoundaryClick(feature.properties.id);
+    } else if (type == "national-park-labels") {
+      this.setState({
+        fitToFilter: {
+          layers: ['national-parks'],
+          filter: ["==", "id", feature.properties.id]
+        }
+      });
     }
   }
 
@@ -88,10 +93,6 @@ export default class Map extends React.Component {
     event.target.dragPan.enable();
   }
 
-  fitBounds() {
-    if (this.props.selectedBoundary) return this.props.selectedBoundary.bounds;
-  }
-
   sources() {
     if (!this.state.zoom || !this.state.viewBox) return [];
     let sources = [];
@@ -112,7 +113,7 @@ export default class Map extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {zoom: null, viewBox: null};
+    this.state = {zoom: null, viewBox: null, selectedElement: null};
   }
 
   render() {
@@ -123,7 +124,7 @@ export default class Map extends React.Component {
           previewBoundary={this.props.previewBoundary}
           previewTrail={this.props.previewTrail}
           layers={mapBoxLayers}
-          fitBounds={this.fitBounds()}
+          fitToFilter={this.state.fitToFilter}
           pointer={this.props.previewTrail}
           onClick={this.onMapClick.bind(this)}
           onLoad={this.onMapLoad.bind(this)}
