@@ -66,14 +66,6 @@ export default class Map extends React.Component {
     }
   }
 
-  onMapDrag(event) {
-    this.setState({viewBox: event.bounds, zoom: event.zoom})
-  }
-
-  onMapLoad(event) {
-    this.setState({viewBox: event.bounds, zoom: event.zoom})
-  }
-
   onMapMouseDown(event) {
     const firstHandle = event.features.find(f => f.layer.id == "handles");
     if (!firstHandle) return;
@@ -94,10 +86,7 @@ export default class Map extends React.Component {
   }
 
   sources() {
-    if (!this.state.zoom || !this.state.viewBox) return [];
     let sources = [];
-    let viewBox = this.state.viewBox;
-    let zoom = this.state.zoom;
 
     if (this.props.selectedTrails.length) {
       sources.push({id: 'trails-selected', data: trailsToFeatureCollection(this.props.selectedTrails)})
@@ -110,28 +99,32 @@ export default class Map extends React.Component {
     return sources;
   }
 
+  filters() {
+    return [
+      { id: "trails-preview", filter: ["in", "id", this.props.previewTrail.id] }
+    ];
+  }
+
   constructor(props) {
     super(props);
 
-    this.state = {zoom: null, viewBox: null, selectedElement: null};
+    this.state = {selectedElement: null};
   }
 
   render() {
     return (
         <div id="the-map">
           <MapBox
-          sources={this.sources()}
-          previewBoundary={this.props.previewBoundary}
-          previewTrail={this.props.previewTrail}
           layers={mapBoxLayers}
+          sources={this.sources()}
+          filters={this.filters()}
           fitToFilter={this.state.fitToFilter}
           pointer={this.props.previewTrail}
-          onClick={this.onMapClick.bind(this)}
-          onLoad={this.onMapLoad.bind(this)}
-          onMouseMove={this.onMapMouseMove.bind(this)}
-          onMouseUp={this.onMapMouseUp.bind(this)}
-          onMouseDown={this.onMapMouseDown.bind(this)}
-          onDrag={this.onMapDrag.bind(this)}/>
+          click={this.onMapClick.bind(this)}
+          mousemove={this.onMapMouseMove.bind(this)}
+          mouseup={this.onMapMouseUp.bind(this)}
+          mousedown={this.onMapMouseDown.bind(this)}
+          />
           <MapSidebarContainer/>
         </div>
     );
