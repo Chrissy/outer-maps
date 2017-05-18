@@ -8,7 +8,6 @@ import MapBox from './mapBox';
 import MapSidebarContainer from './mapSidebarContainer';
 import {mapBoxLayers} from '../modules/mapBoxLayers';
 
-const WATCH_EVENTS = ['load','mousedown','mouseup','moveend','mousemove','click'];
 const WATCH_LAYERS = ['trails', 'national-park-labels', 'national-park-labels-active', 'handles'];
 
 export default class Map extends React.Component {
@@ -62,6 +61,7 @@ export default class Map extends React.Component {
           filter: ["==", "id", feature.properties.id]
         }
       });
+      this.props.onBoundaryClick(feature.properties.id);
     }
   }
 
@@ -99,9 +99,11 @@ export default class Map extends React.Component {
   }
 
   filters() {
+    console.log(["in", "id", (this.props.selectedBoundary) ? this.props.selectedBoundary.id : 0])
     return [
       {id: "trails-preview", filter: ["in", "id", (this.props.previewTrail) ? this.props.previewTrail.id : 0]},
-      {id: "national-park-labels-active", filter: ["in", "id", (this.props.previewBoundary) ? this.props.previewBoundary.id : 0]}
+      {id: "national-park-labels-active", filter: ["in", "id", (this.props.previewBoundary) ? this.props.previewBoundary.id : 0]},
+      {id: "national-parks-active", filter: ["in", "id", (this.props.selectedBoundary) ? this.props.selectedBoundary.id : 0]}
     ];
   }
 
@@ -120,7 +122,6 @@ export default class Map extends React.Component {
           filters={this.filters()}
           fitToFilter={this.state.fitToFilter}
           pointer={this.props.previewTrail || this.props.previewBoundary}
-          watchEvents={WATCH_EVENTS}
           watchLayers={WATCH_LAYERS}
           click={this.onMapClick.bind(this)}
           mousemove={this.onMapMouseMove.bind(this)}

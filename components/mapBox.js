@@ -3,6 +3,7 @@ import MapboxGL from 'mapbox-gl';
 import bbox from '@turf/bbox';
 import helpers from '@turf/helpers';
 import {accessToken, styleUrl} from '../modules/mapBoxStaticData';
+const WATCH_EVENTS = ['mousedown','mouseup','click','dblclick','mousemove','mouseenter', 'mouseleave','mouseover','mouseout','contextmenu','touchstart','touchend','touchcancel'];
 
 export default class MapBox extends React.PureComponent {
 
@@ -85,7 +86,7 @@ export default class MapBox extends React.PureComponent {
   }
 
   mapEvents() {
-    this.props.watchEvents.forEach((eventName) => {
+    WATCH_EVENTS.forEach((eventName) => {
       if (!this.props[eventName]) return;
       this.mapboxed.on(eventName, (event) => {
         this.props[eventName](Object.assign({}, event, {

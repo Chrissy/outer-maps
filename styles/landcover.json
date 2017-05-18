@@ -120,6 +120,18 @@
   }
 },
 {
+  "id": "national-parks-active",
+  "type": "line",
+  "source": "composite",
+  "source-layer": "park-boundaries",
+  "filter": ["in", "id", 0],
+  "paint": {
+    "line-width": 3,
+    "line-opacity": 0.8,
+    "line-color": "white"
+  }
+},
+{
   "id": "national-parks-border",
   "type": "line",
   "source": "composite",
