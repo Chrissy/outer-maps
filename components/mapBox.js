@@ -86,7 +86,7 @@ export default class MapBox extends React.PureComponent {
 
   mapEvents() {
     const watchEvents = ['load','mousedown','mouseup','moveend','mousemove','click'];
-    const watchLayers = ['trails', 'national-park-labels', 'handles'];
+    const watchLayers = ['trails', 'national-park-labels', 'national-park-labels-active', 'handles'];
 
     watchEvents.forEach((eventName) => {
       if (!this.props[eventName]) return;
