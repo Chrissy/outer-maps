@@ -8,9 +8,8 @@ import MapBox from './mapBox';
 import MapSidebarContainer from './mapSidebarContainer';
 import {mapBoxLayers} from '../modules/mapBoxLayers';
 
-const TRAILS_BREAKPOINT = 9;
-const LABELS_BREAKPOINT = 10;
-const ZOOMED_IN_LABELS_BREAKPOINT = 12;
+const WATCH_EVENTS = ['load','mousedown','mouseup','moveend','mousemove','click'];
+const WATCH_LAYERS = ['trails', 'national-park-labels', 'national-park-labels-active', 'handles'];
 
 export default class Map extends React.Component {
 
@@ -121,6 +120,8 @@ export default class Map extends React.Component {
           filters={this.filters()}
           fitToFilter={this.state.fitToFilter}
           pointer={this.props.previewTrail || this.props.previewBoundary}
+          watchEvents={WATCH_EVENTS}
+          watchLayers={WATCH_LAYERS}
           click={this.onMapClick.bind(this)}
           mousemove={this.onMapMouseMove.bind(this)}
           mouseup={this.onMapMouseUp.bind(this)}

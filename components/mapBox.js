@@ -85,16 +85,13 @@ export default class MapBox extends React.PureComponent {
   }
 
   mapEvents() {
-    const watchEvents = ['load','mousedown','mouseup','moveend','mousemove','click'];
-    const watchLayers = ['trails', 'national-park-labels', 'national-park-labels-active', 'handles'];
-
-    watchEvents.forEach((eventName) => {
+    this.props.watchEvents.forEach((eventName) => {
       if (!this.props[eventName]) return;
       this.mapboxed.on(eventName, (event) => {
         this.props[eventName](Object.assign({}, event, {
           bounds: this.mapboxed.getBounds().toArray(),
           zoom: this.mapboxed.getZoom(),
-          features: (event.point) ? this.mapboxed.queryRenderedFeatures(event.point, { layers: watchLayers }) : null
+          features: (event.point) ? this.mapboxed.queryRenderedFeatures(event.point, { layers: this.props.watchLayers }) : null
         }));
       });
     });
