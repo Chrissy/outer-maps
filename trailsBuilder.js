@@ -11,7 +11,7 @@ const queries = [
   {
     name: "trails-zoomed-out",
     minZoom: 6,
-    maxZoom: 11.75,
+    maxZoom: 9.75,
     query: `
       SELECT name, id, type, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.000005) as geom
       FROM trails
@@ -21,7 +21,7 @@ const queries = [
   },
   {
     name: "trails",
-    minZoom: 12,
+    minZoom: 10,
     maxZoom: 14,
     query: `
       SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.00000001) as geom
