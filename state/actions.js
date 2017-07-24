@@ -5,7 +5,7 @@ import {getDataFromNearestStation} from '../modules/NOAA';
 function getElevationData(trail) {
   return (dispatch) => {
     if (trail.hasElevationData) return Promise.resolve();
-    return fetch(`/api/elevation?points=${JSON.stringify(trail.geometry.coordinates)}`)
+    return fetch(`/api/elevation/${trail.id}`)
       .then(response => response.json())
       .then(elevations => {
         return dispatch({type: 'SET_ELEVATION_DATA', elevations, id: trail.id});
