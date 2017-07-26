@@ -16,6 +16,25 @@
   "filter": ["all", ["in", "type", "hike", "horse", "bike", "trail"], ["!=", "name", ""]]
 },
 {
+  "id": "trails-zoomed-out-outline",
+  "source": "$source",
+  "source-layer": "trails-zoomed-out",
+  "type": "line",
+  "before": "trails-core-line",
+  "line": {
+    "line-cap": "round",
+    "line-join": "bevel"
+  },
+  "paint": {
+    "line-color": "rgba(250,250,250,1)",
+    "line-width": 3,
+    "line-opacity": {
+      "stops": [[8, 0], [8.25, 0.5], [9.75, 1]]
+    }
+  },
+  "filter": ["all", ["in", "type", "hike", "horse"], [">", "distance", 3000]]
+},
+{
   "id": "trails-core-line",
   "source": "$source",
   "source-layer": "trails",
@@ -27,8 +46,7 @@
   "paint": {
     "line-color": "rgba(0,103,14,1)",
     "line-width": 1
-  },
-  "filter": ["all", ["in", "type", "hike", "trail", "horse"], ["!=", "name", ""]]
+  }
 },
 {
   "id": "trails-zoomed-out",
@@ -40,11 +58,14 @@
     "line-join": "bevel"
   },
   "paint": {
-    "line-color": "rgba(0,103,14,1)",
+    "line-color": "rgb(0,103,14)",
     "line-width": 1,
+    "line-dasharray": {
+      "stops": [[6, [1, 1]], [8, [2, 1]], [9, [4, 1]], [11, [10000, 0]]]
+    },
     "line-opacity": {
       "base": 1,
-      "stops": [[0, 0.2], [7, 0.4], [9, 0.6]]
+      "stops": [[0, 0.2], [7, 0.4], [9, 1]]
     }
   },
   "filter": ["all", ["in", "type", "hike", "horse"], [">", "distance", 3000]]
@@ -76,7 +97,14 @@
   },
   "paint": {
     "line-color": "rgb(160,160,160)",
-    "line-width": 1
+    "line-width": 1,
+    "line-dasharray": {
+      "stops": [[6, [1, 1]], [8, [2, 1]], [9, [1, 0]]]
+    },
+    "line-opacity": {
+      "base": 1,
+      "stops": [[0, 0.2], [7, 0.4], [9, 0.6]]
+    }
   },
   "filter": ["all", ["in", "type", "bike"], [">", "distance", 3000]]
 },
@@ -125,6 +153,41 @@
   "filter": ["in", "type", "hike", "horse", "bike", "atv", "motorcycle", "trail"]
 },
 {
+  "id": "trails-selected-outline",
+  "source": "trails-selected",
+  "type": "line",
+  "line": {
+    "line-cap": "round",
+    "line-join": "bevel"
+  },
+  "paint": {
+    "line-color": "#FFF",
+    "line-width": 4
+  }
+},
+{
+  "id": "trails-selected",
+  "source": "trails-selected",
+  "type": "line",
+  "line": {
+    "line-cap": "round",
+    "line-join": "bevel"
+  },
+  "paint": {
+    "line-color": "#FF9100",
+    "line-width": 2
+  }
+},
+{
+  "id": "handles-outline",
+  "source": "handles",
+  "type": "circle",
+  "paint": {
+    "circle-radius": 6,
+    "circle-color": "#FFF"
+  }
+},
+{
   "id": "trail-labels",
   "source": "$source",
   "source-layer": "trail-labels",
@@ -162,5 +225,23 @@
     "text-halo-blur": 0.5
   },
   "filter": ["all", ["in", "type", "hike", "horse"], ["!=", "name", ""]]
+},
+{
+  "id": "handles-center",
+  "source": "handles",
+  "type": "circle",
+  "paint": {
+    "circle-radius": 4,
+    "circle-color": "#FF9100"
+  }
+},
+{
+  "id": "handles",
+  "source": "handles",
+  "type": "circle",
+  "paint": {
+    "circle-radius": 8,
+    "circle-color": "rgba(0,0,0,0)"
+  }
 }
 ]}

@@ -6,11 +6,8 @@ import {pointToPoint, pointsToFeatureCollection, trailsToFeatureCollection} from
 import TooltipContainer from './tooltipContainer';
 import MapBox from './mapBox';
 import MapSidebarContainer from './mapSidebarContainer';
-import {mapBoxLayers} from '../modules/mapBoxLayers';
 
-const TRAILS_BREAKPOINT = 9;
-const LABELS_BREAKPOINT = 10;
-const ZOOMED_IN_LABELS_BREAKPOINT = 12;
+const WATCH_LAYERS = ['trails', 'national-park-labels', 'national-park-labels-active', 'handles'];
 
 export default class Map extends React.Component {
 
@@ -24,7 +21,7 @@ export default class Map extends React.Component {
     } else {
       if (this.draggingPoint || feature.layer.id == 'handles') {
         this.handleDrag(event);
-      } else if (feature.layer.id == 'trails' || feature.layer.id == 'national-parks') {
+      } else if (feature.layer.id == 'trails' || feature.layer.id == 'national-park-labels' || feature.layer.id == 'national-park-labels-active') {
         event.target.dragPan.enable();
         this.handleFeature(feature);
       }
@@ -56,17 +53,15 @@ export default class Map extends React.Component {
 
     if (type == "trails") {
       this.props.onTrailClick({properties: feature.properties, geometry:feature.geometry});
-    } else if (type == "national-parks") {
+    } else if (type == "national-park-labels" || type == "national-park-labels-active") {
+      this.setState({
+        fitToFilter: {
+          layers: ['national-parks'],
+          filter: ["==", "id", feature.properties.id]
+        }
+      });
       this.props.onBoundaryClick(feature.properties.id);
     }
-  }
-
-  onMapDrag(event) {
-    this.setState({viewBox: event.bounds, zoom: event.zoom})
-  }
-
-  onMapLoad(event) {
-    this.setState({viewBox: event.bounds, zoom: event.zoom})
   }
 
   onMapMouseDown(event) {
@@ -88,31 +83,25 @@ export default class Map extends React.Component {
     event.target.dragPan.enable();
   }
 
-  fitBounds() {
-    if (this.props.selectedBoundary) return this.props.selectedBoundary.bounds;
+  sources() {
+    return [
+      { id: 'trails-selected', data: trailsToFeatureCollection(this.props.selectedTrails) },
+      { id: 'handles', data: featureCollection(this.props.handles.map(p => pointToPoint(p))) }
+    ];
   }
 
-  sources() {
-    if (!this.state.zoom || !this.state.viewBox) return [];
-    let sources = [];
-    let viewBox = this.state.viewBox;
-    let zoom = this.state.zoom;
-
-    if (this.props.selectedTrails.length) {
-      sources.push({id: 'trails-selected', data: trailsToFeatureCollection(this.props.selectedTrails)})
-    }
-
-    if (this.props.handles && this.props.handles.length) {
-      sources.push({ id: 'handles', data: featureCollection(this.props.handles.map(p => pointToPoint(p)))});
-    }
-
-    return sources;
+  filters() {
+    return [
+      {id: "trails-preview", filter: ["in", "id", (this.props.previewTrail) ? this.props.previewTrail.id : 0]},
+      {id: "national-parks-active", filter: ["in", "id", (this.props.selectedBoundary) ? this.props.selectedBoundary.id : 0]},
+      {id: "national-park-labels-active", filter: ["in", "id", (this.props.previewBoundary) ? this.props.previewBoundary.id : 0]}
+    ];
   }
 
   constructor(props) {
     super(props);
 
-    this.state = {zoom: null, viewBox: null};
+    this.state = {selectedElement: null};
   }
 
   render() {
@@ -120,17 +109,15 @@ export default class Map extends React.Component {
         <div id="the-map">
           <MapBox
           sources={this.sources()}
-          previewBoundary={this.props.previewBoundary}
-          previewTrail={this.props.previewTrail}
-          layers={mapBoxLayers}
-          fitBounds={this.fitBounds()}
-          pointer={this.props.previewTrail}
-          onClick={this.onMapClick.bind(this)}
-          onLoad={this.onMapLoad.bind(this)}
-          onMouseMove={this.onMapMouseMove.bind(this)}
-          onMouseUp={this.onMapMouseUp.bind(this)}
-          onMouseDown={this.onMapMouseDown.bind(this)}
-          onDrag={this.onMapDrag.bind(this)}/>
+          filters={this.filters()}
+          fitToFilter={this.state.fitToFilter}
+          pointer={this.props.previewTrail || this.props.previewBoundary}
+          watchLayers={WATCH_LAYERS}
+          click={this.onMapClick.bind(this)}
+          mousemove={this.onMapMouseMove.bind(this)}
+          mouseup={this.onMapMouseUp.bind(this)}
+          mousedown={this.onMapMouseDown.bind(this)}
+          />
           <MapSidebarContainer/>
         </div>
     );

@@ -1,0 +1,65 @@
+{"layers": [
+{
+  "id": "national-park-labels",
+  "type": "symbol",
+  "source": "composite",
+  "source-layer": "park-boundary-labels",
+  "layout": {
+    "icon-image": "park-11",
+    "icon-size": 0.8,
+    "text-line-height": 1.1,
+    "text-size": {
+      "base": 1,
+      "stops": [[9, 10],[10, 11],[18, 14]]
+    },
+    "text-offset": [0, 0.5],
+    "text-anchor": "top",
+    "text-font": ["DIN Offc Pro Medium","Arial Unicode MS Regular"],
+    "text-padding": {
+      "stops": [[0, 75], [7, 50], [9, 10]]
+    },
+    "text-field": "{name}",
+    "text-letter-spacing": 0.01,
+    "text-max-width": 8
+  },
+  "paint": {
+    "text-color": "hsl(100, 100%, 20%)",
+    "text-halo-color": "hsl(0, 0%, 100%)",
+    "text-halo-width": 0.5,
+    "text-halo-blur": 0.5
+  },
+  "filter": [">", "area", 500000000]
+},
+{
+  "id": "national-park-labels-active",
+  "type": "symbol",
+  "source": "composite",
+  "text-ignore-placement": false,
+  "source-layer": "park-boundary-labels",
+  "layout": {
+    "icon-image": "park-11",
+    "icon-size": 0.8,
+    "text-line-height": 1.1,
+    "text-size": {
+      "base": 1,
+      "stops": [[9, 10],[10, 11],[18, 14]]
+    },
+    "text-offset": [0, 0.5],
+    "text-anchor": "top",
+    "text-font": ["DIN Offc Pro Medium","Arial Unicode MS Regular"],
+    "text-padding": {
+      "stops": [[0, 75], [7, 50], [9, 10]]
+    },
+    "text-field": "{name}",
+    "text-letter-spacing": 0.01,
+    "text-max-width": 8
+  },
+  "paint": {
+    "text-color": "rgb(50, 50, 255)",
+    "text-halo-color": "hsl(0, 0%, 100%)",
+    "text-halo-width": 0.5,
+    "text-halo-blur": 0.5
+  },
+  "filter": ["in", "id", 0]
+}
+]}

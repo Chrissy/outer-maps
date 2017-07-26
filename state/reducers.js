@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import distance from '@turf/distance';
 import centroid from '@turf/centroid';
 import bbox from '@turf/bbox';
+import {lineString} from '@turf/helpers';
 import _ from 'underscore';
 
 const trail = (state = {}, action) => {
@@ -12,9 +13,7 @@ const trail = (state = {}, action) => {
         id: action.properties.id,
         name: action.properties.name,
         distance: action.properties.distance,
-        center: centroid(action.geometry).geometry.coordinates,
-        bounds: bbox(action.geometry),
-        geometry: action.geometry
+        center: [action.properties.cx, action.properties.cy]
       }
     case 'SET_TRAIL_PREVIEWING':
       return { ...state, previewing: (state.id === action.id) }
@@ -27,10 +26,27 @@ const trail = (state = {}, action) => {
       return state;
     case 'CLEAR_TRAIL_SELECTED':
       return { ...state, selected: false, selectedId: null }
-    case 'SET_ELEVATION_DATA':
+    case 'SET_TRAIL_DATA':
       if (action.id !== state.id) return state
+      const geometry = lineString(action.coordinates).geometry;
       return { ...state,
         hasElevationData: true,
+        bounds: bbox(geometry),
+        geometry: geometry,
+        handles: [
+          handle(null, {
+            ...action,
+            point: action.coordinates[0],
+            handleId: 0,
+            index: 0
+          }),
+          handle(null, {
+            ...action,
+            point: action.coordinates[action.coordinates.length - 1],
+            handleId: 1,
+            index: action.coordinates.length
+          })
+        ],
         points: action.elevations.map((e, i) => {
           const p = action.elevations[i - 1];
 
@@ -57,14 +73,6 @@ const trail = (state = {}, action) => {
         chanceOfHeavySnow: action.chanceOfHeavySnow,
         chanceOfSnowPack: action.chanceOfSnowPack,
         chanceOfHeavySnowPack: action.chanceOfHeavySnowPack
-      }
-    case 'SET_HANDLES':
-      if (state.id !== action.id) return state;
-      return { ...state,
-        handles: [
-          handle(null, action, 0),
-          handle(null, action, 1)
-        ]
       }
     case 'UPDATE_HANDLE':
       if (!state.handles) return state;
@@ -97,13 +105,11 @@ const trails = (state = [], action) => {
       return state.map(t => trail(t, {...action, selectedTrailCount: state.filter(e => e.selected).length + 1}))
     case 'CLEAR_TRAIL_SELECTED':
       return state.map(t => trail(t, action))
-    case 'SET_ELEVATION_DATA':
+    case 'SET_TRAIL_DATA':
       return state.map(t => trail(t, action))
     case 'SET_TRAIL_BASE_DATA':
       return state.map(t => trail(t, action))
     case 'SET_WEATHER_DATA':
-      return state.map(t => trail(t, action))
-    case 'SET_HANDLES':
       return state.map(t => trail(t, action))
     case 'CLEAR_HANDLES':
       return state.map(t => trail(t, action))
@@ -115,14 +121,13 @@ const trails = (state = [], action) => {
   }
 }
 
-const handle = (state = {}, action, handleId) => {
+const handle = (state = {}, action) => {
   switch (action.type) {
-    case 'SET_HANDLES':
-      const index = (handleId == 0) ? 0 : action.geometry.coordinates.length - 1;
+    case 'SET_TRAIL_DATA':
       return {
-        coordinates: action.geometry.coordinates[index],
-        id: action.id + '-' + handleId,
-        index: index,
+        coordinates: action.point,
+        id: action.id + '-' + action.handleId,
+        index: action.index,
         trailId: action.id
       }
     case 'UPDATE_HANDLE':

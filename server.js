@@ -27,13 +27,13 @@ app.get('/bundle.js', browserify(__dirname + '/components/app.js', {
 
 const pool = createPool();
 
-app.get('/api/elevation', function(request, response){
-  const points = JSON.parse(request.query.points);
-  const pointsStr = points.reduce((a, p, i) =>  a + `${(i == 0) ? '' : ','}ST_MakePoint(${p[0]},${p[1]})`, '');
+app.get('/api/elevation/:id', function(request, response){
 
   const sql = `
     WITH trail AS (
-        SELECT ST_SetSRID(ST_MakeLine(ARRAY[${pointsStr}]), 4326) AS path
+        SELECT ST_SimplifyVW(geog::geometry, 0.00000001) AS path
+        FROM trails
+        WHERE id = ${request.params.id}
       ),
       points AS (
         SELECT (ST_DumpPoints(path)).geom AS point
@@ -44,7 +44,9 @@ app.get('/api/elevation', function(request, response){
         WHERE ST_Intersects(rast, path)
       )
     SELECT
-      ST_Value(rast, point) as elevation
+      ST_Value(rast, point) as elevation,
+      ST_X(point) as x,
+      ST_Y(point) as y
     FROM raster
     CROSS JOIN points
   `;
@@ -54,7 +56,7 @@ app.get('/api/elevation', function(request, response){
     response.json(elevations.map((r, i) => {
       return {
         elevation: r,
-        coordinates: points[i]
+        coordinates: [result.rows[i].x, result.rows[i].y]
       };
     }));
   });

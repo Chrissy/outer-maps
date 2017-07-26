@@ -13,7 +13,7 @@ import {
 
 const mapStateToProps = (state) => {
   return {
-    selectedTrails: state.trails.filter(trail => trail.selected),
+    selectedTrails: state.trails.filter(trail => trail.selected && trail.hasElevationData),
     previewTrail: state.trails.find(trail => trail.previewing),
     trails: state.trails,
     boundaries: state.boundaries,

@@ -7,28 +7,6 @@ const exec = require('child_process').execSync;
 const tempFileName = 'temp-trails.geojson';
 const fs = require('fs');
 
-addTippecanoeProps = (data, props) => {
-  return Object.assign({}, data, {
-    features: data.features.map(f => Object.assign({}, f, {
-      "tippecanoe" : props
-    }))
-  });
-}
-
-build = (data, {name, minZoom = 0, maxZoom = 99, labelLength} = {}, resolve) => {
-
-  const newObj = addTippecanoeProps(data, {
-    "maxzoom" : maxZoom,
-    "minzoom" : minZoom,
-    layer: name
-  });
-
-  jsonfile.writeFile("./" + tempFileName, newObj, {flag: 'a'}, () => {
-    console.log(name + " done!");
-    resolve();
-  });
-};
-
 const queries = [
   {
     name: "trails-zoomed-out",
@@ -46,7 +24,8 @@ const queries = [
     minZoom: 10,
     maxZoom: 14,
     query: `
-      SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.00000005) as geom
+      SELECT name, id, type, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.0000005) as geom,
+      ST_X(ST_Centroid(geog::geometry)) as cx, ST_Y(ST_Centroid(geog::geometry)) as cy,
       FROM trails
       WHERE type = 'hike' OR type = 'horse' OR type = 'bike' OR
       type = 'motorcycle' OR type = 'atv' AND name != ''
@@ -69,12 +48,34 @@ const queries = [
     minZoom: 12,
     maxZoom: 14,
     query: `
-      SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.000001) as geom
+      SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.0000005) as geom
       FROM trails
       WHERE (type = 'hike' OR type = 'horse' OR type = 'bike') AND name != ''
     `
   }
 ]
+
+addTippecanoeProps = (data, props) => {
+  return Object.assign({}, data, {
+    features: data.features.map(f => Object.assign({}, f, {
+      "tippecanoe" : props
+    }))
+  });
+}
+
+build = (data, {name, minZoom = 0, maxZoom = 99, labelLength} = {}, resolve) => {
+
+  const newObj = addTippecanoeProps(data, {
+    "maxzoom" : maxZoom,
+    "minzoom" : minZoom,
+    layer: name
+  });
+
+  jsonfile.writeFile("./" + tempFileName, newObj, {flag: 'a'}, () => {
+    console.log(name + " done!");
+    resolve();
+  });
+};
 
 const pool = gQuery.pool();
 
@@ -92,6 +93,6 @@ Promise.all(processes).then(() => {
   console.log("making tiles...")
   exec(`tippecanoe --quiet -f -P -M 100000 -as -an -al -ap -o tiles/local.mbtiles ${tempFileName}`);
   fs.unlink("./" + tempFileName, () => {
-    console.log("Done! Tiles are cached into memory by the server. You will need to restart.")    
+    console.log("Done! Tiles are cached into memory by the server. You will need to restart.")
   });
 })

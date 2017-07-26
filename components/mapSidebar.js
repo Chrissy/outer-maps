@@ -10,6 +10,7 @@ import spacing from './spacing.css';
 
 export default class MapSidebar extends React.Component {
   terrainComponent() {
+    return '';
     return <Terrain trail={this.props.firstTrail}/>
   }
 

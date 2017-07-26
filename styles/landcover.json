@@ -110,7 +110,7 @@
   "id": "national-parks",
   "type": "fill",
   "source": "composite",
-  "source-layer": "park-boundaries-ahcjq8",
+  "source-layer": "park-boundaries",
   "filter": ["==", "$type", "Polygon"],
   "paint": {
     "fill-color": {
@@ -120,26 +120,34 @@
   }
 },
 {
-  "id": "national-parks-active-outline",
-  "source": "composite",
-  "source-layer": "park-boundaries-ahcjq8",
+  "id": "national-parks-active",
   "type": "line",
+  "source": "composite",
+  "source-layer": "park-boundaries",
   "filter": ["in", "id", 0],
   "paint": {
-    "line-color": "hsl(119, 77%, 100%)",
-    "line-width": 2,
-    "line-opacity": 0.9
+    "line-width": 3,
+    "line-opacity": 0.8,
+    "line-color": "white"
   }
 },
 {
-  "id": "national-parks-active",
+  "id": "national-parks-border",
+  "type": "line",
   "source": "composite",
-  "source-layer": "park-boundaries-ahcjq8",
-  "type": "fill",
-  "filter": ["in", "id", 0],
+  "source-layer": "park-boundaries",
+  "minzoom": 5,
   "paint": {
-    "fill-color": "hsl(119, 77%, 70%)",
-    "fill-opacity": 0.2
+    "line-color": "rgb(255, 255, 255)",
+    "line-offset": {
+      "base": 1.4,
+      "stops": [[9, 0],[14, -2.5]]
+    },
+    "line-width": 0.5,
+    "line-opacity": {
+      "base": 1,
+      "stops": [[9, 0.5],[10, 0.75]]
+    }
   }
 },
 {
@@ -209,34 +217,6 @@
     },
     "fill-color": "hsl(75, 37%, 81%)",
     "fill-outline-color": "hsl(75, 32%, 68%)"
-  }
-},
-{
-  "id": "national_park-tint-band",
-  "type": "line",
-  "source": "composite",
-  "source-layer": "landuse_overlay",
-  "minzoom": 9,
-  "filter": ["==", "class", "national_park"],
-  "layout": {
-    "line-cap": "round",
-    "visibility": "none"
-  },
-  "paint": {
-    "line-color": "hsl(100, 62%, 74%)",
-    "line-width": {
-      "base": 1.4,
-      "stops": [[9, 1],[14, 8]]
-    },
-    "line-offset": {
-      "base": 1.4,
-      "stops": [[9, 0],[14, -2.5]]
-    },
-    "line-opacity": {
-      "base": 1,
-      "stops": [[9, 0],[10, 0.75]]
-    },
-    "line-blur": 3
   }
 },
 {
