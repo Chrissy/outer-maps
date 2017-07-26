@@ -4,7 +4,7 @@ import _ from 'underscore';
 export default class LineGraph extends React.Component {
 
   pointsToPathString() {
-    var points = this.props.points;
+    var points = this.props.elevations;
     var elevations = points.map(e => e.elevation);
     var distances = points.map(p => p.distanceFromPreviousPoint).reduce((a, p) => a.concat(p + _.last(a) || 0), []);
     var maxElevation = Math.max(...elevations);

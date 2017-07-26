@@ -1,10 +1,10 @@
 import React from 'react';
 import _ from 'underscore';
 import distance from '@turf/distance';
-import LineGraph from './lineGraph';
+import ElevationTotals from './lineGraph';
 import {metersToFeet, metersToMiles} from '../modules/conversions';
 
-export default class distanceAndElevation extends React.Component {
+export default class Elevation extends React.Component {
 
   reversePoints(points) {
     return [...points].reverse().map((point, i) => {
@@ -39,34 +39,10 @@ export default class distanceAndElevation extends React.Component {
     }, []);
   }
 
-  elevationGain() {
-    return this.elevations.reduce((a, e) => a + e.elevationGain, 0);
-  }
-
-  elevationLoss() {
-    return this.elevations.reduce((a, e) => a + e.elevationLoss, 0);
-  }
-
-  distance() {
-    return this.elevations.reduce((a, e) => a + e.distanceFromPreviousPoint, 0);
-  }
-
-  componentWillMount() {
-    this.elevations = this.cumulativeElevations();
-  }
-
-  componentWillUpdate() {
-    this.elevations = this.cumulativeElevations();
-  }
-
   render() {
     return (
       <div>
-        distance: {metersToMiles(this.distance())}<br/>
-        elevation gain: {metersToFeet(this.elevationGain())} Feet<br/>
-        elevation loss: {metersToFeet(this.elevationLoss())} Feet<br/>
-
-        <LineGraph points={this.cumulativeElevations()}/>
+        <ElevationTotals elevations={this.cumulativeElevations()}/>
       </div>
     )
   }
