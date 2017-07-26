@@ -29,6 +29,20 @@ export const mapBoxLayers = [
     }
   },
   {
+    "id": "trails-selected-outline",
+    "source": "trails-selected",
+    "type": "line",
+    "before": "trails-selected",
+    "line": {
+      "line-cap": "round",
+      "line-join": "bevel"
+    },
+    "paint": {
+      "line-color": "#FFF",
+      "line-width": 4
+    }
+  },
+  {
     "id": "trails-selected",
     "source": "trails-selected",
     "type": "line",

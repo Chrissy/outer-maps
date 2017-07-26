@@ -24,7 +24,7 @@ const queries = [
     minZoom: 10,
     maxZoom: 14,
     query: `
-      SELECT name, id, type, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.00000001) as geom,
+      SELECT name, id, type, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.000001) as geom,
       ST_X(ST_Centroid(geog::geometry)) as cx, ST_Y(ST_Centroid(geog::geometry)) as cy
       FROM trails
       WHERE type = 'hike' OR type = 'horse' OR type = 'bike' OR
