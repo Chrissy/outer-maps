@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch';
 import _ from 'underscore'
 import {getDataFromNearestStation} from '../modules/NOAA';
 
-function getElevationData(trail) {
+function getTrailData(trail) {
   return (dispatch) => {
     if (trail.hasElevationData) return Promise.resolve();
     return fetch(`/api/elevation/${trail.id}`)
@@ -55,7 +55,7 @@ export function selectTrail(trail) {
     dispatch({type: 'CLEAR_BOUNDARY_SELECTED'});
     dispatch({type: 'TOGGLE_TRAIL_SELECTED', ...trail});
     dispatch({type: 'SET_HANDLES', id: trail.id, start: [props.sx, props.sy], end: [props.ex, props.ey]});
-    dispatch(getElevationData(trail));
+    dispatch(getTrailData(trail));
     return dispatch(getWeatherData(trail));
   };
 };
