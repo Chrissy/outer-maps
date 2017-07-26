@@ -28,7 +28,7 @@ const trail = (state = {}, action) => {
       return { ...state, selected: false, selectedId: null }
     case 'SET_ELEVATION_DATA':
       if (action.id !== state.id) return state
-      const geometry = lineString(action.elevations.map(e => e.coordinates)).geometry;
+      const geometry = lineString(action.coordinates).geometry;
       return { ...state,
         hasElevationData: true,
         bounds: bbox(geometry),
@@ -120,9 +120,9 @@ const trails = (state = [], action) => {
 const handle = (state = {}, action, handleId) => {
   switch (action.type) {
     case 'SET_HANDLES':
-      const index = (handleId == 0) ? 0 : action.elevations.length - 1;
+      const index = (handleId == 0) ? 0 : action.coordinates.length - 1;
       return {
-        coordinates: action.elevations[index].coordinates,
+        coordinates: action.coordinates[index],
         id: action.id + '-' + handleId,
         index: index,
         trailId: action.id

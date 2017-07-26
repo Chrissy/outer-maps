@@ -8,8 +8,9 @@ function getElevationData(trail) {
     return fetch(`/api/elevation/${trail.id}`)
       .then(response => response.json())
       .then(elevations => {
-        dispatch({type: 'SET_ELEVATION_DATA', elevations, id: trail.id});
-        dispatch({type: 'SET_HANDLES', elevations, id: trail.id});
+        const coordinates = elevations.map(e => e.coordinates);
+        dispatch({type: 'SET_ELEVATION_DATA', elevations, coordinates, id: trail.id});
+        dispatch({type: 'SET_HANDLES', coordinates, id: trail.id});
       });
   };
 };
