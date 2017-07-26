@@ -1,5 +1,6 @@
 import React from 'react';
 import LineGraph from './lineGraph';
+import {metersToFeet, metersToMiles} from '../modules/conversions';
 
 export default class ElevationTotals extends React.Component {
   elevationGain() {
@@ -17,7 +18,7 @@ export default class ElevationTotals extends React.Component {
   render() {
     return (
       <div>
-        distance: {metersToMiles(this.distance())}<br/>
+        distance: {metersToMiles(this.distance())} Miles<br/>
         elevation gain: {metersToFeet(this.elevationGain())} Feet<br/>
         elevation loss: {metersToFeet(this.elevationLoss())} Feet<br/>
         <LineGraph elevations={this.props.elevations}/>

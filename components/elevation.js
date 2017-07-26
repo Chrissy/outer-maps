@@ -1,8 +1,7 @@
 import React from 'react';
 import _ from 'underscore';
 import distance from '@turf/distance';
-import ElevationTotals from './lineGraph';
-import {metersToFeet, metersToMiles} from '../modules/conversions';
+import ElevationTotals from './elevationTotals';
 
 export default class Elevation extends React.Component {
 
