@@ -33,6 +33,20 @@ const trail = (state = {}, action) => {
         hasElevationData: true,
         bounds: bbox(geometry),
         geometry: geometry,
+        handles: [
+          handle(null, {
+            ...action,
+            point: action.coordinates[0],
+            handleId: 0,
+            index: 0
+          }),
+          handle(null, {
+            ...action,
+            point: action.coordinates[action.coordinates.length - 1],
+            handleId: 1,
+            index: action.coordinates.length
+          })
+        ],
         points: action.elevations.map((e, i) => {
           const p = action.elevations[i - 1];
 
@@ -59,14 +73,6 @@ const trail = (state = {}, action) => {
         chanceOfHeavySnow: action.chanceOfHeavySnow,
         chanceOfSnowPack: action.chanceOfSnowPack,
         chanceOfHeavySnowPack: action.chanceOfHeavySnowPack
-      }
-    case 'SET_HANDLES':
-      if (state.id !== action.id) return state;
-      return { ...state,
-        handles: [
-          handle(null, {...action, coordinates: action.start, handleId: 0, id: action.id}),
-          handle(null, {...action, coordinates: action.end, handleId: 1, id: action.id})
-        ]
       }
     case 'UPDATE_HANDLE':
       if (!state.handles) return state;
@@ -105,8 +111,6 @@ const trails = (state = [], action) => {
       return state.map(t => trail(t, action))
     case 'SET_WEATHER_DATA':
       return state.map(t => trail(t, action))
-    case 'SET_HANDLES':
-      return state.map(t => trail(t, action))
     case 'CLEAR_HANDLES':
       return state.map(t => trail(t, action))
     case 'UPDATE_HANDLE':
@@ -119,11 +123,11 @@ const trails = (state = [], action) => {
 
 const handle = (state = {}, action) => {
   switch (action.type) {
-    case 'SET_HANDLES':
+    case 'SET_ELEVATION_DATA':
       return {
-        coordinates: action.coordinates,
+        coordinates: action.point,
         id: action.id + '-' + action.handleId,
-        index: null,
+        index: action.index,
         trailId: action.id
       }
     case 'UPDATE_HANDLE':
