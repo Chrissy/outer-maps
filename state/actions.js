@@ -8,7 +8,8 @@ function getElevationData(trail) {
     return fetch(`/api/elevation/${trail.id}`)
       .then(response => response.json())
       .then(elevations => {
-        return dispatch({type: 'SET_ELEVATION_DATA', elevations, id: trail.id});
+        dispatch({type: 'SET_ELEVATION_DATA', elevations, id: trail.id});
+        dispatch({type: 'SET_HANDLES', elevations, id: trail.id});
       });
   };
 };
@@ -53,8 +54,7 @@ export function selectTrail(trail) {
     dispatch({type: 'CLEAR_BOUNDARY_SELECTED'});
     dispatch({type: 'TOGGLE_TRAIL_SELECTED', ...trail});
     dispatch(getElevationData(trail));
-    dispatch({type: 'SET_HANDLES', ...trail})
-    dispatch(getWeatherData(trail));
+    return dispatch(getWeatherData(trail));
   };
 };
 

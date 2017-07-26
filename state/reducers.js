@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import distance from '@turf/distance';
 import centroid from '@turf/centroid';
 import bbox from '@turf/bbox';
+import {lineString} from '@turf/helpers';
 import _ from 'underscore';
 
 const trail = (state = {}, action) => {
@@ -12,9 +13,7 @@ const trail = (state = {}, action) => {
         id: action.properties.id,
         name: action.properties.name,
         distance: action.properties.distance,
-        center: centroid(action.geometry).geometry.coordinates,
-        bounds: bbox(action.geometry),
-        geometry: action.geometry
+        center: [action.properties.cx, action.properties.cy]
       }
     case 'SET_TRAIL_PREVIEWING':
       return { ...state, previewing: (state.id === action.id) }
@@ -29,8 +28,11 @@ const trail = (state = {}, action) => {
       return { ...state, selected: false, selectedId: null }
     case 'SET_ELEVATION_DATA':
       if (action.id !== state.id) return state
+      const geometry = lineString(action.elevations.map(e => e.coordinates)).geometry;
       return { ...state,
         hasElevationData: true,
+        bounds: bbox(geometry),
+        geometry: geometry,
         points: action.elevations.map((e, i) => {
           const p = action.elevations[i - 1];
 
@@ -118,9 +120,9 @@ const trails = (state = [], action) => {
 const handle = (state = {}, action, handleId) => {
   switch (action.type) {
     case 'SET_HANDLES':
-      const index = (handleId == 0) ? 0 : action.geometry.coordinates.length - 1;
+      const index = (handleId == 0) ? 0 : action.elevations.length - 1;
       return {
-        coordinates: action.geometry.coordinates[index],
+        coordinates: action.elevations[index].coordinates,
         id: action.id + '-' + handleId,
         index: index,
         trailId: action.id

@@ -88,7 +88,7 @@ export default class Map extends React.Component {
     let sources = [];
 
     if (this.props.selectedTrails.length) {
-      sources.push({id: 'trails-selected', data: trailsToFeatureCollection(this.props.selectedTrails)})
+      sources.push({id: 'trails-selected', data: trailsToFeatureCollection(this.props.loadedTrails)})
     }
 
     if (this.props.handles && this.props.handles.length) {
@@ -99,7 +99,6 @@ export default class Map extends React.Component {
   }
 
   filters() {
-    console.log(["in", "id", (this.props.selectedBoundary) ? this.props.selectedBoundary.id : 0])
     return [
       {id: "trails-preview", filter: ["in", "id", (this.props.previewTrail) ? this.props.previewTrail.id : 0]},
       {id: "national-park-labels-active", filter: ["in", "id", (this.props.previewBoundary) ? this.props.previewBoundary.id : 0]},
