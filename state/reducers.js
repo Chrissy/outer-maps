@@ -26,7 +26,7 @@ const trail = (state = {}, action) => {
       return state;
     case 'CLEAR_TRAIL_SELECTED':
       return { ...state, selected: false, selectedId: null }
-    case 'SET_ELEVATION_DATA':
+    case 'SET_TRAIL_DATA':
       if (action.id !== state.id) return state
       const geometry = lineString(action.coordinates).geometry;
       return { ...state,
@@ -105,7 +105,7 @@ const trails = (state = [], action) => {
       return state.map(t => trail(t, {...action, selectedTrailCount: state.filter(e => e.selected).length + 1}))
     case 'CLEAR_TRAIL_SELECTED':
       return state.map(t => trail(t, action))
-    case 'SET_ELEVATION_DATA':
+    case 'SET_TRAIL_DATA':
       return state.map(t => trail(t, action))
     case 'SET_TRAIL_BASE_DATA':
       return state.map(t => trail(t, action))
@@ -123,7 +123,7 @@ const trails = (state = [], action) => {
 
 const handle = (state = {}, action) => {
   switch (action.type) {
-    case 'SET_ELEVATION_DATA':
+    case 'SET_TRAIL_DATA':
       return {
         coordinates: action.point,
         id: action.id + '-' + action.handleId,
