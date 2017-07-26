@@ -8,39 +8,9 @@ const WATCH_EVENTS = ['mousedown','mouseup','click','dblclick','mousemove','mous
 export default class MapBox extends React.PureComponent {
 
   updateSources(oldSources = [], newSources = []) {
-    const changedSources = newSources.filter(s => oldSources.find(os => os.id == s.id && os.data !== s.data));
-    const removedSources = oldSources.filter(s => !newSources.map(n => n.id).includes(s.id));
-    const addedSources = newSources.filter(s => !oldSources.map(n => n.id).includes(s.id));
-
-    removedSources.forEach(function(source){
-      this.mapboxed.removeSource(source.id);
-    }.bind(this));
-
-    addedSources.forEach(function(source){
-      this.mapboxed.addSource(source.id, {
-        data: source.data,
-        type: source.type || "geojson",
-        tolerance: source.tolerance || 0.3
-      });
-    }.bind(this));
-
-    changedSources.forEach(function(source){
+    newSources.forEach(function(source) {
       this.mapboxed.getSource(source.id).setData(source.data);
     }.bind(this))
-
-
-    this.updateLayers()
-  }
-
-  updateLayers() {
-    this.props.layers.forEach(function(layer){
-      if (!this.mapboxed.getLayer(layer.id) && this.mapboxed.getSource(layer.source)){
-        this.mapboxed.addLayer(layer, layer.before);
-      }
-      if (this.mapboxed.getLayer(layer.id) && !this.mapboxed.getSource(layer.source)){
-        this.mapboxed.removeLayer(layer.id);
-      }
-    }.bind(this));
   }
 
   updateFilters(filters) {

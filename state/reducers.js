@@ -64,8 +64,8 @@ const trail = (state = {}, action) => {
       if (state.id !== action.id) return state;
       return { ...state,
         handles: [
-          handle(null, action, 0),
-          handle(null, action, 1)
+          handle(null, {...action, coordinates: action.start, handleId: 0, id: action.id}),
+          handle(null, {...action, coordinates: action.end, handleId: 1, id: action.id})
         ]
       }
     case 'UPDATE_HANDLE':
@@ -117,14 +117,13 @@ const trails = (state = [], action) => {
   }
 }
 
-const handle = (state = {}, action, handleId) => {
+const handle = (state = {}, action) => {
   switch (action.type) {
     case 'SET_HANDLES':
-      const index = (handleId == 0) ? 0 : action.coordinates.length - 1;
       return {
-        coordinates: action.coordinates[index],
-        id: action.id + '-' + handleId,
-        index: index,
+        coordinates: action.coordinates,
+        id: action.id + '-' + action.handleId,
+        index: null,
         trailId: action.id
       }
     case 'UPDATE_HANDLE':

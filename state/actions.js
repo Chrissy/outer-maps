@@ -10,7 +10,6 @@ function getElevationData(trail) {
       .then(elevations => {
         const coordinates = elevations.map(e => e.coordinates);
         dispatch({type: 'SET_ELEVATION_DATA', elevations, coordinates, id: trail.id});
-        dispatch({type: 'SET_HANDLES', coordinates, id: trail.id});
       });
   };
 };
@@ -49,11 +48,13 @@ export function previewTrail(trail) {
 
 export function selectTrail(trail) {
   return (dispatch, getState) => {
-    const cachedTrail = getState().trails.find(t => t.id == trail.properties.id);
+    const props = trail.properties
+    const cachedTrail = getState().trails.find(t => t.id == props.id);
     if (!cachedTrail) dispatch({type: 'ADD_TRAIL', ...trail});
-    trail = getState().trails.find(t => t.id == trail.properties.id);
+    trail = getState().trails.find(t => t.id == props.id);
     dispatch({type: 'CLEAR_BOUNDARY_SELECTED'});
     dispatch({type: 'TOGGLE_TRAIL_SELECTED', ...trail});
+    dispatch({type: 'SET_HANDLES', id: trail.id, start: [props.sx, props.sy], end: [props.ex, props.ey]});
     dispatch(getElevationData(trail));
     return dispatch(getWeatherData(trail));
   };

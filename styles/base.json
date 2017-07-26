@@ -16,6 +16,20 @@
     "local": {
       "tiles": ["http://0.0.0.0:5000/tiles/{z}/{x}/{y}.pbf"],
       "type": "vector"
+    },
+    "handles": {
+      "data": {
+        "type": "FeatureCollection",
+        "features": []
+      },
+      "type": "geojson"
+    },
+    "trails-selected": {
+      "data": {
+        "type": "FeatureCollection",
+        "features": []
+      },
+      "type": "geojson"
     }
   },
   "remote": {

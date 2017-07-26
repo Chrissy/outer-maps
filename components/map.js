@@ -6,7 +6,6 @@ import {pointToPoint, pointsToFeatureCollection, trailsToFeatureCollection} from
 import TooltipContainer from './tooltipContainer';
 import MapBox from './mapBox';
 import MapSidebarContainer from './mapSidebarContainer';
-import {mapBoxLayers} from '../modules/mapBoxLayers';
 
 const WATCH_LAYERS = ['trails', 'national-park-labels', 'national-park-labels-active', 'handles'];
 
@@ -85,17 +84,10 @@ export default class Map extends React.Component {
   }
 
   sources() {
-    let sources = [];
-
-    if (this.props.selectedTrails.length) {
-      sources.push({id: 'trails-selected', data: trailsToFeatureCollection(this.props.selectedTrails)})
-    }
-
-    if (this.props.handles && this.props.handles.length) {
-      sources.push({ id: 'handles', data: featureCollection(this.props.handles.map(p => pointToPoint(p)))});
-    }
-
-    return sources;
+    return [
+      { id: 'trails-selected', data: trailsToFeatureCollection(this.props.selectedTrails) },
+      { id: 'handles', data: featureCollection(this.props.handles.map(p => pointToPoint(p))) }
+    ];
   }
 
   filters() {
@@ -116,7 +108,6 @@ export default class Map extends React.Component {
     return (
         <div id="the-map">
           <MapBox
-          layers={mapBoxLayers}
           sources={this.sources()}
           filters={this.filters()}
           fitToFilter={this.state.fitToFilter}
