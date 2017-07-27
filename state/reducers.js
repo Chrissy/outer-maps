@@ -84,6 +84,20 @@ const trail = (state = {}, action) => {
       return {...state,
         handles: state.handles.map(p => handle(p, action)),
       }
+    case 'SHOW_HANDLES':
+      if (action.id !== state.id || !state.points) return state;
+      return {...state, handles: [
+        handle(null, {...action,
+          point: state.points[0].coordinates,
+          handleId: 0,
+          index: 0
+        }),
+        handle(null, {...action,
+          point: state.points[state.points.length - 1].coordinates,
+          handleId: 1,
+          index: state.points.length
+        })
+      ]}
     case 'CLEAR_HANDLES':
         return { ...state,
         handles: null
@@ -111,6 +125,8 @@ const trails = (state = [], action) => {
       return state.map(t => trail(t, action))
     case 'SET_WEATHER_DATA':
       return state.map(t => trail(t, action))
+    case 'SHOW_HANDLES':
+      return state.map(t => trail(t, action))
     case 'CLEAR_HANDLES':
       return state.map(t => trail(t, action))
     case 'UPDATE_HANDLE':
@@ -124,6 +140,13 @@ const trails = (state = [], action) => {
 const handle = (state = {}, action) => {
   switch (action.type) {
     case 'SET_TRAIL_DATA':
+      return {
+        coordinates: action.point,
+        id: action.id + '-' + action.handleId,
+        index: action.index,
+        trailId: action.id
+      }
+    case 'SHOW_HANDLES':
       return {
         coordinates: action.point,
         id: action.id + '-' + action.handleId,

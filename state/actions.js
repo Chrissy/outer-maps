@@ -54,7 +54,7 @@ export function selectTrail(trail) {
     trail = getState().trails.find(t => t.id == props.id);
     dispatch({type: 'CLEAR_BOUNDARY_SELECTED'});
     dispatch({type: 'TOGGLE_TRAIL_SELECTED', ...trail});
-    dispatch({type: 'SET_HANDLES', id: trail.id, start: [props.sx, props.sy], end: [props.ex, props.ey]});
+    dispatch({type: 'SHOW_HANDLES', ...trail});
     dispatch(getTrailData(trail));
     return dispatch(getWeatherData(trail));
   };
@@ -71,7 +71,7 @@ export function previewBoundary(boundary) {
 export function selectBoundary(id) {
   return dispatch => {
     dispatch({type: 'CLEAR_TRAIL_SELECTED'});
-    dispatch({type: 'CLEAR_HANDLES'})
+    dispatch({type: 'CLEAR_HANDLES'});
     return dispatch({type: 'SET_BOUNDARY_SELECTED', id});
   };
 };
