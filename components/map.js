@@ -19,7 +19,7 @@ export default class Map extends React.Component {
       if (previewTrail && previewTrail.id) return props.onFeatureMouseOut();
       if (previewBoundary && previewBoundary.id) return props.onFeatureMouseOut();
     } else {
-      if (this.draggingPoint || feature.layer.id == 'handles') {
+      if (draggingPoint || feature.layer.id == 'handles') {
         this.handleDrag({target, lngLat});
       } else if (feature.layer.id == 'trails' || feature.layer.id == 'national-park-labels') {
         target.dragPan.enable();
@@ -41,7 +41,7 @@ export default class Map extends React.Component {
 
     target.dragPan.disable();
 
-    if (!this.draggingPoint) return;
+    if (!draggingPoint) return;
 
     let snapToPoint = pointOnLine(draggingPoint.trail.geometry, point([lngLat.lng, lngLat.lat]));
     props.updateHandle(draggingPoint.properties.id, snapToPoint.geometry.coordinates);
@@ -74,14 +74,16 @@ export default class Map extends React.Component {
     if (!handle) return;
     this.draggingPoint = {...handle,
       trail: this.props.selectedTrails.find(t => t.id == handle.properties.trailId),
-      geometry: handle.geometry
+      geometry: handle.geometry,
+      currentPointOnLine: handle.geometry.coordinates
     };
   }
 
   onMapMouseUp({target}) {
     if (!this.draggingPoint) return;
     const {draggingPoint, draggingPoint: {currentPointOnLine, trail}, props} = this;
-    const snapToPoint = nearest(currentPointOnLine, pointsToFeatureCollection(trail.points));
+    const collection = pointsToFeatureCollection(trail.points);
+    const snapToPoint = nearest(currentPointOnLine, collection);
 
     props.updateHandle(draggingPoint.properties.id, snapToPoint.properties.coordinates);
     props.setHandleIndex(draggingPoint.properties.id, snapToPoint.properties.index);
@@ -117,7 +119,10 @@ export default class Map extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {selectedElement: null};
+    this.state = {
+      selectedElement: null,
+      preparedForDragging: null
+    };
   }
 
   render() {
