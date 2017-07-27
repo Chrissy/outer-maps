@@ -11,16 +11,14 @@ const WATCH_LAYERS = ['trails', 'national-park-labels', 'national-park-labels-ac
 
 export default class Map extends React.Component {
 
-  onMapMouseMove(event) {
-    const {features, target, features: [feature]} = event;
-
+  onMapMouseMove({features, target, features: [feature], lngLat}) {
     if (!feature && !this.draggingPoint) {
       target.dragPan.enable();
       if (this.props.previewTrail && this.props.previewTrail.id) return this.props.onFeatureMouseOut();
       if (this.props.previewBoundary && this.props.previewBoundary.id) return this.props.onFeatureMouseOut();
     } else {
       if (this.draggingPoint || feature.layer.id == 'handles') {
-        this.handleDrag(event);
+        this.handleDrag({target, lngLat});
       } else if (feature.layer.id == 'trails' || feature.layer.id == 'national-park-labels' || feature.layer.id == 'national-park-labels-active') {
         target.dragPan.enable();
         this.handleFeature(feature);
@@ -44,12 +42,11 @@ export default class Map extends React.Component {
     this.draggingPoint.currentPointOnLine = snapToPoint;
   }
 
-  onMapClick(event) {
+  onMapClick({features, features: [feature]}) {
     if (this.draggingPoint) return;
-    if (!event.features.length) return this.props.onNonFeatureClick();
+    if (!features.length) return this.props.onNonFeatureClick();
 
-    const feature = event.features[0];
-    const type = event.features[0].layer.id;
+    const type = feature.layer.id;
 
     if (type == "trails") {
       this.props.onTrailClick({properties: feature.properties, geometry:feature.geometry});
@@ -64,12 +61,12 @@ export default class Map extends React.Component {
     }
   }
 
-  onMapMouseDown(event) {
-    const firstHandle = event.features.find(f => f.layer.id == "handles");
-    if (!firstHandle) return;
-    this.draggingPoint = {...firstHandle,
-      trail: this.props.selectedTrails.find(t => t.id == firstHandle.properties.trailId),
-      geometry: firstHandle.geometry
+  onMapMouseDown({features}) {
+    const handle = features.find(f => f.layer.id == "handles");
+    if (!handle) return;
+    this.draggingPoint = {...handle,
+      trail: this.props.selectedTrails.find(t => t.id == handle.properties.trailId),
+      geometry: handle.geometry
     };
   }
 
