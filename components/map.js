@@ -12,8 +12,7 @@ const WATCH_LAYERS = ['trails', 'national-park-labels', 'national-park-labels-ac
 export default class Map extends React.Component {
 
   onMapMouseMove(event) {
-    const {features, target} = event;
-    const [feature] = features;
+    const {features, target, features: [feature]} = event;
 
     if (!feature && !this.draggingPoint) {
       target.dragPan.enable();
@@ -29,13 +28,13 @@ export default class Map extends React.Component {
     }
   }
 
-  handleFeature({properties, geometry, layer} = event) {
+  handleFeature({properties, geometry, layer}) {
     if (this.props.previewBoundary && properties.id == this.props.previewBoundary.id) return;
     if (this.props.previewTrail && properties.id == this.props.previewTrail.id) return;
     this.props.onFeatureMouseIn({properties: properties, geometry: geometry}, layer.id);
   }
 
-  handleDrag({target, lngLat} = event) {
+  handleDrag({target, lngLat}) {
     target.dragPan.disable();
 
     if (!this.draggingPoint) return;
