@@ -12,10 +12,12 @@ const WATCH_LAYERS = ['trails', 'national-park-labels', 'national-park-labels-ac
 export default class Map extends React.Component {
 
   onMapMouseMove({features, target, features: [feature], lngLat}) {
-    if (!feature && !this.draggingPoint) {
+    const {draggingPoint, props, props: {previewTrail, previewBoundary}} = this;
+
+    if (!feature && !draggingPoint) {
       target.dragPan.enable();
-      if (this.props.previewTrail && this.props.previewTrail.id) return this.props.onFeatureMouseOut();
-      if (this.props.previewBoundary && this.props.previewBoundary.id) return this.props.onFeatureMouseOut();
+      if (previewTrail && previewTrail.id) return props.onFeatureMouseOut();
+      if (previewBoundary && previewBoundary.id) return props.onFeatureMouseOut();
     } else {
       if (this.draggingPoint || feature.layer.id == 'handles') {
         this.handleDrag({target, lngLat});
@@ -27,8 +29,10 @@ export default class Map extends React.Component {
   }
 
   handleFeature({properties, geometry, layer}) {
-    if (this.props.previewBoundary && properties.id == this.props.previewBoundary.id) return;
-    if (this.props.previewTrail && properties.id == this.props.previewTrail.id) return;
+    const {previewBoundary, previewTrail} = this.props;
+
+    if (previewBoundary && properties.id == previewBoundary.id) return;
+    if (previewTrail && properties.id == previewTrail.id) return;
     this.props.onFeatureMouseIn({properties: properties, geometry: geometry}, layer.id);
   }
 
