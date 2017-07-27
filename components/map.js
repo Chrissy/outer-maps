@@ -37,23 +37,27 @@ export default class Map extends React.Component {
   }
 
   handleDrag({target, lngLat}) {
+    const {draggingPoint, props} = this;
+
     target.dragPan.disable();
 
     if (!this.draggingPoint) return;
 
-    let snapToPoint = pointOnLine(this.draggingPoint.trail.geometry, point([lngLat.lng, lngLat.lat]));
-    this.props.updateHandle(this.draggingPoint.properties.id, snapToPoint.geometry.coordinates);
-    this.draggingPoint.currentPointOnLine = snapToPoint;
+    let snapToPoint = pointOnLine(draggingPoint.trail.geometry, point([lngLat.lng, lngLat.lat]));
+    props.updateHandle(draggingPoint.properties.id, snapToPoint.geometry.coordinates);
+    draggingPoint.currentPointOnLine = snapToPoint;
   }
 
   onMapClick({features, features: [feature]}) {
-    if (this.draggingPoint) return;
-    if (!features.length) return this.props.onNonFeatureClick();
+    const {draggingPoint, props} = this;
+
+    if (draggingPoint) return;
+    if (!features.length) return props.onNonFeatureClick();
 
     const type = feature.layer.id;
 
     if (type == "trails") {
-      this.props.onTrailClick({properties: feature.properties, geometry:feature.geometry});
+      props.onTrailClick({properties: feature.properties, geometry: feature.geometry});
     } else if (type == "national-park-labels" || type == "national-park-labels-active") {
       this.setState({
         fitToFilter: {
@@ -61,7 +65,7 @@ export default class Map extends React.Component {
           filter: ["==", "id", feature.properties.id]
         }
       });
-      this.props.onBoundaryClick(feature.properties.id);
+      props.onBoundaryClick(feature.properties.id);
     }
   }
 
