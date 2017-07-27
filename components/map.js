@@ -12,34 +12,35 @@ const WATCH_LAYERS = ['trails', 'national-park-labels', 'national-park-labels-ac
 export default class Map extends React.Component {
 
   onMapMouseMove(event) {
-    const feature = event.features[0];
+    const {features, target} = event;
+    const [feature] = features;
 
     if (!feature && !this.draggingPoint) {
-      event.target.dragPan.enable();
+      target.dragPan.enable();
       if (this.props.previewTrail && this.props.previewTrail.id) return this.props.onFeatureMouseOut();
       if (this.props.previewBoundary && this.props.previewBoundary.id) return this.props.onFeatureMouseOut();
     } else {
       if (this.draggingPoint || feature.layer.id == 'handles') {
         this.handleDrag(event);
       } else if (feature.layer.id == 'trails' || feature.layer.id == 'national-park-labels' || feature.layer.id == 'national-park-labels-active') {
-        event.target.dragPan.enable();
+        target.dragPan.enable();
         this.handleFeature(feature);
       }
     }
   }
 
-  handleFeature(feature) {
-    if (this.props.previewBoundary && feature.properties.id == this.props.previewBoundary.id) return;
-    if (this.props.previewTrail && feature.properties.id == this.props.previewTrail.id) return;
-    this.props.onFeatureMouseIn({properties: feature.properties, geometry: feature.geometry}, feature.layer.id);
+  handleFeature({properties, geometry, layer} = event) {
+    if (this.props.previewBoundary && properties.id == this.props.previewBoundary.id) return;
+    if (this.props.previewTrail && properties.id == this.props.previewTrail.id) return;
+    this.props.onFeatureMouseIn({properties: properties, geometry: geometry}, layer.id);
   }
 
-  handleDrag(event) {
-    event.target.dragPan.disable();
+  handleDrag({target, lngLat} = event) {
+    target.dragPan.disable();
 
     if (!this.draggingPoint) return;
 
-    let snapToPoint = pointOnLine(this.draggingPoint.trail.geometry, point([event.lngLat.lng, event.lngLat.lat]));
+    let snapToPoint = pointOnLine(this.draggingPoint.trail.geometry, point([lngLat.lng, lngLat.lat]));
     this.props.updateHandle(this.draggingPoint.properties.id, snapToPoint.geometry.coordinates);
     this.draggingPoint.currentPointOnLine = snapToPoint;
   }
