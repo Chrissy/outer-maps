@@ -9,7 +9,8 @@ function getTrailData(trail) {
       .then(response => response.json())
       .then(elevations => {
         const coordinates = elevations.map(e => e.coordinates);
-        dispatch({type: 'SET_TRAIL_DATA', elevations, coordinates, id: trail.id});
+        dispatch({type: 'SET_TRAIL_DATA', elevations, coordinates, id: trail.id });
+        dispatch({type: 'SHOW_HANDLES', id: trail.id });
       });
   };
 };
