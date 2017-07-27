@@ -21,7 +21,7 @@ export default class Map extends React.Component {
     } else {
       if (this.draggingPoint || feature.layer.id == 'handles') {
         this.handleDrag({target, lngLat});
-      } else if (feature.layer.id == 'trails' || feature.layer.id == 'national-park-labels' || feature.layer.id == 'national-park-labels-active') {
+      } else if (feature.layer.id == 'trails' || feature.layer.id == 'national-park-labels') {
         target.dragPan.enable();
         this.handleFeature(feature);
       }
