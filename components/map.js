@@ -91,10 +91,20 @@ export default class Map extends React.Component {
   }
 
   filters() {
-    return [
-      {id: "trails-preview", filter: ["in", "id", (this.props.previewTrail) ? this.props.previewTrail.id : 0]},
-      {id: "national-parks-active", filter: ["in", "id", (this.props.selectedBoundary) ? this.props.selectedBoundary.id : 0]},
-      {id: "national-park-labels-active", filter: ["in", "id", (this.props.previewBoundary) ? this.props.previewBoundary.id : 0]}
+    return [{
+      id: "trails-preview",
+      filter: ["all",
+        ["in", "id", (this.props.previewTrail) ? this.props.previewTrail.id : 0],
+        ["!in", "id", ...(this.props.selectedTrails.map(t => t.id) || [] )]
+      ]},
+      {
+        id: "national-parks-active",
+        filter: ["in", "id", (this.props.selectedBoundary) ? this.props.selectedBoundary.id : 0]
+      },
+      {
+        id: "national-park-labels-active",
+        filter: ["in", "id", (this.props.previewBoundary) ? this.props.previewBoundary.id : 0]
+      }
     ];
   }
 
