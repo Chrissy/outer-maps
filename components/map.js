@@ -70,14 +70,15 @@ export default class Map extends React.Component {
     };
   }
 
-  onMapMouseUp(event) {
+  onMapMouseUp({target}) {
     if (!this.draggingPoint) return;
-    const features = pointsToFeatureCollection(this.draggingPoint.trail.points);
-    let snapToPoint = nearest(this.draggingPoint.currentPointOnLine, features);
-    this.props.updateHandle(this.draggingPoint.properties.id, snapToPoint.properties.coordinates);
-    this.props.setHandleIndex(this.draggingPoint.properties.id, snapToPoint.properties.index);
+    const {draggingPoint, draggingPoint: {currentPointOnLine, trail}, props} = this;
+    const snapToPoint = nearest(currentPointOnLine, pointsToFeatureCollection(trail.points));
+
+    props.updateHandle(draggingPoint.properties.id, snapToPoint.properties.coordinates);
+    props.setHandleIndex(draggingPoint.properties.id, snapToPoint.properties.index);
     this.draggingPoint = null;
-    event.target.dragPan.enable();
+    target.dragPan.enable();
   }
 
   sources() {
