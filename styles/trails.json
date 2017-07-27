@@ -45,7 +45,10 @@
   },
   "paint": {
     "line-color": "rgba(0,103,14,1)",
-    "line-width": 1
+    "line-width": 1,
+    "line-dasharray": {
+      "stops": [[9, [4, 1]], [10, [10000, 0]]]
+    }
   }
 },
 {

@@ -11,11 +11,23 @@ const queries = [
   {
     name: "trails-zoomed-out",
     minZoom: 6,
-    maxZoom: 9.75,
+    maxZoom: 8.75,
     query: `
       SELECT name, id, type, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.000005) as geom
       FROM trails
-      WHERE type = 'hike' OR type = 'horse' OR type = 'bike' OR
+      WHERE ST_Length(geog) > 3000 AND type = 'hike' OR type = 'horse' OR type = 'bike' OR
+      type = 'motorcycle' OR type = 'atv' AND name != ''
+    `
+  },
+  {
+    name: "trails",
+    minZoom: 9,
+    maxZoom: 9.75,
+    query: `
+      SELECT name, id, type, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.000003) as geom,
+      ST_X(ST_Centroid(geog::geometry)) as cx, ST_Y(ST_Centroid(geog::geometry)) as cy
+      FROM trails
+      WHERE ST_Length(geog) > 1500 AND type = 'hike' OR type = 'horse' OR type = 'bike' OR
       type = 'motorcycle' OR type = 'atv' AND name != ''
     `
   },
