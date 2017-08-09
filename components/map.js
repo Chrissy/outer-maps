@@ -11,48 +11,53 @@ const WATCH_LAYERS = ['trails', 'national-park-labels', 'national-park-labels-ac
 
 export default class Map extends React.Component {
 
-  onMapMouseMove(event) {
-    const feature = event.features[0];
+  onMapMouseMove({features, target, features: [feature], lngLat}) {
+    const {draggingPoint, props, props: {previewTrail, previewBoundary}} = this;
 
-    if (!feature && !this.draggingPoint) {
-      event.target.dragPan.enable();
-      if (this.props.previewTrail && this.props.previewTrail.id) return this.props.onFeatureMouseOut();
-      if (this.props.previewBoundary && this.props.previewBoundary.id) return this.props.onFeatureMouseOut();
+    if (!feature && !draggingPoint) {
+      target.dragPan.enable();
+      if (previewTrail && previewTrail.id) return props.onFeatureMouseOut();
+      if (previewBoundary && previewBoundary.id) return props.onFeatureMouseOut();
     } else {
-      if (this.draggingPoint || feature.layer.id == 'handles') {
-        this.handleDrag(event);
-      } else if (feature.layer.id == 'trails' || feature.layer.id == 'national-park-labels' || feature.layer.id == 'national-park-labels-active') {
-        event.target.dragPan.enable();
+      if (draggingPoint || feature.layer.id == 'handles') {
+        this.handleDrag({target, lngLat});
+      } else if (feature.layer.id == 'trails' || feature.layer.id == 'national-park-labels') {
+        target.dragPan.enable();
         this.handleFeature(feature);
       }
     }
   }
 
-  handleFeature(feature) {
-    if (this.props.previewBoundary && feature.properties.id == this.props.previewBoundary.id) return;
-    if (this.props.previewTrail && feature.properties.id == this.props.previewTrail.id) return;
-    this.props.onFeatureMouseIn({properties: feature.properties, geometry: feature.geometry}, feature.layer.id);
+  handleFeature({properties, geometry, layer}) {
+    const {previewBoundary, previewTrail} = this.props;
+
+    if (previewBoundary && properties.id == previewBoundary.id) return;
+    if (previewTrail && properties.id == previewTrail.id) return;
+    this.props.onFeatureMouseIn({properties: properties, geometry: geometry}, layer.id);
   }
 
-  handleDrag(event) {
-    event.target.dragPan.disable();
+  handleDrag({target, lngLat}) {
+    const {draggingPoint, props} = this;
 
-    if (!this.draggingPoint) return;
+    target.dragPan.disable();
 
-    let snapToPoint = pointOnLine(this.draggingPoint.trail.geometry, point([event.lngLat.lng, event.lngLat.lat]));
-    this.props.updateHandle(this.draggingPoint.properties.id, snapToPoint.geometry.coordinates);
-    this.draggingPoint.currentPointOnLine = snapToPoint;
+    if (!draggingPoint) return;
+
+    let snapToPoint = pointOnLine(draggingPoint.trail.geometry, point([lngLat.lng, lngLat.lat]));
+    props.updateHandle(draggingPoint.properties.id, snapToPoint.geometry.coordinates);
+    draggingPoint.currentPointOnLine = snapToPoint;
   }
 
-  onMapClick(event) {
-    if (this.draggingPoint) return;
-    if (!event.features.length) return this.props.onNonFeatureClick();
+  onMapClick({features, features: [feature]}) {
+    const {draggingPoint, props} = this;
 
-    const feature = event.features[0];
-    const type = event.features[0].layer.id;
+    if (draggingPoint) return;
+    if (!features.length) return props.onNonFeatureClick();
+
+    const type = feature.layer.id;
 
     if (type == "trails") {
-      this.props.onTrailClick({properties: feature.properties, geometry:feature.geometry});
+      props.onTrailClick({properties: feature.properties, geometry: feature.geometry});
     } else if (type == "national-park-labels" || type == "national-park-labels-active") {
       this.setState({
         fitToFilter: {
@@ -60,27 +65,30 @@ export default class Map extends React.Component {
           filter: ["==", "id", feature.properties.id]
         }
       });
-      this.props.onBoundaryClick(feature.properties.id);
+      props.onBoundaryClick(feature.properties.id);
     }
   }
 
-  onMapMouseDown(event) {
-    const firstHandle = event.features.find(f => f.layer.id == "handles");
-    if (!firstHandle) return;
-    this.draggingPoint = {...firstHandle,
-      trail: this.props.selectedTrails.find(t => t.id == firstHandle.properties.trailId),
-      geometry: firstHandle.geometry
+  onMapMouseDown({features}) {
+    const handle = features.find(f => f.layer.id == "handles");
+    if (!handle) return;
+    this.draggingPoint = {...handle,
+      trail: this.props.selectedTrails.find(t => t.id == handle.properties.trailId),
+      geometry: handle.geometry,
+      currentPointOnLine: handle.geometry.coordinates
     };
   }
 
-  onMapMouseUp(event) {
+  onMapMouseUp({target}) {
     if (!this.draggingPoint) return;
-    const features = pointsToFeatureCollection(this.draggingPoint.trail.points);
-    let snapToPoint = nearest(this.draggingPoint.currentPointOnLine, features);
-    this.props.updateHandle(this.draggingPoint.properties.id, snapToPoint.properties.coordinates);
-    this.props.setHandleIndex(this.draggingPoint.properties.id, snapToPoint.properties.index);
+    const {draggingPoint, draggingPoint: {currentPointOnLine, trail}, props} = this;
+    const collection = pointsToFeatureCollection(trail.points);
+    const snapToPoint = nearest(currentPointOnLine, collection);
+
+    props.updateHandle(draggingPoint.properties.id, snapToPoint.properties.coordinates);
+    props.setHandleIndex(draggingPoint.properties.id, snapToPoint.properties.index);
     this.draggingPoint = null;
-    event.target.dragPan.enable();
+    target.dragPan.enable();
   }
 
   sources() {
@@ -111,7 +119,10 @@ export default class Map extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {selectedElement: null};
+    this.state = {
+      selectedElement: null,
+      preparedForDragging: null
+    };
   }
 
   render() {
