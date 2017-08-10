@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import {store} from '../state/configureStore';
-import MapContainer from '../components/mapContainer';
+import MapContainer from './mapContainer';
 
 ReactDOM.render(
   <Provider store={store}>

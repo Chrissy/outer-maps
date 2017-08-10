@@ -1,5 +1,4 @@
-{"layers": [
-{
+[{
   "id": "trails-outline",
   "source": "$source",
   "source-layer": "trails",
@@ -246,5 +245,4 @@
     "circle-radius": 8,
     "circle-color": "rgba(0,0,0,0)"
   }
-}
-]}
+}]

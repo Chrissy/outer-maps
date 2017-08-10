@@ -1,5 +1,4 @@
-{"layers": [
-{
+[{
   "id": "background",
   "type": "background",
   "layout": {},
@@ -506,5 +505,4 @@
     },
     "line-color": "hsl(35, 12%, 89%)"
   }
-}
-]}
+}]

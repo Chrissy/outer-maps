@@ -1,5 +1,4 @@
-{"layers": [
-{
+[{
   "id": "contour-label",
   "type": "symbol",
   "source": "composite",
@@ -1861,5 +1860,4 @@
     },
     "text-halo-width": 1.25
   }
-}
-]}
+}]

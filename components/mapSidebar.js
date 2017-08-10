@@ -5,8 +5,8 @@ import Terrain from './terrain';
 import LoadingSpinner from './loadingSpinner';
 import {convertToPercent} from '../modules/NOAA'
 
-import styles from './mapSidebar.css';
-import spacing from './spacing.css';
+import styles from '../styles/mapSidebar.css';
+import spacing from '../styles/spacing.css';
 
 export default class MapSidebar extends React.Component {
   terrainComponent() {
