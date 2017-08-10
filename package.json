@@ -55,6 +55,7 @@
     "tilelive": "^5.12.3",
     "vis-why": "^1.2.2",
     "webpack": "^3.5.2",
+    "webpack-dev-middleware": "^1.12.0",
     "xml2js": "^0.4.17"
   }
 }
