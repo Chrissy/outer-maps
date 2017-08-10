@@ -1,5 +1,4 @@
-{"layers": [
-{
+[{
   "id": "bridge-path-bg",
   "type": "line",
   "metadata": {
@@ -1384,5 +1383,4 @@
   "paint": {
     "icon-opacity": 0.5
   }
-}
-]}
+}]

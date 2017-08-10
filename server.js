@@ -3,27 +3,16 @@ const fs = require('fs');
 const path = require('path').normalize;
 const pg = require('pg');
 const express = require('express');
-const browserify = require('browserify-middleware');
-const app = express();
 const _ = require('underscore');
 const env = require('./environment/development');
 const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
 const statUtils = require('./modules/statUtils');
 const query = require('./modules/genericQuery').query;
 const createPool = require('./modules/genericQuery').pool;
-const tilelive = require('tilelive');
-require('mbtiles').registerProtocols(tilelive);
+
+const app = express();
 
 app.use(express.static('public'));
-
-app.get('/bundle.js', browserify(__dirname + '/components/app.js', {
-  mode: (process.env.NODE_ENV == 'production') ? 'production' : 'development',
-  transform: ['babelify'],
-  plugins: [{
-    plugin: 'css-modulesify',
-    options: { output: './public/bundle.css'}
-  }]
-}));
 
 const pool = createPool();
 
@@ -103,15 +92,27 @@ app.get('/api/terrain/:x/:y/:zoom', function(request, response){
   })
 });
 
-tilelive.load('mbtiles://./tiles/local.mbtiles', function(err, source) {
-  if (err) throw err;
-  app.get('/tiles/:z/:x/:y.*', function(request, response) {
-    source.getTile(request.params.z, request.params.x, request.params.y, function(err, tile, headers) {
-      response.setHeader('Content-Encoding', 'gzip');
-      response.send(tile);
+if (process.env.NODE_ENV != 'production') {
+  const webpackMiddleware = require("webpack-dev-middleware");
+  const webpackConfig = require('./webpack.dev.config.js')
+  const webpack = require('webpack');
+  const tilelive = require('tilelive');
+  require('mbtiles').registerProtocols(tilelive);
+
+  app.use(webpackMiddleware(webpack(webpackConfig), {
+    publicPath: webpackConfig.output.publicPath
+  }));
+
+  tilelive.load('mbtiles://./tiles/local.mbtiles', function(err, source) {
+    if (err) throw err;
+    app.get('/tiles/:z/:x/:y.*', function(request, response) {
+      source.getTile(request.params.z, request.params.x, request.params.y, function(err, tile, headers) {
+        response.setHeader('Content-Encoding', 'gzip');
+        response.send(tile);
+      });
     });
   });
-});
+}
 
 app.listen(5000, function () {
   console.log('listening on port 5000');

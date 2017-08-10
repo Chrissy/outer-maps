@@ -2,7 +2,8 @@ import React, { Proptypes } from 'react';
 import MapboxGL from 'mapbox-gl';
 import bbox from '@turf/bbox';
 import helpers from '@turf/helpers';
-import {accessToken, styleUrl} from '../modules/mapBoxStaticData';
+import {accessToken, styleUrl} from '../modules/mapboxStaticData';
+import mapboxStyles from '../modules/mapboxStyleLoader'
 const WATCH_EVENTS = ['mousedown','mouseup','click','dblclick','mousemove','mouseenter', 'mouseleave','mouseover','mouseout','contextmenu','touchstart','touchend','touchcancel'];
 
 export default class MapBox extends React.PureComponent {
@@ -31,14 +32,14 @@ export default class MapBox extends React.PureComponent {
 
     this.mapboxed = new MapboxGL.Map({
       container: 'mapbox-gl-element',
-      style: '/dist/mapbox-styles.json',
+      style: mapboxStyles,
       center: [-123.6, 47.8],
       zoom: 8,
       maxZoom: 14
     });
 
     this.mapEvents();
-    this.mapboxed.addControl(new MapboxGL.Navigation());
+    this.mapboxed.addControl(new MapboxGL.NavigationControl());
   }
 
   componentDidUpdate(prevProps, q) {
