@@ -4,6 +4,17 @@ import bbox from '@turf/bbox';
 import helpers from '@turf/helpers';
 import {accessToken, styleUrl} from '../modules/mapBoxStaticData';
 const WATCH_EVENTS = ['mousedown','mouseup','click','dblclick','mousemove','mouseenter', 'mouseleave','mouseover','mouseout','contextmenu','touchstart','touchend','touchcancel'];
+const req = require.context("../styles", true, /\.json$/);
+const base = req("./base.json");
+const env = require("../environment/development.js");
+const mapboxStyles = Object.assign({}, base, {
+  layers: [].concat(...base.layers.map(l => req(`./${l}.json`))).map(l => {
+    const source = (env.tileSource == "remote") ? "composite" : "local"
+    if (l.source) l.source = (l.source == "$source") ? source : l.source;
+    return l;
+  }),
+  sources: base[env.tileSource]
+});
 
 export default class MapBox extends React.PureComponent {
 
@@ -31,7 +42,7 @@ export default class MapBox extends React.PureComponent {
 
     this.mapboxed = new MapboxGL.Map({
       container: 'mapbox-gl-element',
-      style: '/dist/mapbox-styles.json',
+      style: mapboxStyles,
       center: [-123.6, 47.8],
       zoom: 8,
       maxZoom: 14
