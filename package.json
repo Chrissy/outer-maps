@@ -6,17 +6,11 @@
     "trails": "node trailsBuilder.js",
     "parks": "node parksBuilder.js",
     "tiles": "node tilesBuilder.js",
-    "upload": "node uploader.js"
+    "upload": "node uploader.js",
+    "assets": "./node_modules/.bin/webpack --config webpack.production.config.js"
   },
   "license": "ISC",
   "dependencies": {
-    "dbgeo": "^1.1.0",
-    "express": "^4.14.0",
-    "geo-viewport": "^0.2.1",
-    "pg": "^6.0.1",
-    "underscore": "^1.8.3"
-  },
-  "devDependencies": {
     "@turf/bbox": "^4.0.2",
     "@turf/bezier": "^4.1.0",
     "@turf/centroid": "^4.0.2",
@@ -34,15 +28,14 @@
     "babel-preset-react": "^6.11.1",
     "classnames": "^2.2.5",
     "css-loader": "^0.28.4",
-    "glob": "^7.1.1",
-    "gulp": "^3.9.1",
-    "gulp-json-editor": "^2.2.1",
-    "gulp-merge-json": "^1.0.0",
-    "gulp-plumber": "^1.1.0",
+    "dbgeo": "^1.1.0",
+    "express": "^4.14.0",
+    "geo-viewport": "^0.2.1",
+    "pg": "^6.0.1",
+    "underscore": "^1.8.3",
     "isomorphic-fetch": "^2.2.1",
     "jsonfile": "^3.0.0",
     "mapbox-gl": "^0.39.1",
-    "mbtiles": "^0.9.0",
     "moment": "^2.17.1",
     "r-dom": "^2.2.3",
     "react": "15.x",
@@ -52,9 +45,16 @@
     "redux-thunk": "^2.1.0",
     "style-loader": "^0.18.2",
     "three": "^0.84.0",
+    "webpack": "^3.5.2"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-json-editor": "^2.2.1",
+    "gulp-merge-json": "^1.0.0",
+    "gulp-plumber": "^1.1.0",
+    "glob": "^7.1.1",
+    "mbtiles": "^0.9.0",
     "tilelive": "^5.12.3",
-    "vis-why": "^1.2.2",
-    "webpack": "^3.5.2",
     "webpack-dev-middleware": "^1.12.0",
     "xml2js": "^0.4.17"
   }

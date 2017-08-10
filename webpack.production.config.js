@@ -1,10 +1,10 @@
-const path = require('path');
+const path = require('path').normalize;
 
 module.exports = {
   entry: './components/app.js',
   output: {
-    path: '/',
-    filename: 'bundle-production.js'
+    path: path(__dirname + '/public/dist'),
+    filename: 'bundle.js'
   },
   module: {
     rules: [

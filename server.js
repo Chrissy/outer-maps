@@ -9,8 +9,6 @@ const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTN
 const statUtils = require('./modules/statUtils');
 const query = require('./modules/genericQuery').query;
 const createPool = require('./modules/genericQuery').pool;
-const tilelive = require('tilelive');
-require('mbtiles').registerProtocols(tilelive);
 
 const app = express();
 
@@ -94,26 +92,26 @@ app.get('/api/terrain/:x/:y/:zoom', function(request, response){
   })
 });
 
-tilelive.load('mbtiles://./tiles/local.mbtiles', function(err, source) {
-  if (err) throw err;
-  app.get('/tiles/:z/:x/:y.*', function(request, response) {
-    source.getTile(request.params.z, request.params.x, request.params.y, function(err, tile, headers) {
-      response.setHeader('Content-Encoding', 'gzip');
-      response.send(tile);
-    });
-  });
-});
-
 if (process.env.NODE_ENV != 'production') {
   const webpackMiddleware = require("webpack-dev-middleware");
   const webpackConfig = require('./webpack.dev.config.js')
   const webpack = require('webpack');
+  const tilelive = require('tilelive');
+  require('mbtiles').registerProtocols(tilelive);
 
   app.use(webpackMiddleware(webpack(webpackConfig), {
     publicPath: webpackConfig.output.publicPath
   }));
 
-  app.get('/dist/bundle-production.js', (request, response) => response.send(''));
+  tilelive.load('mbtiles://./tiles/local.mbtiles', function(err, source) {
+    if (err) throw err;
+    app.get('/tiles/:z/:x/:y.*', function(request, response) {
+      source.getTile(request.params.z, request.params.x, request.params.y, function(err, tile, headers) {
+        response.setHeader('Content-Encoding', 'gzip');
+        response.send(tile);
+      });
+    });
+  });
 }
 
 app.listen(5000, function () {
