@@ -10,6 +10,7 @@
   },
   "license": "ISC",
   "dependencies": {
+    "dbgeo": "^1.1.0",
     "express": "^4.14.0",
     "geo-viewport": "^0.2.1",
     "pg": "^6.0.1",
@@ -35,6 +36,7 @@
     "css-loader": "^0.28.4",
     "glob": "^7.1.1",
     "gulp": "^3.9.1",
+    "gulp-json-editor": "^2.2.1",
     "gulp-merge-json": "^1.0.0",
     "gulp-plumber": "^1.1.0",
     "isomorphic-fetch": "^2.2.1",

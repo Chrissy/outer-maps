@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path').normalize;
 const pg = require('pg');
 const express = require('express');
-const browserify = require('browserify-middleware');
+//const browserify = require('browserify-middleware');
 const app = express();
 const _ = require('underscore');
 const env = require('./environment/development');
@@ -16,14 +16,14 @@ require('mbtiles').registerProtocols(tilelive);
 
 app.use(express.static('public'));
 
-app.get('/bundle.js', browserify(__dirname + '/components/app.js', {
-  mode: (process.env.NODE_ENV == 'production') ? 'production' : 'development',
-  transform: ['babelify'],
-  plugins: [{
-    plugin: 'css-modulesify',
-    options: { output: './public/bundle.css'}
-  }]
-}));
+// app.get('/bundle.js', browserify(__dirname + '/components/app.js', {
+//   mode: (process.env.NODE_ENV == 'production') ? 'production' : 'development',
+//   transform: ['babelify'],
+//   plugins: [{
+//     plugin: 'css-modulesify',
+//     options: { output: './public/bundle.css'}
+//   }]
+// }));
 
 const pool = createPool();
 

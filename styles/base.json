@@ -39,7 +39,7 @@
     }
   },
   "glyphs": "mapbox://fonts/fivefourths/{fontstack}/{range}.pbf",
-  "sprite": "/sprite",
+  "sprite": "http://0.0.0.0:5000/sprite",
   "layers": [],
   "created": "2017-04-12T19:41:53.385Z",
   "id": "cj1fdtp1f00002sttxerc303x",

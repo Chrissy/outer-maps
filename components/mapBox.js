@@ -38,7 +38,7 @@ export default class MapBox extends React.PureComponent {
     });
 
     this.mapEvents();
-    this.mapboxed.addControl(new MapboxGL.Navigation());
+    this.mapboxed.addControl(new MapboxGL.NavigationControl());
   }
 
   componentDidUpdate(prevProps, q) {
