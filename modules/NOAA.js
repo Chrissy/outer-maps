@@ -10,7 +10,10 @@ const get = path => {
 };
 
 const getStation = ({dataSetID, stationID, date, endDate, dataTypeIDs}) => {
-  return get(`/data?datasetid=${dataSetID}&stationid=${stationID}&startdate=2010-${date}&enddate=2010-${date}&datatypeid=${dataTypeIDs.join("&datatypeid=")}&limit=10&units=standard`).then(({results}) => {
+  return get(`/data?datasetid=${dataSetID}&stationid=${stationID}
+              &startdate=2010-${date}&enddate=2010-${date}
+              &datatypeid=${dataTypeIDs.join("&datatypeid=")}
+              &limit=10&units=standard`).then(({results}) => {
     return results.reduce((r, v) => {
       return {...r, [v.datatype]: v.value || null}
     }, {});
@@ -18,7 +21,9 @@ const getStation = ({dataSetID, stationID, date, endDate, dataTypeIDs}) => {
 };
 
 const getStations = ({x, y, dataSetID, dataTypeIDs, getAll, size = 0.2,}) => {
-  return get(`/stations/?extent=${x - size},${y - size},${x + size},${y + size}&datasetid=${dataSetID}${(getAll) ? `&datatypeid=${dataTypeIDs.join("&datatypeid=")}` : ''}`).then(response => {
+  return get(`/stations/?extent=${x - size},${y - size},${x + size},${y + size}&
+              datasetid=${dataSetID}${(getAll) ? `
+              &datatypeid=${dataTypeIDs.join("&datatypeid=")}` : ''}`).then(response => {
     if (response.results) {
       return response.results;
     } else if (size > 0.7) {
