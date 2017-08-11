@@ -18,16 +18,14 @@ const getData = ({dataSetID, stationID, date, endDate, dataTypeIDs}) => {
 };
 
 const getStations = ({x, y, dataSetID, size = 0.1,}) => {
-  return new Promise(resolve => {
-    get(`/stations/?extent=${x - size},${y - size},${x + size},${y + size}&datasetid=${dataSetID}`).then(response => {
-      if (response.results) {
-        resolve(response.results);
-      } else if (size > 0.6) {
-        resolve(null);
-      } else {
-        resolve(getStations({x, y, dataSetID, size: size + 0.1}));
-      }
-    });
+  return get(`/stations/?extent=${x - size},${y - size},${x + size},${y + size}&datasetid=${dataSetID}`).then(response => {
+    if (response.results) {
+      return response.results;
+    } else if (size > 0.6) {
+      return null;
+    } else {
+      return getStations({x, y, dataSetID, size: size + 0.1});
+    }
   });
 };
 
