@@ -9,37 +9,41 @@ const get = path => {
   }).then(response => response.json());
 };
 
-const getData = ({dataSetID, stationID, date, endDate, dataTypeIDs}) => {
+const getStation = ({dataSetID, stationID, date, endDate, dataTypeIDs}) => {
   return get(`/data?datasetid=${dataSetID}&stationid=${stationID}&startdate=2010-${date}&enddate=2010-${date}&datatypeid=${dataTypeIDs.join("&datatypeid=")}&limit=10&units=standard`).then(({results}) => {
     return results.reduce((r, v) => {
-      return {...r, [v.datatype]: v}
+      return {...r, [v.datatype]: v.value || null}
     }, {});
   });
 };
 
-const getStations = ({x, y, dataSetID, size = 0.1,}) => {
-  return get(`/stations/?extent=${x - size},${y - size},${x + size},${y + size}&datasetid=${dataSetID}`).then(response => {
+const getStations = ({x, y, dataSetID, dataTypeIDs, getAll, size = 0.2,}) => {
+  return get(`/stations/?extent=${x - size},${y - size},${x + size},${y + size}&datasetid=${dataSetID}${(getAll) ? `&datatypeid=${dataTypeIDs.join("&datatypeid=")}` : ''}`).then(response => {
     if (response.results) {
       return response.results;
-    } else if (size > 0.6) {
+    } else if (size > 0.7) {
       return null;
     } else {
-      return getStations({x, y, dataSetID, size: size + 0.1});
+      return getStations({x, y, dataSetID, dataTypeIDs, getAll, size: size + 0.2});
     }
   });
 };
 
-export default ({x, y, dataSetID, dataTypeIDs}) => {
-  return getStations({x, y, dataSetID}).then(stations => {
+const getBestStation = ({x, y, stations}) => {
+  if (stations.length == 1) return stations[0];
+  return stations.map(e => {
+    return {...e, distance: distance([e.latitude, e.longitude], [x, y])}
+  }).sort((a, b) => a.distance - b.distance)[0];
+}
+
+export default ({x, y, dataSetID, dataTypeIDs, getAll = false}) => {
+  return getStations({x, y, dataSetID, dataTypeIDs, getAll}).then(stations => {
     if (!stations.length) return null;
-    const station = stations.sort((a, b) => {
-      return distance([a.x, a.y], [x, y]) - distance([b.x, b.y], [x, y]);
-    })[0];
-    return getData({
-      stationID: station.id,
+    return getStation({
+      stationID: getBestStation({x, y, stations}).id,
       date: moment.format("MM-DD"),
       dataSetID,
-      dataTypeIDs,
+      dataTypeIDs
     });
   });
 };
