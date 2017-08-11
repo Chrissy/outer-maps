@@ -15,8 +15,7 @@ const getData = function({dataSetID, stationID, startDate="01-01", endDate="01-0
   return new Promise(function(resolve){
     get(`/data?datasetid=${dictionary(dataSetID)}&stationid=${stationID}&startdate=2010-${startDate}&enddate=2010-${endDate}&datatypeid=${dataTypeIDs.map(v => dictionary(v)).join("&datatypeid=")}&limit=10&units=standard`).then((response) => {
       resolve(dataTypeIDs.reduce((r, v) => {
-        r[v] = findByDatatype(dictionary(v), response.results);
-        return r;
+        return {...r, [v]: findByDatatype(dictionary(v), response.results)};
       }, {}));
     });
   });
