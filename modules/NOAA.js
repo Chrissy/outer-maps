@@ -1,6 +1,6 @@
 import Moment from 'moment';
 import distance from '@turf/distance';
-
+const moment = new Moment;
 const key = 'aMjnYsZqxVmjzkbPYtHBVXUnYHUROvwS';
 
 const get = function(path) {
@@ -10,11 +10,11 @@ const get = function(path) {
   .then(data => data);
 }
 
-const getData = function({dataSetID, stationID, startDate="01-01", endDate="01-01", dataTypeIDs}) {
+const getData = function({dataSetID, stationID, date, endDate, dataTypeIDs}) {
   return new Promise(function(resolve){
-    get(`/data?datasetid=${dataSetID}&stationid=${stationID}&startdate=2010-${startDate}&enddate=2010-${endDate}&datatypeid=${dataTypeIDs.join("&datatypeid=")}&limit=10&units=standard`).then(({results}) => {
+    get(`/data?datasetid=${dataSetID}&stationid=${stationID}&startdate=2010-${date}&enddate=2010-${date}&datatypeid=${dataTypeIDs.join("&datatypeid=")}&limit=10&units=standard`).then(({results}) => {
       resolve(results.reduce((r, v) => {
-        return { ...r, [v.datatype]: v }
+        return {...r, [v.datatype]: v}
       }, {}));
     });
   });
@@ -28,16 +28,13 @@ const getStation = function({x, y, dataSetID, size = 0.3}) {
   });
 }
 
-const getDataForToday = function({dataSetID, stationID, dataTypeIDs}) {
-  const moment = new Moment;
-  const dateString = moment.format("MM-DD");
-  return getData({startDate: dateString, endDate: dateString, dataSetID: dataSetID, stationID: stationID, dataTypeIDs: dataTypeIDs})
-}
-
 export default ({x, y, dataSetID, dataTypeIDs}) => {
   return getStation({x, y, dataSetID}).then(station => {
-    if (station) {
-      return getDataForToday({stationID: station.id, dataSetID: dataSetID, dataTypeIDs: dataTypeIDs});
-    }
+    if (station) return getData({
+      stationID: station.id,
+      date: moment.format("MM-DD"),
+      dataSetID,
+      dataTypeIDs,
+    });
   });
 }
