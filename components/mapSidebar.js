@@ -3,7 +3,6 @@ import cx from 'classnames';
 import Elevation from './elevation';
 import Terrain from './terrain';
 import LoadingSpinner from './loadingSpinner';
-import {convertToPercent} from '../modules/NOAA'
 
 import styles from '../styles/mapSidebar.css';
 import spacing from '../styles/spacing.css';
@@ -19,7 +18,7 @@ export default class MapSidebar extends React.Component {
   }
 
   percentText(integer) {
-    return (typeof(integer) == "number") ? convertToPercent(integer) + "%" : "0%";
+    return (typeof(integer) == "number") ? parseInt(integer/10) + "%" : "0%";
   }
 
   render() {
