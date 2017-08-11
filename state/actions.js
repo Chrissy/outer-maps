@@ -35,7 +35,7 @@ function getWeatherData(trail) {
   }
 }
 
-function getAdditionalWeatherData(trail) {
+export function getAdditionalWeatherData(trail) {
   return dispatch => {
     if (trail.hasAdditionalWeatherData) return Promise.resolve();
 
@@ -50,6 +50,7 @@ function getAdditionalWeatherData(trail) {
         ["DLY-SNWD-PCTALL-GE010WI"]
       ]
     }).then(response => {
+
       return dispatch({type: 'SET_ADDITIONAL_WEATHER_DATA', ...response, id: trail.id});
     });
   }

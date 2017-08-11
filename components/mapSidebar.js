@@ -3,22 +3,44 @@ import cx from 'classnames';
 import Elevation from './elevation';
 import Terrain from './terrain';
 import LoadingSpinner from './loadingSpinner';
+import ImportantWeather from './importantWeather';
+import LessImportantWeather from './lessImportantWeather';
 
 import styles from '../styles/mapSidebar.css';
 import spacing from '../styles/spacing.css';
 
 export default class MapSidebar extends React.Component {
-  terrainComponent() {
+  constructor(props) {
+    super(props);
+
+    this.showMoreWeather = this.showMoreWeather.bind(this);
+  }
+
+  terrain() {
     return '';
     return <Terrain trail={this.props.firstTrail}/>
   }
 
-  elevationComponent() {
+  elevation() {
     if (this.props.firstTrail.hasElevationData) return <Elevation trails={this.props.trails.filter(t => t.hasElevationData)}/>
   }
 
-  percentText(integer) {
-    return (typeof(integer) == "number") ? parseInt(integer/10) + "%" : "0%";
+  importantWeather() {
+    if (this.props.firstTrail.hasWeatherData) return <ImportantWeather trail={this.props.firstTrail}/>
+  }
+
+  lessImportantWeather() {
+    if (this.props.firstTrail.hasAdditionalWeatherData) {
+      return <LessImportantWeather trail={this.props.firstTrail}/>
+    }
+  }
+
+  showMoreWeather() {
+    this.props.getAdditionalWeatherData(this.props.firstTrail);
+  }
+
+  showMoreWeatherButton() {
+    if (this.props.firstTrail.hasWeatherData) return <a href="#" onClick={(e) => this.showMoreWeather(e)}>More Weather</a>
   }
 
   render() {
@@ -26,17 +48,11 @@ export default class MapSidebar extends React.Component {
       <div className={cx(styles.body, {[styles.active]: this.props.loading})}>
         <div className={cx(styles.content, {[styles.active]: this.props.firstTrail.hasBaseData})}>
           name: {this.props.firstTrail.name}<br/>
-          {this.terrainComponent()}
-          {this.elevationComponent()}
-          Weather almanac for this week: <br/>
-          High temperature: {this.props.firstTrail.maxTemperature}° <br/>
-          Low Temperature: {this.props.firstTrail.minTemperature}° <br/>
-          Chance of percipitation: {this.percentText(this.props.firstTrail.chanceOfPercipitation)} <br/>
-          Chance of heavy percipitation: {this.percentText(this.props.firstTrail.chanceOfHeavyPercipitation)} <br/>
-          Chance of snow: {this.percentText(this.props.firstTrail.chanceOfSnow)} <br/>
-          Chance of heavy snow: {this.percentText(this.props.firstTrail.chanceOfHeavySnow)} <br/>
-          Chance of snowpack: {this.percentText(this.props.firstTrail.chanceOfSnowPack)} <br/>
-          Chance of heavy snowpack: {this.percentText(this.props.firstTrail.chanceOfHeavySnowPack)} <br/>
+          {this.terrain()}
+          {this.elevation()}
+          {this.importantWeather()}
+          {this.lessImportantWeather()}
+          {this.showMoreWeatherButton()}
         </div>
         <div className={cx(styles.spinner, {[styles.hidden]: this.props.firstTrail.hasBaseData})}>
           <LoadingSpinner/>

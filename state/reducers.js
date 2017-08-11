@@ -116,6 +116,8 @@ const trails = (state = [], action) => {
       return state.map(t => trail(t, action))
     case 'SET_WEATHER_DATA':
       return state.map(t => trail(t, action))
+    case 'SET_ADDITIONAL_WEATHER_DATA':
+      return state.map(t => trail(t, action))
     case 'SHOW_HANDLES':
       return state.map(t => trail(t, action))
     case 'CLEAR_HANDLES':
