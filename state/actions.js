@@ -22,16 +22,16 @@ function getWeatherData(trail) {
     getDataFromNearestStation({
       x: trail.center[1],
       y: trail.center[0],
-      dataSetID: "normalDaily",
+      dataSetID: "NORMAL_DLY",
       dataTypeIDs: [
-        "maxTemperature",
-        "minTemperature",
-        "chanceOfPercipitation",
-        "chanceOfHeavyPercipitation",
-        "chanceOfSnow",
-        "chanceOfHeavySnow",
-        "chanceOfSnowPack",
-        "chanceOfHeavySnowPack"
+        "DLY-TMAX-NORMAL",
+        "DLY-TMIN-NORMAL",
+        "DLY-PRCP-PCTALL-GE001HI",
+        "DLY-PRCP-PCTALL-GE050HI",
+        "DLY-SNOW-PCTALL-GE001TI",
+        "DLY-SNOW-PCTALL-GE030TI",
+        "DLY-SNWD-PCTALL-GE001WI",
+        "DLY-SNWD-PCTALL-GE010WI"
       ]
     }).then(response => {
       return dispatch({type: 'SET_WEATHER_DATA', ...response, id: trail.id});

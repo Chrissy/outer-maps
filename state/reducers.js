@@ -51,14 +51,14 @@ const trail = (state = {}, action) => {
       if (action.id !== state.id) return state
       return { ...state,
         hasWeatherData: true,
-        maxTemperature: action.maxTemperature,
-        minTemperature: action.minTemperature,
-        chanceOfPercipitation: action.chanceOfPercipitation,
-        chanceOfHeavyPercipitation: action.chanceOfHeavyPercipitation,
-        chanceOfSnow: action.chanceOfSnow,
-        chanceOfHeavySnow: action.chanceOfHeavySnow,
-        chanceOfSnowPack: action.chanceOfSnowPack,
-        chanceOfHeavySnowPack: action.chanceOfHeavySnowPack
+        maxTemperature: action["DLY-TMAX-NORMAL"].value,
+        minTemperature: action["DLY-TMIN-NORMAL"].value,
+        chanceOfPercipitation: action["DLY-PRCP-PCTALL-GE001HI"].value,
+        chanceOfHeavyPercipitation: action["DLY-PRCP-PCTALL-GE050HI"].value,
+        chanceOfSnow: action["DLY-SNOW-PCTALL-GE001TI"].value,
+        chanceOfHeavySnow: action["DLY-SNOW-PCTALL-GE030TI"].value,
+        chanceOfSnowPack: action["DLY-SNWD-PCTALL-GE001WI"].value,
+        chanceOfHeavySnowPack: action["DLY-SNWD-PCTALL-GE010WI"].value
       }
     case 'UPDATE_HANDLE':
       if (!state.handles) return state;
