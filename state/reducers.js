@@ -54,7 +54,12 @@ const trail = (state = {}, action) => {
         maxTemperature:             action["DLY-TMAX-NORMAL"],
         minTemperature:             action["DLY-TMIN-NORMAL"],
         chanceOfPercipitation:      action["DLY-PRCP-PCTALL-GE001HI"],
-        chanceOfHeavyPercipitation: action["DLY-PRCP-PCTALL-GE050HI"],
+        chanceOfHeavyPercipitation: action["DLY-PRCP-PCTALL-GE050HI"]
+      }
+    case 'SET_ADDITIONAL_WEATHER_DATA':
+      if (action.id !== state.id) return state
+      return { ...state,
+        hasAdditionalWeatherData: true,
         chanceOfSnow:               action["DLY-SNOW-PCTALL-GE001TI"],
         chanceOfHeavySnow:          action["DLY-SNOW-PCTALL-GE030TI"],
         chanceOfSnowPack:           action["DLY-SNWD-PCTALL-GE001WI"],

@@ -27,14 +27,30 @@ function getWeatherData(trail) {
         "DLY-TMAX-NORMAL",
         "DLY-TMIN-NORMAL",
         "DLY-PRCP-PCTALL-GE001HI",
-        "DLY-PRCP-PCTALL-GE050HI",
-        "DLY-SNOW-PCTALL-GE001TI",
-        "DLY-SNOW-PCTALL-GE030TI",
-        "DLY-SNWD-PCTALL-GE001WI",
-        "DLY-SNWD-PCTALL-GE010WI"
+        "DLY-PRCP-PCTALL-GE050HI"
       ]
     }).then(response => {
       return dispatch({type: 'SET_WEATHER_DATA', ...response, id: trail.id});
+    });
+  }
+}
+
+function getAdditionalWeatherData(trail) {
+  return dispatch => {
+    if (trail.hasAdditionalWeatherData) return Promise.resolve();
+
+    getDataFromNearestStation({
+      x: trail.center[1],
+      y: trail.center[0],
+      dataSetID: "NORMAL_DLY",
+      dataTypeIDs: [
+        ["DLY-SNOW-PCTALL-GE001TI"],
+        ["DLY-SNOW-PCTALL-GE030TI"],
+        ["DLY-SNWD-PCTALL-GE001WI"],
+        ["DLY-SNWD-PCTALL-GE010WI"]
+      ]
+    }).then(response => {
+      return dispatch({type: 'SET_ADDITIONAL_WEATHER_DATA', ...response, id: trail.id});
     });
   }
 }
@@ -58,6 +74,7 @@ export function selectTrail(trail) {
     dispatch({type: 'SHOW_HANDLES', ...trail});
     dispatch(getTrailData(trail));
     return dispatch(getWeatherData(trail));
+    return dispatch(getAdditionalWeatherData(trail));
   };
 };
 
