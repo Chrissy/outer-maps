@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch';
 import _ from 'underscore'
-import {getDataFromNearestStation} from '../modules/NOAA';
+import getDataFromNearestStation from '../modules/NOAA';
 
 function getTrailData(trail) {
   return (dispatch) => {
@@ -22,17 +22,17 @@ function getWeatherData(trail) {
     getDataFromNearestStation({
       x: trail.center[1],
       y: trail.center[0],
-      dataSetID: "NORMAL_DLY",
-      dataTypeIDs: {
-        maxTemperature: "DLY-TMAX-NORMAL",
-        minTemperature: "DLY-TMIN-NORMAL",
-        chanceOfPercipitation: "DLY-PRCP-PCTALL-GE001HI",
-        chanceOfHeavyPercipitation: "DLY-PRCP-PCTALL-GE050HI",
-        chanceOfSnow: "DLY-SNOW-PCTALL-GE001TI",
-        chanceOfHeavySnow: "DLY-SNOW-PCTALL-GE030TI",
-        chanceOfSnowPack: "DLY-SNWD-PCTALL-GE001WI",
-        chanceOfHeavySnowPack: "DLY-SNWD-PCTALL-GE010WI"
-      }
+      dataSetID: "normalDaily",
+      dataTypeIDs: [
+        "maxTemperature",
+        "minTemperature",
+        "chanceOfPercipitation",
+        "chanceOfHeavyPercipitation",
+        "chanceOfSnow",
+        "chanceOfHeavySnow",
+        "chanceOfSnowPack",
+        "chanceOfHeavySnowPack"
+      ]
     }).then(response => {
       return dispatch({type: 'SET_WEATHER_DATA', ...response, id: trail.id});
     });
