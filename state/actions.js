@@ -75,7 +75,6 @@ export function selectTrail(trail) {
     dispatch({type: 'SHOW_HANDLES', ...trail});
     dispatch(getTrailData(trail));
     return dispatch(getWeatherData(trail));
-    return dispatch(getAdditionalWeatherData(trail));
   };
 };
 
