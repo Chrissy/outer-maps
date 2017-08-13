@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch';
 import _ from 'underscore'
-import {getDataFromNearestStation} from '../modules/NOAA';
+import getDataFromNearestStation from '../modules/NOAA';
 
 function getTrailData(trail) {
   return (dispatch) => {
@@ -23,18 +23,35 @@ function getWeatherData(trail) {
       x: trail.center[1],
       y: trail.center[0],
       dataSetID: "NORMAL_DLY",
-      dataTypeIDs: {
-        maxTemperature: "DLY-TMAX-NORMAL",
-        minTemperature: "DLY-TMIN-NORMAL",
-        chanceOfPercipitation: "DLY-PRCP-PCTALL-GE001HI",
-        chanceOfHeavyPercipitation: "DLY-PRCP-PCTALL-GE050HI",
-        chanceOfSnow: "DLY-SNOW-PCTALL-GE001TI",
-        chanceOfHeavySnow: "DLY-SNOW-PCTALL-GE030TI",
-        chanceOfSnowPack: "DLY-SNWD-PCTALL-GE001WI",
-        chanceOfHeavySnowPack: "DLY-SNWD-PCTALL-GE010WI"
-      }
+      dataTypeIDs: [
+        "DLY-TMAX-NORMAL",
+        "DLY-TMIN-NORMAL",
+        "DLY-PRCP-PCTALL-GE001HI",
+        "DLY-PRCP-PCTALL-GE050HI"
+      ]
     }).then(response => {
       return dispatch({type: 'SET_WEATHER_DATA', ...response, id: trail.id});
+    });
+  }
+}
+
+export function getAdditionalWeatherData(trail) {
+  return dispatch => {
+    if (trail.hasAdditionalWeatherData) return Promise.resolve();
+
+    getDataFromNearestStation({
+      x: trail.center[1],
+      y: trail.center[0],
+      dataSetID: "NORMAL_DLY",
+      dataTypeIDs: [
+        ["DLY-SNOW-PCTALL-GE001TI"],
+        ["DLY-SNOW-PCTALL-GE030TI"],
+        ["DLY-SNWD-PCTALL-GE001WI"],
+        ["DLY-SNWD-PCTALL-GE010WI"]
+      ]
+    }).then(response => {
+
+      return dispatch({type: 'SET_ADDITIONAL_WEATHER_DATA', ...response, id: trail.id});
     });
   }
 }
@@ -58,6 +75,7 @@ export function selectTrail(trail) {
     dispatch({type: 'SHOW_HANDLES', ...trail});
     dispatch(getTrailData(trail));
     return dispatch(getWeatherData(trail));
+    return dispatch(getAdditionalWeatherData(trail));
   };
 };
 

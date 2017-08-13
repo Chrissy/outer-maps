@@ -51,14 +51,19 @@ const trail = (state = {}, action) => {
       if (action.id !== state.id) return state
       return { ...state,
         hasWeatherData: true,
-        maxTemperature: action.maxTemperature,
-        minTemperature: action.minTemperature,
-        chanceOfPercipitation: action.chanceOfPercipitation,
-        chanceOfHeavyPercipitation: action.chanceOfHeavyPercipitation,
-        chanceOfSnow: action.chanceOfSnow,
-        chanceOfHeavySnow: action.chanceOfHeavySnow,
-        chanceOfSnowPack: action.chanceOfSnowPack,
-        chanceOfHeavySnowPack: action.chanceOfHeavySnowPack
+        maxTemperature:             action["DLY-TMAX-NORMAL"],
+        minTemperature:             action["DLY-TMIN-NORMAL"],
+        chanceOfPercipitation:      action["DLY-PRCP-PCTALL-GE001HI"],
+        chanceOfHeavyPercipitation: action["DLY-PRCP-PCTALL-GE050HI"]
+      }
+    case 'SET_ADDITIONAL_WEATHER_DATA':
+      if (action.id !== state.id) return state
+      return { ...state,
+        hasAdditionalWeatherData: true,
+        chanceOfSnow:               action["DLY-SNOW-PCTALL-GE001TI"],
+        chanceOfHeavySnow:          action["DLY-SNOW-PCTALL-GE030TI"],
+        chanceOfSnowPack:           action["DLY-SNWD-PCTALL-GE001WI"],
+        chanceOfHeavySnowPack:      action["DLY-SNWD-PCTALL-GE010WI"]
       }
     case 'UPDATE_HANDLE':
       if (!state.handles) return state;
@@ -110,6 +115,8 @@ const trails = (state = [], action) => {
     case 'SET_TRAIL_BASE_DATA':
       return state.map(t => trail(t, action))
     case 'SET_WEATHER_DATA':
+      return state.map(t => trail(t, action))
+    case 'SET_ADDITIONAL_WEATHER_DATA':
       return state.map(t => trail(t, action))
     case 'SHOW_HANDLES':
       return state.map(t => trail(t, action))
