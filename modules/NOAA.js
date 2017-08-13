@@ -17,11 +17,11 @@ const getStation = ({dataSetID, stationID, date, endDate, dataTypeIDs}) => {
   });
 };
 
-const getStations = ({x, y, dataSetID, dataTypeIDs, size = 0.2,}) => {
+const getStations = ({x, y, dataSetID, dataTypeIDs, size = 10}) => {
   return get(`/stations/?extent=${x - size},${y - size},${x + size},${y + size}&datasetid=${dataSetID}&datatypeid=${dataTypeIDs.join("&datatypeid=")}`).then(response => {
     if (response.results) {
       return response.results;
-    } else if (size > 0.7) {
+    } else if (size > 30) {
       return null;
     } else {
       return getStations({x, y, dataSetID, dataTypeIDs, size: size + 0.2});
