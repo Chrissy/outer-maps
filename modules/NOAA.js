@@ -36,7 +36,7 @@ const getBestStation = ({x, y, stations}) => {
   }).sort((a, b) => a.distance - b.distance)[0];
 }
 
-export default ({x, y, dataSetID, dataTypeIDs}) => {
+const getDataFromNearestStation = ({x, y, dataSetID, dataTypeIDs}) => {
   return getStations({x, y, dataSetID, dataTypeIDs}).then(stations => {
     if (!stations.length) return null;
     return getStation({
@@ -47,3 +47,11 @@ export default ({x, y, dataSetID, dataTypeIDs}) => {
     });
   });
 };
+
+const getWeatherData = ({x, y, dataSetID, dataTypeIDs, stationID}) => {
+  if (stationID && stationID !== '') {
+    return getStation({dataSetID, stationID, date: moment.format("MM-DD"), dataTypeIDs});
+  } else {
+    return getDataFromNearestStation({x, y, dataSetID, dataTypeIDs});    
+  }
+}

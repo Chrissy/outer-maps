@@ -24,7 +24,7 @@ const queries = [
     minZoom: 9,
     maxZoom: 9.75,
     query: `
-      SELECT name, id, type, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.000003) as geom,
+      SELECT name, id, type, station1, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.000003) as geom,
       ST_X(ST_Centroid(geog::geometry)) as cx, ST_Y(ST_Centroid(geog::geometry)) as cy
       FROM trails
       WHERE ST_Length(geog) > 1500 AND type = 'hike' OR type = 'horse' OR type = 'bike' OR
@@ -36,7 +36,7 @@ const queries = [
     minZoom: 10,
     maxZoom: 11.75,
     query: `
-      SELECT name, id, type, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.0000005) as geom,
+      SELECT name, id, type, station1, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.0000005) as geom,
       ST_X(ST_Centroid(geog::geometry)) as cx, ST_Y(ST_Centroid(geog::geometry)) as cy
       FROM trails
       WHERE type = 'hike' OR type = 'horse' OR type = 'bike' OR
@@ -48,7 +48,7 @@ const queries = [
     minZoom: 12,
     maxZoom: 14,
     query: `
-      SELECT name, id, type, ST_Length(geog) as distance, geog::geometry as geom,
+      SELECT name, id, type, station1, ST_Length(geog) as distance, geog::geometry as geom,
       ST_X(ST_Centroid(geog::geometry)) as cx, ST_Y(ST_Centroid(geog::geometry)) as cy
       FROM trails
       WHERE type = 'hike' OR type = 'horse' OR type = 'bike' OR

@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch';
 import _ from 'underscore'
-import getDataFromNearestStation from '../modules/NOAA';
+import {getStation, getDataFromNearestStation} from '../modules/NOAA';
 
 function getTrailData(trail) {
   return (dispatch) => {
@@ -18,10 +18,13 @@ function getTrailData(trail) {
 function getWeatherData(trail) {
   return dispatch => {
     if (trail.hasWeatherData) return Promise.resolve();
+    
+    const opts = 
 
-    getDataFromNearestStation({
+    getWeatherData({
       x: trail.center[1],
       y: trail.center[0],
+      stationID: trail.station1,
       dataSetID: "NORMAL_DLY",
       dataTypeIDs: [
         "DLY-TMAX-NORMAL",
