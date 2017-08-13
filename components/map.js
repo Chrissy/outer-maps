@@ -6,6 +6,7 @@ import {pointToPoint, pointsToFeatureCollection, trailsToFeatureCollection} from
 import TooltipContainer from './tooltipContainer';
 import MapBox from './mapBox';
 import MapSidebarContainer from './mapSidebarContainer';
+import styles from '../styles/map.css';
 
 const WATCH_LAYERS = ['trails', 'national-park-labels', 'national-park-labels-active', 'handles'];
 
@@ -128,7 +129,7 @@ export default class Map extends React.Component {
   render() {
 
     return (
-        <div id="the-map">
+        <div id="the-map" className={styles.body}>
           <MapBox
           sources={this.sources()}
           filters={this.filters()}
