@@ -47,7 +47,7 @@ export default class MapSidebar extends React.Component {
     return (
       <div className={cx(styles.body, {[styles.active]: this.props.loading})}>
         <div className={cx(styles.content, {[styles.active]: this.props.firstTrail.hasBaseData})}>
-          name: {this.props.firstTrail.name}<br/>
+          <div className={styles.title}>{this.props.firstTrail.name}</div>
           {this.terrain()}
           {this.elevation()}
           {this.importantWeather()}

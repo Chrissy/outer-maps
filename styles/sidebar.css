@@ -5,9 +5,10 @@
   height: 100%;
   width: 25vw;
   min-width: 400px;
-  border-right: 1px solid var(--gray-4);
   padding: 1em;
   background: var(--gray-1);
+  color: var(--gray-7);
+  border-right: 1px solid var(--gray-4);
   box-sizing: border-box;
   transition: .3s all;
   opacity: 0;
@@ -22,6 +23,13 @@
   font-size: 1.1em;
   line-height: 1.5em;
   transition: .2s all;
+}
+
+.title {
+  font-size: 1.4em;
+  font-size: 1.4em;
+  font-weight: 800;
+  padding-bottom: .5em;
 }
 
 .spinner {
