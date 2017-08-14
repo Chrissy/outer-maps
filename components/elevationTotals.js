@@ -17,7 +17,7 @@ export default class ElevationTotals extends React.Component {
   }
 
   score() {
-    return 90;
+    return 25;
   }
 
   render() {
