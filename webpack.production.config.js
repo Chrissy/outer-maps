@@ -1,4 +1,7 @@
 const path = require('path').normalize;
+const paths = {
+  svg: path.join(__dirname, './svg'),
+};
 
 module.exports = {
   entry: './components/app.js',
@@ -29,7 +32,8 @@ module.exports = {
       },
       {
         test: /\.svg$/,
-        loader: 'svg-inline-loader'
+        exclude: /(node_modules)/,
+        loaders: ['react-svg-inline-loader']
       }
     ]
   }

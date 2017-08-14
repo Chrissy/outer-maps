@@ -3,3 +3,9 @@
 .body {
   background: var(--gray-1);
 }
+
+.wordmark {
+  width: 100px;
+  height: auto;
+  path { color: var(--brand-color); }
+}
