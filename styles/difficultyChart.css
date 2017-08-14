@@ -1,0 +1,24 @@
+.body {
+  width: 200px;
+  height: 200px;
+  position: relative;
+  background: var(--gray-6);
+  border-radius: 100%;
+}
+
+.circle1, .circle2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border: 9px solid;
+  border-color: transparent transparent var(--accent-color) var(--accent-color);
+  transform: rotate(225deg);
+  border-radius: 100%;
+}
+
+.halfEmpty {
+  border-color: transparent transparent var(--accent-color) var(--accent-color);
+}
