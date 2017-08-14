@@ -1,0 +1,7 @@
+.body {
+  display: grid;
+  grid-template-rows: 2.5em auto;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
