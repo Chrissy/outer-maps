@@ -6,7 +6,7 @@ import LoadingSpinner from './loadingSpinner';
 import ImportantWeather from './importantWeather';
 import LessImportantWeather from './lessImportantWeather';
 
-import styles from '../styles/mapSidebar.css';
+import styles from '../styles/sidebar.css';
 import spacing from '../styles/spacing.css';
 
 export default class MapSidebar extends React.Component {
