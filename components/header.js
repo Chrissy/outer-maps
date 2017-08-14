@@ -8,6 +8,7 @@ export default class Header extends React.Component {
   render() {
     return (
       <div className={cx(styles.body, center.flex)}>
+        <img className={styles.mark} src="/mark.png"/>
         <Wordmark className={styles.wordmark}/>
       </div>
     )
