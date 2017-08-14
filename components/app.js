@@ -5,7 +5,7 @@ import { createStore } from 'redux';
 import {store} from '../state/configureStore';
 import MapContainer from './mapContainer';
 import Header from './header';
-import styles from '../styles/site-layout.css';
+import styles from '../styles/app.css';
 import clear from '../styles/clear.css';
 
 ReactDOM.render(
