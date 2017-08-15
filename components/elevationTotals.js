@@ -16,15 +16,19 @@ export default class ElevationTotals extends React.Component {
     return this.props.elevations.reduce((a, e) => a + e.distanceFromPreviousPoint, 0);
   }
 
+  miles() {
+    return metersToMiles(this.distance())
+  }
+
   score() {
-    return 25;
+    return Math.min(100, parseInt((metersToFeet(this.elevationGain()) / 100) + (this.miles() / 14 * 50)));
   }
 
   render() {
     return (
       <div>
         <DifficultyChart score={this.score()}/>
-        distance: {metersToMiles(this.distance())} Miles<br/>
+        distance: {this.miles()} Miles<br/>
         elevation gain: {metersToFeet(this.elevationGain())} Feet<br/>
         elevation loss: {metersToFeet(this.elevationLoss())} Feet<br/>
         <LineGraph elevations={this.props.elevations}/>

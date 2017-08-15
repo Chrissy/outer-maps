@@ -40,7 +40,7 @@
 }
 
 .score, .difficulty {
-  color: var(--brand-color);
+  color: var(--accent-color);
   font-weight: 700;
 }
 
