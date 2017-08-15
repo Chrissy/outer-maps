@@ -20,6 +20,18 @@
   top: 0;
 }
 
+@media (max-width: 600px) {
+  .body {
+    height: 80vh;
+    bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    top: auto;
+    transform: translateY(1em);
+  }
+}
+
 .content {
   opacity: 0;
   font-size: 1.1em;
