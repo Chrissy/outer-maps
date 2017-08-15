@@ -13,7 +13,8 @@ const trail = (state = {}, action) => {
         id: action.properties.id,
         name: action.properties.name,
         distance: action.properties.distance,
-        center: [action.properties.cx, action.properties.cy]
+        center: [action.properties.cx, action.properties.cy],
+        bounds: bbox(action.geometry)
       }
     case 'SET_TRAIL_PREVIEWING':
       return { ...state, previewing: (state.id === action.id) }

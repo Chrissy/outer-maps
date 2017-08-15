@@ -17,7 +17,6 @@ export default class MapSidebar extends React.Component {
   }
 
   terrain() {
-    return '';
     return <Terrain trail={this.props.firstTrail}/>
   }
 

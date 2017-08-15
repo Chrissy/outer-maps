@@ -1,6 +1,9 @@
 import React from 'react';
 import {WebGLRenderer, Scene, PerspectiveCamera, TextureLoader, PlaneGeometry, MeshBasicMaterial, Mesh, DefaultLoadingManager} from 'three';
 import GeoViewport from 'geo-viewport';
+import styles from '../styles/terrain.css';
+import center from '../styles/center.css';
+import cx from 'classnames';
 import _ from 'underscore';
 
 
@@ -60,7 +63,7 @@ export default class Terrain extends React.Component {
     const renderer = new WebGLRenderer({alpha:true, canvas: this.refs.canvas});
 
     renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
-    renderer.setSize(this.refs.canvasContainer.offsetWidth, this.refs.canvasContainer.offsetWidth);
+    renderer.setSize(this.refs.canvasContainer.offsetWidth * 1.25, this.refs.canvasContainer.offsetWidth * 1.25);
     camera.position.z = 11000;
 
     this.renderMap = function() {
@@ -89,8 +92,8 @@ export default class Terrain extends React.Component {
 
   render() {
     return (
-      <div ref="canvasContainer">
-        <canvas ref="canvas" style={{width: '100% !important', height: 'auto !important'}}></canvas>
+      <div ref="canvasContainer" className={cx(styles.terrain, styles.center)}>
+        <canvas ref="canvas" className={styles.canvas}></canvas>
       </div>
     )
   }

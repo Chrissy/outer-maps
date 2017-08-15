@@ -33,7 +33,9 @@ export default class ElevationTotals extends React.Component {
     return (
       <div>
         <div className={styles.elevationTotals}>
-          <DifficultyChart score={this.score()}/>
+          <div className={styles.difficultyChart}>
+            <DifficultyChart score={this.score()}/>
+          </div>
           <div className={cx(styles.stat, styles.border)}>
             <Hiker className={styles.statIcon} />
             <div className={styles.statTotal}>{this.miles()}</div>
