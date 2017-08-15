@@ -39,6 +39,7 @@ export default class MapSidebar extends React.Component {
   }
 
   showMoreWeatherButton() {
+    return '';
     if (this.props.firstTrail.hasWeatherData) return <a href="#" onClick={(e) => this.showMoreWeather(e)}>More Weather</a>
   }
 
