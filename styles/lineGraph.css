@@ -1,6 +1,5 @@
 .lineGraph {
   width: calc(100% - 2em);
-  height: 165px;
-  margin-top: 1em;
-  padding: 0 1em;
+  height: auto;
+  margin-top: 2em;
 }

@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from '../styles/difficultyChart.css';
 import center from '../styles/center.css';
+import label from '../styles/label.css';
 import cx from 'classnames';
 
 export default class DifficultyChart extends React.Component {
@@ -28,7 +29,7 @@ export default class DifficultyChart extends React.Component {
         <div className={styles.circle2} style={{transform: `rotate(${this.rotation()}deg)`}}></div>
         <div className={cx(styles.innerCircle, center.flex)}>
           <div className={styles.data}>
-            <div className={styles.label}>Difficulty</div>
+            <div className={cx(styles.label, label.label)}>Difficulty</div>
             <div className={styles.score}>{this.props.score}</div>
             <div className={styles.difficulty}>{this.difficulty()}</div>
           </div>
