@@ -21,7 +21,7 @@ export default class ImportantWeather extends React.Component {
 
   render() {
     return (
-      <div className={cx(spacing.horizontalPadding, spacing.marginTop)}>
+      <div className={cx(spacing.horizontalPadding, spacing.marginTop, spacing.marginBottom)}>
         <div className={label.label}>Average weather this week</div>
         <div className={styles.importantWeather}>
           <div className={cx(styles.importantWeatherUnit, styles.high, this.tempIsExtreme(this.props.trail.maxTemperature))}>
@@ -43,7 +43,7 @@ export default class ImportantWeather extends React.Component {
               <PrecipIcon className={styles.icon}/>
               <div className={styles.data}>{this.percentText(this.props.trail.chanceOfPercipitation)}</div>
             </div>
-            <div className={styles.label}>Chance of percipitation</div>
+            <div className={styles.label}>Chance percipitation</div>
           </div>
         </div>
       </div>

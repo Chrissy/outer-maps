@@ -6,7 +6,7 @@
   position: absolute;
   height: 100%;
   width: 43vw;
-  min-width: 450px;
+  min-width: 320px;
   max-width: 500px;
   background: var(--gray-1);
   color: var(--gray-7);
@@ -18,6 +18,18 @@
   z-index: -1;
   overflow: scroll;
   top: 0;
+}
+
+@media (max-width: 600px) {
+  .body {
+    height: 80vh;
+    bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    top: auto;
+    transform: translateY(1em);
+  }
 }
 
 .content {

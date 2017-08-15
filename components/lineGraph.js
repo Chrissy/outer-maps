@@ -66,9 +66,9 @@ export default class LineGraph extends React.Component {
 
   render() {
     return (
-      <div className={cx(spacing.marginTop, spacing.horizontalPadding)}>
+      <div className={spacing.marginTop}>
         <div className={label.label}>Altitidue Change</div>
-        <svg viewBox={this.viewBox()} overflow="hidden">
+        <svg viewBox={this.viewBox()} overflow="hidden" className={styles.lineGraph}>
           <g>{this.mileMarkers()}</g>
           <polyline points={this.pointsToPathString()} fill="#344632"/>
         </svg>
