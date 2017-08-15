@@ -42,7 +42,7 @@ export default class ElevationTotals extends React.Component {
             <div className={styles.statLabel}>Miles</div>
           </div>
           <div className={cx(styles.stat)}>
-            <Mountain className={styles.statIcon} />
+            <Mountain className={cx(styles.statIcon, styles.mountain)} />
             <div className={styles.statTotal}>
               <NumberFormat value={metersToFeet(this.elevationGain())}
                 displayType={'text'}

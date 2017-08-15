@@ -27,6 +27,10 @@
   fill: var(--brand-color);
 }
 
+.mountain svg {
+  height: 0.8em;
+}
+
 .statTotal {
   font-size: 2.2em;
   font-weight: 800;

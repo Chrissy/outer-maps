@@ -31,12 +31,11 @@ export default class LineGraph extends React.Component {
     if (iterations > 7) every = 2;
     if (iterations > 20) every = 5;
     if (iterations > 50) every = 10;
-    return <g>
+    return <g key={step}>
       <rect
         x={width * step}
         width={(step == iterations - 1) ? width - leftOver : width}
         height={100}
-        key={step}
         fill={(Math.floor(step / every) % 2 !== 0) ? "transparent" : "#EAEAEA"}
       />
       {this.textMarker({width, step, iterations, every})}
