@@ -5,6 +5,12 @@
   background-color: var(--gray-7);
 }
 
+@media (max-width: 600px) {
+  .terrain {
+    height: 150px;
+  }
+}
+
 .canvas {
   transform: translateY(-30%) translateX(-8%);
 }
