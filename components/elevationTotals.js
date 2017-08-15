@@ -7,6 +7,7 @@ import {metersToFeet, metersToMiles} from '../modules/conversions';
 import styles from '../styles/elevationTotals.css';
 import cx from 'classnames';
 import NumberFormat from 'react-number-format';
+import spacing from '../styles/spacing.css';
 
 export default class ElevationTotals extends React.Component {
   elevationGain() {
@@ -31,7 +32,7 @@ export default class ElevationTotals extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className={spacing.marginBottomHalf}>
         <div className={styles.elevationTotals}>
           <div className={styles.difficultyChart}>
             <DifficultyChart score={this.score()}/>
