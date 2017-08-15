@@ -1,6 +1,8 @@
 @import './colors.css';
+@import './fonts.css';
 
 .body {
+  font-family: var(--body-type);
   position: absolute;
   height: 100%;
   width: 43vw;
@@ -26,6 +28,8 @@
 }
 
 .title {
+  font-family: var(--headline-type);
+  color: var(--brand-color);
   font-size: 1.4em;
   font-size: 1.4em;
   font-weight: 800;

@@ -55,13 +55,17 @@
 }
 
 .score {
-  font-size: 3em;
+  font-size: 3.5em;
   line-height: 0;
   align-self: center;
+  font-weight: 700;
 }
 
 .difficulty {
   align-self: flex-end;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: .9em;
 }
 
 .halfEmpty .circle1, .halfEmpty .circle2 {

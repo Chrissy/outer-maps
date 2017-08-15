@@ -8,7 +8,6 @@ import HighIcon from '../svg/weather-high.svg';
 import LowIcon from '../svg/weather-low.svg';
 import PrecipIcon from '../svg/weather-precip.svg';
 
-
 export default class ImportantWeather extends React.Component {
   percentText(integer) {
     return (typeof(integer) == "number") ? parseInt(integer/10) + "%" : "0%";

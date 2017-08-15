@@ -7,6 +7,8 @@ import {metersToFeet, metersToMiles} from '../modules/conversions';
 import styles from '../styles/elevationTotals.css';
 import cx from 'classnames';
 import NumberFormat from 'react-number-format';
+import spacing from '../styles/spacing.css';
+import opentype from '../styles/openType.css';
 
 export default class ElevationTotals extends React.Component {
   elevationGain() {
@@ -31,19 +33,19 @@ export default class ElevationTotals extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className={spacing.marginBottomHalf}>
         <div className={styles.elevationTotals}>
           <div className={styles.difficultyChart}>
             <DifficultyChart score={this.score()}/>
           </div>
           <div className={cx(styles.stat, styles.border)}>
             <Hiker className={styles.statIcon} />
-            <div className={styles.statTotal}>{this.miles()}</div>
+            <div className={cx(styles.statTotal, opentype.tabular)}>{this.miles()}</div>
             <div className={styles.statLabel}>Miles</div>
           </div>
           <div className={cx(styles.stat)}>
             <Mountain className={cx(styles.statIcon, styles.mountain)} />
-            <div className={styles.statTotal}>
+            <div className={cx(styles.statTotal, opentype.tabular)}>
               <NumberFormat value={metersToFeet(this.elevationGain())}
                 displayType={'text'}
                 thousandSeparator={true}

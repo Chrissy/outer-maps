@@ -14,7 +14,7 @@
       "type": "vector"
     },
     "local": {
-      "tiles": ["http://0.0.0.0:5000/tiles/{z}/{x}/{y}.pbf"],
+      "tiles": ["http://localhost:5000/tiles/{z}/{x}/{y}.pbf"],
       "type": "vector"
     },
     "handles": {
@@ -39,7 +39,7 @@
     }
   },
   "glyphs": "mapbox://fonts/fivefourths/{fontstack}/{range}.pbf",
-  "sprite": "http://0.0.0.0:5000/sprite",
+  "sprite": "http://localhost:5000/sprite",
   "layers": [
     "landcover",
     "elevation",
