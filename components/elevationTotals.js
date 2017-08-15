@@ -32,7 +32,7 @@ export default class ElevationTotals extends React.Component {
 
   render() {
     return (
-      <div className={spacing.marginBottomHalf}>
+      <div className={cx(spacing.marginBottomHalf, spacing.horizontalPadding)}>
         <div className={styles.elevationTotals}>
           <div className={styles.difficultyChart}>
             <DifficultyChart score={this.score()}/>

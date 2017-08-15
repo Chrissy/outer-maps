@@ -12,6 +12,12 @@
   color: var(--gray-6);
 }
 
+@media (max-width: 900px) {
+  .importantWeatherUnit {
+    font-size: .8em;
+  }
+}
+
 .importantWeatherUnit:nth-child(odd) {
   background-color: var(--gray-3);
 }

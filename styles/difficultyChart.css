@@ -12,6 +12,14 @@
   overflow: hidden;
 }
 
+@media (max-width: 900px) {
+  .body {
+    width: 125px;
+    height: 125px;
+    font-size: .7em;
+  }
+}
+
 .circle1, .circle2 {
   position: absolute;
   top: 0;

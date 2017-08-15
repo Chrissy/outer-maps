@@ -6,7 +6,7 @@
   position: absolute;
   height: 100%;
   width: 43vw;
-  min-width: 450px;
+  min-width: 320px;
   max-width: 500px;
   background: var(--gray-1);
   color: var(--gray-7);
