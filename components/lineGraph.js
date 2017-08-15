@@ -26,6 +26,11 @@ export default class LineGraph extends React.Component {
   }
 
   mileMarker({width, step, iterations, leftOver}) {
+    let every = 0;
+    if (iterations > 10) every = 2;
+    if (iterations > 20) every = 5;
+    if (iterations > 50) every = 10;
+    if (step % every !== 0) return;
     return <g>
       <rect
         x={width * step}
