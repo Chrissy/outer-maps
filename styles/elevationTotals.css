@@ -5,6 +5,12 @@
 
 @media (max-width: 900px) {
   .elevationTotals {
+    grid-template-columns: 120px .5fr .5fr;
+  }
+}
+
+@media (max-width: 360px) {
+  .elevationTotals {
     grid-template-columns: 90px .5fr .5fr;
   }
 }
@@ -13,7 +19,7 @@
   margin-top: -2em;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 360px) {
   .difficultyChart {
     margin-left: -1em;
   }
