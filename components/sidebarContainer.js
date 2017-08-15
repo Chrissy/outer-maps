@@ -1,5 +1,5 @@
 import {connect} from 'react-redux';
-import MapSidebar from './mapSidebar';
+import Sidebar from './sidebar';
 import {getAdditionalWeatherData} from '../state/actions'
 
 const mapStateToProps = (state) => {
@@ -18,4 +18,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MapSidebar);
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);

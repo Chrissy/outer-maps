@@ -1,17 +1,21 @@
+@import './colors.css';
+
 .body {
   position: absolute;
-  height: calc(100% - 2em);
-  width: 25vw;
-  min-width: 400px;
-  margin: 1em;
+  height: 100%;
+  width: 43vw;
+  min-width: 450px;
   padding: 1em;
-  background: #fefefe;
+  background: var(--gray-1);
+  color: var(--gray-7);
+  border-right: 1px solid var(--gray-4);
   box-sizing: border-box;
   transition: .3s all;
   opacity: 0;
   transform: translateX(-1em);
   z-index: -1;
   overflow: scroll;
+  top: 0;
 }
 
 .content {
@@ -19,6 +23,13 @@
   font-size: 1.1em;
   line-height: 1.5em;
   transition: .2s all;
+}
+
+.title {
+  font-size: 1.4em;
+  font-size: 1.4em;
+  font-weight: 800;
+  padding-bottom: .5em;
 }
 
 .spinner {

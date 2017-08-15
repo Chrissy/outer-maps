@@ -5,7 +5,6 @@ import {point, featureCollection} from '@turf/helpers';
 import {pointToPoint, pointsToFeatureCollection, trailsToFeatureCollection} from '../modules/stateToGeoJson'
 import TooltipContainer from './tooltipContainer';
 import MapBox from './mapBox';
-import MapSidebarContainer from './mapSidebarContainer';
 import styles from '../styles/map.css';
 
 const WATCH_LAYERS = ['trails', 'national-park-labels', 'national-park-labels-active', 'handles'];
@@ -141,7 +140,6 @@ export default class Map extends React.Component {
           mouseup={this.onMapMouseUp.bind(this)}
           mousedown={this.onMapMouseDown.bind(this)}
           />
-          <MapSidebarContainer/>
         </div>
     );
   }

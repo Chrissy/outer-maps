@@ -1,0 +1,32 @@
+.elevationTotals {
+  display: grid;
+  grid-template-columns: 143px .5fr .5fr;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;;
+  padding: 1.25em;
+  text-align: center;
+  color: var(--brand-color);
+}
+
+.stat.border {
+  border-right: 1px solid var(--gray-4);
+}
+
+.statIcon svg {
+  height: 1.1em;
+  width: auto;
+  fill: var(--brand-color);
+}
+
+.statTotal {
+  font-size: 2.5em;
+  font-weight: 700;
+}
+
+.statLabel {
+  font-size: .8em;
+}

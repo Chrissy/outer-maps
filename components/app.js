@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import {store} from '../state/configureStore';
 import MapContainer from './mapContainer';
+import SidebarContainer from './sidebarContainer';
 import Header from './header';
 import styles from '../styles/app.css';
 import clear from '../styles/clear.css';
@@ -14,6 +15,7 @@ ReactDOM.render(
       <div className={styles.body}>
         <Header />
         <MapContainer />
+        <SidebarContainer/>
       </div>
     </div>
   </Provider>,
