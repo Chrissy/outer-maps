@@ -21,6 +21,23 @@ export default class LineGraph extends React.Component {
     return relativePoints.reduce((a,p,i) => a + `${p[1] * 250},${p[0] * 100} `, "0,100 ") + "250,100";
   }
 
+  textMarker({width, step, iterations}) {
+    if (step !== iterations - 1) return <text x={width * step + 2} y={7} fill="#D5D5D5" fontSize="7px">{step + 1}</text>
+  }
+
+  mileMarker({width, step, iterations, leftOver}) {
+    return <g>
+      <rect
+        x={width * step}
+        width={(step == iterations - 1) ? width - leftOver : width}
+        height={100}
+        key={step}
+        fill={(step % 2 !== 0) ? "transparent" : "#EAEAEA"}
+      />
+      {this.textMarker({width, step, iterations})}
+    </g>
+  }
+
   mileMarkers(){
     const miles = metersToMiles(_.last(this.distances()));
     const iterations = Math.ceil(miles);
@@ -28,13 +45,7 @@ export default class LineGraph extends React.Component {
     const leftOver = width * iterations - 250;
     let markers = [];
     for (let step = 0; step < iterations; step++) {
-      markers.push(<rect
-        x={width * step}
-        width={(step == iterations - 1) ? width - leftOver : width}
-        height={100}
-        key={step}
-        fill={(step % 2 !== 0) ? "transparent" : "#EAEAEA"}
-      />);
+      markers.push(this.mileMarker({width, step, iterations, leftOver}));
     }
     return markers;
   }
