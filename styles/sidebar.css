@@ -5,7 +5,6 @@
   height: 100%;
   width: 43vw;
   min-width: 450px;
-  padding: 1em;
   background: var(--gray-1);
   color: var(--gray-7);
   border-right: 1px solid var(--gray-4);
@@ -30,6 +29,7 @@
   font-size: 1.4em;
   font-weight: 800;
   padding-bottom: .5em;
+  padding: .5em;
 }
 
 .spinner {

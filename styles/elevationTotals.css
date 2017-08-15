@@ -1,6 +1,7 @@
 .elevationTotals {
   display: grid;
   grid-template-columns: 143px .5fr .5fr;
+  padding: 0 1em;
 }
 
 .difficultyChart {

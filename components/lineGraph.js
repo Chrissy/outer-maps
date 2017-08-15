@@ -13,12 +13,12 @@ export default class LineGraph extends React.Component {
     var fullDistance = _.last(distances);
     var relativePoints = elevations.map((elevation, i) => [((maxElevation - elevation)/elevationWindow), (distances[i]/fullDistance)]);
 
-    return relativePoints.reduce((a,p,i) => a + `${p[1] * 300},${p[0] * 100} `, "0,100 ") + "300,100";
+    return relativePoints.reduce((a,p,i) => a + `${p[1] * 250},${p[0] * 100} `, "0,100 ") + "250,100";
   }
 
   render() {
     return (
-      <svg className={styles.lineGraph} viewBox="0 0 300 100">
+      <svg className={styles.lineGraph} viewBox="0 0 250 100">
         <polyline points={this.pointsToPathString()} strokeWidth="2" fill="#344632"/>
       </svg>
     )
