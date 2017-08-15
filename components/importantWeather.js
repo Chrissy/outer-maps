@@ -43,7 +43,7 @@ export default class ImportantWeather extends React.Component {
               <PrecipIcon className={styles.icon}/>
               <div className={styles.data}>{this.percentText(this.props.trail.chanceOfPercipitation)}</div>
             </div>
-            <div className={styles.label}>Chance of percipitation</div>
+            <div className={styles.label}>Chance percipitation</div>
           </div>
         </div>
       </div>
