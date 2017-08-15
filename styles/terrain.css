@@ -1,0 +1,10 @@
+.terrain {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  background-color: var(--gray-7);
+}
+
+.canvas {
+  transform: translateY(-30%) translateX(-8%);
+}

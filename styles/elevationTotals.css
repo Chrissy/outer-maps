@@ -1,13 +1,18 @@
 .elevationTotals {
   display: grid;
   grid-template-columns: 143px .5fr .5fr;
+  padding: 0 1em;
+}
+
+.difficultyChart {
+  margin-top: -2em;
 }
 
 .stat {
   display: flex;
   flex-direction: column;
   justify-content: space-between;;
-  padding: 1.25em;
+  padding: 1em .5em .25em .5em;
   text-align: center;
   color: var(--brand-color);
 }
@@ -23,8 +28,8 @@
 }
 
 .statTotal {
-  font-size: 2.5em;
-  font-weight: 700;
+  font-size: 2.2em;
+  font-weight: 800;
 }
 
 .statLabel {
