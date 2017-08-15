@@ -1,1 +1,57 @@
-.top_margin { margin-top: 1em; }
+.horizontalPadding {
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.verticalPadding {
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.marginTop {
+  margin-top: 1em;
+}
+
+.marginBottom {
+  margin-bottom: 1em;
+}
+
+.marginLeft {
+  margin-left: 1em;
+}
+
+.marginRight {
+  margin-right: 1em;
+}
+
+.marginTopDouble {
+  margin-top: 2em;
+}
+
+.marginBottomDouble {
+  margin-bottom: 2em;
+}
+
+.marginLeftDouble {
+  margin-left: 2em;
+}
+
+.marginRightDouble {
+  margin-right: 2em;
+}
+
+.marginTopHalf {
+  margin-top: .5em;
+}
+
+.marginBottomHalf {
+  margin-bottom: .5em;
+}
+
+.marginLeftHalf {
+  margin-left: .5em;
+}
+
+.marginRightHalf {
+  margin-right: .5em;
+}
