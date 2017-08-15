@@ -21,25 +21,25 @@ export default class LineGraph extends React.Component {
     return relativePoints.reduce((a,p,i) => a + `${p[1] * 250},${p[0] * 100} `, "0,100 ") + "250,100";
   }
 
-  textMarker({width, step, iterations}) {
-    if (step !== iterations - 1) return <text x={width * step + 2} y={7} fill="#D5D5D5" fontSize="7px">{step + 1}</text>
+  textMarker({width, step, iterations, every}) {
+    if (step % every !== 0) return;
+    return <text x={width * step + 2} y={7} fill="#D5D5D5" fontSize="7px">{step + 1}</text>
   }
 
   mileMarker({width, step, iterations, leftOver}) {
-    let every = 0;
-    if (iterations > 10) every = 2;
+    let every = 1;
+    if (iterations > 7) every = 2;
     if (iterations > 20) every = 5;
     if (iterations > 50) every = 10;
-    if (step % every !== 0) return;
     return <g>
       <rect
         x={width * step}
         width={(step == iterations - 1) ? width - leftOver : width}
         height={100}
         key={step}
-        fill={(step % 2 !== 0) ? "transparent" : "#EAEAEA"}
+        fill={(Math.floor(step / every) % 2 !== 0) ? "transparent" : "#EAEAEA"}
       />
-      {this.textMarker({width, step, iterations})}
+      {this.textMarker({width, step, iterations, every})}
     </g>
   }
 
