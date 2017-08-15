@@ -63,7 +63,7 @@ export default class Terrain extends React.Component {
     const renderer = new WebGLRenderer({alpha:true, canvas: this.refs.canvas});
 
     renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
-    renderer.setSize(this.refs.canvasContainer.offsetWidth * 1.25, this.refs.canvasContainer.offsetWidth * 1.25);
+    renderer.setSize(this.refs.canvasContainer.offsetWidth * 1.3, this.refs.canvasContainer.offsetWidth * 1.3);
     camera.position.z = 11000;
 
     this.renderMap = function() {
