@@ -13,8 +13,8 @@ export default class DifficultyChart extends React.Component {
     if (this.props.score < 25) return 'Very Easy';
     if (this.props.score < 50) return 'Easy';
     if (this.props.score < 75) return 'Moderate';
-    if (this.props.score < 85) return 'Strenuous';
-    if (this.props.score > 85) return 'Extreme';
+    if (this.props.score < 96) return 'Strenuous';
+    if (this.props.score >= 96) return 'Extreme';
   }
 
   difficultyClass() {
