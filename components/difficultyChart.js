@@ -27,9 +27,11 @@ export default class DifficultyChart extends React.Component {
         <div className={styles.circle1}></div>
         <div className={styles.circle2} style={{transform: `rotate(${this.rotation()}deg)`}}></div>
         <div className={cx(styles.innerCircle, center.flex)}>
-          <div className={styles.label}>Difficulty</div>
-          <div className={styles.score}>{this.props.score}</div>
-          <div className={styles.difficulty}>{this.difficulty()}</div>
+          <div className={styles.data}>
+            <div className={styles.label}>Difficulty</div>
+            <div className={styles.score}>{this.props.score}</div>
+            <div className={styles.difficulty}>{this.difficulty()}</div>
+          </div>
         </div>
       </div>
     )

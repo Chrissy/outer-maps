@@ -3,8 +3,9 @@
 }
 
 .body {
-  width: 160px;
-  height: 160px;
+  width: 150px;
+  height: 150px;
+  font-size: .9em;
   position: relative;
   background: var(--gray-6);
   border-radius: 100%;
@@ -30,13 +31,18 @@
   height: calc(100% - calc(var(--border-width) * 2));
   background: var(--gray-1);
   border-radius: 100%;
-  flex-direction: column;
 }
 
-.label {
-  font-size: .7em;
-  line-height: 1.4;
-  color: var(--gray-5);
+.data {
+  margin-top: -.5em;
+  height: 50%;
+  text-align: center;
+  display: grid;
+  grid-template-rows: 1em 1fr 1.25em;
+}
+
+.label, .score, .difficulty {
+  line-height: 0;
 }
 
 .score, .difficulty {
@@ -44,9 +50,21 @@
   font-weight: 700;
 }
 
+.label {
+  font-size: .7em;
+  line-height: 0;
+  color: var(--gray-5);
+  align-self: flex-start;
+}
+
 .score {
   font-size: 3em;
-  line-height: 1;
+  line-height: 0;
+  align-self: center;
+}
+
+.difficulty {
+  align-self: flex-end;
 }
 
 .halfEmpty .circle1, .halfEmpty .circle2 {

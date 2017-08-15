@@ -1,7 +1,12 @@
 import React from 'react';
 import LineGraph from './lineGraph';
 import DifficultyChart from './difficultyChart';
+import Hiker from '../svg/hiker.svg';
+import Mountain from '../svg/mountain.svg';
 import {metersToFeet, metersToMiles} from '../modules/conversions';
+import styles from '../styles/elevationTotals.css';
+import cx from 'classnames';
+import NumberFormat from 'react-number-format';
 
 export default class ElevationTotals extends React.Component {
   elevationGain() {
@@ -27,10 +32,24 @@ export default class ElevationTotals extends React.Component {
   render() {
     return (
       <div>
-        <DifficultyChart score={this.score()}/>
-        distance: {this.miles()} Miles<br/>
-        elevation gain: {metersToFeet(this.elevationGain())} Feet<br/>
-        elevation loss: {metersToFeet(this.elevationLoss())} Feet<br/>
+        <div className={styles.elevationTotals}>
+          <DifficultyChart score={this.score()}/>
+          <div className={cx(styles.stat, styles.border)}>
+            <Hiker className={styles.statIcon} />
+            <div className={styles.statTotal}>{this.miles()}</div>
+            <div className={styles.statLabel}>Miles</div>
+          </div>
+          <div className={cx(styles.stat)}>
+            <Mountain className={styles.statIcon} />
+            <div className={styles.statTotal}>
+              <NumberFormat value={metersToFeet(this.elevationGain())}
+                displayType={'text'}
+                thousandSeparator={true}
+              />
+            </div>
+            <div className={styles.statLabel}>Elevation Gain</div>
+          </div>
+        </div>
         <LineGraph elevations={this.props.elevations}/>
       </div>
     )
