@@ -96,8 +96,8 @@ if (process.env.NODE_ENV != 'production') {
   const webpackMiddleware = require("webpack-dev-middleware");
   const webpackConfig = require('./webpack.dev.config.js')
   const webpack = require('webpack');
-  const tilelive = require('tilelive');
-  require('mbtiles').registerProtocols(tilelive);
+  const tilelive = require('@mapbox/tilelive');
+  require('@mapbox/mbtiles').registerProtocols(tilelive);
 
   app.use(webpackMiddleware(webpack(webpackConfig), {
     publicPath: webpackConfig.output.publicPath
