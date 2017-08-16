@@ -1,0 +1,63 @@
+.welcome {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  background: rgba(52, 70, 50, .9);
+  flex-direction: column;
+  overflow: scroll;
+}
+
+.closed {
+  display: none;
+}
+
+.content {
+  background: var(--gray-2);
+  width: 50vw;
+  min-width: 300px;
+  margin-top: 2em;
+  padding-bottom: 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5vw;
+  font-family: var(--body-type);
+  border: 5px solid #fff;
+  color: var(--brand-color);
+  text-align: center;
+}
+
+.title {
+  font-family: var(--headline-type);
+  font-size: 2em;
+  font-weight: 800;
+  line-height: 1em;
+  border-bottom: 3px solid var(--accent-color);
+  padding-bottom: .2em;
+}
+
+.image {
+  width: 30vw;
+  min-width: 200px;
+  height: auto;
+  margin-top: -20%;
+}
+
+.text {
+  font-size: 1em;
+}
+
+.link {
+  color: var(--accent-color);
+}
+
+.close {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+}
+
+.close svg {
+  width: 1.5em;
+  height: 1.5em;
+}
