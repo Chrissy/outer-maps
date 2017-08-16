@@ -9,22 +9,22 @@ const get = path => {
   }).then(response => response.json());
 };
 
-const getStation = ({dataSetID, stationID, date, endDate, dataTypeIDs}) => {
-  return get(`/data?datasetid=${dataSetID}&stationid=${stationID}&startdate=2010-${date}&enddate=2010-${date}&datatypeid=${dataTypeIDs.join("&datatypeid=")}&limit=10&units=standard`).then(({results}) => {
+const getStation = ({dataSetId, stationId, date, dataTypeIds}) => {
+  return get(`/data?datasetid=${dataSetId}&stationid=${stationId}&startdate=2010-${date}&enddate=2010-${date}&datatypeid=${dataTypeIds.join("&datatypeid=")}&limit=10&units=standard`).then(({results}) => {
     return results.reduce((r, v) => {
       return {...r, [v.datatype]: v.value}
     }, {});
   });
 };
 
-const getStations = ({x, y, dataSetID, dataTypeIDs, size = 10}) => {
-  return get(`/stations/?extent=${x - size},${y - size},${x + size},${y + size}&datasetid=${dataSetID}&datatypeid=${dataTypeIDs.join("&datatypeid=")}`).then(response => {
+const getStations = ({x, y, dataSetId, dataTypeIds, size = 10}) => {
+  return get(`/stations/?extent=${x - size},${y - size},${x + size},${y + size}&datasetid=${dataSetId}&datatypeid=${dataTypeIds.join("&datatypeid=")}`).then(response => {
     if (response.results) {
       return response.results;
     } else if (size > 30) {
       return null;
     } else {
-      return getStations({x, y, dataSetID, dataTypeIDs, size: size + 0.2});
+      return getStations({x, y, dataSetId, dataTypeIds, size: size + 0.2});
     }
   });
 };
@@ -36,14 +36,22 @@ const getBestStation = ({x, y, stations}) => {
   }).sort((a, b) => a.distance - b.distance)[0];
 }
 
-export default ({x, y, dataSetID, dataTypeIDs}) => {
-  return getStations({x, y, dataSetID, dataTypeIDs}).then(stations => {
+const getDataFromNearestStation = ({x, y, dataSetId, dataTypeIds}) => {
+  return getStations({x, y, dataSetId, dataTypeIds}).then(stations => {
     if (!stations.length) return null;
     return getStation({
-      stationID: getBestStation({x, y, stations}).id,
+      stationId: getBestStation({x, y, stations}).id,
       date: moment.format("MM-DD"),
-      dataSetID,
-      dataTypeIDs
+      dataSetId,
+      dataTypeIds
     });
   });
 };
+
+export const getNoaaData = ({x, y, dataSetId, dataTypeIds, stationId}) => {
+  if (stationId && stationId !== '') {
+    return getStation({dataSetId, stationId: "GHCND:" + stationId, date: moment.format("MM-DD"), dataTypeIds});
+  } else {
+    return getDataFromNearestStation({x, y, dataSetId, dataTypeIds});
+  }
+}

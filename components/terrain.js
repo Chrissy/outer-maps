@@ -1,6 +1,6 @@
 import React from 'react';
 import {WebGLRenderer, Scene, PerspectiveCamera, TextureLoader, PlaneGeometry, MeshBasicMaterial, Mesh, DefaultLoadingManager} from 'three';
-import GeoViewport from 'geo-viewport';
+import GeoViewport from '@mapbox/geo-viewport';
 import styles from '../styles/terrain.css';
 import center from '../styles/center.css';
 import cx from 'classnames';

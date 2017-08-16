@@ -2,7 +2,7 @@ const req = require.context("../styles", true, /\.json$/);
 const base = req("./base.json");
 const env = require("../environment/development.js");
 const baseLayers = base.layers.map(l => req(`./${l}.json`));
-const source = (env.tileSource == "remote") ? "composite" : "local"
+const source = (process.env.NPM_CONFIG_PRODUCTION || env.tileSource == "remote") ? "composite" : "local"
 
 export default Object.assign({}, base, {
   layers: [].concat(...baseLayers).map(l => {

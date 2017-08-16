@@ -13,6 +13,7 @@ const trail = (state = {}, action) => {
         id: action.properties.id,
         name: action.properties.name,
         distance: action.properties.distance,
+        stationId: action.properties.station1,
         center: [action.properties.cx, action.properties.cy],
         bounds: bbox(action.geometry)
       }

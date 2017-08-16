@@ -13,7 +13,6 @@ export default class Tooltip extends React.Component {
   }
 
   constructor(props) {
-    localStorage.setItem('welcomeMessageClosed', false);
     super(props);
     this.state = {
       closed: localStorage.getItem('welcomeMessageClosed') == 'true'

@@ -1,5 +1,5 @@
 const jsonfile = require('jsonfile');
-const gQuery = require('./modules/genericQuery');
+const gQuery = require('../modules/genericQuery');
 const exec = require('child_process').execSync;
 const pool = gQuery.pool();
 
