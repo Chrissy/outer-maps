@@ -32,17 +32,17 @@ const lineStringToLabelMultiLineString = (geom, minlength) => {
   const multiArray = explodeLineByAngle(geom, 150);
   const filteredLines = multiArray.filter(c => lineDistance(c) > minlength);
 
-  if (filteredLines.length == 0) return helpers.lineString([]);
+  if (filteredLines.length == 0) return null;
 
   const bezierLines = filteredLines.map(f => bezier(f, 500, 0.5));
   return helpers.multiLineString(bezierLines.map(l => l.geometry.coordinates));
 }
 
 exports.labelMaker = (geojson, minLength) => {
-  const features = geojson.features.map((r) => {
-    return Object.assign({}, lineStringToLabelMultiLineString(r.geometry, minLength), {
-      properties: r.properties
+  const features = geojson.features.map(p => {
+    return Object.assign({}, lineStringToLabelMultiLineString(p.geometry, minLength), {
+      properties: p.properties
     });
   });
-  return helpers.featureCollection(features.filter(r => r.geometry.coordinates.length > 1));
+  return helpers.featureCollection(features.filter(r => r.geometry !== null));
 }

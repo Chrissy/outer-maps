@@ -29,8 +29,10 @@ exports.up = function(next) {
   //     }, next);
   //   });
   // })
+  next()
 };
 
 exports.down = function(next) {
   //utils.genericQuery("DELETE FROM trails WHERE source = 'https://data.fs.usda.gov/geodata/edw/edw_resources/meta/S_USA.Road_MVUM.xml'", next);
+  next()
 };

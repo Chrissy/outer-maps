@@ -6,7 +6,7 @@ import LoadingSpinner from './loadingSpinner';
 import ImportantWeather from './importantWeather';
 import LessImportantWeather from './lessImportantWeather';
 
-import styles from '../styles/mapSidebar.css';
+import styles from '../styles/sidebar.css';
 import spacing from '../styles/spacing.css';
 
 export default class MapSidebar extends React.Component {
@@ -17,7 +17,6 @@ export default class MapSidebar extends React.Component {
   }
 
   terrain() {
-    return '';
     return <Terrain trail={this.props.firstTrail}/>
   }
 
@@ -40,6 +39,7 @@ export default class MapSidebar extends React.Component {
   }
 
   showMoreWeatherButton() {
+    return '';
     if (this.props.firstTrail.hasWeatherData) return <a href="#" onClick={(e) => this.showMoreWeather(e)}>More Weather</a>
   }
 
@@ -47,7 +47,7 @@ export default class MapSidebar extends React.Component {
     return (
       <div className={cx(styles.body, {[styles.active]: this.props.loading})}>
         <div className={cx(styles.content, {[styles.active]: this.props.firstTrail.hasBaseData})}>
-          name: {this.props.firstTrail.name}<br/>
+          <div className={styles.title}>{this.props.firstTrail.name}</div>
           {this.terrain()}
           {this.elevation()}
           {this.importantWeather()}

@@ -1,0 +1,64 @@
+.elevationTotals {
+  display: grid;
+  grid-template-columns: 143px .5fr .5fr;
+}
+
+@media (max-width: 900px) {
+  .elevationTotals {
+    grid-template-columns: 120px .5fr .5fr;
+  }
+}
+
+@media (max-width: 360px) {
+  .elevationTotals {
+    grid-template-columns: 90px .5fr .5fr;
+  }
+}
+
+.difficultyChart {
+  margin-top: -2em;
+}
+
+@media (max-width: 360px) {
+  .difficultyChart {
+    margin-left: -1em;
+  }
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;;
+  padding: 1em .5em .25em .5em;
+  text-align: center;
+  color: var(--brand-color);
+}
+
+@media (max-width: 900px) {
+  .stat {
+    font-size: .8em;
+  }
+}
+
+.stat.border {
+  border-right: 1px solid var(--gray-4);
+}
+
+.statIcon svg {
+  height: 1.1em;
+  width: auto;
+  fill: var(--brand-color);
+}
+
+.mountain svg {
+  height: 0.8em;
+}
+
+.statTotal {
+  font-size: 2.2em;
+  font-weight: 800;
+}
+
+.statLabel {
+  font-size: .8em;
+}

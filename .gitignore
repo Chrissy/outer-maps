@@ -48,3 +48,6 @@ public/cache/terrain/*.jpg
 
 # Optional REPL history
 .node_repl_history
+
+# Annoying mac files
+.DS_Store

@@ -1,0 +1,113 @@
+:root {
+  --border-width: 9px;
+}
+
+.body {
+  width: 160px;
+  height: 160px;
+  font-size: .9em;
+  position: relative;
+  background: var(--gray-6);
+  border-radius: 100%;
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .body {
+    width: 125px;
+    height: 125px;
+    font-size: .7em;
+  }
+}
+
+.circle1, .circle2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border-width: var(--border-width);
+  border-style: solid;
+  border-color: transparent transparent var(--accent-color) var(--accent-color);
+  transform: rotate(225deg);
+  border-radius: 100%;
+}
+
+.innerCircle {
+  width: calc(100% - calc(var(--border-width) * 2));
+  height: calc(100% - calc(var(--border-width) * 2));
+  background: var(--gray-1);
+  border-radius: 100%;
+}
+
+.data {
+  margin-top: -.5em;
+  height: 50%;
+  text-align: center;
+  display: grid;
+  grid-template-rows: 1em 1fr 1.25em;
+}
+
+.label, .score, .difficulty {
+  line-height: 0;
+}
+
+.score, .difficulty {
+  color: var(--accent-color);
+  font-weight: 700;
+}
+
+.label {
+  align-self: flex-start;
+}
+
+.score {
+  font-size: 3.5em;
+  line-height: 0;
+  align-self: center;
+  font-weight: 700;
+}
+
+.difficulty {
+  align-self: flex-end;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: .9em;
+}
+
+.halfEmpty .circle1, .halfEmpty .circle2 {
+  transform: rotate(45deg);
+}
+
+.veryeasy .difficulty, .veryeasy .score {
+  color: var(--blue);
+}
+
+.easy .difficulty, .easy .score {
+  color: var(--purple);
+}
+
+.moderate .difficulty, .moderate .score {
+  color: var(--orange);
+}
+
+.extreme .difficulty, .extreme .score {
+  color: var(--red);
+}
+
+.veryeasy .circle1, .veryeasy .circle2 {
+  border-color: transparent transparent var(--blue) var(--blue);
+}
+
+.easy .circle1, .easy .circle2 {
+  border-color: transparent transparent var(--purple) var(--purple);
+}
+
+.moderate .circle1, .moderate .circle2 {
+  border-color: transparent transparent var(--orange) var(--orange);
+}
+
+.extreme .circle1, .extreme .circle2 {
+  border-color: transparent transparent var(--red) var(--red);
+}
