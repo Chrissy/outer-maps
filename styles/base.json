@@ -39,7 +39,7 @@
     }
   },
   "glyphs": "mapbox://fonts/fivefourths/{fontstack}/{range}.pbf",
-  "sprite": "http://localhost:5000/sprite",
+  "sprite": "mapbox://sprites/fivefourths/cj1fdtp1f00002sttxerc303x",
   "layers": [
     "landcover",
     "elevation",
