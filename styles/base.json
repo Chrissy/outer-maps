@@ -34,8 +34,22 @@
   },
   "remote": {
     "composite": {
-      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.54ouy1ho,fivefourths.local",
+      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.park-boundaries,fivefourths.local,fivefourths.park-boundary-labels",
       "type": "vector"
+    },
+    "handles": {
+      "data": {
+        "type": "FeatureCollection",
+        "features": []
+      },
+      "type": "geojson"
+    },
+    "trails-selected": {
+      "data": {
+        "type": "FeatureCollection",
+        "features": []
+      },
+      "type": "geojson"
     }
   },
   "glyphs": "mapbox://fonts/fivefourths/{fontstack}/{range}.pbf",
