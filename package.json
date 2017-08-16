@@ -6,7 +6,7 @@
     "trails": "node builders/trailsBuilder.js",
     "parks": "node builders/parksBuilder.js",
     "upload": "node builders/uploader.js",
-    "assets": "./node_modules/.bin/webpack --config webpack.production.config.js"
+    "heroku-postbuild": "./node_modules/.bin/webpack --config webpack.production.config.js"
   },
   "license": "ISC",
   "dependencies": {
@@ -57,5 +57,8 @@
     "@mapbox/tilelive": "^5.12.6",
     "webpack-dev-middleware": "^1.12.0",
     "xml2js": "^0.4.17"
+  },
+  "engines": {
+    "node": "8.3.0"
   }
 }

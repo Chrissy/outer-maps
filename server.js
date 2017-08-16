@@ -92,7 +92,7 @@ app.get('/api/terrain/:x/:y/:zoom', function(request, response){
   })
 });
 
-if (process.env.NODE_ENV != 'production') {
+if (process.env.NPM_CONFIG_PRODUCTION) {
   const webpackMiddleware = require("webpack-dev-middleware");
   const webpackConfig = require('./webpack.dev.config.js')
   const webpack = require('webpack');
