@@ -9,13 +9,14 @@ export default class Tooltip extends React.Component {
 
   close(e) {
     this.setState({closed: true});
+    localStorage.setItem('welcomeMessageClosed', true);
   }
 
   constructor(props) {
+    localStorage.setItem('welcomeMessageClosed', false);
     super(props);
-
     this.state = {
-      closed: false,
+      closed: localStorage.getItem('welcomeMessageClosed') == 'true'
     };
   }
 
@@ -29,7 +30,7 @@ export default class Tooltip extends React.Component {
             It isn't totally done yet, but look—one doesn't simply
             build an interactive map of all your favorite parks overnight.
             <br /><br />
-            It will work on all the latest greatest browers. Currently only Washington, Utah, and Idaho are
+            It will work on all the latest greatest browers. Currently only parks in Washington, Utah, and Idaho are
             supported. If you are interested in contributing to
             or following the progress of Trail Gunk, head over to the <a  className={styles.link} href="https://github.com/Chrissy/trails-up">Github Repo</a>.
           </div>
