@@ -1,5 +1,6 @@
 const pg = require('pg');
-const env = require('../environment/development');
+const optional = require("optional");
+const env = optional('../environment/development');
 const dbgeo = require('dbgeo');
 
 exports.pool = () => {
@@ -7,7 +8,7 @@ exports.pool = () => {
     database: process.env.DATABASE_URL || env.databaseName,
     max: 10,
     idleTimeoutMillis: 3000,
-    user: env.dbUser || ''
+    user: (env == null) ? '' : env.dbUser
   });
 };
 
