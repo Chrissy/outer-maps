@@ -1,10 +1,14 @@
+if (!process.env.NPM_CONFIG_PRODUCTION) {
+  const env = require('./environment/development');
+  process.env = {...process.env, ...env};
+}
+
 const http = require('http');
 const fs = require('fs');
 const path = require('path').normalize;
 const pg = require('pg');
 const express = require('express');
 const _ = require('underscore');
-const env = require('./environment/development');
 const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
 const statUtils = require('./modules/statUtils');
 const query = require('./modules/genericQuery').query;

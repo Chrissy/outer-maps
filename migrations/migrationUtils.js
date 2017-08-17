@@ -1,5 +1,5 @@
 const pg = require('pg');
-const env = require('../environment/development');
+const env = process.env;
 const execSync = require('child_process').execSync;
 const path = require('path').normalize;
 const user = (env.dbUser) ? `-U ${env.dbUser}` : '';

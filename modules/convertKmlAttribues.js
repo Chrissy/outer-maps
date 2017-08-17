@@ -2,7 +2,7 @@ const xml2js = require('xml2js');
 const fs = require('fs');
 const path = require('path').normalize;
 const execSync = require('child_process').execSync;
-const env = require('../environment/development');
+const env = process.env;
 const directoryName = "idaho_trails"
 const workingDir = path(env.libDirectory + "/" + directoryName);
 

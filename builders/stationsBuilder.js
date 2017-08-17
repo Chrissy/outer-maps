@@ -1,6 +1,6 @@
 const fs = require('fs');
 const fixy = require('fixy');
-const env = require('../environment/development');
+const env = process.env;
 
 const stationsString = fs.readFileSync(env.libDirectory + "/noaa_stations/ghcnd-stations.txt").toString();
 const inventoryString = fs.readFileSync(env.libDirectory + "/noaa_stations/ghcnd-inventory.txt").toString();
