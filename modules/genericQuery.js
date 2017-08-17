@@ -4,10 +4,10 @@ const dbgeo = require('dbgeo');
 
 exports.pool = () => {
   return new pg.Pool({
-    database: env.databaseName,
+    database: process.env.DATABASE_URL || env.databaseName,
     max: 10,
     idleTimeoutMillis: 3000,
-    user: env.dbUser
+    user: env.dbUser || ''
   });
 };
 
