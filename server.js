@@ -12,6 +12,12 @@ const createPool = require('./modules/genericQuery').pool;
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 
+const webpackMiddleware = optional("webpack-dev-middleware");
+const webpackConfig = optional('./webpack.dev.config.js')
+const webpack = optional('webpack');
+const tilelive = optional('@mapbox/tilelive');
+optional('@mapbox/mbtiles').registerProtocols(tilelive);
+
 const app = express();
 
 if (!process.env.NPM_CONFIG_PRODUCTION) {
@@ -101,12 +107,6 @@ app.get('/api/terrain/:x/:y/:zoom', function(request, response){
 });
 
 if (!process.env.NPM_CONFIG_PRODUCTION) {
-  const webpackMiddleware = require("webpack-dev-middleware");
-  const webpackConfig = require('./webpack.dev.config.js')
-  const webpack = require('webpack');
-  const tilelive = require('@mapbox/tilelive');
-  require('@mapbox/mbtiles').registerProtocols(tilelive);
-
   app.use(webpackMiddleware(webpack(webpackConfig), {
     publicPath: webpackConfig.output.publicPath
   }));
