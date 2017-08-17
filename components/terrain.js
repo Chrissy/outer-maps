@@ -28,7 +28,9 @@ export default class Terrain extends React.Component {
 
     let vertices = this.altitude.vertices;
 
-    const texture = new TextureLoader().load(this.earth.url)
+    const loader = new TextureLoader();
+    loader.crossOrigin = '';
+    const texture = loader.load(this.earth.url);
     const geometry = new PlaneGeometry(10240, 10240, this.altitude.height - 1, this.altitude.length - 1);
     const material = new MeshBasicMaterial({map: texture});
     const plane = new Mesh(geometry, material);

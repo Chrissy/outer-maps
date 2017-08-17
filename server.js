@@ -13,6 +13,8 @@ const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTN
 const statUtils = require('./modules/statUtils');
 const query = require('./modules/genericQuery').query;
 const createPool = require('./modules/genericQuery').pool;
+const AWS = require('aws-sdk');
+const s3 = new AWS.S3();
 
 const app = express();
 
@@ -56,10 +58,6 @@ app.get('/api/elevation/:id', function(request, response){
 });
 
 app.get('/api/elevation-dump/:x1/:y1/:x2/:y2', function(request, response){
-  const cachedPath = path(__dirname + `/public/cache/elevation/elevation-${request.params.x1}-${request.params.y1}-${request.params.x2}-${request.params.y2}.json`);
-
-  if (fs.existsSync(cachedPath)) return response.json(JSON.parse(fs.readFileSync(cachedPath)));
-
   const sql = `
     select to_json(ST_DumpValues(ST_Clip(ST_Union(rast),
       ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
@@ -79,20 +77,25 @@ app.get('/api/elevation-dump/:x1/:y1/:x2/:y2', function(request, response){
 
 app.get('/api/terrain/:x/:y/:zoom', function(request, response){
   const params = request.params;
-  const cachedImagePath = `/cache/terrain/terrain-${params.x}-${params.y}-${params.zoom}.jpg`;
-  const localImagePath = path(`${__dirname}/public/${cachedImagePath}`);
+  const cachedImageKey = `terrain-${params.x}-${params.y}-${params.zoom}.jpg`;
+  const cachedImagePath = `https://s3-us-west-2.amazonaws.com/chrissy-gunk/${cachedImageKey}`;
 
-  if (fs.existsSync(localImagePath)) return response.json({url: cachedImagePath});
-
-  http.get({
-    host: 'api.mapbox.com',
-    path: `/v4/mapbox.satellite/${params.x},${params.y},${params.zoom}/1024x1024.jpg70?access_token=${accessToken}`
-  }, function(r){
-    let body = [];
-    r.on('data', (chunk) => body.push(chunk)).on('end', () => {
-      fs.writeFileSync(localImagePath, Buffer.concat(body));
+  s3.headObject({Bucket: 'chrissy-gunk', Key: cachedImageKey}, (err, metadata) => {
+    if (err && err.code == 'NotFound') {
+      http.get({
+        host: 'api.mapbox.com',
+        path: `/v4/mapbox.satellite/${params.x},${params.y},${params.zoom}/1024x1024.jpg70?access_token=${accessToken}`
+      }, function(r){
+        let body = [];
+        r.on('data', (chunk) => body.push(chunk)).on('end', () => {
+          s3.putObject({Bucket: 'chrissy-gunk', Key: cachedImageKey, Body: Buffer.concat(body), ACL:'public-read'}, function(err, data) {
+            response.json({url: cachedImagePath})
+          });
+        });
+      });
+    } else {
       response.json({url: cachedImagePath})
-    })
+    }
   })
 });
 

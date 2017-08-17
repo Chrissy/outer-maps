@@ -1,5 +1,5 @@
 const pg = require('pg');
-const env = process.env;
+const env = require('../environment/development');
 const dbgeo = require('dbgeo');
 
 exports.pool = () => {

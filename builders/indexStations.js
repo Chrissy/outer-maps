@@ -17,10 +17,10 @@ utils.uploadShapeFile({
   utils.genericQuery(`
     create table stations_index as
     with t as (select * from trails where type = 'hike' OR type = 'horse' OR type = 'bike' OR type = 'motorcycle' OR type = 'atv' AND name != ''),
-    s as (select * from stations where datatypes like '%TMAX% %TMIN% %PRCP% %SNOW% %SNWD%')
+    s as (select * from stations)
     select distinct on (t.id) t.id, t.name, s.stationid
     from t left join s
-    on st_dwithin(s.geog, t.geog, 20000, false) order by t.id, s.geog <-> t.geog;
+    on st_dwithin(s.geog, t.geog, 50000, false) order by t.id, s.geog <-> t.geog;
 
     CREATE TABLE trails_new AS
     SELECT trail.id, trail.name, trail.source_id, trail.source, trail.type, trail.geog, stationid AS station1

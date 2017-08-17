@@ -10,6 +10,7 @@
   },
   "license": "ISC",
   "dependencies": {
+    "@mapbox/geo-viewport": "^0.2.1",
     "@turf/bbox": "^4.0.2",
     "@turf/bezier": "^4.1.0",
     "@turf/centroid": "^4.0.2",
@@ -20,6 +21,7 @@
     "@turf/nearest": "^4.0.1",
     "@turf/point-on-line": "^4.0.2",
     "@turf/simplify": "^4.1.0",
+    "aws-sdk": "^2.100.0",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
     "babel-plugin-transform-object-rest-spread": "^6.8.0",
@@ -30,7 +32,6 @@
     "css-loader": "^0.28.4",
     "dbgeo": "^1.1.0",
     "express": "^4.14.0",
-    "@mapbox/geo-viewport": "^0.2.1",
     "isomorphic-fetch": "^2.2.1",
     "jsonfile": "^3.0.0",
     "mapbox-gl": "^0.39.1",
@@ -51,10 +52,10 @@
     "webpack": "^3.5.2"
   },
   "devDependencies": {
-    "fixy": "^1.1.0",
-    "glob": "^7.1.1",
     "@mapbox/mbtiles": "^0.9.0",
     "@mapbox/tilelive": "^5.12.6",
+    "fixy": "^1.1.0",
+    "glob": "^7.1.1",
     "webpack-dev-middleware": "^1.12.0",
     "xml2js": "^0.4.17"
   },
