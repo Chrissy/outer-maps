@@ -1,4 +1,4 @@
-const optional = require("./optional");
+const optional = require("optional");
 const http = require('http');
 const fs = require('fs');
 const path = require('path').normalize;
