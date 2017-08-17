@@ -6,7 +6,7 @@
     "trails": "node builders/trailsBuilder.js",
     "parks": "node builders/parksBuilder.js",
     "upload": "node builders/uploader.js",
-    "heroku-postbuild": "./node_modules/.bin/webpack --config webpack.production.config.js"
+    "heroku-postbuild": "./node_modules/.bin/webpack --config webpack.production.config.js -p"
   },
   "license": "ISC",
   "dependencies": {
