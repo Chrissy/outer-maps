@@ -1,8 +1,4 @@
-if (!process.env.NPM_CONFIG_PRODUCTION) {
-  const env = require('./environment/development');
-  process.env = {...process.env, ...env};
-}
-
+const optional = require("./optional");
 const http = require('http');
 const fs = require('fs');
 const path = require('path').normalize;
@@ -17,6 +13,11 @@ const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 
 const app = express();
+
+if (!process.env.NPM_CONFIG_PRODUCTION) {
+  const env = optional('./environment/development');
+  process.env = {...process.env, ...env};
+}
 
 app.use(express.static('public'));
 
