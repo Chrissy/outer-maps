@@ -16,7 +16,7 @@ const webpackMiddleware = optional("webpack-dev-middleware");
 const webpackConfig = optional('./webpack.dev.config.js')
 const webpack = optional('webpack');
 const tilelive = optional('@mapbox/tilelive');
-optional('@mapbox/mbtiles').registerProtocols(tilelive);
+const mbtiles = optional('@mapbox/mbtiles');
 
 const app = express();
 
@@ -107,6 +107,8 @@ app.get('/api/terrain/:x/:y/:zoom', function(request, response){
 });
 
 if (!process.env.NPM_CONFIG_PRODUCTION) {
+  mbtiles.registerProtocols(tilelive);
+
   app.use(webpackMiddleware(webpack(webpackConfig), {
     publicPath: webpackConfig.output.publicPath
   }));
