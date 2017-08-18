@@ -1,5 +1,4 @@
-const req = require.context("../styles", true, /\.json$/);
-const base = req("./base.json");
+const base = require("../styles/base.json");
 const baseLayers = base.layers.map(l => req(`./${l}.json`));
 const source = "composite"
 
@@ -8,5 +7,5 @@ export default Object.assign({}, base, {
     if (l.source && l.source == "$source") l.source = source;
     return l;
   }),
-  sources: base["remote"]
+  sources: base[(process.env.TILE_SOURCE || 'remote')]
 });

@@ -1,14 +1,13 @@
 const pg = require('pg');
 const optional = require("optional");
-const env = optional('../environment/development');
 const dbgeo = require('dbgeo');
 
 exports.pool = () => {
   return new pg.Pool({
-    database: process.env.DATABASE_URL || env.databaseName,
+    database: process.env.DATABASE_URL,
     max: 10,
     idleTimeoutMillis: 3000,
-    user: (env == null) ? '' : env.dbUser
+    user: process.env.DATABASE_USER || ''
   });
 };
 
