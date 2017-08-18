@@ -9,5 +9,5 @@ export default Object.assign({}, base, {
     if (l.source && l.source == "$source") l.source = source;
     return l;
   }),
-  sources: base[env.tileSource]
+  sources: (process.env.NPM_CONFIG_PRODUCTION) ? "remote" : base[env.tileSource]
 });
