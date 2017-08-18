@@ -18,6 +18,7 @@ const webpack = optional('webpack');
 const tilelive = optional('@mapbox/tilelive');
 const mbtiles = optional('@mapbox/mbtiles');
 
+const port = process.env.PORT || 8080;
 const app = express();
 
 // if (!process.env.NPM_CONFIG_PRODUCTION) {
@@ -124,6 +125,6 @@ app.get('/api/terrain/:x/:y/:zoom', function(request, response){
 //   });
 // }
 
-app.listen(5000, function () {
+app.listen(port, function () {
   console.log('listening on port 5000');
 });
