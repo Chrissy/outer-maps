@@ -100,7 +100,7 @@ app.get('/api/terrain/:x/:y/:zoom', function(request, response){
   })
 });
 
-if (!process.env.NPM_CONFIG_PRODUCTION) {
+if (!process.env.NODE_ENV == 'production') {
   mbtiles.registerProtocols(tilelive);
 
   app.use(webpackMiddleware(webpack(webpackConfig), {
