@@ -3,11 +3,11 @@ const fs = require('fs');
 const path = require('path').normalize;
 const execSync = require('child_process').execSync;
 const directoryName = "idaho_trails"
-const workingDir = path(process.env.LIB_DIRECTORY + "/" + directoryName);
+const workingDir = path(process.env.LIB + "/" + directoryName);
 
 export const convertCrazyKmlAttributes = function() {
-  const readPath = path(process.env.LIB_DIRECTORY + "/" + directoryName + "/idaho-nonmotorized.geojson");
-  const writePath = path(process.env.LIB_DIRECTORY + "/" + directoryName + "/idaho-nonmotorized-converted.geojson");
+  const readPath = path(process.env.LIB + "/" + directoryName + "/idaho-nonmotorized.geojson");
+  const writePath = path(process.env.LIB + "/" + directoryName + "/idaho-nonmotorized-converted.geojson");
 
 
   if (fs.existsSync(writePath)) return;

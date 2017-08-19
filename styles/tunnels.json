@@ -1,4 +1,4 @@
-[{
+{"layers": [{
   "id": "tunnel-street-low",
   "type": "line",
   "metadata": {
@@ -826,4 +826,4 @@
   "paint": {
     "icon-opacity": 0.5
   }
-}]
+}]}

@@ -1,4 +1,4 @@
-[{
+{"layers": [{
   "id": "admin-3-4-boundaries-bg",
   "type": "line",
   "metadata": {
@@ -207,4 +207,4 @@
       "stops": [[3, 0.5],[10, 2]]
     }
   }
-}]
+}]}

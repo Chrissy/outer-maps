@@ -28,7 +28,7 @@ exports.genericQuery = genericQuery;
 exports.uploadShapeFile = function({directoryName, filename, srid = '4326', tableName}, cb) {
   console.log("uploading...");
 
-  const pathStr = path(process.env.LIB_DIRECTORY + "/" + directoryName);
+  const pathStr = path(process.env.LIB + "/" + directoryName);
 
   execSync(`shp2pgsql -G -c -s ${srid}:4326 ${filename}.shp public.${tableName} | psql -d ${env.databaseName} ${user}`, {cwd: pathStr});
 
@@ -38,7 +38,7 @@ exports.uploadShapeFile = function({directoryName, filename, srid = '4326', tabl
 exports.insertElevationRasters = function({directoryName, srid = '4326', tableName} = {}, cb) {
   console.log("inserting...");
 
-  const pathStr = path(process.env.LIB_DIRECTORY + "/" + directoryName);
+  const pathStr = path(process.env.LIB + "/" + directoryName);
 
   execSync(`raster2pgsql -s ${srid} -t "auto" -C *.tif public.${tableName} | psql -d ${env.databaseName} ${user}`, {cwd: pathStr});
 

@@ -21,11 +21,6 @@ const mbtiles = optional('@mapbox/mbtiles');
 const port = process.env.PORT || 8080;
 const app = express();
 
-// if (!process.env.NPM_CONFIG_PRODUCTION) {
-//   const env = optional('./environment/development');
-//   process.env = {...process.env, ...env};
-// }
-
 app.use(express.static('public'));
 
 const pool = createPool();
@@ -107,23 +102,23 @@ app.get('/api/terrain/:x/:y/:zoom', function(request, response){
   })
 });
 
-// if (!process.env.NPM_CONFIG_PRODUCTION) {
-//   mbtiles.registerProtocols(tilelive);
-//
-//   app.use(webpackMiddleware(webpack(webpackConfig), {
-//     publicPath: webpackConfig.output.publicPath
-//   }));
-//
-//   tilelive.load('mbtiles://./tiles/local.mbtiles', function(err, source) {
-//     if (err) throw err;
-//     app.get('/tiles/:z/:x/:y.*', function(request, response) {
-//       source.getTile(request.params.z, request.params.x, request.params.y, function(err, tile, headers) {
-//         response.setHeader('Content-Encoding', 'gzip');
-//         response.send(tile);
-//       });
-//     });
-//   });
-// }
+if (!process.env.NPM_CONFIG_PRODUCTION) {
+  mbtiles.registerProtocols(tilelive);
+
+  app.use(webpackMiddleware(webpack(webpackConfig), {
+    publicPath: webpackConfig.output.publicPath
+  }));
+
+  tilelive.load('mbtiles://./tiles/local.mbtiles', function(err, source) {
+    if (err) throw err;
+    app.get('/tiles/:z/:x/:y.*', function(request, response) {
+      source.getTile(request.params.z, request.params.x, request.params.y, function(err, tile, headers) {
+        response.setHeader('Content-Encoding', 'gzip');
+        response.send(tile);
+      });
+    });
+  });
+}
 
 app.listen(port, function () {
   console.log('listening on port 5000');

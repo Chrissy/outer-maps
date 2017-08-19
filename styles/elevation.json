@@ -1,4 +1,4 @@
-[{
+{"layers": [{
   "id": "contour-line",
   "type": "line",
   "metadata": {
@@ -232,4 +232,4 @@
     "line-width": 10,
     "line-pattern": "cliff"
   }
-}]
+}]}
