@@ -18,7 +18,6 @@ const webpack = optional('webpack');
 const tilelive = optional('@mapbox/tilelive');
 const mbtiles = optional('@mapbox/mbtiles');
 
-const port = process.env.PORT || 8080;
 const app = express();
 
 app.use(express.static('public'));
@@ -120,6 +119,6 @@ if (!process.env.NPM_CONFIG_PRODUCTION) {
   });
 }
 
-app.listen(port, function () {
+app.listen(process.env.PORT || 5000, function () {
   console.log('listening on port 5000');
 });

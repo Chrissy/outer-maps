@@ -3,11 +3,11 @@
   "version": "0.0.1",
   "scripts": {
     "start": "nf start",
-    "dev": "nf start && gulp watch",
+    "dev": "node server.js && gulp watch",
     "trails": "node builders/trailsBuilder.js",
     "parks": "node builders/parksBuilder.js",
     "upload": "node builders/uploader.js",
-    "heroku-postbuild": "./node_modules/.bin/webpack --config webpack.production.config.js -p && gulp mapify"
+    "heroku-postbuild": " gulp mapify && ./node_modules/.bin/webpack --config webpack.production.config.js -p"
   },
   "license": "ISC",
   "dependencies": {
