@@ -1,14 +1,11 @@
 const pg = require('pg');
 const dbgeo = require('dbgeo');
 
-pg.defaults.ssl = true;
+if (process.env.NODE_ENV == 'production') pg.defaults.ssl = true;
 
 exports.pool = () => {
   return new pg.Pool({
-    database: process.env.DATABASE_URL,
-    max: 10,
-    idleTimeoutMillis: 3000,
-    user: process.env.DATABASE_USER || ''
+    connectionString: process.env.DATABASE_URL
   });
 };
 
