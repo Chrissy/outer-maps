@@ -31,14 +31,17 @@
   font-weight: 800;
   line-height: 1em;
   border-bottom: 3px solid var(--accent-color);
-  padding-bottom: .2em;
+  padding-bottom: .4em;
 }
 
 .image {
   width: 30vw;
   min-width: 200px;
-  height: auto;
+  min-height: 200px;
+  max-width: 400px;
+  max-height: 400px;
   margin-top: -20%;
+  border-radius: 50%;
 }
 
 .text {
