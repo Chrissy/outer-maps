@@ -28,7 +28,7 @@ coverage
 build/Release
 public/static/*
 tiles/*
-environment
+.env
 migrations/.migrate
 
 
