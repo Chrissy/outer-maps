@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "start": "nf start",
-    "dev": "node server.js && gulp watch",
+    "dev": "nf start && gulp watch",
     "trails": "node builders/trailsBuilder.js",
     "parks": "node builders/parksBuilder.js",
     "upload": "node builders/uploader.js",
