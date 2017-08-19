@@ -1,6 +1,8 @@
 const pg = require('pg');
 const dbgeo = require('dbgeo');
 
+pg.defaults.ssl = true;
+
 exports.pool = () => {
   return new pg.Pool({
     database: process.env.DATABASE_URL,
