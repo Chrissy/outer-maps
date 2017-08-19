@@ -3,8 +3,8 @@ import MapboxGL from 'mapbox-gl';
 import bbox from '@turf/bbox';
 import helpers from '@turf/helpers';
 import {accessToken, styleUrl} from '../modules/mapboxStaticData';
-import mapboxStyles from '../modules/mapboxStyleLoader';
 import styles from '../styles/mapbox.css';
+import mapboxStyles from '../public/dist/mapbox-styles.json';
 const WATCH_EVENTS = ['mousedown','mouseup','click','dblclick','mousemove','mouseenter', 'mouseleave','mouseover','mouseout','contextmenu','touchstart','touchend','touchcancel'];
 
 export default class MapBox extends React.PureComponent {

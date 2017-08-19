@@ -1,4 +1,4 @@
-[{
+{"layers": [{
   "id": "national-park-labels",
   "type": "symbol",
   "source": "composite",
@@ -60,4 +60,4 @@
     "text-halo-blur": 0.5
   },
   "filter": ["in", "id", 0]
-}]
+}]}

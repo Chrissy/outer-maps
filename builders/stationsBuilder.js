@@ -1,9 +1,8 @@
 const fs = require('fs');
 const fixy = require('fixy');
-const env = require('../environment/development');
 
-const precip = fs.readFileSync(env.libDirectory + "/noaa_stations/normals-prcp-inventory.txt").toString();
-const temp = fs.readFileSync(env.libDirectory + "/noaa_stations/normals-temp-inventory.txt").toString();
+const precip = fs.readFileSync(process.env.LIB + "/noaa_stations/normals-prcp-inventory.txt").toString();
+const temp = fs.readFileSync(process.env.LIB + "/noaa_stations/normals-temp-inventory.txt").toString();
 
 console.log("parsing stations")
 
@@ -75,4 +74,4 @@ const geoJsonStations = filteredPrecip.filter(p => filteredTemp.find(t => p.id =
 }))
 
 const geoJson = {type:"FeatureCollection", features: geoJsonStations};
-fs.writeFileSync(env.libDirectory + "/noaa_stations/stations.geojson", JSON.stringify(geoJson));
+fs.writeFileSync(process.env.LIB + "/noaa_stations/stations.geojson", JSON.stringify(geoJson));

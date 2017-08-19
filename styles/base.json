@@ -54,7 +54,7 @@
   },
   "glyphs": "mapbox://fonts/fivefourths/{fontstack}/{range}.pbf",
   "sprite": "mapbox://sprites/fivefourths/cj1fdtp1f00002sttxerc303x",
-  "layers": [
+  "imports": [
     "landcover",
     "elevation",
     "roads",

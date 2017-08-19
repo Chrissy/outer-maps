@@ -2,13 +2,12 @@ const xml2js = require('xml2js');
 const fs = require('fs');
 const path = require('path').normalize;
 const execSync = require('child_process').execSync;
-const env = require('../environment/development');
 const directoryName = "idaho_trails"
-const workingDir = path(env.libDirectory + "/" + directoryName);
+const workingDir = path(process.env.LIB + "/" + directoryName);
 
 export const convertCrazyKmlAttributes = function() {
-  const readPath = path(env.libDirectory + "/" + directoryName + "/idaho-nonmotorized.geojson");
-  const writePath = path(env.libDirectory + "/" + directoryName + "/idaho-nonmotorized-converted.geojson");
+  const readPath = path(process.env.LIB + "/" + directoryName + "/idaho-nonmotorized.geojson");
+  const writePath = path(process.env.LIB + "/" + directoryName + "/idaho-nonmotorized-converted.geojson");
 
 
   if (fs.existsSync(writePath)) return;
