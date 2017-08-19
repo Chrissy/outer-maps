@@ -20,8 +20,6 @@ const mbtiles = optional('@mapbox/mbtiles');
 
 const app = express();
 
-app.use(express.static('public'));
-
 const pool = createPool();
 
 app.get('/api/elevation/:id', function(request, response){
@@ -100,6 +98,12 @@ app.get('/api/terrain/:x/:y/:zoom', function(request, response){
   })
 });
 
+if (process.env.NODE_ENV == 'production') {
+  app.get('/dist/bundle.js', (request, response) => {
+    response.redirect('https://s3-us-west-2.amazonaws.com/chrissy-gunk/bundle.js')
+  })
+}
+
 if (process.env.NODE_ENV !== 'production') {
   mbtiles.registerProtocols(tilelive);
 
@@ -117,6 +121,8 @@ if (process.env.NODE_ENV !== 'production') {
     });
   });
 }
+
+app.use(express.static('public'));
 
 app.listen(process.env.PORT || 5000, function () {
   console.log('listening on port 5000');
