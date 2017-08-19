@@ -4,7 +4,6 @@ const merge = require('gulp-merge-json');
 const plumber = require('gulp-plumber');
 const jeditor = require("gulp-json-editor");
 
-
 gulp.task('mapify', () => {
   const index = JSON.parse(fs.readFileSync('./styles/base.json')).imports;
   const tileSource = (process.env.NODE_ENV === 'production') ? "remote" : JSON.parse(fs.readFileSync("./.env")).tiles;

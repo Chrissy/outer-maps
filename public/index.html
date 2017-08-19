@@ -9,40 +9,70 @@
   <link href='bundle.css' rel='stylesheet' />
   <link rel="icon" href="/favicon.png">
   <style>
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(359deg);
+      }
+    }
+
     body {
       min-width: 100%;
       min-height: 100%;
-      background-color: #efefef;
+      background-color: #E9E9E9;
     }
 
-    .spinner {
-      width: 100px;
-      height: 100px;
+    .loading {
       position: absolute;
       left: 50%;
       top: 50%;
       transform: translateX(-50%) translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      margin-top: 1em;
+      animation: spin .75s infinite linear;
+    }
+
+    .spinner path {
+      stroke-width: 5px;
+      stroke: #FF6000;
+    }
+
+    .loader {
+      width: 240px;
+      height: 303px;
     }
   </style>
 </head>
 <body>
 
 <div id='app'>
-  <svg class="spinner" viewBox="0 0 64 64">
-      <g>
-        <defs>
-          <linearGradient id="sGD" gradientUnits="userSpaceOnUse" x1="55" y1="46" x2="2" y2="46">
-            <stop offset="0.1"></stop>
-            <stop offset="1"></stop>
-          </linearGradient>
-        </defs>
-        <g strokeWidth="4" strokeLinecap="round" fill="none" transform="rotate(82.912 32 32)">
-        <path stroke="url(#sGD)" d="M4,32 c0,15,12,28,28,28c8,0,16-4,21-9"></path>
-        <path d="M60,32 C60,16,47.464,4,32,4S4,16,4,32"></path>
-        <animateTransform values="0,32,32;360,32,32" attributeName="transform" type="rotate" repeatCount="indefinite" dur="750ms"></animateTransform>
+  <div class="loading">
+    <img class="loader" src="https://s3-us-west-2.amazonaws.com/chrissy-gunk/loader.jpg"/>
+    <svg class="spinner" viewBox="0 0 64 64">
+        <g>
+          <defs>
+            <linearGradient id="sGD" gradientUnits="userSpaceOnUse" x1="55" y1="46" x2="2" y2="46">
+              <stop offset="0.1"></stop>
+              <stop offset="1"></stop>
+            </linearGradient>
+          </defs>
+          <g strokeWidth="4" strokeLinecap="round" fill="none" transform="rotate(82.912 32 32)">
+          <path stroke="url(#sGD)" d="M4,32 c0,15,12,28,28,28c8,0,16-4,21-9"></path>
+          </g>
         </g>
-      </g>
-    </svg>
+      </svg>
+    </div>
 </div>
 
 <script src='/dist/bundle.js'></script>
