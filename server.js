@@ -72,7 +72,6 @@ app.get('/api/elevation-dump/:x1/:y1/:x2/:y2', function(request, response){
   query(sql, pool, (result) => {
     const vertices = result.rows[0].to_json.valarray
     const json = {length: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices)}
-    fs.writeFileSync(cachedPath, JSON.stringify(json));
     response.json(json);
   });
 });
