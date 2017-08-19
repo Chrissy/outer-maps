@@ -1,5 +1,4 @@
 const pg = require('pg');
-const optional = require("optional");
 const dbgeo = require('dbgeo');
 
 exports.pool = () => {
