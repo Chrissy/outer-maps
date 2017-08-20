@@ -61,3 +61,19 @@
 .marginRightHalf {
   margin-right: .5em;
 }
+
+.marginTopTriple {
+  margin-top: 3em;
+}
+
+.marginBottomTriple {
+  margin-bottom: 3em;
+}
+
+.marginLeftTriple {
+  margin-left: 3em;
+}
+
+.marginRightTriple {
+  margin-right: 3em;
+}
