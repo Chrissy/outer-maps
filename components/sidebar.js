@@ -17,6 +17,10 @@ export default class MapSidebar extends React.Component {
     this.showMoreWeather = this.showMoreWeather.bind(this);
   }
 
+  name() {
+    return (this.props.trails.length > 1) ? `${this.props.trails.length} Trails` : this.props.firstTrail.name;
+  }
+
   terrain() {
     return <Terrain trail={this.props.firstTrail}/>
   }
@@ -56,7 +60,7 @@ export default class MapSidebar extends React.Component {
     return (
       <div className={cx(styles.body, {[styles.active]: this.props.loading})}>
         <div className={cx(styles.content, {[styles.active]: this.props.firstTrail.hasBaseData})}>
-          <div className={styles.title}>{this.props.firstTrail.name}</div>
+          <div className={styles.title}>{this.name()}</div>
           {this.terrainOrTrailList()}
           {this.elevation()}
           {this.importantWeather()}
