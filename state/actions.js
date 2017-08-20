@@ -72,12 +72,19 @@ export function selectTrail(trail) {
     if (!cachedTrail) dispatch({type: 'ADD_TRAIL', ...trail});
     trail = getState().trails.find(t => t.id == props.id);
     dispatch({type: 'CLEAR_BOUNDARY_SELECTED'});
-    dispatch({type: 'TOGGLE_TRAIL_SELECTED', ...trail});
+    dispatch({type: 'SELECT_TRAIL', ...trail});
     dispatch({type: 'SHOW_HANDLES', ...trail});
     dispatch(getTrailData(trail));
     return dispatch(getWeatherData(trail));
   };
 };
+
+export function unselectTrail(id) {
+  return dispatch => {
+    dispatch({type: 'REMOVE_TRAIL_HANDLES', id})
+    return dispatch({type: 'UNSELECT_TRAIL', id});
+  }
+}
 
 export function previewBoundary(boundary) {
   return dispatch => {

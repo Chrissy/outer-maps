@@ -2,7 +2,7 @@ import React from 'react';
 import cx from 'classnames';
 import Elevation from './elevation';
 import Terrain from './terrain';
-import TrailList from './trailList.js'
+import TrailListContainer from './trailListContainer.js'
 import LoadingSpinner from './loadingSpinner';
 import ImportantWeather from './importantWeather';
 import LessImportantWeather from './lessImportantWeather';
@@ -26,7 +26,7 @@ export default class MapSidebar extends React.Component {
   }
 
   trailList() {
-    return <TrailList trails={this.props.trails}/>
+    return <TrailListContainer/>
   }
 
   terrainOrTrailList() {
