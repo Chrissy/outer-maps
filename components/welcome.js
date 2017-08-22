@@ -21,7 +21,7 @@ export default class Tooltip extends React.Component {
 
   render() {
     return (
-      <div className={cx(styles.welcome, center.flex, {[styles.closed]: this.state.closed})} onClick={(e) => this.close(e)}>
+      <div className={cx(styles.welcome, center.flex, {[styles.closed]: false})} onClick={(e) => this.close(e)}>
         <div className={styles.content}>
           <img src="https://s3-us-west-2.amazonaws.com/chrissy-gunk/rocks.jpg" className={styles.image}/>
           <div className={cx(styles.title, spacing.marginTop)}>Welcome to the Trail Gunk demo!</div>

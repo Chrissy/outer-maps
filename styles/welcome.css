@@ -1,10 +1,12 @@
 .welcome {
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   position: absolute;
   background: rgba(52, 70, 50, .9);
   flex-direction: column;
   overflow: scroll;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  box-sizing: border-box;
 }
 
 .closed {
@@ -16,13 +18,13 @@
   width: 50vw;
   min-width: 300px;
   max-width: 600px;
-  margin-top: 2em;
   padding-bottom: 2em;
   padding: 5vw;
   font-family: var(--body-type);
   border: 5px solid #fff;
   color: var(--brand-color);
   text-align: center;
+  margin-top: 5em;
 }
 
 .title {
