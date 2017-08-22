@@ -7,6 +7,8 @@
   overflow: scroll;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
+  padding-top: 5em;
 }
 
 .closed {
@@ -24,7 +26,6 @@
   border: 5px solid #fff;
   color: var(--brand-color);
   text-align: center;
-  margin-top: 5em;
 }
 
 .title {
