@@ -2,6 +2,7 @@ import React from 'react';
 import cx from 'classnames';
 import Elevation from './elevation';
 import Terrain from './terrain';
+import TrailListContainer from './trailListContainer.js'
 import LoadingSpinner from './loadingSpinner';
 import ImportantWeather from './importantWeather';
 import LessImportantWeather from './lessImportantWeather';
@@ -16,8 +17,20 @@ export default class MapSidebar extends React.Component {
     this.showMoreWeather = this.showMoreWeather.bind(this);
   }
 
+  name() {
+    return (this.props.trails.length > 1) ? `${this.props.trails.length} Trails` : this.props.firstTrail.name;
+  }
+
   terrain() {
     return <Terrain trail={this.props.firstTrail}/>
+  }
+
+  trailList() {
+    return <TrailListContainer/>
+  }
+
+  terrainOrTrailList() {
+    return (this.props.trails.length > 1) ? this.trailList() : this.terrain()
   }
 
   elevation() {
@@ -47,8 +60,8 @@ export default class MapSidebar extends React.Component {
     return (
       <div className={cx(styles.body, {[styles.active]: this.props.loading})}>
         <div className={cx(styles.content, {[styles.active]: this.props.firstTrail.hasBaseData})}>
-          <div className={styles.title}>{this.props.firstTrail.name}</div>
-          {this.terrain()}
+          <div className={styles.title}>{this.name()}</div>
+          {this.terrainOrTrailList()}
           {this.elevation()}
           {this.importantWeather()}
           {this.lessImportantWeather()}

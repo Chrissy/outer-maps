@@ -1,0 +1,40 @@
+.listElement, .info, .close {
+  display: flex;
+  align-items: center;
+}
+
+.listElement {
+  width: 100%;
+  border-radius: .5em;
+  justify-content: space-between;
+  background-color: var(--accent-color);
+  box-sizing: border-box;
+  color: #fff;
+  font-size: .9em;
+}
+
+.listElement:nth-of-type(3n+2) {
+  background-color: var(--accent-color-tint-dark);
+}
+
+.listElement:nth-of-type(3n+3) {
+  background-color: var(--accent-color-tint-darker);
+}
+
+.name, .dataElement, .close {
+  padding: .5em .75em;
+}
+
+.dataElement {
+  border-right: 1px solid var(--accent-color-tint-light);
+}
+
+.close svg {
+  width: .75em;
+  height: .75em;
+  padding: 0 .3em 0 .1em;
+}
+
+.close svg path {
+  stroke: #fff;
+}

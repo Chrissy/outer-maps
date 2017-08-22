@@ -21,9 +21,16 @@ const trail = (state = {}, action) => {
       return { ...state, previewing: (state.id === action.id) }
     case 'CLEAR_TRAIL_PREVIEWING':
       return { ...state, previewing: false }
-    case 'TOGGLE_TRAIL_SELECTED':
-      if (state.id === action.id && !action.selected){
+    case 'SELECT_TRAIL':
+      if (state.id === action.id && !state.selected){
         return { ...state, selected: true, selectedId: action.selectedTrailCount};
+      }
+      return state;
+    case 'UNSELECT_TRAIL':
+      if (state.id === action.id && state.selected) {
+        return { ...state, selected: false, selectedId: null};
+      } else if (state.selected && state.selectedId > action.selectedId) {
+        return { ...state, selectedId: state.selectedId - 1 }
       }
       return state;
     case 'CLEAR_TRAIL_SELECTED':
@@ -95,6 +102,11 @@ const trail = (state = {}, action) => {
         return { ...state,
         handles: null
       }
+    case 'REMOVE_TRAIL_HANDLES':
+        if (action.id !== state.id) return state;
+        return { ...state,
+        handles: null
+      }
     default: return state
   }
 }
@@ -108,8 +120,10 @@ const trails = (state = [], action) => {
       return state.map(t => trail(t, action))
     case 'CLEAR_TRAIL_PREVIEWING':
       return state.map(t => trail(t, action))
-    case 'TOGGLE_TRAIL_SELECTED':
+    case 'SELECT_TRAIL':
       return state.map(t => trail(t, {...action, selectedTrailCount: state.filter(e => e.selected).length + 1}))
+    case 'UNSELECT_TRAIL':
+      return state.map(t => trail(t, action))
     case 'CLEAR_TRAIL_SELECTED':
       return state.map(t => trail(t, action))
     case 'SET_TRAIL_DATA':
@@ -123,6 +137,8 @@ const trails = (state = [], action) => {
     case 'SHOW_HANDLES':
       return state.map(t => trail(t, action))
     case 'CLEAR_HANDLES':
+      return state.map(t => trail(t, action))
+    case 'REMOVE_TRAIL_HANDLES':
       return state.map(t => trail(t, action))
     case 'UPDATE_HANDLE':
       return state.map(t => trail(t, action))

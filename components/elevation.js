@@ -2,6 +2,7 @@ import React from 'react';
 import _ from 'underscore';
 import distance from '@turf/distance';
 import ElevationTotals from './elevationTotals';
+import sliceElevationsWithHandles from '../modules/sliceElevationsWithHandles';
 
 export default class Elevation extends React.Component {
 
@@ -21,17 +22,9 @@ export default class Elevation extends React.Component {
     return d1 > d2;
   }
 
-  sliceTrailElevationsWithHandles(trail) {
-    if (!trail.handles) return trail;
-    const indeces = trail.handles.map(h => h.index).sort((a,b) => a - b);
-    return Object.assign({}, trail, {
-      points: trail.points.slice(indeces[0], indeces[1])
-    });
-  }
-
   cumulativeElevations() {
     return this.props.trails.reduce((accumulator, trail) => {
-      const points = this.sliceTrailElevationsWithHandles(trail).points;
+      const points = sliceElevationsWithHandles(trail).points;
       if (accumulator.length == 0) return points;
       const shouldInvertPaths = this.pointsOppose(accumulator, points);
       return accumulator.concat(shouldInvertPaths ? this.reversePoints(points) : points);
