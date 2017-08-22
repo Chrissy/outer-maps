@@ -34,26 +34,34 @@ app.get('/api/elevation/:id', function(request, response){
         SELECT (ST_DumpPoints(path)).geom AS point
         FROM trail
       ), raster AS (
-        SELECT ST_Union(rast) AS rast FROM elevation
+        SELECT ST_Clip(ST_Union(rast), ST_Envelope(path)) AS rast FROM elevation
         CROSS JOIN trail
-        WHERE ST_Intersects(rast, path)
+        WHERE ST_Intersects(rast, path) GROUP BY path
+      ), elevations as (
+        SELECT
+          ST_Value(rast, point) as elevation,
+          ST_X(point) as x,
+          ST_Y(point) as y
+        FROM raster, trail
+        CROSS JOIN points
       )
-    SELECT
-      ST_Value(rast, point) as elevation,
-      ST_X(point) as x,
-      ST_Y(point) as y
-    FROM raster
-    CROSS JOIN points
+      SELECT to_json(ST_DumpValues(rast)) as dump,
+      to_json(array_agg(elevations)) as points from trail, raster, elevations group by rast;
   `;
 
-  query(sql, pool, (result) => {
-    const elevations = statUtils.rollingAverage(statUtils.glitchDetector(result.rows.map(r => r.elevation)), 15);
-    response.json(elevations.map((r, i) => {
-      return {
-        elevation: r,
-        coordinates: [result.rows[i].x, result.rows[i].y]
-      };
-    }));
+  query(sql, pool, ({rows}) => {
+    const points = rows[0].points;
+    const elevations = statUtils.rollingAverage(statUtils.glitchDetector(points.map(r => r.elevation)), 15);
+    const vertices = rows[0].dump.valarray
+    return response.json({
+      elevations: elevations.map((r, i) => {
+        return {
+          elevation: r,
+          coordinates: [points[i].x, points[i].y]
+        };
+      }),
+      dump: {length: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices)}
+    });
   });
 });
 

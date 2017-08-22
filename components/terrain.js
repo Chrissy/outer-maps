@@ -9,13 +9,6 @@ import _ from 'underscore';
 
 export default class Terrain extends React.Component {
 
-  drawAltitude() {
-    fetch(new Request(`/api/elevation-dump/${this.bounds.join("/")}`)).then((r) => r.json()).then(function(resp) {
-      this.altitude = resp;
-      this.drawMap();
-    }.bind(this));
-  }
-
   drawEarth() {
     fetch(new Request(`/api/terrain/${this.view.center.join("/")}/${this.view.zoom}`)).then((r) => r.json()).then(function(resp) {
       this.earth = resp;
@@ -24,8 +17,9 @@ export default class Terrain extends React.Component {
   }
 
   drawMap() {
-    if (!this.earth || !this.altitude) return;
+    if (!this.earth) return;
 
+    this.altitude = this.props.trail.dump;
     let vertices = this.altitude.vertices;
 
     const loader = new TextureLoader();
@@ -87,7 +81,6 @@ export default class Terrain extends React.Component {
       if (!this.initialized) this.initializeCanvas();
 
       this.clearMap()
-      this.drawAltitude();
       this.drawEarth();
     };
   }

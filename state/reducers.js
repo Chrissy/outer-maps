@@ -42,6 +42,7 @@ const trail = (state = {}, action) => {
         hasElevationData: true,
         bounds: bbox(geometry),
         geometry: geometry,
+        dump: action.dump,
         points: action.elevations.map((e, i) => {
           const p = action.elevations[i - 1];
 
