@@ -1,15 +1,20 @@
 import fetch from 'isomorphic-fetch';
 import _ from 'underscore'
 import {getNoaaData} from '../modules/NOAA';
+import GeoViewport from '@mapbox/geo-viewport';
 
 function getTrailData(trail) {
   return (dispatch) => {
     if (trail.hasElevationData) return Promise.resolve();
-    return fetch(`/api/elevation/${trail.id}`)
+
+    const view = GeoViewport.viewport(_.flatten(trail.bounds), [1024, 1024], 1, 14);
+    const bounds = GeoViewport.bounds(view.center, view.zoom, [1024, 1024]);
+
+    return fetch(`/api/elevation/${trail.id}/${bounds.join("/")}`)
       .then(response => response.json())
-      .then(elevations => {
-        const coordinates = elevations.map(e => e.coordinates);
-        dispatch({type: 'SET_TRAIL_DATA', elevations, coordinates, id: trail.id });
+      .then(response => {
+        const coordinates = response.elevations.map(e => e.coordinates);
+        dispatch({type: 'SET_TRAIL_DATA', ...response, coordinates, id: trail.id });
         dispatch({type: 'SHOW_HANDLES', id: trail.id });
       });
   };

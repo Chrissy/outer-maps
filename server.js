@@ -22,7 +22,8 @@ const app = express();
 
 const pool = createPool();
 
-app.get('/api/elevation/:id', function(request, response){
+app.get('/api/elevation/:id/:x1/:y1/:x2/:y2', function(request, response){
+  const box = `ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)`;
 
   const sql = `
     WITH trail AS (
@@ -34,43 +35,34 @@ app.get('/api/elevation/:id', function(request, response){
         SELECT (ST_DumpPoints(path)).geom AS point
         FROM trail
       ), raster AS (
-        SELECT ST_Union(rast) AS rast FROM elevation
+        SELECT ST_Clip(ST_Union(rast), ST_Envelope(${box})) AS rast FROM elevation
         CROSS JOIN trail
-        WHERE ST_Intersects(rast, path)
+        WHERE ST_Intersects(rast, ${box}) GROUP BY path
+      ), elevations as (
+        SELECT
+          ST_Value(rast, point) as elevation,
+          ST_X(point) as x,
+          ST_Y(point) as y
+        FROM raster, trail
+        CROSS JOIN points
       )
-    SELECT
-      ST_Value(rast, point) as elevation,
-      ST_X(point) as x,
-      ST_Y(point) as y
-    FROM raster
-    CROSS JOIN points
+      SELECT to_json(ST_DumpValues(rast)) as dump,
+      to_json(array_agg(elevations)) as points from trail, raster, elevations group by rast;
   `;
 
-  query(sql, pool, (result) => {
-    const elevations = statUtils.rollingAverage(statUtils.glitchDetector(result.rows.map(r => r.elevation)), 15);
-    response.json(elevations.map((r, i) => {
-      return {
-        elevation: r,
-        coordinates: [result.rows[i].x, result.rows[i].y]
-      };
-    }));
-  });
-});
-
-app.get('/api/elevation-dump/:x1/:y1/:x2/:y2', function(request, response){
-  const sql = `
-    select to_json(ST_DumpValues(ST_Clip(ST_Union(rast),
-      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
-    )))
-    from elevation_detailed where ST_Intersects(rast,
-      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
-    );
-  `;
-
-  query(sql, pool, (result) => {
-    const vertices = result.rows[0].to_json.valarray
-    const json = {length: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices)}
-    response.json(json);
+  query(sql, pool, ({rows}) => {
+    const points = rows[0].points;
+    const elevations = statUtils.rollingAverage(statUtils.glitchDetector(points.map(r => r.elevation)), 15);
+    const vertices = rows[0].dump.valarray
+    return response.json({
+      elevations: elevations.map((r, i) => {
+        return {
+          elevation: r,
+          coordinates: [points[i].x, points[i].y]
+        };
+      }),
+      dump: {length: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices)}
+    });
   });
 });
 

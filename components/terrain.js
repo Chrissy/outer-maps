@@ -9,14 +9,7 @@ import _ from 'underscore';
 
 export default class Terrain extends React.Component {
 
-  drawAltitude() {
-    fetch(new Request(`/api/elevation-dump/${this.bounds.join("/")}`)).then((r) => r.json()).then(function(resp) {
-      this.altitude = resp;
-      this.drawMap();
-    }.bind(this));
-  }
-
-  drawEarth() {
+  getEarth() {
     fetch(new Request(`/api/terrain/${this.view.center.join("/")}/${this.view.zoom}`)).then((r) => r.json()).then(function(resp) {
       this.earth = resp;
       this.drawMap();
@@ -24,8 +17,9 @@ export default class Terrain extends React.Component {
   }
 
   drawMap() {
-    if (!this.earth || !this.altitude) return;
+    if (!this.earth) return;
 
+    this.altitude = this.props.trail.dump;
     let vertices = this.altitude.vertices;
 
     const loader = new TextureLoader();
@@ -62,7 +56,7 @@ export default class Terrain extends React.Component {
   initializeCanvas() {
     this.scene = new Scene({autoUpdate: false});
     const camera = new PerspectiveCamera(60, 1000 / 1200, 1, 100000);
-    const renderer = new WebGLRenderer({alpha:true, canvas: this.refs.canvas});
+    const renderer = new WebGLRenderer({canvas: this.refs.canvas});
 
     renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
     renderer.setSize(this.refs.canvasContainer.offsetWidth * 1.3, this.refs.canvasContainer.offsetWidth * 1.3);
@@ -80,22 +74,27 @@ export default class Terrain extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.trail.id !== prevProps.trail.id && this.props.trail.hasBaseData) {
+    if (this.props.trail.id !== prevProps.trail.id) {
+
+      this.trailIsChanging = true;
+    }
+
+    if (this.props.trail.hasElevationData == true && prevProps.hasElevationData == undefined && this.trailIsChanging == true) {
+      this.trailIsChanging = false;
       this.view = GeoViewport.viewport(_.flatten(this.props.trail.bounds), [1024, 1024], 1, 14);
       this.bounds = GeoViewport.bounds(this.view.center, this.view.zoom, [1024, 1024]);
 
       if (!this.initialized) this.initializeCanvas();
 
       this.clearMap()
-      this.drawAltitude();
-      this.drawEarth();
+      this.getEarth();
     };
   }
 
   render() {
     return (
       <div ref="canvasContainer" className={cx(styles.terrain, styles.center)}>
-        <canvas ref="canvas" className={styles.canvas}></canvas>
+        <canvas ref="canvas" className={cx(styles.canvas, {[styles.hidden]: this.trailIsChanging})}></canvas>
       </div>
     )
   }
