@@ -9,7 +9,7 @@ import _ from 'underscore';
 
 export default class Terrain extends React.Component {
 
-  drawEarth() {
+  getEarth() {
     fetch(new Request(`/api/terrain/${this.view.center.join("/")}/${this.view.zoom}`)).then((r) => r.json()).then(function(resp) {
       this.earth = resp;
       this.drawMap();
@@ -74,24 +74,27 @@ export default class Terrain extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.trail.id !== prevProps.trail.id) this.trailHasChanged = true;
+    if (this.props.trail.id !== prevProps.trail.id) {
 
-    if (this.props.trail.hasElevationData == true && prevProps.hasElevationData == undefined && this.trailHasChanged == true) {
-      this.trailHasChanged = false;
+      this.trailIsChanging = true;
+    }
+
+    if (this.props.trail.hasElevationData == true && prevProps.hasElevationData == undefined && this.trailIsChanging == true) {
+      this.trailIsChanging = false;
       this.view = GeoViewport.viewport(_.flatten(this.props.trail.bounds), [1024, 1024], 1, 14);
       this.bounds = GeoViewport.bounds(this.view.center, this.view.zoom, [1024, 1024]);
 
       if (!this.initialized) this.initializeCanvas();
 
       this.clearMap()
-      this.drawEarth();
+      this.getEarth();
     };
   }
 
   render() {
     return (
       <div ref="canvasContainer" className={cx(styles.terrain, styles.center)}>
-        <canvas ref="canvas" className={styles.canvas}></canvas>
+        <canvas ref="canvas" className={cx(styles.canvas, {[styles.hidden]: this.trailIsChanging})}></canvas>
       </div>
     )
   }
