@@ -66,23 +66,6 @@ app.get('/api/elevation/:id/:x1/:y1/:x2/:y2', function(request, response){
   });
 });
 
-app.get('/api/elevation-dump/:x1/:y1/:x2/:y2', function(request, response){
-  const sql = `
-    select to_json(ST_DumpValues(ST_Clip(ST_Union(rast),
-      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
-    )))
-    from elevation_detailed where ST_Intersects(rast,
-      ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)
-    );
-  `;
-
-  query(sql, pool, (result) => {
-    const vertices = result.rows[0].to_json.valarray
-    const json = {length: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices)}
-    response.json(json);
-  });
-});
-
 app.get('/api/terrain/:x/:y/:zoom', function(request, response){
   const params = request.params;
   const cachedImageKey = `terrain-${params.x}-${params.y}-${params.zoom}.jpg`;
