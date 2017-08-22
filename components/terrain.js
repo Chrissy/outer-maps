@@ -74,7 +74,10 @@ export default class Terrain extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.trail.id !== prevProps.trail.id && this.props.trail.hasBaseData) {
+    if (this.props.trail.id !== prevProps.trail.id) this.trailHasChanged = true;
+
+    if (this.props.trail.hasElevationData == true && prevProps.hasElevationData == undefined && this.trailHasChanged == true) {
+      this.trailHasChanged = false;
       this.view = GeoViewport.viewport(_.flatten(this.props.trail.bounds), [1024, 1024], 1, 14);
       this.bounds = GeoViewport.bounds(this.view.center, this.view.zoom, [1024, 1024]);
 

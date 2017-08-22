@@ -22,7 +22,8 @@ const app = express();
 
 const pool = createPool();
 
-app.get('/api/elevation/:id', function(request, response){
+app.get('/api/elevation/:id/:x1/:y1/:x2/:y2', function(request, response){
+  const box = `ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)`;
 
   const sql = `
     WITH trail AS (
@@ -34,9 +35,9 @@ app.get('/api/elevation/:id', function(request, response){
         SELECT (ST_DumpPoints(path)).geom AS point
         FROM trail
       ), raster AS (
-        SELECT ST_Clip(ST_Union(rast), ST_Envelope(path)) AS rast FROM elevation
+        SELECT ST_Clip(ST_Union(rast), ST_Envelope(${box})) AS rast FROM elevation
         CROSS JOIN trail
-        WHERE ST_Intersects(rast, path) GROUP BY path
+        WHERE ST_Intersects(rast, ${box}) GROUP BY path
       ), elevations as (
         SELECT
           ST_Value(rast, point) as elevation,
