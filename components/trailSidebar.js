@@ -5,57 +5,46 @@ import TrailListContainer from './trailListContainer.js'
 import ImportantWeather from './importantWeather';
 import LessImportantWeather from './lessImportantWeather';
 
-export default class MapSidebar extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.showMoreWeather = this.showMoreWeather.bind(this);
+export default ({firstTrail, trails}) => {
+  
+  const terrain = () => {
+    return <Terrain trail={firstTrail}/>
   }
 
-  terrain() {
-    return <Terrain trail={this.props.firstTrail}/>
-  }
-
-  trailList() {
+  const trailList = () => {
     return <TrailListContainer/>
   }
 
-  terrainOrTrailList() {
-    return (this.props.trails.length > 1) ? this.trailList() : this.terrain()
+  const terrainOrTrailList = () => {
+    return (trails.length > 1) ? this.trailList() : this.terrain()
   }
 
-  elevation() {
-    if (this.props.firstTrail.hasElevationData) return <Elevation trails={this.props.trails.filter(t => t.hasElevationData)}/>
+  const elevation = () => {
+    if (firstTrail.hasElevationData) return <Elevation trails={trails.filter(t => t.hasElevationData)}/>
   }
 
-  importantWeather() {
-    if (this.props.firstTrail.hasWeatherData) return <ImportantWeather trail={this.props.firstTrail}/>
+  const importantWeather = () => {
+    if (firstTrail.hasWeatherData) return <ImportantWeather trail={firstTrail}/>
   }
 
-  lessImportantWeather() {
-    if (this.props.firstTrail.hasAdditionalWeatherData) {
-      return <LessImportantWeather trail={this.props.firstTrail}/>
+  const lessImportantWeather = () => {
+    if (firstTrail.hasAdditionalWeatherData) {
+      return <LessImportantWeather trail={firstTrail}/>
     }
   }
 
-  showMoreWeather() {
-    this.props.getAdditionalWeatherData(this.props.firstTrail);
-  }
-
-  showMoreWeatherButton() {
+  const showMoreWeatherButton = () => {
     return '';
-    if (this.props.firstTrail.hasWeatherData) return <a href="#" onClick={(e) => this.showMoreWeather(e)}>More Weather</a>
+    if (firstTrail.hasWeatherData) return <a href="#" onClick={(e) => this.showMoreWeather(e)}>More Weather</a>
   }
 
-  render() {
-    return (
-      <div>
-        {this.terrainOrTrailList()}
-        {this.elevation()}
-        {this.importantWeather()}
-        {this.lessImportantWeather()}
-        {this.showMoreWeatherButton()}
-      </div>
-    )
-  }
+  return (
+    <div>
+      {this.terrainOrTrailList()}
+      {this.elevation()}
+      {this.importantWeather()}
+      {this.lessImportantWeather()}
+      {this.showMoreWeatherButton()}
+    </div>
+  )
 };

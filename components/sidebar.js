@@ -5,29 +5,27 @@ import cx from 'classnames';
 import styles from '../styles/sidebar.css';
 import spacing from '../styles/spacing.css';
 
-export default class MapSidebar extends React.Component {
-  trailOrBoundary() {
-    if (this.props.trails.length) return <TrailSidebar firstTrail={this.props.firstTrail} trails={this.props.trails}/>
-    if (this.props.boundary) return <BoundarySidebar trail={this.props.boundary}/>
+export default ({trails, firstTrail, boundary, loading}) => {
+  const trailOrBoundary = () => {
+    if (trails.length) return <TrailSidebar firstTrail={firstTrail} trails={trails}/>
+    if (boundary) return <BoundarySidebar trail={boundary}/>
   }
   
-  hasContent() {
-    return !!(this.props.trails.length || this.props.boundary)
+  const hasContent = () => {
+    return !!(trails.length || boundary)
   }
     
-  name() {
-    if (this.props.trails.length) return (this.props.trails.length > 1) ? `${this.props.trails.length} Trails` : this.props.firstTrail.name;
-    if (this.props.boundary) return this.props.boundary.name;
+  const name = () => {
+    if (trails.length) return (trails.length > 1) ? `${trails.length} Trails` : firstTrail.name;
+    if (boundary) return boundary.name;
   }
 
-  render() {
-    return (
-      <div className={cx(styles.body, {[styles.active]: this.props.loading})}>
-        <div className={cx(styles.content, {[styles.active]: this.hasContent()})}>
-          <div className={styles.title}>{this.name()}</div>
-          {this.trailOrBoundary()}
-        </div>
+  return (
+    <div className={cx(styles.body, {[styles.active]: loading})}>
+      <div className={cx(styles.content, {[styles.active]: hasContent()})}>
+        <div className={styles.title}>{name()}</div>
+        {trailOrBoundary()}
       </div>
-    )
-  }
+    </div>
+  )
 };

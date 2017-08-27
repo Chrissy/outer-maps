@@ -1,10 +1,8 @@
 import React from 'react';
 
-export default class MapSidebar extends React.Component {
+export default () => {
 
-  render() {
-    return (
-      <div>Hi</div>
-    )
-  }
+  return (
+    <div>Hi</div>
+  )
 };
