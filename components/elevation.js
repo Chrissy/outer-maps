@@ -16,18 +16,27 @@ export default class Elevation extends React.Component {
     });
   }
 
-  pointsOppose(p1, p2) {
-    const d1 = distance(_.last(p1).coordinates, _.first(p2).coordinates);
-    const d2 = distance(_.last(p1).coordinates, _.last(p2).coordinates);
-    return d1 > d2;
+  connectPaths(p1, p2) {
+    const arr = [p1[0], _.last(p1), p2[0], _.last(p2)].map(f => ({...f, pid: f.id + ":" + f.index}));
+    const [a1, a2, b1, b2] = arr;
+    const [close1, close2] = arr.map((el, i) => {
+      const closestPoint = arr.filter(e => e.pid !== el.pid).sort((a1, b1) => {
+        return distance(a1.coordinates, el.coordinates) - distance(b1.coordinates, el.coordinates);
+      })[0];
+      return {...el, distance: distance(closestPoint.coordinates, el.coordinates)}
+    }).sort((a, b) => a.distance - b.distance);
+          
+    if (close1.pid == a1.pid && close2.pid == b1.pid) return [...this.reversePoints(p1), ...p2];
+    if (close1.pid == a1.pid && close2.pid == b2.pid) return [...this.reversePoints(p1), ...this.reversePoints(p2)];
+    if (close1.pid == a2.pid && close2.pid == b2.pid) return [...p1, ...this.reversePoints(p2)];
+    return [...p1, ...p2];
   }
 
   cumulativeElevations() {
     return this.props.trails.reduce((accumulator, trail) => {
       const points = sliceElevationsWithHandles(trail).points;
       if (accumulator.length == 0) return points;
-      const shouldInvertPaths = this.pointsOppose(accumulator, points);
-      return accumulator.concat(shouldInvertPaths ? this.reversePoints(points) : points);
+      return this.connectPaths(accumulator, points);
     }, []);
   }
 
