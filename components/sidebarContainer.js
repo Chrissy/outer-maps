@@ -1,21 +1,16 @@
 import {connect} from 'react-redux';
 import Sidebar from './sidebar';
-import {getAdditionalWeatherData} from '../state/actions'
 
 const mapStateToProps = (state) => {
   const sortedTrails = state.trails.filter(t => t.selected && t.hasBaseData).sort((a,b) => a.selectedId - b.selectedId);
+  const boundary = state.boundaries.find(t => t.selected);
 
   return {
     trails: sortedTrails || [],
     firstTrail: sortedTrails[0] || {},
-    loading: state.trails.some(t => t.selected)
+    loading: state.trails.some(t => t.selected) || boundary,
+    boundary: boundary
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getAdditionalWeatherData: (trail) => dispatch(getAdditionalWeatherData(trail))
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);
+export default connect(mapStateToProps)(Sidebar);
