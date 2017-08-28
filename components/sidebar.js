@@ -8,7 +8,7 @@ import spacing from '../styles/spacing.css';
 export default ({trails, firstTrail, boundary, loading}) => {
   const trailOrBoundary = () => {
     if (trails.length) return <TrailSidebar firstTrail={firstTrail} trails={trails}/>
-    if (boundary) return <BoundarySidebar trail={boundary}/>
+    if (boundary) return <BoundarySidebar boundary={boundary}/>
   }
   
   const hasContent = () => {

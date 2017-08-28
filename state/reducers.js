@@ -211,7 +211,8 @@ const boundary = (state = {}, action) => {
       if (action.id !== state.id) return state;
       return {...state,
         area: action.area,
-        dump: action.dump
+        dump: action.dump,
+        hasElevationData: true
       }
     case 'SET_BOUNDARY_PREVIEWING':
       return { ...state, previewing: (state.id === action.properties.id) }
