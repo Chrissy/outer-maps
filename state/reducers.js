@@ -40,7 +40,6 @@ const trail = (state = {}, action) => {
       const geometry = lineString(action.coordinates).geometry;
       return { ...state,
         hasElevationData: true,
-        bounds: bbox(geometry),
         geometry: geometry,
         dump: action.dump,
         points: action.elevations.map((e, i) => {
