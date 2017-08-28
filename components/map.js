@@ -65,7 +65,7 @@ export default class Map extends React.Component {
           filter: ["==", "id", feature.properties.id]
         }
       });
-      props.onBoundaryClick(feature.properties.id);
+      props.onBoundaryClick(feature);
     }
   }
 

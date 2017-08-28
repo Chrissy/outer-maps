@@ -40,11 +40,11 @@ export default ({firstTrail, trails}) => {
 
   return (
     <div>
-      {this.terrainOrTrailList()}
-      {this.elevation()}
-      {this.importantWeather()}
-      {this.lessImportantWeather()}
-      {this.showMoreWeatherButton()}
+      {terrainOrTrailList()}
+      {elevation()}
+      {importantWeather()}
+      {lessImportantWeather()}
+      {showMoreWeatherButton()}
     </div>
   )
 };

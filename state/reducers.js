@@ -182,8 +182,10 @@ const handle = (state = {}, action) => {
 const boundaries = (state = [], action) => {
   switch (action.type) {
     case 'ADD_BOUNDARY':
-      if (state.some(b => b.id == action.properties.id)) return state;
+      if (state.some(b => b.id == action.id)) return state;
       return [...state, boundary(undefined, action)]
+    case 'SET_BOUNDARY_DATA':
+      return state.map(b => boundary(b, action))
     case 'SET_BOUNDARY_PREVIEWING':
       return state.map(b => boundary(b, action))
     case 'CLEAR_BOUNDARY_PREVIEWING':
@@ -202,7 +204,15 @@ const boundary = (state = {}, action) => {
       return {...state,
         id: action.properties.id,
         name: action.properties.name,
-        geometry: action.geometry
+        geometry: action.geometry,
+        bounds: bbox(action.geometry),
+        hasBaseData: true
+      }
+    case 'SET_BOUNDARY_DATA':
+      if (action.id !== state.id) return state;
+      return {...state,
+        area: action.area,
+        dump: action.dump
       }
     case 'SET_BOUNDARY_PREVIEWING':
       return { ...state, previewing: (state.id === action.properties.id) }

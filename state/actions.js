@@ -99,11 +99,27 @@ export function previewBoundary(boundary) {
   };
 };
 
-export function selectBoundary(id) {
+function getBoundaryData({id, bounds}) {
   return dispatch => {
+    const view = GeoViewport.viewport(_.flatten(bounds), [1024, 1024], 1, 14);
+    const viewBounds = GeoViewport.bounds(view.center, view.zoom, [1024, 1024]);
+
+    return fetch(`/api/boundaries/${id}/${viewBounds.join("/")}`)
+      .then(response => response.json())
+      .then(response => {
+        dispatch({type: 'SET_BOUNDARY_DATA', ...response, id: id });
+      });
+  };
+};
+
+export function selectBoundary(boundary) {
+  return (dispatch, getState) => {
     dispatch({type: 'CLEAR_TRAIL_SELECTED'});
     dispatch({type: 'CLEAR_HANDLES'});
-    return dispatch({type: 'SET_BOUNDARY_SELECTED', id});
+    dispatch({type: 'SET_BOUNDARY_SELECTED', id: boundary.properties.id});
+    dispatch({type: 'ADD_BOUNDARY', ...boundary});
+    const cachedBoundary = getState().boundaries.find(b => b.id == boundary.properties.id);
+    if (!cachedBoundary.hasElevationData) dispatch(getBoundaryData(cachedBoundary));    
   };
 };
 

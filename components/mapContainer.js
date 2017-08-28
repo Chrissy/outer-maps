@@ -28,7 +28,7 @@ const mapDispatchToProps = (dispatch) => {
     onFeatureMouseIn: (feature, layer) => dispatch((layer == "trails") ? previewTrail(feature) : previewBoundary(feature)),
     onFeatureMouseOut: () => dispatch(clearPreviewing()),
     onTrailClick: (trail) => dispatch(selectTrail(trail)),
-    onBoundaryClick: (id) => dispatch(selectBoundary(id)),
+    onBoundaryClick: (boundary) => dispatch(selectBoundary(boundary)),
     onNonFeatureClick: () => dispatch(clearSelected()),
     getTrails: (viewBox) => dispatch(getTrails(viewBox)),
     getBoundaries: (viewBox) => dispatch(getBoundaries(viewBox)),

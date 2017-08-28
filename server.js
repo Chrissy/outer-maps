@@ -36,7 +36,6 @@ app.get('/api/elevation/:id/:x1/:y1/:x2/:y2', function(request, response){
         FROM trail
       ), raster AS (
         SELECT ST_Clip(ST_Union(rast), ST_Envelope(${box})) AS rast FROM elevation
-        CROSS JOIN trail
         WHERE ST_Intersects(rast, ${box}) GROUP BY path
       ), elevations as (
         SELECT
@@ -47,7 +46,7 @@ app.get('/api/elevation/:id/:x1/:y1/:x2/:y2', function(request, response){
         CROSS JOIN points
       )
       SELECT to_json(ST_DumpValues(rast)) as dump,
-      to_json(array_agg(elevations)) as points from trail, raster, elevations group by rast;
+      to_json(array_agg(elevations)) as points from trail, raster, elevations GROUP BY rast;
   `;
 
   query(sql, pool, ({rows}) => {
@@ -61,6 +60,32 @@ app.get('/api/elevation/:id/:x1/:y1/:x2/:y2', function(request, response){
           coordinates: [points[i].x, points[i].y]
         };
       }),
+      dump: {length: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices)}
+    });
+  });
+});
+
+app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
+  const box = `ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)`;
+
+  const sql = `
+    WITH boundary AS (
+        SELECT ST_Area(geog) as area, id
+        FROM boundaries
+        WHERE id = ${request.params.id}
+      ), raster AS (
+        SELECT ST_Clip(ST_Union(rast), ST_Envelope(${box})) AS rast FROM elevation
+        WHERE ST_Intersects(rast, ${box})
+      )
+      SELECT to_json(ST_DumpValues(rast)) as dump,
+      area, id from boundary, raster GROUP BY rast, area, id;
+  `;
+
+  query(sql, pool, ({rows: [row]}) => {
+    const vertices = row.dump.valarray
+    return response.json({
+      area: parseInt(row.area),
+      id: row.id,
       dump: {length: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices)}
     });
   });
