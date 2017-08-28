@@ -8,7 +8,14 @@ import LessImportantWeather from './lessImportantWeather';
 export default ({firstTrail, trails}) => {
   
   const terrain = () => {
-    return <Terrain trail={firstTrail}/>
+    if (firstTrail.hasElevationData) {
+      return <Terrain 
+        index={`trail:${firstTrail.id}`} 
+        height={firstTrail.dump.height} 
+        width={firstTrail.dump.width} 
+        bounds={firstTrail.bounds} 
+        vertices={firstTrail.dump.vertices}/>      
+    }
   }
 
   const trailList = () => {
@@ -16,7 +23,7 @@ export default ({firstTrail, trails}) => {
   }
 
   const terrainOrTrailList = () => {
-    return (trails.length > 1) ? this.trailList() : this.terrain()
+    return (trails.length > 1) ? trailList() : terrain()
   }
 
   const elevation = () => {
@@ -33,18 +40,12 @@ export default ({firstTrail, trails}) => {
     }
   }
 
-  const showMoreWeatherButton = () => {
-    return '';
-    if (firstTrail.hasWeatherData) return <a href="#" onClick={(e) => this.showMoreWeather(e)}>More Weather</a>
-  }
-
   return (
     <div>
       {terrainOrTrailList()}
       {elevation()}
       {importantWeather()}
       {lessImportantWeather()}
-      {showMoreWeatherButton()}
     </div>
   )
 };

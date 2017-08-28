@@ -36,6 +36,7 @@ app.get('/api/elevation/:id/:x1/:y1/:x2/:y2', function(request, response){
         FROM trail
       ), raster AS (
         SELECT ST_Clip(ST_Union(rast), ST_Envelope(${box})) AS rast FROM elevation
+        CROSS JOIN trail
         WHERE ST_Intersects(rast, ${box}) GROUP BY path
       ), elevations as (
         SELECT
@@ -86,7 +87,7 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
     return response.json({
       area: parseInt(row.area),
       id: row.id,
-      dump: {length: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices)}
+      dump: {width: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices)}
     });
   });
 });

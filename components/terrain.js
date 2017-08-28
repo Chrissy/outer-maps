@@ -19,20 +19,19 @@ export default class Terrain extends React.Component {
   drawMap() {
     if (!this.earth) return;
 
-    this.altitude = this.props.trail.dump;
-    let vertices = this.altitude.vertices;
+    let vertices = this.props.vertices;
 
     const loader = new TextureLoader();
     loader.crossOrigin = '';
     const texture = loader.load(this.earth.url);
-    const geometry = new PlaneGeometry(10240, 10240, this.altitude.height - 1, this.altitude.length - 1);
+    const geometry = new PlaneGeometry(10240, 10240, this.props.height - 1, this.props.width - 1);
     const material = new MeshBasicMaterial({map: texture});
     const plane = new Mesh(geometry, material);
 
     plane.geometry.vertices.map((v,i) => {
       let z = vertices[i];
       if (z == null || z == NaN || z == undefined) {
-        z = vertices[i - 1] || vertices[i + 1] || vertices[i - this.altitude.height] || vertices[i + this.altitude.height];
+        z = vertices[i - 1] || vertices[i + 1] || vertices[i - this.props.height] || vertices[i + this.props.height];
       };
       return Object.assign(v, {z: z})
     });
@@ -72,29 +71,27 @@ export default class Terrain extends React.Component {
 
     this.initialized = true;
   }
+  
+  draw() {
+    this.view = GeoViewport.viewport(_.flatten(this.props.bounds), [1024, 1024], 1, 14);
 
-  componentDidUpdate(prevProps) {
-    if (this.props.trail.id !== prevProps.trail.id) {
+    this.clearMap();
+    this.getEarth();
+  }
+  
+  componentDidMount() {
+    this.initializeCanvas();
+    this.draw()
+  }
 
-      this.trailIsChanging = true;
-    }
-
-    if (this.props.trail.hasElevationData == true && prevProps.hasElevationData == undefined && this.trailIsChanging == true) {
-      this.trailIsChanging = false;
-      this.view = GeoViewport.viewport(_.flatten(this.props.trail.bounds), [1024, 1024], 1, 14);
-      this.bounds = GeoViewport.bounds(this.view.center, this.view.zoom, [1024, 1024]);
-
-      if (!this.initialized) this.initializeCanvas();
-
-      this.clearMap()
-      this.getEarth();
-    };
+  componentDidUpdate(prevProps) {    
+    if (this.props.index !== prevProps.index) this.draw();
   }
 
   render() {
     return (
       <div ref="canvasContainer" className={cx(styles.terrain, styles.center)}>
-        <canvas ref="canvas" className={cx(styles.canvas, {[styles.hidden]: this.trailIsChanging})}></canvas>
+        <canvas ref="canvas" className={styles.canvas}></canvas>
       </div>
     )
   }
