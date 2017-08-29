@@ -1,11 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import TrailSidebar from './trailSidebar';
 import BoundarySidebar from './boundarySidebar';
 import cx from 'classnames';
 import styles from '../styles/sidebar.css';
 import spacing from '../styles/spacing.css';
 
-export default ({trails, firstTrail, boundary, loading}) => {
+const Sidebar = ({trails, firstTrail, boundary, loading}) => {
   const trailOrBoundary = () => {
     if (trails.length) return <TrailSidebar firstTrail={firstTrail} trails={trails}/>
     if (boundary) return <BoundarySidebar boundary={boundary}/>
@@ -29,3 +30,12 @@ export default ({trails, firstTrail, boundary, loading}) => {
     </div>
   )
 };
+
+Sidebar.propTypes = {
+  trails: PropTypes.array,
+  firstTrail: PropTypes.object,
+  boundary: PropTypes.object,
+  loading: PropTypes.bool
+}
+
+export default Sidebar;

@@ -8,7 +8,7 @@ const mapStateToProps = (state) => {
   return {
     trails: sortedTrails || [],
     firstTrail: sortedTrails[0] || {},
-    loading: state.trails.some(t => t.selected) || boundary,
+    loading: state.trails.some(t => t.selected) || !!boundary,
     boundary: boundary
   }
 }

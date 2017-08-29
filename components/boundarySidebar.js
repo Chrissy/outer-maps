@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Terrain from './terrain';
 
-export default ({boundary}) => {
+const BoundarySidebar = ({boundary}) => {
   const terrain = () => {
     if (boundary.hasElevationData) {
       return <Terrain 
@@ -19,3 +20,11 @@ export default ({boundary}) => {
     </div>
   )
 };
+
+BoundarySidebar.propTypes = {
+  boundary: PropTypes.object
+};
+
+export default BoundarySidebar;
+
+

@@ -1,11 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Elevation from './elevation';
 import Terrain from './terrain';
 import TrailListContainer from './trailListContainer.js'
 import ImportantWeather from './importantWeather';
 import LessImportantWeather from './lessImportantWeather';
 
-export default ({firstTrail, trails}) => {
+const TrailSidebar = ({firstTrail, trails}) => {
   
   const terrain = () => {
     if (firstTrail.hasElevationData) {
@@ -49,3 +50,10 @@ export default ({firstTrail, trails}) => {
     </div>
   )
 };
+
+TrailSidebar.propTypes = {
+  firstTrail: PropTypes.object,
+  trails: PropTypes.array
+}
+
+export default TrailSidebar;

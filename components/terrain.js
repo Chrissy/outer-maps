@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {WebGLRenderer, Scene, PerspectiveCamera, TextureLoader, PlaneGeometry, MeshBasicMaterial, Mesh, DefaultLoadingManager} from 'three';
 import GeoViewport from '@mapbox/geo-viewport';
 import styles from '../styles/terrain.css';
@@ -96,3 +97,11 @@ export default class Terrain extends React.Component {
     )
   }
 };
+
+Terrain.propTypes = {
+  index: PropTypes.string,
+  height: PropTypes.number,
+  width: PropTypes.number,
+  bounds: PropTypes.array,
+  vertices: PropTypes.array
+}
