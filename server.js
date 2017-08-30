@@ -82,7 +82,7 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
           WHERE ST_Length(trails.geog) > 800 AND ST_Intersects(${box}, trails.geog) 
           AND ST_Intersects(boundary.geog, trails.geog)
         ), long_trails AS (
-          SELECT * FROM park_trails ORDER BY length DESC
+          SELECT * FROM park_trails ORDER BY length DESC LIMIT 10
         )
         SELECT boundary.area, boundary.id, to_json(ST_DumpValues(rast)) as dump,
         count(park_trails.id) as trails_count,
@@ -91,13 +91,16 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
       `;
         
   query(sql, pool, ({rows: [row]}) => {
-    const vertices = row.dump.valarray
+    const vertices = row.dump.valarray;
+    const flatVertices = _.flatten(vertices);
+    
     return response.json({
       area: parseInt(row.area),
       id: row.id,
       trailsCount: row.trails_count,
       longTrails: row.long_trails,
-      dump: {width: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices)}
+      dump: {width: vertices.length, height: vertices[0].length, vertices: flatVertices},
+      maxElevation: Math.max(...flatVertices)
     });
   });
 });
