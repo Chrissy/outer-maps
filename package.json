@@ -4,9 +4,9 @@
   "scripts": {
     "start": "nf start",
     "dev": "nf start && gulp watch",
-    "trails": "node builders/trailsBuilder.js",
-    "parks": "node builders/parksBuilder.js",
-    "upload": "node builders/uploader.js",
+    "trails": "nf run node builders/trailsBuilder.js",
+    "parks": "nf run node builders/parksBuilder.js",
+    "upload": "nf run node builders/uploader.js",
     "heroku-postbuild": " gulp mapify && ./node_modules/.bin/webpack --config webpack.production.config.js -p && node builders/uploadBundle.js"
   },
   "license": "ISC",
