@@ -80,7 +80,7 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
         ), park_trails AS (
           SELECT trails.name, trails.id, trails.type, ST_Length(trails.geog) as length FROM trails, boundary
           WHERE ST_Length(trails.geog) > 800 AND ST_Intersects(${box}, trails.geog) 
-          AND ST_Intersects(boundary.geog, trails.geog)
+          AND ST_Intersects(boundary.geog, trails.geog) ORDER BY length DESC LIMIT 1000
         )
         SELECT boundary.area, boundary.id, to_json(ST_DumpValues(rast)) as dump,
         to_json(array_agg(park_trails)) as trails
@@ -95,7 +95,20 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
       area: parseInt(row.area),
       id: row.id,
       trailsCount: row.trails.length,
-      trails: row.trails,
+      trails: row.trails.slice(0, 10),
+      trailTypes: {
+        hike: row.trails.filter(t => t.type == "hike").length,
+        bike: row.trails.filter(t => t.type == "bike").length,
+        horse: row.trails.filter(t => t.type == "horse").length,
+        ohv: row.trails.filter(t => t.type == "atv" || t.type == "motorcycle").length
+      },
+      trailLengths: {
+        "1-3": row.trails.filter(t => t.length <= 4828).length,
+        "3-7": row.trails.filter(t => t.length > 4828 && t.length <= 11265).length,
+        "7-15": row.trails.filter(t => t.length > 11265 && t.length <= 24140).length,
+        "15-25": row.trails.filter(t => t.length > 24140 && t.length <= 32186).length,
+        "25+": row.trails.filter(t => t.length >= 40233).length
+      },
       dump: {width: vertices.length, height: vertices[0].length, vertices: flatVertices},
       maxElevation: Math.max(...flatVertices)
     });
