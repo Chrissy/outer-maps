@@ -69,24 +69,34 @@ app.get('/api/elevation/:id/:x1/:y1/:x2/:y2', function(request, response){
 app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
   const box = `ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)`;
 
-  const sql = `
-    WITH boundary AS (
-        SELECT ST_Area(geog) as area, id
-        FROM boundaries
-        WHERE id = ${request.params.id}
-      ), raster AS (
-        SELECT ST_Clip(ST_Union(rast), ST_Envelope(${box})) AS rast FROM elevation
-        WHERE ST_Intersects(rast, ${box})
-      )
-      SELECT to_json(ST_DumpValues(rast)) as dump,
-      area, id from boundary, raster GROUP BY rast, area, id;
-  `;
-
+  const sql = `      
+      WITH boundary AS (
+          SELECT ST_Area(geog) as area, id, geog
+          FROM boundaries
+          WHERE id = ${request.params.id}
+        ), raster AS (
+          SELECT ST_Clip(ST_Union(rast), ${box}) AS rast FROM elevation
+          WHERE ST_Intersects(rast, ${box})
+        ), park_trails AS (
+          SELECT trails.name, trails.id, ST_Length(trails.geog) as length FROM trails, boundary
+          WHERE ST_Length(trails.geog) > 800 AND ST_Intersects(${box}, trails.geog) 
+          AND ST_Intersects(boundary.geog, trails.geog)
+        ), long_trails AS (
+          SELECT * FROM park_trails ORDER BY length DESC
+        )
+        SELECT boundary.area, boundary.id, to_json(ST_DumpValues(rast)) as dump,
+        count(park_trails.id) as trails_count,
+        to_json(array_agg(long_trails)) as long_trails
+        from boundary, raster, park_trails, long_trails GROUP BY rast, area, boundary.id;
+      `;
+        
   query(sql, pool, ({rows: [row]}) => {
     const vertices = row.dump.valarray
     return response.json({
       area: parseInt(row.area),
       id: row.id,
+      trailsCount: row.trails_count,
+      longTrails: row.long_trails,
       dump: {width: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices)}
     });
   });
