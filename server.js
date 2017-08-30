@@ -78,16 +78,13 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
           SELECT ST_Clip(ST_Union(rast), ${box}) AS rast FROM elevation
           WHERE ST_Intersects(rast, ${box})
         ), park_trails AS (
-          SELECT trails.name, trails.id, ST_Length(trails.geog) as length FROM trails, boundary
+          SELECT trails.name, trails.id, trails.type, ST_Length(trails.geog) as length FROM trails, boundary
           WHERE ST_Length(trails.geog) > 800 AND ST_Intersects(${box}, trails.geog) 
           AND ST_Intersects(boundary.geog, trails.geog)
-        ), long_trails AS (
-          SELECT * FROM park_trails ORDER BY length DESC LIMIT 10
         )
         SELECT boundary.area, boundary.id, to_json(ST_DumpValues(rast)) as dump,
-        count(park_trails.id) as trails_count,
-        to_json(array_agg(long_trails)) as long_trails
-        from boundary, raster, park_trails, long_trails GROUP BY rast, area, boundary.id;
+        to_json(array_agg(park_trails)) as trails
+        from boundary, raster, park_trails GROUP BY rast, area, boundary.id;
       `;
         
   query(sql, pool, ({rows: [row]}) => {
@@ -97,8 +94,8 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
     return response.json({
       area: parseInt(row.area),
       id: row.id,
-      trailsCount: row.trails_count,
-      longTrails: row.long_trails,
+      trailsCount: row.trails.length,
+      trails: row.trails,
       dump: {width: vertices.length, height: vertices[0].length, vertices: flatVertices},
       maxElevation: Math.max(...flatVertices)
     });
