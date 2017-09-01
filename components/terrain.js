@@ -21,20 +21,19 @@ export default class Terrain extends React.Component {
     if (!this.earth) return;
 
     let vertices = this.props.vertices;
-
     const loader = new TextureLoader();
     loader.crossOrigin = '';
     const texture = loader.load(this.earth.url);
-    const geometry = new PlaneGeometry(10240, 10240, this.props.height - 1, this.props.width - 1);
+    const geometry = new PlaneGeometry(200, 200, this.props.height - 1, this.props.width - 1);
     const material = new MeshBasicMaterial({map: texture});
     const plane = new Mesh(geometry, material);
-
+            
     plane.geometry.vertices.map((v,i) => {
       let z = vertices[i];
       if (z == null || z == NaN || z == undefined) {
         z = vertices[i - 1] || vertices[i + 1] || vertices[i - this.props.height] || vertices[i + this.props.height];
       };
-      return Object.assign(v, {z: z})
+      return Object.assign(v, { z: z / 100 })
     });
 
     plane.rotation.x = 5.7;
@@ -55,12 +54,14 @@ export default class Terrain extends React.Component {
 
   initializeCanvas() {
     this.scene = new Scene({autoUpdate: false});
-    const camera = new PerspectiveCamera(60, 1000 / 1200, 1, 100000);
+    
+    const camera = new PerspectiveCamera(50, 1, 0.1, 1000);    
+    camera.position.y = -20;
+    camera.position.z = 200;
+    
     const renderer = new WebGLRenderer({canvas: this.refs.canvas});
-
     renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
-    renderer.setSize(this.refs.canvasContainer.offsetWidth * 1.3, this.refs.canvasContainer.offsetWidth * 1.3);
-    camera.position.z = 11000;
+    renderer.setSize(this.refs.canvasContainer.offsetWidth, this.refs.canvasContainer.offsetWidth);
 
     this.renderMap = function() {
       renderer.render(this.scene, camera);
@@ -74,7 +75,7 @@ export default class Terrain extends React.Component {
   }
   
   draw() {
-    this.view = GeoViewport.viewport(_.flatten(this.props.bounds), [1024, 1024], 1, 14);
+    this.view = GeoViewport.viewport(_.flatten(this.props.bounds), [1024, 1024], 12, 14);
 
     this.clearMap();
     this.getEarth();

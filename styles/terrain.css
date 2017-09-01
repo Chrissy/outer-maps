@@ -3,6 +3,7 @@
   height: 220px;
   overflow: hidden;
   background-color: #000;
+  position: relative;
 }
 
 @media (max-width: 600px) {
@@ -14,5 +15,8 @@
 .hidden { opacity: 0; }
 
 .canvas {
-  transform: translateY(-30%) translateX(-8%);
+  transform: translateY(-50%) translateX(-50%);
+  left: 50%;
+  top: 50%;
+  position: absolute;
 }

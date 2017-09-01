@@ -204,7 +204,7 @@ const boundary = (state = {}, action) => {
         id: action.properties.id,
         name: action.properties.name,
         geometry: action.geometry,
-        bounds: bbox(action.geometry),
+        bounds: bbox(JSON.parse(action.properties.bounds)),
         hasBaseData: true
       }
     case 'SET_BOUNDARY_DATA':

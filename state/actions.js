@@ -7,7 +7,7 @@ function getTrailData(trail) {
   return (dispatch) => {
     if (trail.hasElevationData) return Promise.resolve();
 
-    const view = GeoViewport.viewport(_.flatten(trail.bounds), [1024, 1024], 1, 14);
+    const view = GeoViewport.viewport(_.flatten(trail.bounds), [1024, 1024], 12, 14);
     const bounds = GeoViewport.bounds(view.center, view.zoom, [1024, 1024]);
 
     return fetch(`/api/elevation/${trail.id}/${bounds.join("/")}`)
@@ -101,7 +101,7 @@ export function previewBoundary(boundary) {
 
 function getBoundaryData({id, bounds}) {
   return dispatch => {
-    const view = GeoViewport.viewport(_.flatten(bounds), [1024, 1024], 1, 14);
+    const view = GeoViewport.viewport(_.flatten(bounds), [1024, 1024], 12, 14);
     const viewBounds = GeoViewport.bounds(view.center, view.zoom, [1024, 1024]);
 
     return fetch(`/api/boundaries/${id}/${viewBounds.join("/")}`)
