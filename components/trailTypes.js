@@ -17,9 +17,9 @@ const TrailTypes = ({hike, bike, ohv, horse}) => {
     <div className={styles.trailTypes}>
       <div className={cx(styles.percentBar, spacing.marginBottom)}>
         <div className={styles.percentBarBar} style={{width: percent(hike)}}></div>
+        <div className={styles.percentBarBar} style={{width: percent(horse)}}></div>
         <div className={styles.percentBarBar} style={{width: percent(bike)}}></div>
         <div className={styles.percentBarBar} style={{width: percent(ohv)}}></div>
-        <div className={styles.percentBarBar} style={{width: percent(horse)}}></div>
       </div>
       <div className={styles.trailTypesBreakdown}>
         <div className={styles.type}>
@@ -27,12 +27,12 @@ const TrailTypes = ({hike, bike, ohv, horse}) => {
           {percent(hike)} Hike
         </div>
         <div className={styles.type}>
-          <Bike className={styles.icon}/>
-          {percent(bike)} Bike
-        </div>
-        <div className={styles.type}>
           <Horse className={styles.icon}/>
           {percent(horse)} Horse
+        </div>
+        <div className={styles.type}>
+          <Bike className={styles.icon}/>
+          {percent(bike)} Bike
         </div>
         <div className={styles.type}>
           <Ohv className={styles.icon}/>

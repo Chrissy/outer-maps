@@ -19,24 +19,36 @@
 
 .percentBarBar {
   height: 100%;
-  background-color: var(--accent-color-tint-lighter);
+  background-color: var(--accent-color-tint-darker);
 }
 
 .percentBarBar:nth-of-type(4n+2) {
-  background-color: var(--accent-color);
-}
-
-.percentBarBar:nth-of-type(4n+3) {
   background-color: var(--accent-color-tint-dark);
 }
 
+.percentBarBar:nth-of-type(4n+3) {
+  background-color: var(--accent-color);
+}
+
 .percentBarBar:nth-of-type(4n+4) {
-  background-color: var(--accent-color-tint-darker);
+  background-color: var(--accent-color-tint-lighter);
 }
 
 .type {
   display: flex;
   font-size: .8em;
+  color: var(--accent-color-tint-darker);
+}
+
+.type:nth-of-type(4n+2) {
+  color: var(--accent-color-tint-dark);
+}
+
+.type:nth-of-type(4n+3) {
+  color: var(--accent-color);
+}
+
+.type:nth-of-type(4n+4) {
   color: var(--accent-color-tint-lighter);
 }
 
@@ -44,29 +56,17 @@
   height: auto;
   width: 1.8em;
   margin-right: .3em;
-  fill: var(--accent-color-tint-lighter);
-}
-
-.type:nth-of-type(4n+2) {
-  color: var(--accent-color);
-}
-
-.type:nth-of-type(4n+3) {
-  color: var(--accent-color-tint-dark);
-}
-
-.type:nth-of-type(4n+4) {
-  color: var(--accent-color-tint-darker);
+  fill: var(--accent-color-tint-darker);
 }
 
 .type:nth-of-type(4n+2) svg {
-  fill: var(--accent-color);
-}
-
-.type:nth-of-type(4n+3) svg {
   fill: var(--accent-color-tint-dark);
 }
 
+.type:nth-of-type(4n+3) svg {
+  fill: var(--accent-color);
+}
+
 .type:nth-of-type(4n+4) svg {
-  fill: var(--accent-color-tint-darker);
+  fill: var(--accent-color-tint-lighter);
 }
