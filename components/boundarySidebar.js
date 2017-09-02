@@ -45,7 +45,7 @@ const BoundarySidebar = ({boundary}) => {
     if (boundary.hasElevationData && boundary.trailLengths.length) {
       return (
         <div className={cx(spacing.horizontalPadding, spacing.verticalPadding)}>
-          <div className={cx(label.label, spacing.marginBottomHalf)}>Trail Breakdown</div>
+          <div className={cx(label.label, spacing.marginBottomHalf)}>Mileage Breakdown</div>
           <HorizontalBarGraph 
             keys={boundary.trailLengths.map(p => p[0])} 
             values={boundary.trailLengths.map(p => p[1])} />

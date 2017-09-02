@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import styles from '../styles/horizontalBarGraph.css';
 
 const trailLengths = ({keys, values}) => {
-  const toPercentageWidth = (value) => Math.round(value / Math.max(...values)) * 100 + "%";
+  const toPercentageWidth = (value) => Math.round(value / Math.max(...values) * 100) + "%";
   
   const pairsToGraph = () => {
-    return values.map((value, i) => (
-      <div className={styles.bar}>
-        <div className={styles.barColor} styles={{width: toPercentageWidth(value)}}></div>
+    return values.filter(value => value).map((value, i) => (
+      <div className={styles.bar} key={keys[i]}>
+        <div className={styles.barColor} style={{width: toPercentageWidth(value)}}></div>
         <div className={styles.barLabel}>{keys[i]}</div>
       </div>
     ))
