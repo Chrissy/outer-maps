@@ -10,7 +10,7 @@
   background-color: var(--accent-color);
   box-sizing: border-box;
   color: #fff;
-  font-size: .9em;
+  font-size: .75em;
 }
 
 .listElement:nth-of-type(3n+2) {

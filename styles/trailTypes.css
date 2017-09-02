@@ -31,7 +31,7 @@
 
 .type {
   display: flex;
-  font-size: .8em;
+  font-size: .75em;
   color: var(--accent-color-tint-darker);
 }
 
