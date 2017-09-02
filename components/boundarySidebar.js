@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Terrain from './terrain';
+import TrailBreakdown from './trailBreakdown';
 import BoundaryTotals from './boundaryTotals';
 
 const BoundarySidebar = ({boundary}) => {
@@ -26,7 +27,7 @@ const BoundarySidebar = ({boundary}) => {
   
   const trailBreakdown = () => {
     if (boundary.hasElevationData) {
-      return <trailBreakdown {...boundary.trailTypes}/>
+      return <TrailBreakdown {...boundary.trailTypes}/>
     }
   }
 

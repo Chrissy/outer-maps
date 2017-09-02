@@ -1,10 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const trailBreakdown = ({hike, bike, ohv, horse}) => {
+const TrailBreakdown = ({hike, bike, ohv, horse}) => {
   return (
     <div>
       {hike} / {bike} / {ohv} / {horse}
     </div>
   )
 }
+
+TrailBreakdown.propTypes = {
+  hike: PropTypes.number,
+  bike: PropTypes.number,
+  ohv: PropTypes.number,
+  horse: PropTypes.number
+}
+
+export default TrailBreakdown;
