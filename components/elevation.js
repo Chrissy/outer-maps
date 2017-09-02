@@ -1,12 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import _ from 'underscore';
 import distance from '@turf/distance';
 import ElevationTotals from './elevationTotals';
 import sliceElevationsWithHandles from '../modules/sliceElevationsWithHandles';
 
-export default class Elevation extends React.Component {
+const Elevation = ({trails}) => {
 
-  reversePoints(points) {
+  const reversePoints = (points) => {
     return [...points].reverse().map((point, i) => {
       return {...point,
         distance: (i == 0) ? 0 : points[i - 1].distance,
@@ -16,7 +17,7 @@ export default class Elevation extends React.Component {
     });
   }
 
-  connectPaths(p1, p2) {
+  const connectPaths = (p1, p2) => {
     const arr = [p1[0], _.last(p1), p2[0], _.last(p2)].map(f => ({...f, pid: f.id + ":" + f.index}));
     const [a1, a2, b1, b2] = arr;
     const [close1, close2] = arr.map((el, i) => {
@@ -26,25 +27,29 @@ export default class Elevation extends React.Component {
       return {...el, distance: distance(closestPoint.coordinates, el.coordinates)}
     }).sort((a, b) => a.distance - b.distance);
           
-    if (close1.pid == a1.pid && close2.pid == b1.pid) return [...this.reversePoints(p1), ...p2];
-    if (close1.pid == a1.pid && close2.pid == b2.pid) return [...this.reversePoints(p1), ...this.reversePoints(p2)];
-    if (close1.pid == a2.pid && close2.pid == b2.pid) return [...p1, ...this.reversePoints(p2)];
+    if (close1.pid == a1.pid && close2.pid == b1.pid) return [...reversePoints(p1), ...p2];
+    if (close1.pid == a1.pid && close2.pid == b2.pid) return [...reversePoints(p1), ...reversePoints(p2)];
+    if (close1.pid == a2.pid && close2.pid == b2.pid) return [...p1, ...reversePoints(p2)];
     return [...p1, ...p2];
   }
 
-  cumulativeElevations() {
-    return this.props.trails.reduce((accumulator, trail) => {
+  const cumulativeElevations = () => {
+    return trails.reduce((accumulator, trail) => {
       const points = sliceElevationsWithHandles(trail).points;
       if (accumulator.length == 0) return points;
-      return this.connectPaths(accumulator, points);
+      return connectPaths(accumulator, points);
     }, []);
   }
 
-  render() {
-    return (
-      <div>
-        <ElevationTotals elevations={this.cumulativeElevations()}/>
-      </div>
-    )
-  }
+  return (
+    <div>
+      <ElevationTotals elevations={cumulativeElevations()}/>
+    </div>
+  )
 };
+
+Elevation.propTypes = {
+  trails: PropTypes.array
+}
+
+export default Elevation;
