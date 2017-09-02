@@ -54,8 +54,10 @@ export default class Terrain extends React.Component {
 
   initializeCanvas() {
     this.scene = new Scene({autoUpdate: false});
+
+    const aspectRatio = this.refs.canvasContainer.offsetWidth / this.refs.canvasContainer.offsetHeight;
     
-    const camera = new PerspectiveCamera(23, this.refs.canvasContainer.offsetWidth / this.refs.canvasContainer.offsetHeight, 0.1, 1000);    
+    const camera = new PerspectiveCamera(52 / aspectRatio, aspectRatio, 0.1, 1000);    
     camera.position.y = -20;
     camera.position.z = 200;
     
