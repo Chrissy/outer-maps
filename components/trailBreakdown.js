@@ -2,9 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const TrailBreakdown = ({hike, bike, ohv, horse}) => {
+  const total = () => hike + bike + ohv + horse;
+  
+  const percent = (number) => Math.round(number / total() * 100) + "%"
+  
   return (
     <div>
-      {hike} / {bike} / {ohv} / {horse}
+      {percent(hike)} / {percent(bike)} / {percent(ohv)} / {percent(horse)}
     </div>
   )
 }
