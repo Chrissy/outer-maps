@@ -27,6 +27,10 @@
   height: 0.8em;
 }
 
+.path svg {
+  height: 1.3em;
+}
+
 .total {
   font-size: 2.2em;
   font-weight: 800;

@@ -42,7 +42,7 @@ const ElevationTotals = ({elevations}) => {
           <div className={stat.total}>{miles()}</div>
           <div className={stat.label}>Miles</div>
         </div>
-        <div className={cx(stat.stat)}>
+        <div className={stat.stat}>
           <Mountain className={cx(stat.icon, stat.mountain)} />
           <div className={stat.total}>
             {new Intl.NumberFormat().format(metersToFeet(elevationGain()))}

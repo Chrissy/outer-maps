@@ -3,4 +3,8 @@
   grid-template-columns: .33fr .33fr .33fr;
 }
 
- 
+@media (min-width: 900px) {
+  .boundaryTotals {
+    height: 7em;
+  }
+}
