@@ -1,8 +1,8 @@
 .trailsChartElement {
   display: grid;
   grid-template-columns: 1fr 3em;
-  padding: .5em 0 .5em 1em;
   font-size: .8em;
+  line-height: 1.1em;
 }
 
 .trailsChartElement[id] {
@@ -10,11 +10,18 @@
 }
 
 .trailsChartElement:nth-of-type(even) {
-  background-color: var(--gray-2);
+  background-color: var(--gray-3);
 } 
+
+.name, .distance {
+  padding: .5em;
+}
 
 .name {
   color: var(--gray-7);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .distance {

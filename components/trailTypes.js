@@ -15,14 +15,14 @@ const TrailTypes = ({hike, bike, ohv, horse}) => {
   const percent = (number) => Math.round(number / total() * 100) + "%"
   
   return (
-    <div className={styles.trailTypes}>
+    <div>
       <div className={cx(styles.percentBar, spacing.marginBottom)}>
         <div className={styles.percentBarBar} style={{width: percent(hike)}}></div>
         <div className={styles.percentBarBar} style={{width: percent(horse)}}></div>
         <div className={styles.percentBarBar} style={{width: percent(bike)}}></div>
         <div className={styles.percentBarBar} style={{width: percent(ohv)}}></div>
       </div>
-      <div className={styles.trailTypesBreakdown}>
+      <div className={styles.trailTypes}>
         <div className={styles.type}>
           <Hike className={styles.icon}/>
           {percent(hike)} Hike

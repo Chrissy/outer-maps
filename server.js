@@ -97,7 +97,7 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
       area: parseInt(row.area),
       id: row.id,
       trailsCount: trails.length,
-      trails: trails.slice(0, 10),
+      trails: trails.slice(0, 8),
       trailTypes: {
         hike: trails.filter(t => t.type == "hike").length || 0,
         bike: trails.filter(t => t.type == "bike").length || 0,

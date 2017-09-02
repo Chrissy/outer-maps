@@ -1,9 +1,8 @@
-.trailTypesBreakdown {
+.trailTypes {
   display: grid;
   grid-template-columns: .5fr .5fr;
   grid-column-gap: 1em;
   grid-row-gap: .2em;
-  grid-area: "type";
 }
 
 .percentBar {

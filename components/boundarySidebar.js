@@ -34,7 +34,7 @@ const BoundarySidebar = ({id, hasElevationData, dump, area, trails, trailTypes, 
   const trailTypesBreakdown = () => {
     if (hasElevationData) {
       return (
-        <div className={cx(spacing.horizontalPadding, spacing.verticalPadding)}>
+        <div className={styles.trailTypesBreakdown}>
           <div className={cx(label.label, spacing.marginBottomHalf)}>Trail Breakdown</div>
           <TrailTypes {...trailTypes}/>
         </div>
@@ -45,7 +45,8 @@ const BoundarySidebar = ({id, hasElevationData, dump, area, trails, trailTypes, 
   const trailsChart = () => {
     if (hasElevationData && trails.length) {
       return (
-        <div>
+        <div className={styles.trailsChart}>
+          <div className={cx(label.label, spacing.marginBottomHalf)}>Long Trails</div>
           {trails.map(t => <TrailsChartElement key={t.id} id={t.id} name={t.name} distance={t.length}/>)}
         </div>
       )
@@ -55,7 +56,7 @@ const BoundarySidebar = ({id, hasElevationData, dump, area, trails, trailTypes, 
   const trailLengthsBreakdown = () => {
     if (hasElevationData && trailLengths.length) {
       return (
-        <div className={cx(spacing.horizontalPadding, spacing.verticalPadding)}>
+        <div className={styles.trailLengthsBreakdown}>
           <div className={cx(label.label, spacing.marginBottomHalf)}>Mileage Breakdown</div>
           <HorizontalBarGraph 
             keys={trailLengths.map(p => p[0])} 
@@ -69,9 +70,11 @@ const BoundarySidebar = ({id, hasElevationData, dump, area, trails, trailTypes, 
     <div className={styles.boundarySidebar}>
       {terrain()}
       {boundaryTotals()}
-      {trailTypesBreakdown()}
-      {trailsChart()}
-      {trailLengthsBreakdown()}
+      <div className={styles.boundarySidebarGridLayout}>
+        {trailTypesBreakdown()}
+        {trailsChart()}
+        {trailLengthsBreakdown()}
+      </div>
     </div>
   )
 };

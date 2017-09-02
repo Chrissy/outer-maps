@@ -1,6 +1,21 @@
-.boundarySidebar {
+.boundarySidebarGridLayout {
   display: grid;
-  grid-template-columns: 50% 50%;
-  grid-template-rows: auto;
-  grid-template-areas: "terrain terrain" "totals totals" "type trails" "mileage trails";
+  grid-template-columns: .5fr .5fr;
+  grid-template-rows: max-content;
+  grid-gap: 1em;
+  padding: 1em;
+  grid-template-areas: "type trails" "lengths trails";
+}
+
+.trailTypesBreakdown {
+  grid-area: type;
+}
+
+.trailLengthsBreakdown {
+  grid-area: lengths;
+  grid-column-start: 
+}
+
+.trailsChart {
+  grid-area: trails;
 }
