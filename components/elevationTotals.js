@@ -8,7 +8,6 @@ import {metersToFeet, metersToMiles} from '../modules/conversions';
 import styles from '../styles/elevationTotals.css';
 import stat from '../styles/stat.css';
 import cx from 'classnames';
-import NumberFormat from 'react-number-format';
 import spacing from '../styles/spacing.css';
 
 const ElevationTotals = ({elevations}) => {
@@ -46,10 +45,7 @@ const ElevationTotals = ({elevations}) => {
         <div className={cx(stat.stat)}>
           <Mountain className={cx(stat.icon, stat.mountain)} />
           <div className={stat.total}>
-            <NumberFormat value={metersToFeet(elevationGain())}
-              displayType={'text'}
-              thousandSeparator={true}
-            />
+            {new Intl.NumberFormat().format(metersToFeet(elevationGain()))}
           </div>
           <div className={stat.label}>Elevation Gain</div>
         </div>

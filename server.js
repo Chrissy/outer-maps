@@ -79,7 +79,7 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
           WHERE ST_Intersects(rast, ${box})
         ), park_trails AS (
           SELECT trails.name, trails.id, trails.type, ST_Length(trails.geog) as length FROM trails, boundary
-          WHERE ST_Length(trails.geog) > 800 AND ST_Intersects(${box}, trails.geog) 
+          WHERE ST_Length(trails.geog) > 400 AND ST_Intersects(${box}, trails.geog) 
           AND ST_Intersects(boundary.geog, trails.geog) ORDER BY length DESC LIMIT 1000
         )
         SELECT boundary.area, boundary.id, to_json(ST_DumpValues(rast)) as dump,

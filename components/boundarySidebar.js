@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Terrain from './terrain';
+import BoundaryTotals from './boundaryTotals';
 
 const BoundarySidebar = ({boundary}) => {
   const terrain = () => {
@@ -13,10 +14,20 @@ const BoundarySidebar = ({boundary}) => {
         vertices={boundary.dump.vertices}/>      
     }
   }
+  
+  const boundaryTotals = () => {
+    if (boundary.hasElevationData) {
+      return <BoundaryTotals 
+        area={boundary.area}
+        trailsCount={boundary.trailsCount}
+        highPoint={Math.max(...boundary.dump.vertices)}/>
+    }
+  }
 
   return (
     <div>
       {terrain()}
+      {boundaryTotals()}
     </div>
   )
 };

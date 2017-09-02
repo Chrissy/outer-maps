@@ -1,0 +1,6 @@
+.boundaryTotals {
+  display: grid;
+  grid-template-columns: .33fr .33fr .33fr;
+}
+
+ 

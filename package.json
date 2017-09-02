@@ -48,7 +48,6 @@
     "r-dom": "^2.2.3",
     "react": "15.x",
     "react-dom": "15.x",
-    "react-number-format": "^2.0.3",
     "react-redux": "^5.0.2",
     "react-svg-inline-loader": "^0.2.2",
     "redux": "^3.5.2",
