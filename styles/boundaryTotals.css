@@ -1,6 +1,7 @@
 .boundaryTotals {
   display: grid;
   grid-template-columns: .33fr .33fr .33fr;
+  grid-area: totals;
 }
 
 @media (min-width: 900px) {
