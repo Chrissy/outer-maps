@@ -23,11 +23,18 @@ const BoundarySidebar = ({boundary}) => {
         highPoint={Math.max(...boundary.dump.vertices)}/>
     }
   }
+  
+  const trailBreakdown = () => {
+    if (boundary.hasElevationData) {
+      return <trailBreakdown {...boundary.trailTypes}/>
+    }
+  }
 
   return (
     <div>
       {terrain()}
       {boundaryTotals()}
+      {trailBreakdown()}
     </div>
   )
 };

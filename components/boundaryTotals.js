@@ -14,17 +14,17 @@ const BoundaryTotals = ({area, trailsCount, highPoint}) => {
     <div className={styles.boundaryTotals}>
       <div className={cx(stat.stat, stat.border)}>
         <Squares className={stat.icon} />
-        <div className={stat.total}>{numberShortener(metersToMiles(area))}</div>
+        <div className={stat.total}>{numberShortener({number: metersToMiles(area), oneDecimal: true})}</div>
         <div className={stat.label}>Miles²</div>
       </div>
       <div className={cx(stat.stat, stat.border)}>
         <Path className={cx(stat.icon, stat.path)} />
-        <div className={stat.total}>{numberShortener(trailsCount)}</div>
+        <div className={stat.total}>{numberShortener({number: trailsCount})}</div>
         <div className={stat.label}>Trails</div>
       </div>
       <div className={stat.stat}>
         <Mountain className={cx(stat.icon, stat.mountain)} />
-        <div className={stat.total}>{numberShortener(parseInt(metersToFeet(highPoint)))}</div>
+        <div className={stat.total}>{numberShortener({number: parseInt(metersToFeet(highPoint))})}</div>
         <div className={stat.label}>High Point</div>
       </div>
     </div>

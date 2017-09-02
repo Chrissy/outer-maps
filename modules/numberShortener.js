@@ -3,9 +3,9 @@ const oneDecimalString = (string) => {
   return (match) ? match[0] : string;
 }
 
-const numberShortener = (number) => {
-  if (number > 1000000) return oneDecimalString((number / 1000000).toString()) + "m"
-  if (number > 1000) return oneDecimalString((number / 1000).toString()) + "k"
+const numberShortener = ({number, oneDecimal = false}) => {
+  if (number > 1000000) return ((oneDecimal) ? oneDecimalString((number / 1000000).toString()) : parseInt(number / 1000000)) + "m"
+  if (number > 1000) return ((oneDecimal) ? oneDecimalString((number / 1000).toString()) : parseInt(number / 1000)) + "k"
   return parseInt(number).toString()
 }
 
