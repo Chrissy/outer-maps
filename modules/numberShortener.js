@@ -1,12 +1,13 @@
-const oneDecimalString = (string) => {
-  const match = string.match(/([0-9]*)\.[1-9]/);
-  return (match) ? match[0] : string;
-}
-
 const numberShortener = ({number, oneDecimal = false}) => {
-  if (number > 1000000) return ((oneDecimal) ? oneDecimalString((number / 1000000).toString()) : parseInt(number / 1000000)) + "m"
-  if (number > 1000) return ((oneDecimal) ? oneDecimalString((number / 1000).toString()) : parseInt(number / 1000)) + "k"
-  return parseInt(number).toString()
+  const oneDecimalString = (string) => {
+    if (oneDecimal == false) return parseInt(string);
+    const match = string.match(/([0-9]*)\.[1-9]/);
+    return (match) ? match[0] : string;
+  }
+  
+  if (number > 1000000) return oneDecimalString((number / 1000000).toString()) + "m";
+  if (number > 1000) return oneDecimalString((number / 1000).toString()) + "k";
+  return oneDecimalString(number.toString());
 }
 
 export default numberShortener;

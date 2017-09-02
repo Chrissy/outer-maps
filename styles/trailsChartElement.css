@@ -1,0 +1,24 @@
+.trailsChartElement {
+  display: grid;
+  grid-template-columns: 1fr 3em;
+  padding: .5em 0 .5em 1em;
+  font-size: .8em;
+}
+
+.trailsChartElement[id] {
+  cursor: pointer;
+}
+
+.trailsChartElement:nth-of-type(even) {
+  background-color: var(--gray-2);
+} 
+
+.name {
+  color: var(--gray-7);
+}
+
+.distance {
+  color: var(--gray-5);
+  border-left: 1px solid #fff;
+  text-align: center;
+}

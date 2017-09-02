@@ -5,50 +5,61 @@ import Terrain from './terrain';
 import TrailTypes from './trailTypes';
 import HorizontalBarGraph from './horizontalBarGraph';
 import BoundaryTotals from './boundaryTotals';
+import TrailsChartElement from './trailsChartElement';
 import styles from '../styles/boundarySidebar.css';
 import label from '../styles/label.css';
 import spacing from '../styles/spacing.css';
 
-const BoundarySidebar = ({boundary}) => {
+const BoundarySidebar = ({id, hasElevationData, dump, area, trails, trailTypes, trailLengths, bounds, trailsCount}) => {
   const terrain = () => {
-    if (boundary.hasElevationData) {
+    if (hasElevationData) {
       return <Terrain 
-        index={`boundary:${boundary.id}`} 
-        height={boundary.dump.height} 
-        width={boundary.dump.width} 
-        bounds={boundary.bounds} 
-        vertices={boundary.dump.vertices}/>      
+        index={`boundary:${id}`} 
+        height={dump.height} 
+        width={dump.width} 
+        bounds={bounds} 
+        vertices={dump.vertices}/>      
     }
   }
   
   const boundaryTotals = () => {
-    if (boundary.hasElevationData) {
+    if (hasElevationData) {
       return <BoundaryTotals 
-        area={boundary.area}
-        trailsCount={boundary.trailsCount}
-        highPoint={Math.max(...boundary.dump.vertices)}/>
+        area={area}
+        trailsCount={trailsCount}
+        highPoint={Math.max(...dump.vertices)}/>
     }
   }
   
-  const trailTypes = () => {
-    if (boundary.hasElevationData) {
+  const trailTypesBreakdown = () => {
+    if (hasElevationData) {
       return (
         <div className={cx(spacing.horizontalPadding, spacing.verticalPadding)}>
           <div className={cx(label.label, spacing.marginBottomHalf)}>Trail Breakdown</div>
-          <TrailTypes {...boundary.trailTypes}/>
+          <TrailTypes {...trailTypes}/>
         </div>
       )
     }
   }
   
-  const trailLengths = () => {
-    if (boundary.hasElevationData && boundary.trailLengths.length) {
+  const trailsChart = () => {
+    if (hasElevationData && trails.length) {
+      return (
+        <div>
+          {trails.map(t => <TrailsChartElement key={t.id} id={t.id} name={t.name} distance={t.length}/>)}
+        </div>
+      )
+    }
+  }
+  
+  const trailLengthsBreakdown = () => {
+    if (hasElevationData && trailLengths.length) {
       return (
         <div className={cx(spacing.horizontalPadding, spacing.verticalPadding)}>
           <div className={cx(label.label, spacing.marginBottomHalf)}>Mileage Breakdown</div>
           <HorizontalBarGraph 
-            keys={boundary.trailLengths.map(p => p[0])} 
-            values={boundary.trailLengths.map(p => p[1])} />
+            keys={trailLengths.map(p => p[0])} 
+            values={trailLengths.map(p => p[1])} />
         </div>
       )
     }
@@ -58,14 +69,22 @@ const BoundarySidebar = ({boundary}) => {
     <div className={styles.boundarySidebar}>
       {terrain()}
       {boundaryTotals()}
-      {trailTypes()}
-      {trailLengths()}
+      {trailTypesBreakdown()}
+      {trailsChart()}
+      {trailLengthsBreakdown()}
     </div>
   )
 };
 
 BoundarySidebar.propTypes = {
-  boundary: PropTypes.object
+  id: PropTypes.number, 
+  hasElevationData: PropTypes.bool, 
+  dump: PropTypes.object, 
+  area: PropTypes.number, 
+  trails: PropTypes.array, 
+  trailTypes: PropTypes.object, 
+  trailLengths: PropTypes.array,
+  bounds: PropTypes.array
 };
 
 export default BoundarySidebar;

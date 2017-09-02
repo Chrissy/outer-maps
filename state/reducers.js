@@ -215,7 +215,7 @@ const boundary = (state = {}, action) => {
         trailsCount: action.trailsCount,
         trailLengths: action.trailLengths,
         trailTypes: action.trailTypes,
-        trails: trails,
+        trails: action.trails,
         hasElevationData: true
       }
     case 'SET_BOUNDARY_PREVIEWING':

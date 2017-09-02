@@ -9,7 +9,7 @@ import spacing from '../styles/spacing.css';
 const Sidebar = ({trails, firstTrail, boundary, loading}) => {
   const trailOrBoundary = () => {
     if (trails.length) return <TrailSidebar firstTrail={firstTrail} trails={trails}/>
-    if (boundary) return <BoundarySidebar boundary={boundary}/>
+    if (boundary) return <BoundarySidebar {...boundary}/>
   }
   
   const hasContent = () => {
