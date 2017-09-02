@@ -16,7 +16,6 @@ const TrailTypes = ({hike, bike, ohv, horse}) => {
   
   return (
     <div className={styles.trailTypes}>
-      <div className={cx(label.label, spacing.marginBottomHalf)}>Trail Breakdown</div>
       <div className={cx(styles.percentBar, spacing.marginBottom)}>
         <div className={styles.percentBarBar} style={{width: percent(hike)}}></div>
         <div className={styles.percentBarBar} style={{width: percent(horse)}}></div>
