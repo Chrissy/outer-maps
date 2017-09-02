@@ -6,6 +6,7 @@ import Hiker from '../svg/hiker.svg';
 import Mountain from '../svg/mountain.svg';
 import {metersToFeet, metersToMiles} from '../modules/conversions';
 import styles from '../styles/elevationTotals.css';
+import stat from '../styles/stat.css';
 import cx from 'classnames';
 import NumberFormat from 'react-number-format';
 import spacing from '../styles/spacing.css';
@@ -37,20 +38,20 @@ const ElevationTotals = ({elevations}) => {
         <div className={styles.difficultyChart}>
           <DifficultyChart score={score()}/>
         </div>
-        <div className={cx(styles.stat, styles.border)}>
-          <Hiker className={styles.statIcon} />
-          <div className={styles.statTotal}>{miles()}</div>
-          <div className={styles.statLabel}>Miles</div>
+        <div className={cx(stat.stat, stat.border)}>
+          <Hiker className={stat.icon} />
+          <div className={stat.total}>{miles()}</div>
+          <div className={stat.label}>Miles</div>
         </div>
-        <div className={cx(styles.stat)}>
-          <Mountain className={cx(styles.statIcon, styles.mountain)} />
-          <div className={styles.statTotal}>
+        <div className={cx(stat.stat)}>
+          <Mountain className={cx(stat.icon, stat.mountain)} />
+          <div className={stat.total}>
             <NumberFormat value={metersToFeet(elevationGain())}
               displayType={'text'}
               thousandSeparator={true}
             />
           </div>
-          <div className={styles.statLabel}>Elevation Gain</div>
+          <div className={stat.label}>Elevation Gain</div>
         </div>
       </div>
       <LineGraph elevations={elevations}/>
