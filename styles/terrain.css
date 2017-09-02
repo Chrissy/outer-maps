@@ -4,6 +4,7 @@
   overflow: hidden;
   background-color: #000;
   position: relative;
+  grid-area: terrain;
 }
 
 @media (max-width: 600px) {
