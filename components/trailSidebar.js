@@ -1,12 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Elevation from './elevation';
+import ElevationTotals from './elevationTotals';
 import Terrain from './terrain';
-import TrailListContainer from './trailListContainer.js'
+import TrailListContainer from './trailListContainer';
 import ImportantWeather from './importantWeather';
 import LessImportantWeather from './lessImportantWeather';
+import sliceElevationsWithHandles from '../modules/sliceElevationsWithHandles';
+import connectPaths from '../modules/connectPaths';
+import distance from '@turf/distance';
+import _ from 'underscore';
 
 const TrailSidebar = ({firstTrail, trails}) => {
+  const cumulativeElevations = () => {
+    return trails.reduce((accumulator, trail) => {
+      const points = sliceElevationsWithHandles(trail).points;
+      if (accumulator.length == 0) return points;
+      return connectPaths(accumulator, points);
+    }, []);
+  }
   
   const terrain = () => {
     if (firstTrail.hasElevationData) {
@@ -27,8 +38,8 @@ const TrailSidebar = ({firstTrail, trails}) => {
     return (trails.length > 1) ? trailList() : terrain()
   }
 
-  const elevation = () => {
-    if (firstTrail.hasElevationData) return <Elevation trails={trails.filter(t => t.hasElevationData)}/>
+  const elevationTotals = () => {
+    if (firstTrail.hasElevationData) return <ElevationTotals elevations={cumulativeElevations()}/>
   }
 
   const importantWeather = () => {
@@ -44,7 +55,7 @@ const TrailSidebar = ({firstTrail, trails}) => {
   return (
     <div>
       {terrainOrTrailList()}
-      {elevation()}
+      {elevationTotals()}
       {importantWeather()}
       {lessImportantWeather()}
     </div>
