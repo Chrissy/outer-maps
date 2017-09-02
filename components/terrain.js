@@ -55,13 +55,13 @@ export default class Terrain extends React.Component {
   initializeCanvas() {
     this.scene = new Scene({autoUpdate: false});
     
-    const camera = new PerspectiveCamera(50, 1, 0.1, 1000);    
+    const camera = new PerspectiveCamera(23, this.refs.canvasContainer.offsetWidth / this.refs.canvasContainer.offsetHeight, 0.1, 1000);    
     camera.position.y = -20;
     camera.position.z = 200;
     
     const renderer = new WebGLRenderer({canvas: this.refs.canvas});
     renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
-    renderer.setSize(this.refs.canvasContainer.offsetWidth, this.refs.canvasContainer.offsetWidth);
+    renderer.setSize(this.refs.canvasContainer.offsetWidth, this.refs.canvasContainer.offsetHeight);
 
     this.renderMap = function() {
       renderer.render(this.scene, camera);
