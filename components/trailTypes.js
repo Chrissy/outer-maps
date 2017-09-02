@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import styles from '../styles/trailTypes.css';
 import spacing from '../styles/spacing.css';
+import label from '../styles/label.css';
 import Hike from '../svg/transportation-hike.svg';
 import Bike from '../svg/transportation-bike.svg';
 import Ohv from '../svg/transportation-ohv.svg';
@@ -15,6 +16,7 @@ const TrailTypes = ({hike, bike, ohv, horse}) => {
   
   return (
     <div className={styles.trailTypes}>
+      <div className={cx(label.label, spacing.marginBottomHalf)}>Trail Breakdown</div>
       <div className={cx(styles.percentBar, spacing.marginBottom)}>
         <div className={styles.percentBarBar} style={{width: percent(hike)}}></div>
         <div className={styles.percentBarBar} style={{width: percent(horse)}}></div>
