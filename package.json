@@ -7,6 +7,8 @@
     "trails": "nf run node builders/trailsBuilder.js",
     "parks": "nf run node builders/parksBuilder.js",
     "upload": "nf run node builders/uploader.js",
+    "migrate": "nf run migrate up",
+    "migrate down": "nf run migrate down",
     "heroku-postbuild": " gulp mapify && ./node_modules/.bin/webpack --config webpack.production.config.js -p && node builders/uploadBundle.js"
   },
   "license": "ISC",
