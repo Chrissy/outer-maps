@@ -110,6 +110,10 @@ export default class Map extends React.Component {
         filter: ["in", "id", (this.props.selectedBoundary) ? this.props.selectedBoundary.id : 0]
       },
       {
+        id: "national-parks-active-outline",
+        filter: ["in", "id", (this.props.selectedBoundary) ? this.props.selectedBoundary.id : 0]
+      },
+      {
         id: "national-park-labels-active",
         filter: ["in", "id", (this.props.previewBoundary) ? this.props.previewBoundary.id : 0]
       }
