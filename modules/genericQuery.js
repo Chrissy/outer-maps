@@ -16,7 +16,7 @@ exports.query = (query, pool, cb) => {
     client.query(query, function(err, result) {
       done();
       if (err) throw err;
-      cb();
+      cb(result);
     });
   });
 }
