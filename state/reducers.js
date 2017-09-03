@@ -14,7 +14,7 @@ const trail = (state = {}, action) => {
         name: action.properties.name,
         distance: action.properties.distance,
         stationId: action.properties.station1,
-        center: centroid(action.geometry).coordinates,
+        center: centroid(action.geometry).geometry.coordinates,
         bounds: bbox(action.geometry)
       }
     case 'SET_TRAIL_PREVIEWING':
