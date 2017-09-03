@@ -11,11 +11,12 @@ exports.pool = () => {
 };
 
 exports.query = (query, pool, cb) => {
-  pool.connect(function(err, client, done){
-    client.query(query, function(err, result){
+  pool.connect(function(err, client, done) {
+    if (err) throw err;
+    client.query(query, function(err, result) {
       done();
       if (err) throw err;
-      cb(result);
+      cb();
     });
   });
 }
