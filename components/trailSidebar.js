@@ -4,7 +4,6 @@ import ElevationTotals from './elevationTotals';
 import Terrain from './terrain';
 import TrailListContainer from './trailListContainer';
 import ImportantWeather from './importantWeather';
-import LessImportantWeather from './lessImportantWeather';
 import sliceElevationsWithHandles from '../modules/sliceElevationsWithHandles';
 import connectPaths from '../modules/connectPaths';
 import distance from '@turf/distance';
@@ -18,15 +17,15 @@ const TrailSidebar = ({firstTrail, trails}) => {
       return connectPaths(accumulator, points);
     }, []);
   }
-  
+
   const terrain = () => {
     if (firstTrail.hasElevationData) {
-      return <Terrain 
-        index={`trail:${firstTrail.id}`} 
-        height={firstTrail.dump.height} 
-        width={firstTrail.dump.width} 
-        bounds={firstTrail.bounds} 
-        vertices={firstTrail.dump.vertices}/>      
+      return <Terrain
+        index={`trail:${firstTrail.id}`}
+        height={firstTrail.dump.height}
+        width={firstTrail.dump.width}
+        bounds={firstTrail.bounds}
+        vertices={firstTrail.dump.vertices}/>
     }
   }
 
@@ -43,13 +42,7 @@ const TrailSidebar = ({firstTrail, trails}) => {
   }
 
   const importantWeather = () => {
-    if (firstTrail.hasWeatherData) return <ImportantWeather trail={firstTrail}/>
-  }
-
-  const lessImportantWeather = () => {
-    if (firstTrail.hasAdditionalWeatherData) {
-      return <LessImportantWeather trail={firstTrail}/>
-    }
+    if (firstTrail.hasWeatherData) return <ImportantWeather {...firstTrail.weatherData}/>
   }
 
   return (
@@ -57,7 +50,6 @@ const TrailSidebar = ({firstTrail, trails}) => {
       {terrainOrTrailList()}
       {elevationTotals()}
       {importantWeather()}
-      {lessImportantWeather()}
     </div>
   )
 };
