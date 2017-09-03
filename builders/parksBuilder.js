@@ -16,7 +16,7 @@ gQuery.query(`
 });
 
 gQuery.query(`
-  SELECT name, id, ST_Area(geog) as area, ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds, ST_PointOnSurface(geog::geometry) as geom
+  SELECT name, id, ST_Area(geog) as area, ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds, station1, ST_PointOnSurface(geog::geometry) as geom
   FROM boundaries
 `, pool, (result) => {
   gQuery.geoJson(result, (result) => {

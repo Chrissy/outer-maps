@@ -14,7 +14,7 @@ const trail = (state = {}, action) => {
         name: action.properties.name,
         distance: action.properties.distance,
         stationId: action.properties.station1,
-        center: [action.properties.cx, action.properties.cy],
+        center: centroid(action.geometry).coordinates,
         bounds: bbox(action.geometry)
       }
     case 'SET_TRAIL_PREVIEWING':
@@ -60,10 +60,12 @@ const trail = (state = {}, action) => {
       if (action.id !== state.id) return state
       return { ...state,
         hasWeatherData: true,
-        maxTemperature:             action["DLY-TMAX-NORMAL"],
-        minTemperature:             action["DLY-TMIN-NORMAL"],
-        chanceOfPercipitation:      action["DLY-PRCP-PCTALL-GE001HI"],
-        chanceOfHeavyPercipitation: action["DLY-PRCP-PCTALL-GE050HI"]
+        weatherData: {
+          maxTemperature:             action["DLY-TMAX-NORMAL"],
+          minTemperature:             action["DLY-TMIN-NORMAL"],
+          chanceOfPercipitation:      action["DLY-PRCP-PCTALL-GE001HI"],
+          chanceOfHeavyPercipitation: action["DLY-PRCP-PCTALL-GE050HI"]
+        }
       }
     case 'SET_ADDITIONAL_WEATHER_DATA':
       if (action.id !== state.id) return state
@@ -205,6 +207,7 @@ const boundary = (state = {}, action) => {
         name: action.properties.name,
         geometry: action.geometry,
         bounds: bbox(JSON.parse(action.properties.bounds)),
+        center: action.geometry.coordinates,
         hasBaseData: true
       }
     case 'SET_BOUNDARY_DATA':
