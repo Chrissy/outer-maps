@@ -20,7 +20,7 @@ function getTrailData(trail) {
   };
 };
 
-function getWeatherData(trail) {
+function getTrailWeatherData(trail) {
   return dispatch => {
     if (trail.hasWeatherData) return Promise.resolve();
 
@@ -36,12 +36,33 @@ function getWeatherData(trail) {
         "DLY-PRCP-PCTALL-GE050HI"
       ]
     }).then(response => {
-      return dispatch({type: 'SET_WEATHER_DATA', ...response, id: trail.id});
+      return dispatch({type: 'SET_TRAIL_WEATHER_DATA', ...response, id: trail.id});
     });
   }
 }
 
-export function getAdditionalWeatherData(trail) {
+function getBoundaryWeatherData(boundary) {
+  return dispatch => {
+    if (boundary.hasWeatherData) return Promise.resolve();
+
+    getNoaaData({
+      x: boundary.center[1],
+      y: boundary.center[0],
+      stationId: boundary.stationId,
+      dataSetId: "NORMAL_DLY",
+      dataTypeIds: [
+        "DLY-TMAX-NORMAL",
+        "DLY-TMIN-NORMAL",
+        "DLY-PRCP-PCTALL-GE001HI",
+        "DLY-PRCP-PCTALL-GE050HI"
+      ]
+    }).then(response => {
+      return dispatch({type: 'SET_BOUNDARY_WEATHER_DATA', ...response, id: boundary.id});
+    });
+  }
+}
+
+function getAdditionalWeatherData(trail) {
   return dispatch => {
     if (trail.hasAdditionalWeatherData) return Promise.resolve();
 
@@ -80,7 +101,7 @@ export function selectTrail(trail) {
     dispatch({type: 'SELECT_TRAIL', ...trail});
     dispatch({type: 'SHOW_HANDLES', ...trail});
     dispatch(getTrailData(trail));
-    return dispatch(getWeatherData(trail));
+    return dispatch(getTrailWeatherData(trail));
   };
 };
 
@@ -119,7 +140,8 @@ export function selectBoundary(boundary) {
     dispatch({type: 'SET_BOUNDARY_SELECTED', id: boundary.properties.id});
     dispatch({type: 'ADD_BOUNDARY', ...boundary});
     const cachedBoundary = getState().boundaries.find(b => b.id == boundary.properties.id);
-    if (!cachedBoundary.hasElevationData) dispatch(getBoundaryData(cachedBoundary));    
+    if (!cachedBoundary.hasElevationData) dispatch(getBoundaryData(cachedBoundary));
+    if (!cachedBoundary.hasWeatherData) dispatch(getBoundaryWeatherData(cachedBoundary));
   };
 };
 

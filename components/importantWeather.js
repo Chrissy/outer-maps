@@ -21,7 +21,7 @@ const ImportantWeather = ({maxTemperature, minTemperature, chanceOfPercipitation
   }
 
   return (
-    <div className={cx(spacing.horizontalPadding, spacing.marginTop, spacing.marginBottom)}>
+    <div>
       <div className={label.label}>Average weather this week</div>
       <div className={styles.importantWeather}>
         <div className={cx(styles.importantWeatherUnit, styles.high, tempIsExtreme(maxTemperature))}>

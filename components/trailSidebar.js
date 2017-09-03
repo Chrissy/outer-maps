@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 import ElevationTotals from './elevationTotals';
 import Terrain from './terrain';
 import TrailListContainer from './trailListContainer';
@@ -8,6 +9,7 @@ import sliceElevationsWithHandles from '../modules/sliceElevationsWithHandles';
 import connectPaths from '../modules/connectPaths';
 import distance from '@turf/distance';
 import _ from 'underscore';
+import spacing from '../styles/spacing.css';
 
 const TrailSidebar = ({firstTrail, trails}) => {
   const cumulativeElevations = () => {
@@ -42,7 +44,11 @@ const TrailSidebar = ({firstTrail, trails}) => {
   }
 
   const importantWeather = () => {
-    if (firstTrail.hasWeatherData) return <ImportantWeather {...firstTrail.weatherData}/>
+    if (firstTrail.hasWeatherData) return (
+      <div className={cx(spacing.horizontalPadding, spacing.marginTop, spacing.marginBottom)}>
+        <ImportantWeather {...firstTrail.weatherData}/>
+      </div>
+    )
   }
 
   return (

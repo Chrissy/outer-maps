@@ -9,28 +9,29 @@ import TrailsChartElement from './trailsChartElement';
 import styles from '../styles/boundarySidebar.css';
 import label from '../styles/label.css';
 import spacing from '../styles/spacing.css';
+import ImportantWeather from './importantWeather';
 
-const BoundarySidebar = ({id, hasElevationData, dump, area, trails, trailTypes, trailLengths, bounds, trailsCount}) => {
+const BoundarySidebar = ({id, hasElevationData, dump, area, trails, trailTypes, trailLengths, bounds, trailsCount, hasWeatherData, weatherData}) => {
   const terrain = () => {
     if (hasElevationData) {
-      return <Terrain 
-        index={`boundary:${id}`} 
-        height={dump.height} 
-        width={dump.width} 
-        bounds={bounds} 
-        vertices={dump.vertices}/>      
+      return <Terrain
+        index={`boundary:${id}`}
+        height={dump.height}
+        width={dump.width}
+        bounds={bounds}
+        vertices={dump.vertices}/>
     }
   }
-  
+
   const boundaryTotals = () => {
     if (hasElevationData) {
-      return <BoundaryTotals 
+      return <BoundaryTotals
         area={area}
         trailsCount={trailsCount}
         highPoint={Math.max(...dump.vertices)}/>
     }
   }
-  
+
   const trailTypesBreakdown = () => {
     if (hasElevationData) {
       return (
@@ -41,7 +42,7 @@ const BoundarySidebar = ({id, hasElevationData, dump, area, trails, trailTypes, 
       )
     }
   }
-  
+
   const trailsChart = () => {
     if (hasElevationData && trails.length) {
       return (
@@ -52,18 +53,26 @@ const BoundarySidebar = ({id, hasElevationData, dump, area, trails, trailTypes, 
       )
     }
   }
-  
+
   const trailLengthsBreakdown = () => {
     if (hasElevationData && trailLengths.length) {
       return (
         <div className={styles.trailLengthsBreakdown}>
           <div className={cx(label.label, spacing.marginBottomHalf)}>Mileage Breakdown</div>
-          <HorizontalBarGraph 
-            keys={trailLengths.map(p => p[0])} 
+          <HorizontalBarGraph
+            keys={trailLengths.map(p => p[0])}
             values={trailLengths.map(p => p[1])} />
         </div>
       )
     }
+  }
+
+  const importantWeather = () => {
+    if (hasWeatherData) return (
+      <div className={cx(spacing.horizontalPadding, spacing.marginTop, spacing.marginBottom)}>
+        <ImportantWeather {...weatherData}/>
+      </div>
+    )
   }
 
   return (
@@ -75,21 +84,21 @@ const BoundarySidebar = ({id, hasElevationData, dump, area, trails, trailTypes, 
         {trailsChart()}
         {trailLengthsBreakdown()}
       </div>
+      {importantWeather()}
     </div>
   )
 };
 
 BoundarySidebar.propTypes = {
-  id: PropTypes.number, 
-  hasElevationData: PropTypes.bool, 
-  dump: PropTypes.object, 
-  area: PropTypes.number, 
-  trails: PropTypes.array, 
-  trailTypes: PropTypes.object, 
+  id: PropTypes.number,
+  hasElevationData: PropTypes.bool,
+  dump: PropTypes.object,
+  area: PropTypes.number,
+  trails: PropTypes.array,
+  trailTypes: PropTypes.object,
   trailLengths: PropTypes.array,
-  bounds: PropTypes.array
+  bounds: PropTypes.array,
+  weatherData: PropTypes.object
 };
 
 export default BoundarySidebar;
-
-
