@@ -5,7 +5,7 @@ import helpers from '@turf/helpers';
 import {accessToken, styleUrl} from '../modules/mapboxStaticData';
 import styles from '../styles/mapbox.css';
 import mapboxStyles from '../public/dist/mapbox-styles.json';
-import GeoViewport from '@mapbox/geo-viewport';
+import getOffsetCenter from '../modules/getOffsetCenter';
 const WATCH_EVENTS = ['mousedown','mouseup','click','dblclick','mousemove','mouseenter', 'mouseleave','mouseover','mouseout','contextmenu','touchstart','touchend','touchcancel'];
 
 export default class MapBox extends React.PureComponent {
@@ -45,14 +45,11 @@ export default class MapBox extends React.PureComponent {
     }
 
     if (this.props.flyTo && prevProps.flyTo !== this.props.flyTo) {
-      const {center, zoom, offsetX = 0, offsetY = 0} = this.props.flyTo;
-      const vb = GeoViewport.bounds(center, zoom, [this.mapboxed.getCanvas().clientWidth, this.mapboxed.getCanvas().clientHeight]);
-      const width = Math.abs(vb[0] - vb[2]);
-      const height = Math.abs(vb[1] - vb[3]);
-      this.mapboxed.flyTo({center: [
-        center[0] - (width * (offsetX / this.mapboxed.getCanvas().clientWidth / 2)),
-        center[1] - (height * (offsetY / this.mapboxed.getCanvas().clientHeight / 2))
-      ], zoom});
+      const canvas = this.mapboxed.getCanvas();
+      this.mapboxed.flyTo({
+        center: getOffsetCenter({...this.props.flyTo, width: canvas.clientWidth, height: canvas.clientHeight}),
+        zoom: this.props.flyTo.zoom
+      });
     }
 
     this.mapboxed.getCanvas().style.cursor = (this.props.pointer) ? 'pointer' : '';
