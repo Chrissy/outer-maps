@@ -46,12 +46,12 @@ export default class MapBox extends React.PureComponent {
 
     if (this.props.flyTo && prevProps.flyTo !== this.props.flyTo) {
       const {center, zoom, offsetX = 0, offsetY = 0} = this.props.flyTo;
-      const vb = GeoViewport.bounds(center, zoom, [window.innerHeight, window.innerWidth]);
+      const vb = GeoViewport.bounds(center, zoom, [this.mapboxed.getCanvas().clientWidth, this.mapboxed.getCanvas().clientHeight]);
       const width = Math.abs(vb[0] - vb[2]);
       const height = Math.abs(vb[1] - vb[3]);
       this.mapboxed.flyTo({center: [
-        center[0] - (width * (offsetX / window.innerWidth / 2)),
-        center[1] - (width * (offsetY / (window.innerHeight + 275) / 2))
+        center[0] - (width * (offsetX / this.mapboxed.getCanvas().clientWidth / 2)),
+        center[1] - (height * (offsetY / this.mapboxed.getCanvas().clientHeight / 2))
       ], zoom});
     }
 
