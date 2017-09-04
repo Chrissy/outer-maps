@@ -5,7 +5,6 @@ import helpers from '@turf/helpers';
 import {accessToken, styleUrl} from '../modules/mapboxStaticData';
 import styles from '../styles/mapbox.css';
 import mapboxStyles from '../public/dist/mapbox-styles.json';
-import getOffsetCenter from '../modules/getOffsetCenter';
 const WATCH_EVENTS = ['mousedown','mouseup','click','dblclick','mousemove','mouseenter', 'mouseleave','mouseover','mouseout','contextmenu','touchstart','touchend','touchcancel'];
 
 export default class MapBox extends React.PureComponent {
@@ -45,11 +44,7 @@ export default class MapBox extends React.PureComponent {
     }
 
     if (this.props.flyTo && prevProps.flyTo !== this.props.flyTo) {
-      const canvas = this.mapboxed.getCanvas();
-      this.mapboxed.flyTo({
-        center: getOffsetCenter({...this.props.flyTo, width: canvas.clientWidth, height: canvas.clientHeight}),
-        zoom: this.props.flyTo.zoom
-      });
+      this.mapboxed.flyTo(this.props.flyTo);
     }
 
     this.mapboxed.getCanvas().style.cursor = (this.props.pointer) ? 'pointer' : '';

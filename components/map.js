@@ -7,6 +7,7 @@ import {pointToPoint, pointsToFeatureCollection, trailsToFeatureCollection} from
 import TooltipContainer from './tooltipContainer';
 import MapBox from './mapBox';
 import styles from '../styles/map.css';
+import getOffsetCenter from '../modules/getOffsetCenter';
 
 const WATCH_LAYERS = ['trails', 'national-park-labels', 'national-park-labels-active', 'handles'];
 
@@ -60,16 +61,24 @@ export default class Map extends React.Component {
     if (type == "trails") {
       props.onTrailClick({properties: feature.properties, geometry: feature.geometry});
     } else if (type == "national-park-labels" || type == "national-park-labels-active") {
-      this.setState({
-        flyTo: {
-          center: feature.geometry.coordinates,
-          zoom: 10,
-          offsetX: (window.innerWidth < 600) ? 0 : this.refs.map.nextSibling.offsetWidth * 0.5,
-          offsetY: (window.innerWidth > 600) ? 0 : this.refs.map.nextSibling.offsetHeight * 0.5
-        }
-      });
+      this.sidebarAwareZoom(feature.geometry.coordinates);
       props.onBoundaryClick(feature);
     }
+  }
+
+  sidebarAwareZoom(coordinates) {
+    const sidebar = this.refs.map.nextSibling; //probably wanna do something better here one day
+    this.setState({flyTo: {
+      center: getOffsetCenter({
+        center: coordinates,
+        zoom: 10,
+        offsetX: (window.innerWidth < 600) ? 0 : sidebar.offsetWidth * 0.5,
+        offsetY: (window.innerWidth > 600) ? 0 : sidebar.offsetHeight * 0.5,
+        width: this.refs.map.clientWidth,
+        height: this.refs.map.clientHeight
+      }),
+      zoom: 10
+    }});
   }
 
   onMapMouseDown({features}) {
