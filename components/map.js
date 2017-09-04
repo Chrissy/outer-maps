@@ -7,7 +7,6 @@ import {pointToPoint, pointsToFeatureCollection, trailsToFeatureCollection} from
 import TooltipContainer from './tooltipContainer';
 import MapBox from './mapBox';
 import styles from '../styles/map.css';
-import GeoViewport from '@mapbox/geo-viewport';
 
 const WATCH_LAYERS = ['trails', 'national-park-labels', 'national-park-labels-active', 'handles'];
 
@@ -62,7 +61,7 @@ export default class Map extends React.Component {
       props.onTrailClick({properties: feature.properties, geometry: feature.geometry});
     } else if (type == "national-park-labels" || type == "national-park-labels-active") {
       this.setState({
-        flyTo: GeoViewport.viewport(bbox(JSON.parse(feature.properties.bounds)), [window.innerHeight, window.innerWidth], 10)
+        flyTo: {center: feature.geometry.coordinates, zoom: 10}
       });
       props.onBoundaryClick(feature);
     }
