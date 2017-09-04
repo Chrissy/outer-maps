@@ -49,7 +49,7 @@ export default class Map extends React.Component {
     draggingPoint.currentPointOnLine = snapToPoint;
   }
 
-  onMapClick({features, features: [feature]}) {
+  onMapClick({point, features, features: [feature]}) {
     const {draggingPoint, props} = this;
 
     if (draggingPoint) return;
@@ -61,7 +61,12 @@ export default class Map extends React.Component {
       props.onTrailClick({properties: feature.properties, geometry: feature.geometry});
     } else if (type == "national-park-labels" || type == "national-park-labels-active") {
       this.setState({
-        flyTo: {center: feature.geometry.coordinates, zoom: 10}
+        flyTo: {
+          center: feature.geometry.coordinates,
+          zoom: 10,
+          offsetX: (window.innerWidth < 600) ? 0 : this.refs.map.nextSibling.offsetWidth * 0.5,
+          offsetY: (window.innerWidth > 600) ? 0 : this.refs.map.nextSibling.offsetHeight * 0.5
+        }
       });
       props.onBoundaryClick(feature);
     }
@@ -130,7 +135,7 @@ export default class Map extends React.Component {
   render() {
 
     return (
-        <div id="the-map" className={styles.body}>
+        <div ref="map" id="the-map" className={styles.body}>
           <MapBox
           sources={this.sources()}
           filters={this.filters()}
