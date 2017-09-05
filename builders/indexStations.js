@@ -2,9 +2,13 @@ const utils = require('../migrations/migrationUtils');
 const Moment = require('moment');
 const moment = new Moment;
 
+if (!process.argv.length) console.log("stations indexer requires a geo table to index")
+
 console.log("adding noaa stations to db...");
 
 console.log("Starting at " + moment.format("MMMM Do YYYY, h:mm:ss a"))
+
+const table = process.argv[2];
 
 utils.uploadShapeFile({
   tableName: 'stations',
@@ -12,26 +16,26 @@ utils.uploadShapeFile({
   filename: 'stations',
   srid: '4326'
 }, () => {
-  console.log("assigning weather stations to trails based on location. this could take up to an hour!")
+  console.log(`assigning weather stations to ${table} based on location. this could take a while!`)
 
   utils.genericQuery(`
-    create table stations_index as
-    with t as (select * from trails where type = 'hike' OR type = 'horse' OR type = 'bike' OR type = 'motorcycle' OR type = 'atv' AND name != ''),
-    s as (select * from stations)
-    select distinct on (t.id) t.id, t.name, s.stationid
-    from t left join s
-    on st_dwithin(s.geog, t.geog, 50000, false) order by t.id, s.geog <-> t.geog;
+    CREATE TABLE stations_index AS
+    WITH t AS (SELECT * FROM ${table}),
+    s AS (SELECT * FROM stations)
+    SELECT DISTINCT ON (t.id) t.id, t.name, s.stationid
+    FROM t LEFT JOIN s
+    ON st_dwithin(s.geog, t.geog, 100000, false) ORDER BY t.id, s.geog <-> t.geog;
 
-    CREATE TABLE trails_new AS
-    SELECT trail.id, trail.name, trail.source_id, trail.source, trail.type, trail.geog, stationid AS station1
-    FROM trails AS trail, stations_index AS station
-    WHERE trail.id = station.id;
+    CREATE TABLE ${table}_new AS
+    SELECT t.*, s.stationid AS station1
+    FROM ${table} AS t, stations_index as s
+    WHERE t.id = s.id;
 
-    DROP TABLE trails;
-    ALTER TABLE trails_new RENAME TO trails;
+    DROP TABLE ${table};
+    ALTER TABLE ${table}_new RENAME TO ${table};
 
-    ALTER TABLE trails DROP COLUMN id;
-    ALTER TABLE trails ADD COLUMN id SERIAL PRIMARY KEY;
+    ALTER TABLE ${table} DROP COLUMN id;
+    ALTER TABLE ${table} ADD COLUMN id SERIAL PRIMARY KEY;
 
     DROP TABLE stations_index, stations;
   `, () => {

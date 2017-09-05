@@ -1,11 +1,13 @@
 import React, { Proptypes } from 'react';
 import pointOnLine from '@turf/point-on-line';
 import nearest from '@turf/nearest';
+import bbox from '@turf/bbox';
 import {point, featureCollection} from '@turf/helpers';
 import {pointToPoint, pointsToFeatureCollection, trailsToFeatureCollection} from '../modules/stateToGeoJson'
 import TooltipContainer from './tooltipContainer';
 import MapBox from './mapBox';
 import styles from '../styles/map.css';
+import getOffsetCenter from '../modules/getOffsetCenter';
 
 const WATCH_LAYERS = ['trails', 'national-park-labels', 'national-park-labels-active', 'handles'];
 
@@ -48,7 +50,7 @@ export default class Map extends React.Component {
     draggingPoint.currentPointOnLine = snapToPoint;
   }
 
-  onMapClick({features, features: [feature]}) {
+  onMapClick({point, features, features: [feature]}) {
     const {draggingPoint, props} = this;
 
     if (draggingPoint) return;
@@ -59,14 +61,24 @@ export default class Map extends React.Component {
     if (type == "trails") {
       props.onTrailClick({properties: feature.properties, geometry: feature.geometry});
     } else if (type == "national-park-labels" || type == "national-park-labels-active") {
-      this.setState({
-        fitToFilter: {
-          layers: ['national-parks'],
-          filter: ["==", "id", feature.properties.id]
-        }
-      });
-      props.onBoundaryClick(feature.properties.id);
+      this.sidebarAwareZoom(feature.geometry.coordinates);
+      props.onBoundaryClick(feature);
     }
+  }
+
+  sidebarAwareZoom(coordinates) {
+    const sidebar = this.refs.map.nextSibling; //probably wanna do something better here one day
+    this.setState({flyTo: {
+      center: getOffsetCenter({
+        center: coordinates,
+        zoom: 10,
+        offsetX: (window.innerWidth < 600) ? 0 : sidebar.offsetWidth * 0.5,
+        offsetY: (window.innerWidth > 600) ? 0 : sidebar.offsetHeight * 0.5,
+        width: this.refs.map.clientWidth,
+        height: this.refs.map.clientHeight
+      }),
+      zoom: 10
+    }});
   }
 
   onMapMouseDown({features}) {
@@ -110,6 +122,10 @@ export default class Map extends React.Component {
         filter: ["in", "id", (this.props.selectedBoundary) ? this.props.selectedBoundary.id : 0]
       },
       {
+        id: "national-parks-active-outline",
+        filter: ["in", "id", (this.props.selectedBoundary) ? this.props.selectedBoundary.id : 0]
+      },
+      {
         id: "national-park-labels-active",
         filter: ["in", "id", (this.props.previewBoundary) ? this.props.previewBoundary.id : 0]
       }
@@ -128,11 +144,11 @@ export default class Map extends React.Component {
   render() {
 
     return (
-        <div id="the-map" className={styles.body}>
+        <div ref="map" id="the-map" className={styles.body}>
           <MapBox
           sources={this.sources()}
           filters={this.filters()}
-          fitToFilter={this.state.fitToFilter}
+          flyTo={this.state.flyTo}
           pointer={this.props.previewTrail || this.props.previewBoundary}
           watchLayers={WATCH_LAYERS}
           click={this.onMapClick.bind(this)}

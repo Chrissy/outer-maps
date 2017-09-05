@@ -21,13 +21,6 @@ export default class MapBox extends React.PureComponent {
     });
   }
 
-  fitToFilter(filterObj) {
-    const elements = this.mapboxed.queryRenderedFeatures(filterObj);
-    if (!elements.length) return;
-    const combinedFeatures = helpers.featureCollection(elements);
-    this.mapboxed.fitBounds(bbox(combinedFeatures));
-  }
-
   componentDidMount() {
     MapboxGL.accessToken = accessToken;
 
@@ -50,8 +43,8 @@ export default class MapBox extends React.PureComponent {
       this.updateFilters(this.props.filters);
     }
 
-    if (this.props.fitToFilter && prevProps.fitToFilter !== this.props.fitToFilter) {
-      this.fitToFilter(this.props.fitToFilter)
+    if (this.props.flyTo && prevProps.flyTo !== this.props.flyTo) {
+      this.mapboxed.flyTo(this.props.flyTo);
     }
 
     this.mapboxed.getCanvas().style.cursor = (this.props.pointer) ? 'pointer' : '';

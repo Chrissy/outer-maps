@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {WebGLRenderer, Scene, PerspectiveCamera, TextureLoader, PlaneGeometry, MeshBasicMaterial, Mesh, DefaultLoadingManager} from 'three';
 import GeoViewport from '@mapbox/geo-viewport';
 import styles from '../styles/terrain.css';
@@ -19,22 +20,20 @@ export default class Terrain extends React.Component {
   drawMap() {
     if (!this.earth) return;
 
-    this.altitude = this.props.trail.dump;
-    let vertices = this.altitude.vertices;
-
+    let vertices = this.props.vertices;
     const loader = new TextureLoader();
     loader.crossOrigin = '';
     const texture = loader.load(this.earth.url);
-    const geometry = new PlaneGeometry(10240, 10240, this.altitude.height - 1, this.altitude.length - 1);
+    const geometry = new PlaneGeometry(200, 200, this.props.height - 1, this.props.width - 1);
     const material = new MeshBasicMaterial({map: texture});
     const plane = new Mesh(geometry, material);
-
+            
     plane.geometry.vertices.map((v,i) => {
       let z = vertices[i];
       if (z == null || z == NaN || z == undefined) {
-        z = vertices[i - 1] || vertices[i + 1] || vertices[i - this.altitude.height] || vertices[i + this.altitude.height];
+        z = vertices[i - 1] || vertices[i + 1] || vertices[i - this.props.height] || vertices[i + this.props.height];
       };
-      return Object.assign(v, {z: z})
+      return Object.assign(v, { z: z / 100 })
     });
 
     plane.rotation.x = 5.7;
@@ -55,12 +54,16 @@ export default class Terrain extends React.Component {
 
   initializeCanvas() {
     this.scene = new Scene({autoUpdate: false});
-    const camera = new PerspectiveCamera(60, 1000 / 1200, 1, 100000);
-    const renderer = new WebGLRenderer({canvas: this.refs.canvas});
 
+    const aspectRatio = this.refs.canvasContainer.offsetWidth / this.refs.canvasContainer.offsetHeight;
+    
+    const camera = new PerspectiveCamera(52 / aspectRatio, aspectRatio, 0.1, 1000);    
+    camera.position.y = -20;
+    camera.position.z = 200;
+    
+    const renderer = new WebGLRenderer({canvas: this.refs.canvas});
     renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
-    renderer.setSize(this.refs.canvasContainer.offsetWidth * 1.3, this.refs.canvasContainer.offsetWidth * 1.3);
-    camera.position.z = 11000;
+    renderer.setSize(this.refs.canvasContainer.offsetWidth, this.refs.canvasContainer.offsetHeight);
 
     this.renderMap = function() {
       renderer.render(this.scene, camera);
@@ -72,30 +75,36 @@ export default class Terrain extends React.Component {
 
     this.initialized = true;
   }
+  
+  draw() {
+    this.view = GeoViewport.viewport(_.flatten(this.props.bounds), [1024, 1024], 12, 14);
 
-  componentDidUpdate(prevProps) {
-    if (this.props.trail.id !== prevProps.trail.id) {
+    this.clearMap();
+    this.getEarth();
+  }
+  
+  componentDidMount() {
+    this.initializeCanvas();
+    this.draw()
+  }
 
-      this.trailIsChanging = true;
-    }
-
-    if (this.props.trail.hasElevationData == true && prevProps.hasElevationData == undefined && this.trailIsChanging == true) {
-      this.trailIsChanging = false;
-      this.view = GeoViewport.viewport(_.flatten(this.props.trail.bounds), [1024, 1024], 1, 14);
-      this.bounds = GeoViewport.bounds(this.view.center, this.view.zoom, [1024, 1024]);
-
-      if (!this.initialized) this.initializeCanvas();
-
-      this.clearMap()
-      this.getEarth();
-    };
+  componentDidUpdate(prevProps) {    
+    if (this.props.index !== prevProps.index) this.draw();
   }
 
   render() {
     return (
       <div ref="canvasContainer" className={cx(styles.terrain, styles.center)}>
-        <canvas ref="canvas" className={cx(styles.canvas, {[styles.hidden]: this.trailIsChanging})}></canvas>
+        <canvas ref="canvas" className={styles.canvas}></canvas>
       </div>
     )
   }
 };
+
+Terrain.propTypes = {
+  index: PropTypes.string,
+  height: PropTypes.number,
+  width: PropTypes.number,
+  bounds: PropTypes.array,
+  vertices: PropTypes.array
+}

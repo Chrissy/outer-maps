@@ -1,27 +1,18 @@
 const pg = require('pg');
 const execSync = require('child_process').execSync;
 const path = require('path').normalize;
-const user = (env.dbUser) ? `-U ${env.dbUser}` : '';
+const query = require('../modules/genericQuery').query;
+const createPool = require('../modules/genericQuery').pool;
 
-const genericQuery = function(query, cb) {
-    var pool = new pg.Pool({
-      database: process.env.DATABASE_URL,
-      max: 10,
-      idleTimeoutMillis: 3000,
-      user: env.dbUser
-    });
+const databaseName = process.env.DATABASE_NAME;
+const user = process.env.DATABASE_USER || '';
+if (!databaseName) console.log("warning: no database name");
 
-    pool.connect(function(err, client, done){
-      client.query(query, function(err, result){
-        if (err) console.log(err);
 
-        done();
-
-        console.log(result);
-        if (cb) cb();
-      });
-    });
-}
+const genericQuery = function(sql, cb) {
+  const pool = createPool();
+  return query(sql, pool, cb);
+};
 
 exports.genericQuery = genericQuery;
 
@@ -30,7 +21,7 @@ exports.uploadShapeFile = function({directoryName, filename, srid = '4326', tabl
 
   const pathStr = path(process.env.LIB + "/" + directoryName);
 
-  execSync(`shp2pgsql -G -c -s ${srid}:4326 ${filename}.shp public.${tableName} | psql -d ${env.databaseName} ${user}`, {cwd: pathStr});
+  execSync(`shp2pgsql -G -c -s ${srid}:4326 ${filename}.shp public.${tableName} | psql -d ${databaseName} ${user}`, {cwd: pathStr});
 
   if (cb) cb();
 }
@@ -40,7 +31,7 @@ exports.insertElevationRasters = function({directoryName, srid = '4326', tableNa
 
   const pathStr = path(process.env.LIB + "/" + directoryName);
 
-  execSync(`raster2pgsql -s ${srid} -t "auto" -C *.tif public.${tableName} | psql -d ${env.databaseName} ${user}`, {cwd: pathStr});
+  execSync(`raster2pgsql -s ${srid} -t "auto" -C *.tif public.${tableName} | psql -d ${databaseName} ${user}`, {cwd: pathStr});
 
   if (cb) cb()
 }
@@ -54,7 +45,7 @@ exports.deleteDuplicateTrails = function({from, using}) {
   `
   console.log("deleting duplicates. this job takes a while and will continue to run asynchonously");
 
-  return genericQuery(query);
+  return query(query, pool, () => {});
 }
 
 exports.packTrails = function(baseTableName, callback) {
@@ -123,7 +114,7 @@ exports.patchDisconnectedTrails = function(baseTableName, callback) {
 
     console.log("connecting broken trails...")
 
-    genericQuery(query, function(){
+    genericQuery(query, () => {
       exports.packTrails(baseTableName, function(){
         exports.explodeTrails(baseTableName, callback);
       })

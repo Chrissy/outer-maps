@@ -1,76 +1,41 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import TrailSidebar from './trailSidebar';
+import BoundarySidebar from './boundarySidebar';
 import cx from 'classnames';
-import Elevation from './elevation';
-import Terrain from './terrain';
-import TrailListContainer from './trailListContainer.js'
-import LoadingSpinner from './loadingSpinner';
-import ImportantWeather from './importantWeather';
-import LessImportantWeather from './lessImportantWeather';
-
 import styles from '../styles/sidebar.css';
 import spacing from '../styles/spacing.css';
 
-export default class MapSidebar extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.showMoreWeather = this.showMoreWeather.bind(this);
+const Sidebar = ({trails, firstTrail, boundary, loading}) => {
+  const trailOrBoundary = () => {
+    if (trails.length) return <TrailSidebar firstTrail={firstTrail} trails={trails}/>
+    if (boundary) return <BoundarySidebar {...boundary}/>
+  }
+  
+  const hasContent = () => {
+    return !!(trails.length || boundary)
+  }
+    
+  const name = () => {
+    if (trails.length) return (trails.length > 1) ? `${trails.length} Trails` : firstTrail.name;
+    if (boundary) return boundary.name;
   }
 
-  name() {
-    return (this.props.trails.length > 1) ? `${this.props.trails.length} Trails` : this.props.firstTrail.name;
-  }
-
-  terrain() {
-    return <Terrain trail={this.props.firstTrail}/>
-  }
-
-  trailList() {
-    return <TrailListContainer/>
-  }
-
-  terrainOrTrailList() {
-    return (this.props.trails.length > 1) ? this.trailList() : this.terrain()
-  }
-
-  elevation() {
-    if (this.props.firstTrail.hasElevationData) return <Elevation trails={this.props.trails.filter(t => t.hasElevationData)}/>
-  }
-
-  importantWeather() {
-    if (this.props.firstTrail.hasWeatherData) return <ImportantWeather trail={this.props.firstTrail}/>
-  }
-
-  lessImportantWeather() {
-    if (this.props.firstTrail.hasAdditionalWeatherData) {
-      return <LessImportantWeather trail={this.props.firstTrail}/>
-    }
-  }
-
-  showMoreWeather() {
-    this.props.getAdditionalWeatherData(this.props.firstTrail);
-  }
-
-  showMoreWeatherButton() {
-    return '';
-    if (this.props.firstTrail.hasWeatherData) return <a href="#" onClick={(e) => this.showMoreWeather(e)}>More Weather</a>
-  }
-
-  render() {
-    return (
-      <div className={cx(styles.body, {[styles.active]: this.props.loading})}>
-        <div className={cx(styles.content, {[styles.active]: this.props.firstTrail.hasBaseData})}>
-          <div className={styles.title}>{this.name()}</div>
-          {this.terrainOrTrailList()}
-          {this.elevation()}
-          {this.importantWeather()}
-          {this.lessImportantWeather()}
-          {this.showMoreWeatherButton()}
-        </div>
-        <div className={cx(styles.spinner, {[styles.hidden]: this.props.firstTrail.hasBaseData})}>
-          <LoadingSpinner/>
-        </div>
+  return (
+    <div className={cx(styles.body, {[styles.active]: loading})}>
+      <div className={cx(styles.content, {[styles.active]: hasContent()})}>
+        <div className={styles.title}>{name()}</div>
+        {trailOrBoundary()}
       </div>
-    )
-  }
+    </div>
+  )
 };
+
+Sidebar.propTypes = {
+  trails: PropTypes.array,
+  firstTrail: PropTypes.object,
+  boundary: PropTypes.object,
+  loading: PropTypes.bool
+}
+
+export default Sidebar;

@@ -14,7 +14,7 @@ const trail = (state = {}, action) => {
         name: action.properties.name,
         distance: action.properties.distance,
         stationId: action.properties.station1,
-        center: [action.properties.cx, action.properties.cy],
+        center: centroid(action.geometry).geometry.coordinates,
         bounds: bbox(action.geometry)
       }
     case 'SET_TRAIL_PREVIEWING':
@@ -40,7 +40,6 @@ const trail = (state = {}, action) => {
       const geometry = lineString(action.coordinates).geometry;
       return { ...state,
         hasElevationData: true,
-        bounds: bbox(geometry),
         geometry: geometry,
         dump: action.dump,
         points: action.elevations.map((e, i) => {
@@ -57,16 +56,18 @@ const trail = (state = {}, action) => {
           }
         })
       }
-    case 'SET_WEATHER_DATA':
+    case 'SET_TRAIL_WEATHER_DATA':
       if (action.id !== state.id) return state
       return { ...state,
         hasWeatherData: true,
-        maxTemperature:             action["DLY-TMAX-NORMAL"],
-        minTemperature:             action["DLY-TMIN-NORMAL"],
-        chanceOfPercipitation:      action["DLY-PRCP-PCTALL-GE001HI"],
-        chanceOfHeavyPercipitation: action["DLY-PRCP-PCTALL-GE050HI"]
+        weatherData: {
+          maxTemperature:             action["DLY-TMAX-NORMAL"],
+          minTemperature:             action["DLY-TMIN-NORMAL"],
+          chanceOfPercipitation:      action["DLY-PRCP-PCTALL-GE001HI"],
+          chanceOfHeavyPercipitation: action["DLY-PRCP-PCTALL-GE050HI"]
+        }
       }
-    case 'SET_ADDITIONAL_WEATHER_DATA':
+    case 'SET_TRAIL_ADDITIONAL_WEATHER_DATA':
       if (action.id !== state.id) return state
       return { ...state,
         hasAdditionalWeatherData: true,
@@ -131,9 +132,9 @@ const trails = (state = [], action) => {
       return state.map(t => trail(t, action))
     case 'SET_TRAIL_BASE_DATA':
       return state.map(t => trail(t, action))
-    case 'SET_WEATHER_DATA':
+    case 'SET_TRAIL_WEATHER_DATA':
       return state.map(t => trail(t, action))
-    case 'SET_ADDITIONAL_WEATHER_DATA':
+    case 'SET_TRAIL_ADDITIONAL_WEATHER_DATA':
       return state.map(t => trail(t, action))
     case 'SHOW_HANDLES':
       return state.map(t => trail(t, action))
@@ -182,8 +183,14 @@ const handle = (state = {}, action) => {
 const boundaries = (state = [], action) => {
   switch (action.type) {
     case 'ADD_BOUNDARY':
-      if (state.some(b => b.id == action.properties.id)) return state;
+      if (state.some(b => b.id == action.id)) return state;
       return [...state, boundary(undefined, action)]
+    case 'SET_BOUNDARY_DATA':
+      return state.map(b => boundary(b, action))
+    case 'SET_BOUNDARY_WEATHER_DATA':
+      return state.map(b => boundary(b, action))
+    case 'SET_BOUNDARY_ADDITIONAL_WEATHER_DATA':
+      return state.map(b => boundary(b, action))
     case 'SET_BOUNDARY_PREVIEWING':
       return state.map(b => boundary(b, action))
     case 'CLEAR_BOUNDARY_PREVIEWING':
@@ -202,7 +209,41 @@ const boundary = (state = {}, action) => {
       return {...state,
         id: action.properties.id,
         name: action.properties.name,
-        geometry: action.geometry
+        geometry: action.geometry,
+        bounds: bbox(JSON.parse(action.properties.bounds)),
+        center: action.geometry.coordinates,
+        hasBaseData: true
+      }
+    case 'SET_BOUNDARY_DATA':
+      if (action.id !== state.id) return state;
+      return {...state,
+        area: action.area,
+        dump: action.dump,
+        trailsCount: action.trailsCount,
+        trailLengths: action.trailLengths,
+        trailTypes: action.trailTypes,
+        trails: action.trails,
+        hasElevationData: true
+      }
+    case 'SET_BOUNDARY_WEATHER_DATA':
+      if (action.id !== state.id) return state
+      return { ...state,
+        hasWeatherData: true,
+        weatherData: {
+          maxTemperature:             action["DLY-TMAX-NORMAL"],
+          minTemperature:             action["DLY-TMIN-NORMAL"],
+          chanceOfPercipitation:      action["DLY-PRCP-PCTALL-GE001HI"],
+          chanceOfHeavyPercipitation: action["DLY-PRCP-PCTALL-GE050HI"]
+        }
+      }
+    case 'SET_BOUNDARY_ADDITIONAL_WEATHER_DATA':
+      if (action.id !== state.id) return state
+      return { ...state,
+        hasAdditionalWeatherData: true,
+        chanceOfSnow:               action["DLY-SNOW-PCTALL-GE001TI"],
+        chanceOfHeavySnow:          action["DLY-SNOW-PCTALL-GE030TI"],
+        chanceOfSnowPack:           action["DLY-SNWD-PCTALL-GE001WI"],
+        chanceOfHeavySnowPack:      action["DLY-SNWD-PCTALL-GE010WI"]
       }
     case 'SET_BOUNDARY_PREVIEWING':
       return { ...state, previewing: (state.id === action.properties.id) }
