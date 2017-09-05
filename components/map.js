@@ -22,6 +22,10 @@ export default class Map extends React.Component {
     return this.props.boundaries.find(boundary => boundary.selected);
   }
 
+  elementIsSelected() {
+    return !!(this.selectedBoundary() || this.selectedTrails().length);
+  }
+
   handles() {
     return this.props.trails.reduce((a, t) => (t.handles) ? a.concat(t.handles) : a, []);
   }
@@ -67,7 +71,8 @@ export default class Map extends React.Component {
     const {draggingPoint, props} = this;
 
     if (draggingPoint) return;
-    if (!features.length) return props.onNonFeatureClick();
+    if (!feature && this.elementIsSelected()) return props.onNonFeatureClick();
+    if (!feature) return;
 
     const type = feature.layer.id;
 

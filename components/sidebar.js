@@ -11,11 +11,11 @@ const Sidebar = ({trails, firstTrail, boundary, loading}) => {
     if (trails.length) return <TrailSidebar firstTrail={firstTrail} trails={trails}/>
     if (boundary) return <BoundarySidebar {...boundary}/>
   }
-  
+
   const hasContent = () => {
     return !!(trails.length || boundary)
   }
-    
+
   const name = () => {
     if (trails.length) return (trails.length > 1) ? `${trails.length} Trails` : firstTrail.name;
     if (boundary) return boundary.name;
