@@ -4,8 +4,6 @@ const path = require('path').normalize;
 const query = require('../modules/genericQuery').query;
 const createPool = require('../modules/genericQuery').pool;
 
-if (process.env.NODE_ENV == 'production') pg.defaults.ssl = true;
-
 const databaseName = process.env.DATABASE_NAME;
 const user = process.env.DATABASE_USER || '';
 if (!databaseName) console.log("warning: no database name");
