@@ -6,9 +6,7 @@ const mapStateToProps = (state) => {
   const boundary = state.boundaries.find(t => t.selected);
 
   return {
-    trails: sortedTrails || [],
-    firstTrail: sortedTrails[0] || {},
-    loading: state.trails.some(t => t.selected) || !!boundary,
+    trails: sortedTrails,
     boundary: boundary
   }
 }
