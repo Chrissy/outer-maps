@@ -127,19 +127,6 @@ export function selectBoundary(boundary) {
   };
 };
 
-export function addSource(source){
-  return dispatch => {
-    return dispatch({type: 'ADD_SOURCE', ...source});
-  };
-};
-
-export function clearPreviewing() {
-  return dispatch => {
-    dispatch({type: 'CLEAR_TRAIL_PREVIEWING'});
-    dispatch({type: 'CLEAR_BOUNDARY_PREVIEWING'});
-  }
-}
-
 export function clearSelected() {
   return dispatch => {
     dispatch({type: 'CLEAR_TRAIL_SELECTED'});
