@@ -177,8 +177,6 @@ Map.propTypes = {
   onTrailClick: PropTypes.func,
   onBoundaryClick: PropTypes.func,
   onNonFeatureClick: PropTypes.func,
-  getTrails: PropTypes.func,
-  getBoundaries: PropTypes.func,
   updateHandle: PropTypes.func,
   setHandleIndex: PropTypes.func
 }
