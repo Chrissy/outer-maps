@@ -34,7 +34,7 @@ const trail = (state = {}, action) => {
       }
       return state;
     case 'CLEAR_TRAIL_SELECTED':
-      return { ...state, selected: false, selectedId: null }
+      return { ...state, selected: false, selectedId: null, handles: null }
     case 'SET_TRAIL_DATA':
       if (action.id !== state.id) return state
       const geometry = lineString(action.coordinates).geometry;
@@ -100,10 +100,6 @@ const trail = (state = {}, action) => {
           index: state.points.length
         })
       ]}
-    case 'CLEAR_HANDLES':
-        return { ...state,
-        handles: null
-      }
     case 'REMOVE_TRAIL_HANDLES':
         if (action.id !== state.id) return state;
         return { ...state,
@@ -137,8 +133,6 @@ const trails = (state = [], action) => {
     case 'SET_TRAIL_ADDITIONAL_WEATHER_DATA':
       return state.map(t => trail(t, action))
     case 'SHOW_HANDLES':
-      return state.map(t => trail(t, action))
-    case 'CLEAR_HANDLES':
       return state.map(t => trail(t, action))
     case 'REMOVE_TRAIL_HANDLES':
       return state.map(t => trail(t, action))

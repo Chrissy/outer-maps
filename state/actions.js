@@ -118,7 +118,6 @@ function getBoundaryData({id, bounds}) {
 export function selectBoundary(boundary) {
   return (dispatch, getState) => {
     dispatch({type: 'CLEAR_TRAIL_SELECTED'});
-    dispatch({type: 'CLEAR_HANDLES'});
     dispatch({type: 'ADD_BOUNDARY', properties: boundary.properties, geometry: boundary.geometry});
     dispatch({type: 'SET_BOUNDARY_SELECTED', id: boundary.properties.id});
     const cachedBoundary = getState().boundaries.find(b => b.id == boundary.properties.id);
@@ -131,6 +130,5 @@ export function clearSelected() {
   return dispatch => {
     dispatch({type: 'CLEAR_TRAIL_SELECTED'});
     dispatch({type: 'CLEAR_BOUNDARY_SELECTED'});
-    dispatch({type: 'CLEAR_HANDLES'})
   }
 }
