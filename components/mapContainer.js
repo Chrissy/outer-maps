@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import Map from '../components/map';
-import {selectTrail, selectBoundary, clearSelected, getTrails, getBoundaries} from '../state/actions';
+import {selectTrail, selectBoundary, clearSelected} from '../state/actions';
 
 const mapStateToProps = (state) => {
   return {
