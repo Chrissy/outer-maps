@@ -1,4 +1,5 @@
-import React, { Proptypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import pointOnLine from '@turf/point-on-line';
 import nearest from '@turf/nearest';
 import bbox from '@turf/bbox';
@@ -12,6 +13,18 @@ import getOffsetCenter from '../modules/getOffsetCenter';
 const WATCH_LAYERS = ['trails', 'national-park-labels', 'national-park-labels-active', 'handles'];
 
 export default class Map extends React.Component {
+
+  selectedTrails() {
+    return this.props.trails.filter(t => t.selected && t.hasElevationData);
+  }
+
+  selectedBoundary() {
+    return this.props.boundaries.find(boundary => boundary.selected);
+  }
+
+  handles() {
+    return this.props.trails.reduce((a, t) => (t.handles) ? a.concat(t.handles) : a, []);
+  }
 
   onMapMouseMove({features, target, features: [feature], lngLat}) {
     const {draggingPoint, props, state: {previewTrailId, previewBoundaryId}} = this;
@@ -85,7 +98,7 @@ export default class Map extends React.Component {
     const handle = features.find(f => f.layer.id == "handles");
     if (!handle) return;
     this.draggingPoint = {...handle,
-      trail: this.props.selectedTrails.find(t => t.id == handle.properties.trailId),
+      trail: this.selectedTrails().find(t => t.id == handle.properties.trailId),
       geometry: handle.geometry,
       currentPointOnLine: handle.geometry.coordinates
     };
@@ -105,8 +118,8 @@ export default class Map extends React.Component {
 
   sources() {
     return [
-      { id: 'trails-selected', data: trailsToFeatureCollection(this.props.selectedTrails) },
-      { id: 'handles', data: featureCollection(this.props.handles.map(p => pointToPoint(p))) }
+      { id: 'trails-selected', data: trailsToFeatureCollection(this.selectedTrails()) },
+      { id: 'handles', data: featureCollection(this.handles().map(p => pointToPoint(p))) }
     ];
   }
 
@@ -115,11 +128,11 @@ export default class Map extends React.Component {
       id: "trails-preview",
       filter: ["all",
         ["in", "id", this.state.previewTrailId],
-        ["!in", "id", ...(this.props.selectedTrails.map(t => t.id) || [] )]
+        ["!in", "id", ...(this.selectedTrails().map(t => t.id) || [] )]
       ]},
       {
         id: "national-parks-active",
-        filter: ["in", "id", (this.props.selectedBoundary) ? this.props.selectedBoundary.id : 0]
+        filter: ["in", "id", (this.selectedBoundary()) ? this.selectedBoundary().id : 0]
       },
       {
         id: "national-park-labels-active",
@@ -156,4 +169,9 @@ export default class Map extends React.Component {
         </div>
     );
   }
+}
+
+Map.propTypes = {
+  trails: PropTypes.array,
+  boundaries: PropTypes.array
 }

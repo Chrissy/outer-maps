@@ -4,11 +4,8 @@ import {selectTrail, selectBoundary, clearSelected, getTrails, getBoundaries} fr
 
 const mapStateToProps = (state) => {
   return {
-    selectedTrails: state.trails.filter(trail => trail.selected && trail.hasElevationData),
     trails: state.trails,
-    boundaries: state.boundaries,
-    selectedBoundary: state.boundaries.find(boundary => boundary.selected),
-    handles: state.trails.reduce((a, t) => (t.handles) ? a.concat(t.handles) : a, []),
+    boundaries: state.boundaries
   }
 }
 
