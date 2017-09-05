@@ -209,7 +209,6 @@ const boundary = (state = {}, action) => {
       return {...state,
         id: action.properties.id,
         name: action.properties.name,
-        geometry: action.geometry,
         bounds: bbox(JSON.parse(action.properties.bounds)),
         center: action.geometry.coordinates,
         hasBaseData: true

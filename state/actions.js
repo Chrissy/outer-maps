@@ -83,25 +83,15 @@ function getAdditionalWeatherData(trail) {
   }
 }
 
-export function previewTrail(trail) {
-  return dispatch => {
-    dispatch({type: 'CLEAR_BOUNDARY_PREVIEWING'});
-    dispatch({type: 'ADD_TRAIL', ...trail});
-    return dispatch({type: 'SET_TRAIL_PREVIEWING', id: trail.properties.id});
-  };
-};
-
 export function selectTrail(trail) {
   return (dispatch, getState) => {
-    const props = trail.properties
-    const cachedTrail = getState().trails.find(t => t.id == props.id);
-    if (!cachedTrail) dispatch({type: 'ADD_TRAIL', ...trail});
-    trail = getState().trails.find(t => t.id == props.id);
+    dispatch({type: 'ADD_TRAIL', properties: trail.properties, geometry: trail.geometry});
     dispatch({type: 'CLEAR_BOUNDARY_SELECTED'});
-    dispatch({type: 'SELECT_TRAIL', ...trail});
-    dispatch({type: 'SHOW_HANDLES', ...trail});
-    dispatch(getTrailData(trail));
-    return dispatch(getTrailWeatherData(trail));
+    dispatch({type: 'SELECT_TRAIL', id: trail.properties.id});
+    dispatch({type: 'SHOW_HANDLES', id: trail.properties.id});
+    const cachedTrail = getState().trails.find(t => t.id == trail.properties.id);
+    if (!cachedTrail.hasElevationData) dispatch(getTrailData(cachedTrail));
+    if (!cachedTrail.hasWeatherData) dispatch(getTrailWeatherData(cachedTrail));
   };
 };
 
@@ -111,14 +101,6 @@ export function unselectTrail(id) {
     return dispatch({type: 'UNSELECT_TRAIL', id});
   }
 }
-
-export function previewBoundary(boundary) {
-  return dispatch => {
-    dispatch({type: 'CLEAR_TRAIL_PREVIEWING'});
-    dispatch({type: 'ADD_BOUNDARY', ...boundary});
-    return dispatch({type: 'SET_BOUNDARY_PREVIEWING', ...boundary});
-  };
-};
 
 function getBoundaryData({id, bounds}) {
   return dispatch => {
@@ -137,8 +119,8 @@ export function selectBoundary(boundary) {
   return (dispatch, getState) => {
     dispatch({type: 'CLEAR_TRAIL_SELECTED'});
     dispatch({type: 'CLEAR_HANDLES'});
+    dispatch({type: 'ADD_BOUNDARY', properties: boundary.properties, geometry: boundary.geometry});
     dispatch({type: 'SET_BOUNDARY_SELECTED', id: boundary.properties.id});
-    dispatch({type: 'ADD_BOUNDARY', ...boundary});
     const cachedBoundary = getState().boundaries.find(b => b.id == boundary.properties.id);
     if (!cachedBoundary.hasElevationData) dispatch(getBoundaryData(cachedBoundary));
     if (!cachedBoundary.hasWeatherData) dispatch(getBoundaryWeatherData(cachedBoundary));

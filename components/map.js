@@ -34,8 +34,8 @@ export default class Map extends React.Component {
     const {previewBoundaryId, previewTrailId} = this.state;
     if (previewBoundaryId && properties.id == previewBoundaryId) return;
     if (previewTrailId && properties.id == previewTrailId) return;
-    if (layer.id == "trails") this.setState({previewTrailId: properties.id});
-    if (layer.id == "national-park-labels") this.setState({previewBoundaryId: properties.id});
+    if (layer.id == "trails") this.setState({previewTrailId: properties.id, previewBoundaryId: 0});
+    if (layer.id == "national-park-labels") this.setState({previewBoundaryId: properties.id, previewTrailId: 0});
   }
 
   handleDrag({target, lngLat}) {
