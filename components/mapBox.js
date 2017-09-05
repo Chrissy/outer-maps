@@ -28,7 +28,7 @@ export default class MapBox extends React.PureComponent {
       container: 'mapbox-gl-element',
       style: mapboxStyles,
       center: [-123.6, 47.8],
-      zoom: 9,
+      zoom: 8,
       maxZoom: 14
     });
 
