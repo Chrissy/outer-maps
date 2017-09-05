@@ -11,7 +11,7 @@
 
 .trailsChartElement:nth-of-type(even) {
   background-color: var(--gray-3);
-} 
+}
 
 .name, .distance {
   padding: .5em;
