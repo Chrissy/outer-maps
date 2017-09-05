@@ -173,5 +173,12 @@ export default class Map extends React.Component {
 
 Map.propTypes = {
   trails: PropTypes.array,
-  boundaries: PropTypes.array
+  boundaries: PropTypes.array,
+  onTrailClick: PropTypes.func,
+  onBoundaryClick: PropTypes.func,
+  onNonFeatureClick: PropTypes.func,
+  getTrails: PropTypes.func,
+  getBoundaries: PropTypes.func,
+  updateHandle: PropTypes.func,
+  setHandleIndex: PropTypes.func
 }
