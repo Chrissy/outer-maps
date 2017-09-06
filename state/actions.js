@@ -1,107 +1,30 @@
-import fetch from 'isomorphic-fetch';
-import _ from 'underscore'
 import {getNoaaData} from '../modules/NOAA';
 import GeoViewport from '@mapbox/geo-viewport';
+import bbox from '@turf/bbox';
+import centroid from '@turf/centroid';
 
-function getTrailData(trail) {
+function getTrailData({id, bounds}) {
   return (dispatch) => {
-    if (trail.hasElevationData) return Promise.resolve();
+    const view = GeoViewport.viewport(bounds, [1024, 1024], 12, 14);
+    const tileBounds = GeoViewport.bounds(view.center, view.zoom, [1024, 1024]);
 
-    const view = GeoViewport.viewport(_.flatten(trail.bounds), [1024, 1024], 12, 14);
-    const bounds = GeoViewport.bounds(view.center, view.zoom, [1024, 1024]);
-
-    return fetch(`/api/elevation/${trail.id}/${bounds.join("/")}`)
+    return fetch(`/api/elevation/${id}/${tileBounds.join("/")}`)
       .then(response => response.json())
       .then(response => {
-        const coordinates = response.elevations.map(e => e.coordinates);
-        dispatch({type: 'SET_TRAIL_DATA', ...response, coordinates, id: trail.id });
-        dispatch({type: 'SHOW_HANDLES', id: trail.id });
+        dispatch({type: 'SET_TRAIL_DATA', ...response, points: response.elevations, id });
       });
   };
 };
 
-function getTrailWeatherData(trail) {
-  return dispatch => {
-    if (trail.hasWeatherData) return Promise.resolve();
-
-    getNoaaData({
-      x: trail.center[1],
-      y: trail.center[0],
-      stationId: trail.stationId,
-      dataSetId: "NORMAL_DLY",
-      dataTypeIds: [
-        "DLY-TMAX-NORMAL",
-        "DLY-TMIN-NORMAL",
-        "DLY-PRCP-PCTALL-GE001HI",
-        "DLY-PRCP-PCTALL-GE050HI"
-      ]
-    }).then(response => {
-      return dispatch({type: 'SET_TRAIL_WEATHER_DATA', ...response, id: trail.id});
-    });
-  }
-}
-
-function getBoundaryWeatherData(boundary) {
-  return dispatch => {
-    if (boundary.hasWeatherData) return Promise.resolve();
-
-    getNoaaData({
-      x: boundary.center[1],
-      y: boundary.center[0],
-      stationId: boundary.stationId,
-      dataSetId: "NORMAL_DLY",
-      dataTypeIds: [
-        "DLY-TMAX-NORMAL",
-        "DLY-TMIN-NORMAL",
-        "DLY-PRCP-PCTALL-GE001HI",
-        "DLY-PRCP-PCTALL-GE050HI"
-      ]
-    }).then(response => {
-      return dispatch({type: 'SET_BOUNDARY_WEATHER_DATA', ...response, id: boundary.id});
-    });
-  }
-}
-
-function getAdditionalWeatherData(trail) {
-  return dispatch => {
-    if (trail.hasAdditionalWeatherData) return Promise.resolve();
-
-    getNoaaData({
-      x: trail.center[1],
-      y: trail.center[0],
-      dataSetID: "NORMAL_DLY",
-      dataTypeIDs: [
-        ["DLY-SNOW-PCTALL-GE001TI"],
-        ["DLY-SNOW-PCTALL-GE030TI"],
-        ["DLY-SNWD-PCTALL-GE001WI"],
-        ["DLY-SNWD-PCTALL-GE010WI"]
-      ]
-    }).then(response => {
-
-      return dispatch({type: 'SET_ADDITIONAL_WEATHER_DATA', ...response, id: trail.id});
-    });
-  }
-}
-
-export function previewTrail(trail) {
-  return dispatch => {
-    dispatch({type: 'CLEAR_BOUNDARY_PREVIEWING'});
-    dispatch({type: 'ADD_TRAIL', ...trail});
-    return dispatch({type: 'SET_TRAIL_PREVIEWING', id: trail.properties.id});
-  };
-};
-
-export function selectTrail(trail) {
+export function selectTrail({properties, geometry}) {
   return (dispatch, getState) => {
-    const props = trail.properties
-    const cachedTrail = getState().trails.find(t => t.id == props.id);
-    if (!cachedTrail) dispatch({type: 'ADD_TRAIL', ...trail});
-    trail = getState().trails.find(t => t.id == props.id);
-    dispatch({type: 'CLEAR_BOUNDARY_SELECTED'});
-    dispatch({type: 'SELECT_TRAIL', ...trail});
-    dispatch({type: 'SHOW_HANDLES', ...trail});
-    dispatch(getTrailData(trail));
-    return dispatch(getTrailWeatherData(trail));
+    const cachedTrail = getState().trails.find(t => t.id == properties.id);
+    const center = centroid(geometry).geometry.coordinates;
+    const bounds = bbox(geometry);
+    if (!cachedTrail) dispatch({type: 'ADD_TRAIL', center, bounds, properties, geometry});
+    if (!cachedTrail || !cachedTrail.hasElevationData) dispatch(getTrailData({id: properties.id, bounds}));
+    if (!cachedTrail || !cachedTrail.hasWeatherData) dispatch(getWeatherData({...properties, center, reducer: 'trail'}));
+    if (cachedTrail) return  dispatch({type: 'SELECT_TRAIL', ...cachedTrail});
   };
 };
 
@@ -112,17 +35,9 @@ export function unselectTrail(id) {
   }
 }
 
-export function previewBoundary(boundary) {
-  return dispatch => {
-    dispatch({type: 'CLEAR_TRAIL_PREVIEWING'});
-    dispatch({type: 'ADD_BOUNDARY', ...boundary});
-    return dispatch({type: 'SET_BOUNDARY_PREVIEWING', ...boundary});
-  };
-};
-
 function getBoundaryData({id, bounds}) {
   return dispatch => {
-    const view = GeoViewport.viewport(_.flatten(bounds), [1024, 1024], 12, 14);
+    const view = GeoViewport.viewport(bounds, [1024, 1024], 12, 14);
     const viewBounds = GeoViewport.bounds(view.center, view.zoom, [1024, 1024]);
 
     return fetch(`/api/boundaries/${id}/${viewBounds.join("/")}`)
@@ -133,35 +48,57 @@ function getBoundaryData({id, bounds}) {
   };
 };
 
-export function selectBoundary(boundary) {
+export function selectBoundary({properties, geometry}) {
   return (dispatch, getState) => {
-    dispatch({type: 'CLEAR_TRAIL_SELECTED'});
-    dispatch({type: 'CLEAR_HANDLES'});
-    dispatch({type: 'SET_BOUNDARY_SELECTED', id: boundary.properties.id});
-    dispatch({type: 'ADD_BOUNDARY', ...boundary});
-    const cachedBoundary = getState().boundaries.find(b => b.id == boundary.properties.id);
-    if (!cachedBoundary.hasElevationData) dispatch(getBoundaryData(cachedBoundary));
-    if (!cachedBoundary.hasWeatherData) dispatch(getBoundaryWeatherData(cachedBoundary));
+    const cachedBoundary = getState().boundaries.find(b => b.id == properties.id);
+    const bounds = bbox(JSON.parse(properties.bounds));
+
+    if (!cachedBoundary) dispatch({type: 'ADD_BOUNDARY', properties, geometry, bounds});
+    if (!cachedBoundary || !cachedBoundary.hasElevationData) dispatch(getBoundaryData({id: properties.id, bounds}));
+    if (!cachedBoundary || !cachedBoundary.hasWeatherData) dispatch(getWeatherData({...properties, center: geometry.coordinates, reducer: 'boundary'}));
+    if (cachedBoundary) return dispatch({type: 'SELECT_BOUNDARY', id: properties.id});
   };
 };
-
-export function addSource(source){
-  return dispatch => {
-    return dispatch({type: 'ADD_SOURCE', ...source});
-  };
-};
-
-export function clearPreviewing() {
-  return dispatch => {
-    dispatch({type: 'CLEAR_TRAIL_PREVIEWING'});
-    dispatch({type: 'CLEAR_BOUNDARY_PREVIEWING'});
-  }
-}
 
 export function clearSelected() {
   return dispatch => {
-    dispatch({type: 'CLEAR_TRAIL_SELECTED'});
-    dispatch({type: 'CLEAR_BOUNDARY_SELECTED'});
-    dispatch({type: 'CLEAR_HANDLES'})
+    dispatch({type: 'CLEAR_SELECTED'});
+  }
+}
+
+function getWeatherData({id, center, stationId, reducer}) {
+  return dispatch => {
+    getNoaaData({
+      x: center[1],
+      y: center[0],
+      stationId: stationId,
+      dataSetId: "NORMAL_DLY",
+      dataTypeIds: [
+        "DLY-TMAX-NORMAL",
+        "DLY-TMIN-NORMAL",
+        "DLY-PRCP-PCTALL-GE001HI",
+        "DLY-PRCP-PCTALL-GE050HI"
+      ]
+    }).then(response => {
+      return dispatch({type: `SET_${reducer.toUpperCase()}_WEATHER_DATA`, ...response, id: id});
+    });
+  }
+}
+
+function getAdditionalWeatherData({id, center, stationId, hasWeatherData, reducer}) {
+  return dispatch => {
+    getNoaaData({
+      x: center[1],
+      y: center[0],
+      dataSetID: "NORMAL_DLY",
+      dataTypeIDs: [
+        ["DLY-SNOW-PCTALL-GE001TI"],
+        ["DLY-SNOW-PCTALL-GE030TI"],
+        ["DLY-SNWD-PCTALL-GE001WI"],
+        ["DLY-SNWD-PCTALL-GE010WI"]
+      ]
+    }).then(response => {
+      return dispatch({type: `SET_${reducer.toUpperCase()}_ADDITIONAL_WEATHER_DATA`, ...response, id: id});
+    });
   }
 }

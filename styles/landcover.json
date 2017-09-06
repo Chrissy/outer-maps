@@ -138,27 +138,13 @@
   }
 },
 {
-  "id": "national-parks-active-outline",
-  "type": "line",
-  "source": "composite",
-  "source-layer": "park-boundaries",
-  "filter": ["in", "id", 0],
-  "paint": {
-    "line-width": 6,
-    "line-opacity": 0.8,
-    "line-color": "#FFF"
-  }
-},
-{
   "id": "national-parks-active",
-  "type": "line",
+  "type": "fill",
   "source": "composite",
   "source-layer": "park-boundaries",
   "filter": ["in", "id", 0],
   "paint": {
-    "line-width": 2,
-    "line-opacity": 0.8,
-    "line-color": "#344632"
+    "fill-color": "rgba(209,255,208,0.6)"
   }
 },
 {

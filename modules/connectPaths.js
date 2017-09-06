@@ -1,3 +1,6 @@
+import _ from 'underscore';
+import distance from '@turf/distance';
+
 const reversePoints = (points) => {
   return [...points].reverse().map((point, i) => {
     return {...point,
@@ -17,7 +20,7 @@ const connectPaths = (p1, p2) => {
     })[0];
     return {...el, distance: distance(closestPoint.coordinates, el.coordinates)}
   }).sort((a, b) => a.distance - b.distance);
-        
+
   if (close1.pid == a1.pid && close2.pid == b1.pid) return [...reversePoints(p1), ...p2];
   if (close1.pid == a1.pid && close2.pid == b2.pid) return [...reversePoints(p1), ...reversePoints(p2)];
   if (close1.pid == a2.pid && close2.pid == b2.pid) return [...p1, ...reversePoints(p2)];

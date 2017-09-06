@@ -1,5 +1,4 @@
-import {point, feature, featureCollection} from '@turf/helpers';
-import lineSlice from '@turf/line-slice';
+import {point, feature, featureCollection, lineString} from '@turf/helpers';
 
 export const pointToPoint = (toConvert) => {
   const asFeature = point(toConvert.coordinates);
@@ -12,19 +11,10 @@ export const pointsToFeatureCollection = (points) => {
 }
 
 export const trailToLine = (toConvert, opts) => {
-  let props = {...toConvert};
-  delete props.geometry;
-  const asFeature = (props.handles) ? cropToHandles(toConvert) : feature(toConvert.geometry);
-
-  return {...asFeature, properties: props};
+  return lineString(toConvert.points.map(p => p.coordinates));
 }
 
 export const trailsToFeatureCollection = (trails) => {
   if (!trails.length) return featureCollection([]);
   return featureCollection(trails.map(t => trailToLine(t)));
-}
-
-const cropToHandles = (trail) => {
-  const newTrail = trail;
-  return lineSlice(pointToPoint(trail.handles[0]), pointToPoint(trail.handles[1]), trail.geometry);
 }

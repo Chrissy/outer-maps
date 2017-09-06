@@ -7,14 +7,16 @@ import TrailListContainer from './trailListContainer';
 import ImportantWeather from './importantWeather';
 import sliceElevationsWithHandles from '../modules/sliceElevationsWithHandles';
 import connectPaths from '../modules/connectPaths';
-import distance from '@turf/distance';
-import _ from 'underscore';
 import spacing from '../styles/spacing.css';
 
-const TrailSidebar = ({firstTrail, trails}) => {
+const TrailSidebar = ({firstTrail, trails, handles}) => {
+  const slicedTrails = () => {
+    return trails.map(t => sliceElevationsWithHandles(t, handles));
+  }
+
   const cumulativeElevations = () => {
-    return trails.reduce((accumulator, trail) => {
-      const points = sliceElevationsWithHandles(trail).points;
+    return slicedTrails().filter(t => t.hasElevationData).reduce((accumulator, trail) => {
+      const points = trail.points;
       if (accumulator.length == 0) return points;
       return connectPaths(accumulator, points);
     }, []);
@@ -32,7 +34,7 @@ const TrailSidebar = ({firstTrail, trails}) => {
   }
 
   const trailList = () => {
-    return <TrailListContainer/>
+    return <TrailListContainer trails={slicedTrails()} />
   }
 
   const terrainOrTrailList = () => {
@@ -62,7 +64,8 @@ const TrailSidebar = ({firstTrail, trails}) => {
 
 TrailSidebar.propTypes = {
   firstTrail: PropTypes.object,
-  trails: PropTypes.array
+  trails: PropTypes.array,
+  handles: PropTypes.array
 }
 
 export default TrailSidebar;

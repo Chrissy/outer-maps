@@ -1,37 +1,20 @@
 import { connect } from 'react-redux';
 import Map from '../components/map';
-import {
-  previewTrail,
-  previewBoundary,
-  selectTrail,
-  selectBoundary,
-  clearPreviewing,
-  clearSelected,
-  getTrails,
-  getBoundaries
-} from '../state/actions'
+import {selectTrail, selectBoundary, clearSelected} from '../state/actions';
 
 const mapStateToProps = (state) => {
   return {
-    selectedTrails: state.trails.filter(trail => trail.selected && trail.hasElevationData),
-    previewTrail: state.trails.find(trail => trail.previewing),
     trails: state.trails,
     boundaries: state.boundaries,
-    selectedBoundary: state.boundaries.find(boundary => boundary.selected),
-    previewBoundary: state.boundaries.find(boundary => boundary.previewing),
-    handles: state.trails.reduce((a, t) => (t.handles) ? a.concat(t.handles) : a, []),
+    handles: state.handles
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onFeatureMouseIn: (feature, layer) => dispatch((layer == "trails") ? previewTrail(feature) : previewBoundary(feature)),
-    onFeatureMouseOut: () => dispatch(clearPreviewing()),
     onTrailClick: (trail) => dispatch(selectTrail(trail)),
     onBoundaryClick: (boundary) => dispatch(selectBoundary(boundary)),
     onNonFeatureClick: () => dispatch(clearSelected()),
-    getTrails: (viewBox) => dispatch(getTrails(viewBox)),
-    getBoundaries: (viewBox) => dispatch(getBoundaries(viewBox)),
     updateHandle: (id, coordinates) => dispatch({type: 'UPDATE_HANDLE', id, coordinates}),
     setHandleIndex: (id, index) => dispatch({type: 'SET_HANDLE_INDEX', id, index})
   }

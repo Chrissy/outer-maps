@@ -6,24 +6,22 @@ import cx from 'classnames';
 import styles from '../styles/sidebar.css';
 import spacing from '../styles/spacing.css';
 
-const Sidebar = ({trails, firstTrail, boundary, loading}) => {
+const Sidebar = ({trails, boundary, handles}) => {
   const trailOrBoundary = () => {
-    if (trails.length) return <TrailSidebar firstTrail={firstTrail} trails={trails}/>
-    if (boundary) return <BoundarySidebar {...boundary}/>
+    if (trails && trails.length) return <TrailSidebar firstTrail={trails[0]} trails={trails} handles={handles}/>
+    if (boundary && boundary.selected) return <BoundarySidebar {...boundary}/>
   }
-  
-  const hasContent = () => {
-    return !!(trails.length || boundary)
-  }
-    
+
+  const hasContent = () => ((boundary && boundary.selected) || (trails && trails.some(t => t.selected)))
+
   const name = () => {
-    if (trails.length) return (trails.length > 1) ? `${trails.length} Trails` : firstTrail.name;
+    if (trails.length) return (trails.length > 1) ? `${trails.length} Trails` : trails[0].name;
     if (boundary) return boundary.name;
   }
 
   return (
-    <div className={cx(styles.body, {[styles.active]: loading})}>
-      <div className={cx(styles.content, {[styles.active]: hasContent()})}>
+    <div className={cx(styles.body, {[styles.active]: hasContent()})}>
+      <div className={styles.content}>
         <div className={styles.title}>{name()}</div>
         {trailOrBoundary()}
       </div>
@@ -33,9 +31,8 @@ const Sidebar = ({trails, firstTrail, boundary, loading}) => {
 
 Sidebar.propTypes = {
   trails: PropTypes.array,
-  firstTrail: PropTypes.object,
   boundary: PropTypes.object,
-  loading: PropTypes.bool
+  handles: PropTypes.array
 }
 
 export default Sidebar;

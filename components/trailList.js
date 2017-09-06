@@ -4,7 +4,6 @@ import cx from 'classnames';
 import styles from '../styles/trailList.css';
 import spacing from '../styles/spacing.css';
 import Close from '../svg/close.svg';
-import sliceElevationsWithHandles from '../modules/sliceElevationsWithHandles';
 
 export default class TrailList extends React.Component {
   constructor(props) {
@@ -19,7 +18,7 @@ export default class TrailList extends React.Component {
 
   trailDistance(trail) {
     if (!trail.hasElevationData) return '';
-    return metersToMiles(sliceElevationsWithHandles(trail).points.reduce((a, e) => {
+    return metersToMiles(trail.points.reduce((a, e) => {
       return a + e.distanceFromPreviousPoint
     }, 0)) + "m";
   }
