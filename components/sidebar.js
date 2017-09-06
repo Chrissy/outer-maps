@@ -6,9 +6,9 @@ import cx from 'classnames';
 import styles from '../styles/sidebar.css';
 import spacing from '../styles/spacing.css';
 
-const Sidebar = ({trails, firstTrail, boundary, loading}) => {
+const Sidebar = ({trails, boundary, handles}) => {
   const trailOrBoundary = () => {
-    if (trails && trails.length) return <TrailSidebar firstTrail={trails[0]} trails={trails}/>
+    if (trails && trails.length) return <TrailSidebar firstTrail={trails[0]} trails={trails} handles={handles}/>
     if (boundary && boundary.selected) return <BoundarySidebar {...boundary}/>
   }
 
@@ -31,7 +31,8 @@ const Sidebar = ({trails, firstTrail, boundary, loading}) => {
 
 Sidebar.propTypes = {
   trails: PropTypes.array,
-  boundary: PropTypes.object
+  boundary: PropTypes.object,
+  handles: PropTypes.array
 }
 
 export default Sidebar;

@@ -6,7 +6,8 @@ const mapStateToProps = (state) => {
   const sortedTrails = state.trails.filter(t => t.selected).sort((a,b) => a.selectedId - b.selectedId);
 
   return {
-    trails: sortedTrails || []
+    trails: sortedTrails || [],
+    handles: state.handles
   }
 }
 

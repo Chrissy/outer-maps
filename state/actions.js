@@ -11,8 +11,7 @@ function getTrailData({id, bounds}) {
     return fetch(`/api/elevation/${id}/${tileBounds.join("/")}`)
       .then(response => response.json())
       .then(response => {
-        const coordinates = response.elevations.map(e => e.coordinates);
-        dispatch({type: 'SET_TRAIL_DATA', ...response, coordinates, id: id });
+        dispatch({type: 'SET_TRAIL_DATA', ...response, points: response.elevations, id });
       });
   };
 };
@@ -25,7 +24,7 @@ export function selectTrail({properties, geometry}) {
     if (!cachedTrail) dispatch({type: 'ADD_TRAIL', center, bounds, properties, geometry});
     if (!cachedTrail || !cachedTrail.hasElevationData) dispatch(getTrailData({id: properties.id, bounds}));
     if (!cachedTrail || !cachedTrail.hasWeatherData) dispatch(getWeatherData({...properties, center, reducer: 'trail'}));
-    if (cachedTrail) return  dispatch({type: 'SELECT_TRAIL', id: properties.id});
+    if (cachedTrail) return  dispatch({type: 'SELECT_TRAIL', ...cachedTrail});
   };
 };
 

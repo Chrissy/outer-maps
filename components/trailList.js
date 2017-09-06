@@ -19,7 +19,7 @@ export default class TrailList extends React.Component {
 
   trailDistance(trail) {
     if (!trail.hasElevationData) return '';
-    return metersToMiles(sliceElevationsWithHandles(trail).points.reduce((a, e) => {
+    return metersToMiles(sliceElevationsWithHandles(trail, this.props.handles).points.reduce((a, e) => {
       return a + e.distanceFromPreviousPoint
     }, 0)) + "m";
   }

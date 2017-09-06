@@ -32,14 +32,13 @@ const trail = (state = {}, action) => {
       return { ...state, selected: false, selectedId: null, handles: null }
     case 'SET_TRAIL_DATA':
       if (action.id !== state.id) return state
-      const geometry = lineString(action.coordinates).geometry;
+      const points = action.points;
       return { ...state,
         hasElevationData: true,
-        geometry: geometry,
+        geometry: lineString(points.map(p => p.coordinates)).geometry,
         dump: action.dump,
-        points: action.elevations.map((e, i) => {
-          const p = action.elevations[i - 1];
-
+        points: points.map((e, i) => {
+          const p = points[i - 1];
           return {
             coordinates: e.coordinates,
             id: action.id,
@@ -71,35 +70,6 @@ const trail = (state = {}, action) => {
         chanceOfSnowPack:           action["DLY-SNWD-PCTALL-GE001WI"],
         chanceOfHeavySnowPack:      action["DLY-SNWD-PCTALL-GE010WI"]
       }
-    case 'UPDATE_HANDLE':
-      if (!state.handles) return state;
-      return {...state,
-        handles: state.handles.map(p => handle(p, action)),
-      }
-    case 'SET_HANDLE_INDEX':
-      if (!state.handles) return state;
-      return {...state,
-        handles: state.handles.map(p => handle(p, action)),
-      }
-    case 'SHOW_HANDLES':
-      if (action.id !== state.id || !state.points) return state;
-      return {...state, handles: [
-        handle(null, {...action,
-          point: state.points[0].coordinates,
-          handleId: 0,
-          index: 0
-        }),
-        handle(null, {...action,
-          point: state.points[state.points.length - 1].coordinates,
-          handleId: 1,
-          index: state.points.length
-        })
-      ]}
-    case 'REMOVE_TRAIL_HANDLES':
-        if (action.id !== state.id) return state;
-        return { ...state,
-        handles: null
-      }
     default: return state
   }
 }
@@ -124,47 +94,6 @@ const trails = (state = [], action) => {
       return state.map(t => trail(t, action))
     case 'SET_TRAIL_ADDITIONAL_WEATHER_DATA':
       return state.map(t => trail(t, action))
-    case 'SHOW_HANDLES':
-    case 'ADD_TRAIL':
-    case 'SELECT_TRAIL':
-    case 'SET_TRAIL_DATA':
-      return  state.map(t => trail(t, {...action, type: 'SHOW_HANDLES'}))
-    case 'REMOVE_TRAIL_HANDLES':
-      return state.map(t => trail(t, action))
-    case 'UPDATE_HANDLE':
-      return state.map(t => trail(t, action))
-    case 'SET_HANDLE_INDEX':
-      return state.map(t => trail(t, action))
-    default: return state
-  }
-}
-
-const handle = (state = {}, action) => {
-  switch (action.type) {
-    case 'SET_TRAIL_DATA':
-      return {
-        coordinates: action.point,
-        id: action.id + '-' + action.handleId,
-        index: action.index,
-        trailId: action.id
-      }
-    case 'SHOW_HANDLES':
-      return {
-        coordinates: action.point,
-        id: action.id + '-' + action.handleId,
-        index: action.index,
-        trailId: action.id
-      }
-    case 'UPDATE_HANDLE':
-      if (action.id !== state.id) return state;
-      return {...state,
-        coordinates: action.coordinates
-      }
-    case 'SET_HANDLE_INDEX':
-      if (action.id !== state.id) return state;
-      return {...state,
-        index: action.index
-      }
     default: return state
   }
 }
@@ -240,7 +169,64 @@ const boundary = (state = {}, action) => {
   }
 }
 
+const handles = (state = [], action) => {
+  switch (action.type) {
+    case 'SELECT_TRAIL':
+    case 'SET_TRAIL_DATA':
+      return [...state,
+        handle(null, {...action,
+          type: 'ADD_HANDLE',
+          point: action.points[0].coordinates,
+          handleId: 0,
+          index: 0
+        }),
+        handle(null, {...action,
+          type: 'ADD_HANDLE',
+          point: action.points[action.points.length - 1].coordinates,
+          handleId: 1,
+          index: action.points.length
+        })
+      ]
+    case 'CLEAR_TRAIL_SELECTED':
+    case 'CLEAR_SELECTED':
+    case 'ADD_BOUNDARY':
+    case 'SELECT_BOUNDARY':
+      return []
+    case 'UNSELECT_TRAIL':
+     return state.filter(h => h.trailId !== action.id)
+    case 'UPDATE_HANDLE':
+      return state.map(h => handle(h, action))
+    case 'SET_HANDLE_INDEX':
+      return state.map(h => handle(h, action))
+    default: return state
+  }
+}
+
+const handle = (state = {}, action) => {
+  switch (action.type) {
+    case 'ADD_HANDLE':
+      return {
+        coordinates: action.point,
+        id: action.id + '-' + action.handleId,
+        index: action.index,
+        trailId: action.id
+      }
+    case 'UPDATE_HANDLE':
+      if (action.id !== state.id) return state;
+      return {...state,
+        coordinates: action.coordinates
+      }
+    case 'SET_HANDLE_INDEX':
+      if (action.id !== state.id) return state;
+      return {...state,
+        index: action.index
+      }
+    default: return state
+  }
+}
+
 export default combineReducers({
   trails,
-  boundaries
+  boundaries,
+  handles
 })

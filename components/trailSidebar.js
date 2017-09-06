@@ -9,10 +9,10 @@ import sliceElevationsWithHandles from '../modules/sliceElevationsWithHandles';
 import connectPaths from '../modules/connectPaths';
 import spacing from '../styles/spacing.css';
 
-const TrailSidebar = ({firstTrail, trails}) => {
+const TrailSidebar = ({firstTrail, trails, handles}) => {
   const cumulativeElevations = () => {
     return trails.filter(t => t.hasElevationData).reduce((accumulator, trail) => {
-      const points = sliceElevationsWithHandles(trail).points;
+      const points = sliceElevationsWithHandles(trail, handles).points;
       if (accumulator.length == 0) return points;
       return connectPaths(accumulator, points);
     }, []);
@@ -60,7 +60,8 @@ const TrailSidebar = ({firstTrail, trails}) => {
 
 TrailSidebar.propTypes = {
   firstTrail: PropTypes.object,
-  trails: PropTypes.array
+  trails: PropTypes.array,
+  handles: PropTypes.array
 }
 
 export default TrailSidebar;

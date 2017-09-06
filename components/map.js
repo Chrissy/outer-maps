@@ -9,6 +9,7 @@ import TooltipContainer from './tooltipContainer';
 import MapBox from './mapBox';
 import styles from '../styles/map.css';
 import getOffsetCenter from '../modules/getOffsetCenter';
+import sliceElevationsWithHandles from '../modules/sliceElevationsWithHandles';
 
 const WATCH_LAYERS = ['trails', 'national-park-labels', 'national-park-labels-active', 'handles'];
 
@@ -27,7 +28,7 @@ export default class Map extends React.Component {
   }
 
   handles() {
-    return this.props.trails.reduce((a, t) => (t.handles) ? a.concat(t.handles) : a, []);
+    return this.props.handles || [];
   }
 
   onMapMouseMove({features, target, features: [feature], lngLat}) {
@@ -123,8 +124,8 @@ export default class Map extends React.Component {
 
   sources() {
     return [
-      { id: 'trails-selected', data: trailsToFeatureCollection(this.selectedTrails()) },
-      { id: 'handles', data: featureCollection(this.handles().map(p => pointToPoint(p))) }
+      {id: 'trails-selected', data: trailsToFeatureCollection(this.selectedTrails().map(t => sliceElevationsWithHandles(t, this.props.handles)))},
+      {id: 'handles', data: featureCollection(this.handles().map(p => pointToPoint(p)))}
     ];
   }
 
@@ -179,6 +180,7 @@ export default class Map extends React.Component {
 Map.propTypes = {
   trails: PropTypes.array,
   boundaries: PropTypes.array,
+  handles: PropTypes.array,
   onTrailClick: PropTypes.func,
   onBoundaryClick: PropTypes.func,
   onNonFeatureClick: PropTypes.func,
