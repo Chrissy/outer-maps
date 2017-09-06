@@ -1,7 +1,5 @@
 import { combineReducers } from 'redux';
 import distance from '@turf/distance';
-import centroid from '@turf/centroid';
-import bbox from '@turf/bbox';
 import {lineString} from '@turf/helpers';
 import _ from 'underscore';
 
@@ -14,8 +12,9 @@ const trail = (state = {}, action) => {
         name: action.properties.name,
         distance: action.properties.distance,
         stationId: action.properties.station1,
-        center: centroid(action.geometry).geometry.coordinates,
-        bounds: bbox(action.geometry)
+        center: action.center,
+        bounds: action.bounds,
+        selected: true
       }
     case 'SELECT_TRAIL':
       if (state.id === action.id && !state.selected){
@@ -85,6 +84,9 @@ const trail = (state = {}, action) => {
         handles: state.handles.map(p => handle(p, action)),
       }
     case 'SHOW_HANDLES':
+    case 'ADD_TRAIL':
+    case 'SELECT_TRAIL':
+    case 'SET_TRAIL_DATA':
       if (action.id !== state.id || !state.points) return state;
       return {...state, handles: [
         handle(null, {...action,
@@ -195,9 +197,9 @@ const boundary = (state = {}, action) => {
       return {...state,
         id: action.properties.id,
         name: action.properties.name,
-        bounds: bbox(JSON.parse(action.properties.bounds)),
-        center: action.geometry.coordinates,
-        hasBaseData: true
+        bounds: action.bounds,
+        hasBaseData: true,
+        selected: true
       }
     case 'SET_BOUNDARY_DATA':
       if (action.id !== state.id) return state;
