@@ -2,19 +2,10 @@ import {connect} from 'react-redux';
 import TrailList from './trailList';
 import {unselectTrail} from '../state/actions'
 
-const mapStateToProps = (state) => {
-  const sortedTrails = state.trails.filter(t => t.selected).sort((a,b) => a.selectedId - b.selectedId);
-
-  return {
-    trails: sortedTrails || [],
-    handles: state.handles
-  }
-}
-
 const mapDispatchToProps = (dispatch) => {
   return {
     unselectTrail: (id) => dispatch(unselectTrail(id))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TrailList);
+export default connect((state) => ({}), mapDispatchToProps)(TrailList);
