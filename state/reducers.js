@@ -31,6 +31,7 @@ const trail = (state = {}, action) => {
       return state;
     case 'CLEAR_SELECTED':
     case 'CLEAR_TRAIL_SELECTED':
+    case 'ADD_BOUNDARY':
       return { ...state, selected: false, selectedId: null, handles: null }
     case 'SET_TRAIL_DATA':
       if (action.id !== state.id) return state
@@ -117,6 +118,7 @@ const trails = (state = [], action) => {
       return state.map(t => trail(t, action))
     case 'CLEAR_SELECTED':
     case 'CLEAR_TRAIL_SELECTED':
+    case 'ADD_BOUNDARY':
       return state.map(t => trail(t, action))
     case 'SET_TRAIL_DATA':
       return state.map(t => trail(t, action))
@@ -181,6 +183,7 @@ const boundaries = (state = [], action) => {
       return state.map(b => boundary(b, action))
     case 'CLEAR_SELECTED':
     case 'CLEAR_BOUNDARY_SELECTED':
+    case 'ADD_TRAIL':
       return state.map(b => boundary(b, action))
     default: return state
   }
@@ -232,6 +235,7 @@ const boundary = (state = {}, action) => {
       return state;
     case 'CLEAR_SELECTED':
     case 'CLEAR_BOUNDARY_SELECTED':
+    case 'ADD_TRAIL':
       return { ...state, selected: false }
     default: return state
   }

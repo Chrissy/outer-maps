@@ -86,7 +86,6 @@ function getAdditionalWeatherData(trail) {
 export function selectTrail(trail) {
   return (dispatch, getState) => {
     dispatch({type: 'ADD_TRAIL', properties: trail.properties, geometry: trail.geometry});
-    dispatch({type: 'CLEAR_BOUNDARY_SELECTED'});
     dispatch({type: 'SELECT_TRAIL', id: trail.properties.id});
     dispatch({type: 'SHOW_HANDLES', id: trail.properties.id});
     const cachedTrail = getState().trails.find(t => t.id == trail.properties.id);
@@ -117,7 +116,6 @@ function getBoundaryData({id, bounds}) {
 
 export function selectBoundary(boundary) {
   return (dispatch, getState) => {
-    dispatch({type: 'CLEAR_SELECTED'});
     dispatch({type: 'ADD_BOUNDARY', properties: boundary.properties, geometry: boundary.geometry});
     dispatch({type: 'SET_BOUNDARY_SELECTED', id: boundary.properties.id});
     const cachedBoundary = getState().boundaries.find(b => b.id == boundary.properties.id);
