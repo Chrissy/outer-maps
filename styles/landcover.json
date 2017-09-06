@@ -144,7 +144,7 @@
   "source-layer": "park-boundaries",
   "filter": ["in", "id", 0],
   "paint": {
-    "fill-color": "rgba(219,248,218,0.6)"
+    "fill-color": "rgba(209,255,208,0.6)"
   }
 },
 {
