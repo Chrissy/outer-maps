@@ -102,7 +102,7 @@ const boundaries = (state = [], action) => {
   switch (action.type) {
     case 'ADD_BOUNDARY':
       if (state.some(b => b.id == action.id)) return state;
-      return [...state, boundary(undefined, action)]
+      return [...state.map(b => ({...b, selected: false})), boundary(undefined, action)]
     case 'SET_BOUNDARY_DATA':
       return state.map(b => boundary(b, action))
     case 'SET_BOUNDARY_WEATHER_DATA':
