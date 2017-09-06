@@ -27,10 +27,6 @@ export default class Map extends React.Component {
     return !!(this.selectedBoundary() || this.selectedTrails().length);
   }
 
-  handles() {
-    return this.props.handles || [];
-  }
-
   onMapMouseMove({features, target, features: [feature], lngLat}) {
     const {draggingPoint, props, state: {previewTrailId, previewBoundaryId}} = this;
 
@@ -125,7 +121,7 @@ export default class Map extends React.Component {
   sources() {
     return [
       {id: 'trails-selected', data: trailsToFeatureCollection(this.selectedTrails().map(t => sliceElevationsWithHandles(t, this.props.handles)))},
-      {id: 'handles', data: featureCollection(this.handles().map(p => pointToPoint(p)))}
+      {id: 'handles', data: featureCollection(this.props.handles.map(p => pointToPoint(p)))}
     ];
   }
 
