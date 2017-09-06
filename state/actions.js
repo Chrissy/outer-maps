@@ -57,7 +57,7 @@ export function selectBoundary({properties, geometry}) {
     if (!cachedBoundary) dispatch({type: 'ADD_BOUNDARY', properties, geometry, bounds});
     if (!cachedBoundary || !cachedBoundary.hasElevationData) dispatch(getBoundaryData({id: properties.id, bounds}));
     if (!cachedBoundary || !cachedBoundary.hasWeatherData) dispatch(getWeatherData({...properties, center: geometry.coordinates, reducer: 'boundary'}));
-    if (cachedBoundary) return dispatch({type: 'SET_BOUNDARY_SELECTED', id: properties.id});
+    if (cachedBoundary) return dispatch({type: 'SELECT_BOUNDARY', id: properties.id});
   };
 };
 

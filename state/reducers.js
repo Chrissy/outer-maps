@@ -28,9 +28,7 @@ const trail = (state = {}, action) => {
         return { ...state, selectedId: state.selectedId - 1 }
       }
       return state;
-    case 'CLEAR_SELECTED':
     case 'CLEAR_TRAIL_SELECTED':
-    case 'ADD_BOUNDARY':
       return { ...state, selected: false, selectedId: null, handles: null }
     case 'SET_TRAIL_DATA':
       if (action.id !== state.id) return state
@@ -84,9 +82,6 @@ const trail = (state = {}, action) => {
         handles: state.handles.map(p => handle(p, action)),
       }
     case 'SHOW_HANDLES':
-    case 'ADD_TRAIL':
-    case 'SELECT_TRAIL':
-    case 'SET_TRAIL_DATA':
       if (action.id !== state.id || !state.points) return state;
       return {...state, handles: [
         handle(null, {...action,
@@ -118,10 +113,11 @@ const trails = (state = [], action) => {
       return state.map(t => trail(t, {...action, selectedTrailCount: state.filter(e => e.selected).length + 1}))
     case 'UNSELECT_TRAIL':
       return state.map(t => trail(t, action))
-    case 'CLEAR_SELECTED':
     case 'CLEAR_TRAIL_SELECTED':
+    case 'CLEAR_SELECTED':
     case 'ADD_BOUNDARY':
-      return state.map(t => trail(t, action))
+    case 'SELECT_BOUNDARY':
+      return state.map(t => trail(t, {...action, type: 'CLEAR_TRAIL_SELECTED'}))
     case 'SET_TRAIL_DATA':
       return state.map(t => trail(t, action))
     case 'SET_TRAIL_WEATHER_DATA':
@@ -129,7 +125,10 @@ const trails = (state = [], action) => {
     case 'SET_TRAIL_ADDITIONAL_WEATHER_DATA':
       return state.map(t => trail(t, action))
     case 'SHOW_HANDLES':
-      return state.map(t => trail(t, action))
+    case 'ADD_TRAIL':
+    case 'SELECT_TRAIL':
+    case 'SET_TRAIL_DATA':
+      return  state.map(t => trail(t, {...action, type: 'SHOW_HANDLES'}))
     case 'REMOVE_TRAIL_HANDLES':
       return state.map(t => trail(t, action))
     case 'UPDATE_HANDLE':
@@ -181,12 +180,13 @@ const boundaries = (state = [], action) => {
       return state.map(b => boundary(b, action))
     case 'SET_BOUNDARY_ADDITIONAL_WEATHER_DATA':
       return state.map(b => boundary(b, action))
-    case 'SET_BOUNDARY_SELECTED':
+    case 'SELECT_BOUNDARY':
       return state.map(b => boundary(b, action))
-    case 'CLEAR_SELECTED':
     case 'CLEAR_BOUNDARY_SELECTED':
+    case 'CLEAR_SELECTED':
     case 'ADD_TRAIL':
-      return state.map(b => boundary(b, action))
+    case 'SELECT_TRAIL':
+      return state.map(b => boundary(b, {...action, type: 'CLEAR_BOUNDARY_SELECTED'}))
     default: return state
   }
 }
@@ -232,12 +232,9 @@ const boundary = (state = {}, action) => {
         chanceOfSnowPack:           action["DLY-SNWD-PCTALL-GE001WI"],
         chanceOfHeavySnowPack:      action["DLY-SNWD-PCTALL-GE010WI"]
       }
-    case 'SET_BOUNDARY_SELECTED':
+    case 'SELECT_BOUNDARY':
       return { ...state, selected: (state.id === action.id)};
-      return state;
-    case 'CLEAR_SELECTED':
     case 'CLEAR_BOUNDARY_SELECTED':
-    case 'ADD_TRAIL':
       return { ...state, selected: false }
     default: return state
   }
