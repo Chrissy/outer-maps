@@ -1,92 +1,75 @@
-import {WebGLRenderer, Scene, PerspectiveCamera, TextureLoader, PlaneGeometry, MeshBasicMaterial, Mesh, DefaultLoadingManager} from 'three';
-import PropTypes from 'prop-types';
+import {WebGLRenderer, Scene, PerspectiveCamera, TextureLoader, PlaneGeometry, MeshBasicMaterial, Mesh} from 'three';
 import GeoViewport from '@mapbox/geo-viewport';
 import _ from 'underscore';
+import injectedJson from '../public/dist/terrain.json';
 
+const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
 
-const Terrain = ({index, height, width, bounds, vertices}) => {
+const Terrain = ({height, width, canvas, bounds}) => {
+
+  const getElevations = (bounds) => {
+    return fetch(`/api/terrain/${bounds.join("/")}`).then(r => r.json());
+  }
 
   const getEarth = () => {
-    fetch(new Request(`/api/terrain/${this.view.center.join("/")}/${this.view.zoom}`)).then((r) => r.json()).then(function(resp) {
-      this.earth = resp;
-      this.drawMap();
-    }.bind(this));
-  }
-
-  const drawMap = () => {
-    if (!this.earth) return;
-
-    let vertices = this.props.vertices;
+    const {center: [x, y], zoom} = GeoViewport.viewport(bounds, [1024, 1024]);
+    const url = `http://api.mapbox.com/v4/mapbox.satellite/${x},${y},${zoom}/1024x1024.jpg70?access_token=${accessToken}`;
     const loader = new TextureLoader();
     loader.crossOrigin = '';
-    const texture = loader.load(this.earth.url);
-    const geometry = new PlaneGeometry(200, 200, this.props.height - 1, this.props.width - 1);
-    const material = new MeshBasicMaterial({map: texture});
-    const plane = new Mesh(geometry, material);
 
-    plane.geometry.vertices.map((v,i) => {
-      let z = vertices[i];
-      if (z == null || z == NaN || z == undefined) {
-        z = vertices[i - 1] || vertices[i + 1] || vertices[i - this.props.height] || vertices[i + this.props.height];
-      };
-      return Object.assign(v, { z: z / 100 })
+    return new Promise((resolve, reject) => {
+      loader.load(url, (image) => resolve(image))
+    })
+  }
+
+  const makePlane = (earth, vertices) => {
+    return new Promise((resolve, reject) => {
+      const geometry = new PlaneGeometry(200, 200, 99, 99);
+      const material = new MeshBasicMaterial({map: earth});
+      const plane = new Mesh(geometry, material);
+
+      plane.geometry.vertices.map((v,i) => {
+        let z = vertices[i];
+        if (z == null || z == NaN || z == undefined) {
+          z = vertices[i - 1] || vertices[i + 1] || vertices[i - height] || vertices[i + height];
+        };
+        return Object.assign(v, { z: z / 100 })
+      });
+
+      plane.rotation.x = 5.7;
+
+      return resolve(plane);
     });
-
-    plane.rotation.x = 5.7;
-
-    this.scene.add(plane);
   }
 
-  const clearMap = () => {
-    this.earth = null;
-    this.altitude = null;
+  const initializeCanvas = (plane) => {
+    const scene = new Scene({autoUpdate: false});
 
-    this.scene.children.forEach(function(object) {
-      this.scene.remove(object);
-    }.bind(this));
-
-    this.renderMap();
-  }
-
-  const initializeCanvas = () => {
-    this.scene = new Scene({autoUpdate: false});
-
-    const aspectRatio = this.refs.canvasContainer.offsetWidth / this.refs.canvasContainer.offsetHeight;
-
-    const camera = new PerspectiveCamera(52 / aspectRatio, aspectRatio, 0.1, 1000);
+    const camera = new PerspectiveCamera(52, 1, 0.1, 1000);
     camera.position.y = -20;
     camera.position.z = 200;
 
-    const renderer = new WebGLRenderer({canvas: this.refs.canvas});
+    const renderer = new WebGLRenderer({canvas: canvas});
     renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
-    renderer.setSize(this.refs.canvasContainer.offsetWidth, this.refs.canvasContainer.offsetHeight);
+    renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
 
-    this.renderMap = function() {
-      renderer.render(this.scene, camera);
-    }
-
-    DefaultLoadingManager.onLoad = function() {
-      this.renderMap();
-    }.bind(this);
-
-    this.initialized = true;
-  }
+    scene.add(plane);
+    renderer.render(scene, camera);
+  };
 
   const draw = () => {
-    this.view = GeoViewport.viewport(_.flatten(this.props.bounds), [1024, 1024], 12, 14);
-
-    this.clearMap();
-    this.getEarth();
+    getEarth().then(earth => getElevations(bounds).then(elevations => makePlane(earth, elevations).then(plane => initializeCanvas(plane))));
   }
 
   draw();
 };
 
-Terrain.propTypes = {
-  height: PropTypes.number,
-  width: PropTypes.number,
-  bounds: PropTypes.array,
-  vertices: PropTypes.array
-}
+const center = [-120.3189, 48.3698];
+const bounds = GeoViewport.bounds(center, 12, [1024, 1024]);
 
-Terrain({...injectedJson});
+Terrain({
+  height: 800,
+  width: 800,
+  bounds,
+  canvas: document.getElementById("canvas")
+});

@@ -69,7 +69,7 @@ app.get('/api/elevation/:id/:x1/:y1/:x2/:y2', function(request, response){
 app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
   const box = `ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)`;
 
-  const sql = `      
+  const sql = `
       WITH boundary AS (
           SELECT ST_Area(geog) as area, id, ST_Simplify(geog::geometry, 0.05) as geom
           FROM boundaries
@@ -79,20 +79,20 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
           WHERE ST_Intersects(rast, ${box})
         ), park_trails AS (
           SELECT trails.name, trails.id, trails.type, ST_Length(trails.geog) as length FROM boundary LEFT OUTER JOIN trails
-          ON ST_Length(ST_Simplify(trails.geog::geometry, 1)::geography) > 1600 
-          AND ST_Intersects(ST_Envelope(boundary.geom), trails.geog) 
+          ON ST_Length(ST_Simplify(trails.geog::geometry, 1)::geography) > 1600
+          AND ST_Intersects(ST_Envelope(boundary.geom), trails.geog)
           AND ST_Intersects(ST_Simplify(boundary.geom, 0.005), trails.geog) ORDER BY length DESC LIMIT 1000
         )
         SELECT boundary.area, boundary.id, to_json(ST_DumpValues(rast)) as dump,
         to_json(array_agg(park_trails)) as trails
         FROM boundary, raster, park_trails GROUP BY rast, area, boundary.id;
       `;
-              
+
   query(sql, pool, ({rows: [row]}) => {
     const vertices = row.dump.valarray;
     const flatVertices = _.flatten(vertices);
     const trails = (row.trails[0].id == null) ? [] : row.trails;
-            
+
     return response.json({
       area: parseInt(row.area),
       id: row.id,
@@ -117,28 +117,22 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
   });
 });
 
-app.get('/api/terrain/:x/:y/:zoom', function(request, response){
-  const params = request.params;
-  const cachedImageKey = `terrain-${params.x}-${params.y}-${params.zoom}.jpg`;
-  const cachedImagePath = `https://s3-us-west-2.amazonaws.com/chrissy-gunk/${cachedImageKey}`;
+app.get('/api/terrain/:x1/:y1/:x2/:y2', function(request, response){
+  const {x1, y1, x2, y2} = request.params;
+  const box = `ST_MakeEnvelope(${x1}, ${y1}, ${x2}, ${y2}, 4326)`;
 
-  s3.headObject({Bucket: 'chrissy-gunk', Key: cachedImageKey}, (err, metadata) => {
-    if (err && err.code == 'NotFound') {
-      http.get({
-        host: 'api.mapbox.com',
-        path: `/v4/mapbox.satellite/${params.x},${params.y},${params.zoom}/1024x1024.jpg70?access_token=${accessToken}`
-      }, function(r){
-        let body = [];
-        r.on('data', (chunk) => body.push(chunk)).on('end', () => {
-          s3.putObject({Bucket: 'chrissy-gunk', Key: cachedImageKey, Body: Buffer.concat(body), ACL:'public-read'}, function(err, data) {
-            response.json({url: cachedImagePath})
-          });
-        });
-      });
-    } else {
-      response.json({url: cachedImagePath})
-    }
-  })
+  const sql = `
+    WITH raster AS (
+      SELECT ST_Resize(ST_Clip(ST_Union(rast), ${box}), 100, 100) AS rast FROM elevation
+      WHERE ST_Intersects(rast, ${box})
+    )
+    SELECT to_json(ST_DumpValues(rast)) as dump
+    FROM raster;
+  `;
+
+  query(sql, pool, ({rows: [row]}) => {
+    response.json(row.dump.valarray.reduce((a, v) => [...a, ...v]))
+  });
 });
 
 if (process.env.NODE_ENV == 'production') {
