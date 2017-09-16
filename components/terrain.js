@@ -27,14 +27,7 @@ const Terrain = ({height, width, canvas, bounds}) => {
     const material = new MeshBasicMaterial({map: earth});
     const plane = new Mesh(geometry, material);
 
-    plane.geometry.vertices.map((v,i) => {
-      let z = vertices[i];
-      if (z == null || z == NaN || z == undefined) {
-        z = vertices[i - 1] || vertices[i + 1] || vertices[i - height] || vertices[i + height];
-      };
-      return Object.assign(v, { z: z / 100 })
-    });
-
+    plane.geometry.vertices.map((v,i) => Object.assign(v, { z: vertices[i] / 100 }));
     plane.rotation.x = 5.7;
 
     return plane;
