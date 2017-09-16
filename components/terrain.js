@@ -50,7 +50,6 @@ const Terrain = ({height, width, canvas, bounds}) => {
     camera.position.z = 200;
 
     const renderer = new WebGLRenderer({canvas: canvas});
-    renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
     renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
 
     scene.add(plane);
