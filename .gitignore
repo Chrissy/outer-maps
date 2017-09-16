@@ -39,10 +39,6 @@ lib
 public/static
 public/dist/*
 
-# Cache
-public/cache/elevation/*.json
-public/cache/terrain/*.jpg
-
 # Optional npm cache directory
 .npm
 

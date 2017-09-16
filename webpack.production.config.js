@@ -1,10 +1,13 @@
 const path = require('path').normalize;
 
 module.exports = {
-  entry: './components/app.js',
+  entry: {
+    bundle: './components/app.js',
+    terrain: './components/terrain.js'
+  },
   output: {
     path: path(__dirname + '/public/dist'),
-    filename: 'bundle.js'
+    filename: '[name].js'
   },
   module: {
     noParse: /(mapbox-gl)\.js$/,
