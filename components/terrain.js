@@ -45,7 +45,7 @@ const Terrain = ({height, width, canvas, bounds}) => {
   const initializeCanvas = (plane) => {
     const scene = new Scene({autoUpdate: false});
 
-    const camera = new PerspectiveCamera(52, 1, 0.1, 1000);
+    const camera = new PerspectiveCamera(42, 1, 0.1, 1000);
     camera.position.y = -20;
     camera.position.z = 200;
 
