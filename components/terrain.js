@@ -5,7 +5,7 @@ import injectedJson from '../public/dist/terrain.json';
 
 const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
 
-const Terrain = ({height, width, canvas, bounds}) => {
+const Terrain = ({canvas, bounds}) => {
 
   const getElevations = (bounds) => {
     return fetch(`/api/terrain/${bounds.join("/")}`).then(r => r.json());
@@ -58,8 +58,6 @@ const Terrain = ({height, width, canvas, bounds}) => {
 };
 
 Terrain({
-  height: 800,
-  width: 800,
   bounds: GeoViewport.bounds([-120.3189, 48.3698], 12, [1024, 1024]),
   canvas: document.getElementById("canvas")
 });
