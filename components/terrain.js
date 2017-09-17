@@ -8,7 +8,7 @@ const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTN
 const Terrain = ({canvas, bounds}) => {
 
   const getElevations = (bounds) => {
-    return fetch(`/api/terrain/${bounds.join("/")}`).then(r => r.json());
+    return fetch(`/api/elevations/${bounds.join("/")}`).then(r => r.json());
   }
 
   const getEarth = () => {
@@ -36,28 +36,27 @@ const Terrain = ({canvas, bounds}) => {
   const initializeScene = (plane) => {
     return new Promise((resolve, reject) => {
       const scene = new Scene({autoUpdate: false});
-
       const camera = new PerspectiveCamera(42, 1, 0.1, 1000);
       camera.position.y = -20;
       camera.position.z = 200;
-
       const renderer = new WebGLRenderer({canvas: canvas});
       renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
-
       scene.add(plane);
       renderer.render(scene, camera);
+      resolve()
     })
   };
 
   const draw = async () => {
     const [earth, elevations] = await Promise.all([getEarth(), getElevations(bounds)]);
-    initializeScene(createPlane(earth, elevations));
+    await initializeScene(createPlane(earth, elevations));
+    window.isFinished = true;
   }
 
-  draw();
+  window.onload = () => draw();
 };
 
 Terrain({
-  bounds: GeoViewport.bounds([-120.3189, 48.3698], 12, [1024, 1024]),
+  bounds: GeoViewport.bounds([-119.3189, 48.3698], 12, [1024, 1024]),
   canvas: document.getElementById("canvas")
 });
