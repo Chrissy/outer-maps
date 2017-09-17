@@ -119,7 +119,7 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
 });
 
 app.get('/api/terrain/', function(request, response) {
-  puppeteer.launch().then(async browser => {
+  puppeteer.launch({args: ["--no-sandbox", "--use-gl=browser"]}).then(async browser => {
     const page = await browser.newPage();
     page.on('console', (errors) => console.log(errors))
     await page.goto('http://0.0.0.0:5000/terrain.html');

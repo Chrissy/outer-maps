@@ -1,7 +1,6 @@
 import {WebGLRenderer, Scene, PerspectiveCamera, TextureLoader, PlaneGeometry, MeshBasicMaterial, Mesh} from 'three';
 import GeoViewport from '@mapbox/geo-viewport';
 import _ from 'underscore';
-import injectedJson from '../public/dist/terrain.json';
 
 const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
 
@@ -39,6 +38,7 @@ const Terrain = ({canvas, bounds}) => {
       const camera = new PerspectiveCamera(42, 1, 0.1, 1000);
       camera.position.y = -20;
       camera.position.z = 200;
+      console.log(canvas.getContext("webgl"))
       const renderer = new WebGLRenderer({canvas: canvas});
       renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
       scene.add(plane);
