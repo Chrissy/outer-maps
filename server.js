@@ -9,7 +9,7 @@ const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTN
 const statUtils = require('./modules/statUtils');
 const query = require('./modules/genericQuery').query;
 const createPool = require('./modules/genericQuery').pool;
-const puppeteer = require('puppeteer');
+const terrain = require('./modules/terrain');
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 
@@ -119,16 +119,10 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
 });
 
 app.get('/api/terrain/', function(request, response) {
-  puppeteer.launch({args: ["--no-sandbox", "--use-gl=browser"]}).then(async browser => {
-    const page = await browser.newPage();
-    page.on('console', (errors) => console.log(errors))
-    await page.goto('http://0.0.0.0:5000/terrain.html');
-//    const waiter = page.mainFrame().waitForFunction('window.isFinished');
-    page.setViewport({width: 800, height: 800});
-//    await waiter;
-    await page.screenshot({path: './public/dist/screenshot.png'})
-    await browser.close();
-    response.json({"ping":"pong"});
+  const output = terrain.render()
+  output.then(stream => {
+    //response.setHeader('Content-Type', 'image/png');
+    response.json(stream);
   });
 });
 

@@ -2,8 +2,7 @@ const path = require('path').normalize;
 
 module.exports = {
   entry: {
-    bundle: ['babel-polyfill', './components/app.js'],
-    terrain: ['babel-polyfill', './components/terrain.js']
+    bundle: ['babel-polyfill', './components/app.js']
   },
   output: {
     path: path(__dirname + '/public/dist'),
