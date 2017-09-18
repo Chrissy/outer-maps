@@ -6,12 +6,13 @@ const pg = require('pg');
 const express = require('express');
 const _ = require('underscore');
 const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
-const statUtils = require('./modules/statUtils');
-const query = require('./modules/genericQuery').query;
-const createPool = require('./modules/genericQuery').pool;
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 const terrain = require('./modules/terrain');
+const statUtils = require('./modules/statUtils');
+const query = require('./modules/genericQuery').query;
+const createPool = require('./modules/genericQuery').pool;
+const uploadImageToS3 = require('./modules/uploadImageToS3').upload;
 
 const webpackMiddleware = optional("webpack-dev-middleware");
 const webpackConfig = optional('./webpack.dev.config.js')
@@ -136,26 +137,16 @@ app.get('/api/elevations/:x1/:y1/:x2/:y2', function(request, response){
   });
 });
 
-const uploadImageToS3 = ({host, path, key}) => {
-  http.get({host, path}, function(r) {
-    let body = [];
-    r.on('data', (chunk) => body.push(chunk)).on('end', () => {
-      s3.putObject({Bucket: 'chrissy-gunk', Key: key, Body: Buffer.concat(body), ACL:'public-read'});
-    });
-  });
-}
-
 app.get('/api/terrain/:x/:y/:zoom', function(request, response){
   const {x, y, zoom} = request.params;
   const key = `terrain-${x}-${y}-${zoom}.jpg`;
   const cachedImagePath = `https://s3-us-west-2.amazonaws.com/chrissy-gunk/${key}`;
-  const host = 'api.mapbox.com';
-  const path = `/v4/mapbox.satellite/${x},${y},${zoom}/1024x1024.jpg70?access_token=${accessToken}`;
+  const url = `https://api.mapbox.com/v4/mapbox.satellite/${x},${y},${zoom}/1024x1024.jpg70?access_token=${accessToken}`;
 
   s3.headObject({Bucket: 'chrissy-gunk', Key: key}, (err, metadata) => {
     if (err && err.code == 'NotFound') {
-      response.redirect("https://" + host + path);
-      uploadImageToS3({host, path, key})
+      response.redirect(url);
+      uploadImageToS3({url, key, quality: 30})
     } else {
       response.redirect(cachedImagePath);
     }
