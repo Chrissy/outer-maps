@@ -120,9 +120,9 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
 
 app.get('/api/terrain/', function(request, response) {
   const output = terrain.render()
-  output.then(stream => {
-    //response.setHeader('Content-Type', 'image/png');
-    response.json(stream);
+  output.then(png => {
+    response.setHeader('Content-Type', 'image/png');
+    png.pack().pipe(response);
   });
 });
 

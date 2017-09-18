@@ -10,7 +10,6 @@ const window = dom.window;
 const document = dom.window.document;
 const threePngStream = require('three-png-stream');
 const PNG = require('pngjs').PNG
-const fs = require('fs');
 const jimp = require('jimp');
 
 const Terrain = ({bounds}) => {
@@ -95,8 +94,7 @@ const Terrain = ({bounds}) => {
       }
     }
 
-    const stream = fs.createWriteStream("./test.png")
-    png.pack().pipe(stream);
+    return png;
   }
 
   return draw();
