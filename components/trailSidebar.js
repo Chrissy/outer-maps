@@ -23,12 +23,10 @@ const TrailSidebar = ({firstTrail, trails, handles}) => {
   }
 
   const terrain = () => {
-    if (firstTrail.hasElevationData) {
+    if (firstTrail.hasElevationData && firstTrail.hasSatelliteImage) {
       return <Terrain
         index={`trail:${firstTrail.id}`}
-        height={firstTrail.dump.height}
-        width={firstTrail.dump.width}
-        bounds={firstTrail.bounds}
+        satelliteImageUrl={firstTrail.satelliteImageUrl}
         vertices={firstTrail.dump.vertices}/>
     }
   }

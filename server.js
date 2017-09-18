@@ -154,7 +154,7 @@ app.get('/api/terrain/:x/:y/:zoom', function(request, response){
 
   s3.headObject({Bucket: 'chrissy-gunk', Key: key}, (err, metadata) => {
     if (err && err.code == 'NotFound') {
-      response.redirect("https://" + mbHost + mbPath);
+      response.redirect("https://" + host + path);
       uploadImageToS3({host, path, key})
     } else {
       response.redirect(cachedImagePath);

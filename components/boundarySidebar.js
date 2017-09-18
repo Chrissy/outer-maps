@@ -11,14 +11,12 @@ import label from '../styles/label.css';
 import spacing from '../styles/spacing.css';
 import ImportantWeather from './importantWeather';
 
-const BoundarySidebar = ({id, hasElevationData, dump, area, trails, trailTypes, trailLengths, bounds, trailsCount, hasWeatherData, weatherData}) => {
+const BoundarySidebar = ({id, hasElevationData, dump, area, trails, trailTypes, trailLengths, bounds, trailsCount, hasWeatherData, weatherData, hasSatelliteImage, satelliteImageUrl}) => {
   const terrain = () => {
-    if (hasElevationData) {
+    if (hasElevationData && hasSatelliteImage) {
       return <Terrain
         index={`boundary:${id}`}
-        height={dump.height}
-        width={dump.width}
-        bounds={bounds}
+        satelliteImageUrl={satelliteImageUrl}
         vertices={dump.vertices}/>
     }
   }
@@ -98,7 +96,10 @@ BoundarySidebar.propTypes = {
   trailTypes: PropTypes.object,
   trailLengths: PropTypes.array,
   bounds: PropTypes.array,
-  weatherData: PropTypes.object
+  hasWeatherData: PropTypes.bool,
+  weatherData: PropTypes.object,
+  hasSatelliteImage: PropTypes.bool,
+  satelliteImageUrl: PropTypes.string
 };
 
 export default BoundarySidebar;

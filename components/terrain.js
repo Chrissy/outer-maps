@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {WebGLRenderer, Scene, PerspectiveCamera, TextureLoader, PlaneGeometry, MeshBasicMaterial, Mesh, DefaultLoadingManager} from 'three';
-import GeoViewport from '@mapbox/geo-viewport';
 import styles from '../styles/terrain.css';
 import center from '../styles/center.css';
 import cx from 'classnames';
@@ -10,19 +9,11 @@ import _ from 'underscore';
 
 export default class Terrain extends React.Component {
 
-  getEarth() {
-    fetch(`/api/terrain/${this.view.center.join("/")}/${this.view.zoom}`).then((r) => r.blob()).then(function(resp) {
-      this.earth = resp;
-      this.drawMap();
-    }.bind(this));
-  }
-
   drawMap() {
-    if (!this.earth) return;
-
     let vertices = this.props.vertices;
-    const texture = new TextureLoader().load(URL.createObjectURL(this.earth));
-    const geometry = new PlaneGeometry(200, 200, this.props.height - 1, this.props.width - 1);
+    const size = Math.sqrt(vertices.length) - 1;
+    const texture = new TextureLoader().load(this.props.satelliteImageUrl);
+    const geometry = new PlaneGeometry(200, 200, size, size);
     const material = new MeshBasicMaterial({map: texture});
     const plane = new Mesh(geometry, material);
 
@@ -40,9 +31,6 @@ export default class Terrain extends React.Component {
   }
 
   clearMap() {
-    this.earth = null;
-    this.altitude = null;
-
     this.scene.children.forEach(function(object) {
       this.scene.remove(object);
     }.bind(this));
@@ -75,10 +63,8 @@ export default class Terrain extends React.Component {
   }
 
   draw() {
-    this.view = GeoViewport.viewport(_.flatten(this.props.bounds), [1024, 1024], 12, 14);
-
     this.clearMap();
-    this.getEarth();
+    this.drawMap();
   }
 
   componentDidMount() {
@@ -87,7 +73,7 @@ export default class Terrain extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.index !== prevProps.index) this.draw();
+    if (this.props.index !== prevProps.index) this.drawMap();
   }
 
   render() {
@@ -101,8 +87,6 @@ export default class Terrain extends React.Component {
 
 Terrain.propTypes = {
   index: PropTypes.string,
-  height: PropTypes.number,
-  width: PropTypes.number,
-  bounds: PropTypes.array,
-  vertices: PropTypes.array
+  vertices: PropTypes.array,
+  satelliteImageUrl: PropTypes.string
 }
