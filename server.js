@@ -36,7 +36,7 @@ app.get('/api/elevation/:id/:x1/:y1/:x2/:y2', function(request, response){
         SELECT (ST_DumpPoints(path)).geom AS point
         FROM trail
       ), raster AS (
-        SELECT ST_Clip(ST_Union(rast), ST_Envelope(${box})) AS rast FROM elevation
+        SELECT ST_Resize(ST_Clip(ST_Union(rast), ${box}), 100, 100) AS rast FROM elevation
         CROSS JOIN trail
         WHERE ST_Intersects(rast, ${box}) GROUP BY path
       ), elevations as (
@@ -76,7 +76,7 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
           FROM boundaries
           WHERE id = ${request.params.id}
         ), raster AS (
-          SELECT ST_Clip(ST_Union(rast), ${box}) AS rast FROM elevation
+          SELECT ST_Resize(ST_Clip(ST_Union(rast), ${box}), 100, 100) AS rast FROM elevation
           WHERE ST_Intersects(rast, ${box})
         ), park_trails AS (
           SELECT trails.name, trails.id, trails.type, ST_Length(trails.geog) as length FROM boundary LEFT OUTER JOIN trails
@@ -118,14 +118,6 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
   });
 });
 
-app.get('/api/static/', function(request, response) {
-  const output = terrain.render()
-  output.then(png => {
-    response.setHeader('Content-Type', 'image/png');
-    png.pack().pipe(response);
-  });
-});
-
 app.get('/api/elevations/:x1/:y1/:x2/:y2', function(request, response){
   const {x1, y1, x2, y2} = request.params;
   const box = `ST_MakeEnvelope(${x1}, ${y1}, ${x2}, ${y2}, 4326)`;
@@ -144,26 +136,28 @@ app.get('/api/elevations/:x1/:y1/:x2/:y2', function(request, response){
   });
 });
 
-app.get('/api/terrain/:x/:y/:zoom', function(request, response){
-  const params = request.params;
-  const cachedImageKey = `terrain-${params.x}-${params.y}-${params.zoom}.jpg`;
-  const cachedImagePath = `https://s3-us-west-2.amazonaws.com/chrissy-gunk/${cachedImageKey}`;
+const uploadImageToS3 = ({host, path, key}) => {
+  http.get({host, path}, function(r) {
+    let body = [];
+    r.on('data', (chunk) => body.push(chunk)).on('end', () => {
+      s3.putObject({Bucket: 'chrissy-gunk', Key: key, Body: Buffer.concat(body), ACL:'public-read'});
+    });
+  });
+}
 
-  s3.headObject({Bucket: 'chrissy-gunk', Key: cachedImageKey}, (err, metadata) => {
+app.get('/api/terrain/:x/:y/:zoom', function(request, response){
+  const {x, y, zoom} = request.params;
+  const key = `terrain-${x}-${y}-${zoom}.jpg`;
+  const cachedImagePath = `https://s3-us-west-2.amazonaws.com/chrissy-gunk/${key}`;
+  const host = 'api.mapbox.com';
+  const path = `/v4/mapbox.satellite/${x},${y},${zoom}/1024x1024.jpg70?access_token=${accessToken}`;
+
+  s3.headObject({Bucket: 'chrissy-gunk', Key: key}, (err, metadata) => {
     if (err && err.code == 'NotFound') {
-      http.get({
-        host: 'api.mapbox.com',
-        path: `/v4/mapbox.satellite/${params.x},${params.y},${params.zoom}/1024x1024.jpg70?access_token=${accessToken}`
-      }, function(r){
-        let body = [];
-        r.on('data', (chunk) => body.push(chunk)).on('end', () => {
-          s3.putObject({Bucket: 'chrissy-gunk', Key: cachedImageKey, Body: Buffer.concat(body), ACL:'public-read'}, function(err, data) {
-            response.json({url: cachedImagePath})
-          });
-        });
-      });
+      response.redirect("https://" + mbHost + mbPath);
+      uploadImageToS3({host, path, key})
     } else {
-      response.json({url: cachedImagePath})
+      response.redirect(cachedImagePath);
     }
   })
 });
