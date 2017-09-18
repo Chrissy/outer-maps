@@ -1,14 +1,9 @@
 const {WebGLRenderer, Scene, PerspectiveCamera, DataTexture, PlaneGeometry, ShaderMaterial, Mesh, WebGLRenderTarget, RGBAFormat, UnsignedByteType} = require('three');
 const GeoViewport = require('@mapbox/geo-viewport');
 const gl = require('gl')(1,1);
-const jsdom = require('jsdom');
 const _ = require('underscore');
 const fetch = require('node-fetch');
 const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
-const dom = new jsdom.JSDOM('<!DOCTYPE html>');
-const window = dom.window;
-const document = dom.window.document;
-const threePngStream = require('three-png-stream');
 const PNG = require('pngjs').PNG
 const jimp = require('jimp');
 
