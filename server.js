@@ -11,6 +11,7 @@ const query = require('./modules/genericQuery').query;
 const createPool = require('./modules/genericQuery').pool;
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
+const terrain = require('./modules/terrain');
 
 const webpackMiddleware = optional("webpack-dev-middleware");
 const webpackConfig = optional('./webpack.dev.config.js')
@@ -69,7 +70,7 @@ app.get('/api/elevation/:id/:x1/:y1/:x2/:y2', function(request, response){
 app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
   const box = `ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)`;
 
-  const sql = `      
+  const sql = `
       WITH boundary AS (
           SELECT ST_Area(geog) as area, id, ST_Simplify(geog::geometry, 0.05) as geom
           FROM boundaries
@@ -79,20 +80,20 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
           WHERE ST_Intersects(rast, ${box})
         ), park_trails AS (
           SELECT trails.name, trails.id, trails.type, ST_Length(trails.geog) as length FROM boundary LEFT OUTER JOIN trails
-          ON ST_Length(ST_Simplify(trails.geog::geometry, 1)::geography) > 1600 
-          AND ST_Intersects(ST_Envelope(boundary.geom), trails.geog) 
+          ON ST_Length(ST_Simplify(trails.geog::geometry, 1)::geography) > 1600
+          AND ST_Intersects(ST_Envelope(boundary.geom), trails.geog)
           AND ST_Intersects(ST_Simplify(boundary.geom, 0.005), trails.geog) ORDER BY length DESC LIMIT 1000
         )
         SELECT boundary.area, boundary.id, to_json(ST_DumpValues(rast)) as dump,
         to_json(array_agg(park_trails)) as trails
         FROM boundary, raster, park_trails GROUP BY rast, area, boundary.id;
       `;
-              
+
   query(sql, pool, ({rows: [row]}) => {
     const vertices = row.dump.valarray;
     const flatVertices = _.flatten(vertices);
     const trails = (row.trails[0].id == null) ? [] : row.trails;
-            
+
     return response.json({
       area: parseInt(row.area),
       id: row.id,
@@ -114,6 +115,32 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
       dump: {width: vertices.length, height: vertices[0].length, vertices: flatVertices},
       maxElevation: Math.max(...flatVertices)
     });
+  });
+});
+
+app.get('/api/static/', function(request, response) {
+  const output = terrain.render()
+  output.then(png => {
+    response.setHeader('Content-Type', 'image/png');
+    png.pack().pipe(response);
+  });
+});
+
+app.get('/api/elevations/:x1/:y1/:x2/:y2', function(request, response){
+  const {x1, y1, x2, y2} = request.params;
+  const box = `ST_MakeEnvelope(${x1}, ${y1}, ${x2}, ${y2}, 4326)`;
+
+  const sql = `
+    WITH raster AS (
+      SELECT ST_Resize(ST_Clip(ST_Union(rast), ${box}), 100, 100) AS rast FROM elevation
+      WHERE ST_Intersects(rast, ${box})
+    )
+    SELECT to_json(ST_DumpValues(rast)) as dump
+    FROM raster;
+  `;
+
+  query(sql, pool, ({rows: [row]}) => {
+    response.json(row.dump.valarray.reduce((a, v) => [...a, ...v]))
   });
 });
 
