@@ -1,12 +1,10 @@
 const path = require('path').normalize;
 
 module.exports = {
-  entry: {
-    bundle: ['babel-polyfill', './components/app.js']
-  },
+  entry: './components/app.js',
   output: {
     path: path(__dirname + '/public/dist'),
-    filename: '[name].js'
+    filename: 'bundle.js'
   },
   module: {
     noParse: /(mapbox-gl)\.js$/,

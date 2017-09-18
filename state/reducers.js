@@ -123,7 +123,6 @@ const boundaries = (state = [], action) => {
 const boundary = (state = {}, action) => {
   switch (action.type) {
     case 'ADD_BOUNDARY':
-      console.log(action.bounds)
       return {...state,
         id: action.properties.id,
         name: action.properties.name,

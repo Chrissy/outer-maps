@@ -9,9 +9,9 @@ const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTN
 const statUtils = require('./modules/statUtils');
 const query = require('./modules/genericQuery').query;
 const createPool = require('./modules/genericQuery').pool;
-const terrain = require('./modules/terrain');
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
+const terrain = require('./modules/terrain');
 
 const webpackMiddleware = optional("webpack-dev-middleware");
 const webpackConfig = optional('./webpack.dev.config.js')
@@ -118,7 +118,7 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
   });
 });
 
-app.get('/api/terrain/', function(request, response) {
+app.get('/api/static/', function(request, response) {
   const output = terrain.render()
   output.then(png => {
     response.setHeader('Content-Type', 'image/png');
@@ -142,6 +142,30 @@ app.get('/api/elevations/:x1/:y1/:x2/:y2', function(request, response){
   query(sql, pool, ({rows: [row]}) => {
     response.json(row.dump.valarray.reduce((a, v) => [...a, ...v]))
   });
+});
+
+app.get('/api/terrain/:x/:y/:zoom', function(request, response){
+  const params = request.params;
+  const cachedImageKey = `terrain-${params.x}-${params.y}-${params.zoom}.jpg`;
+  const cachedImagePath = `https://s3-us-west-2.amazonaws.com/chrissy-gunk/${cachedImageKey}`;
+
+  s3.headObject({Bucket: 'chrissy-gunk', Key: cachedImageKey}, (err, metadata) => {
+    if (err && err.code == 'NotFound') {
+      http.get({
+        host: 'api.mapbox.com',
+        path: `/v4/mapbox.satellite/${params.x},${params.y},${params.zoom}/1024x1024.jpg70?access_token=${accessToken}`
+      }, function(r){
+        let body = [];
+        r.on('data', (chunk) => body.push(chunk)).on('end', () => {
+          s3.putObject({Bucket: 'chrissy-gunk', Key: cachedImageKey, Body: Buffer.concat(body), ACL:'public-read'}, function(err, data) {
+            response.json({url: cachedImagePath})
+          });
+        });
+      });
+    } else {
+      response.json({url: cachedImagePath})
+    }
+  })
 });
 
 if (process.env.NODE_ENV == 'production') {
