@@ -10,7 +10,7 @@ const jimp = require('jimp');
 const Terrain = ({bounds}) => {
 
   const getElevations = (bounds) => {
-    return fetch(`http://0.0.0.0:5000/api/elevations/${bounds.join("/")}`).then(r => r.json());
+    return fetch(`http://trailgunk.com/api/elevations/${bounds.join("/")}`).then(r => r.json());
   }
 
   const getEarth = () => {
