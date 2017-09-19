@@ -6,7 +6,7 @@ const uploadImageToS3 = ({url, key, quality}) => {
   Jimp.read(url).then(image => {
     image.quality(quality).getBuffer(Jimp.MIME_JPEG, (err, buff) => {
       if (err) throw err;
-      s3.putObject({Bucket: 'chrissy-gunk', Key: key, Body: buff, ACL:'public-read'});
+      s3.putObject({Bucket: 'chrissy-gunk', Key: key, Body: buff, ACL:'public-read'}, () => {});
     });
   });
 };

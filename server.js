@@ -144,11 +144,11 @@ app.get('/api/terrain/:x/:y/:zoom', function(request, response){
   const url = `https://api.mapbox.com/v4/mapbox.satellite/${x},${y},${zoom}/1024x1024.jpg70?access_token=${accessToken}`;
 
   s3.headObject({Bucket: 'chrissy-gunk', Key: key}, (err, metadata) => {
-    if (err && err.code == 'NotFound') {
+    if (metadata) {
+      response.redirect(cachedImagePath);
+    } else {
       response.redirect(url);
       uploadImageToS3({url, key, quality: 30})
-    } else {
-      response.redirect(cachedImagePath);
     }
   })
 });
