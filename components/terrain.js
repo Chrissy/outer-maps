@@ -12,12 +12,17 @@ export default class Terrain extends React.Component {
   drawMap() {
     let vertices = this.props.vertices;
     const size = Math.sqrt(vertices.length) - 1;
-    const texture = new TextureLoader().load(this.props.satelliteImageUrl);
     const geometry = new PlaneGeometry(200, 200, size, size);
-    const material = new MeshBasicMaterial({map: texture});
-    const plane = new Mesh(geometry, material);
+    const material = new MeshBasicMaterial();
+    const mesh = new Mesh(geometry, material);
 
-    plane.geometry.vertices.map((v,i) => {
+    const texture = new TextureLoader().load(this.props.satelliteImageUrl, function(img){
+      mesh.material.map = img;
+      mesh.material.needsUpdate = true;
+      this.renderMap();
+    }.bind(this));
+
+    mesh.geometry.vertices.map((v,i) => {
       let z = vertices[i];
       if (z == null || z == NaN || z == undefined) {
         z = vertices[i - 1] || vertices[i + 1] || vertices[i - this.props.height] || vertices[i + this.props.height];
@@ -25,9 +30,10 @@ export default class Terrain extends React.Component {
       return Object.assign(v, { z: z / 100 })
     });
 
-    plane.rotation.x = 5.7;
+    mesh.rotation.x = 5.7;
 
-    this.scene.add(plane);
+    this.scene.add(mesh);
+    this.renderMap();
   }
 
   clearMap() {
@@ -53,11 +59,8 @@ export default class Terrain extends React.Component {
 
     this.renderMap = function() {
       renderer.render(this.scene, camera);
+      console.log("render called")
     }
-
-    DefaultLoadingManager.onLoad = function() {
-      this.renderMap();
-    }.bind(this);
 
     this.initialized = true;
   }
