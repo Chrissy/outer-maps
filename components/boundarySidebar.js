@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-import Terrain from './terrain';
 import TrailTypes from './trailTypes';
 import HorizontalBarGraph from './horizontalBarGraph';
 import BoundaryTotals from './boundaryTotals';
@@ -12,13 +11,6 @@ import spacing from '../styles/spacing.css';
 import ImportantWeather from './importantWeather';
 
 const BoundarySidebar = ({id, hasElevationData, vertices, area, trails, trailTypes, trailLengths, bounds, trailsCount, hasWeatherData, weatherData, hasSatelliteImage, satelliteImageUrl}) => {
-  const terrain = () => {
-    return <Terrain
-      index={`boundary:${id}`}
-      satelliteImageUrl={satelliteImageUrl}
-      vertices={vertices}/>
-  }
-
   const boundaryTotals = () => {
     if (hasElevationData) {
       return <BoundaryTotals
