@@ -14,20 +14,16 @@ export default class Terrain extends React.Component {
       mesh.geometry.vertices.map((v,i) => Object.assign(v, { z: this.props.vertices[i] / 100 }));
       mesh.rotation.x = 5.7;
 
-      new TextureLoader().load(this.props.satelliteImageUrl, function(img){
+      new TextureLoader().load(this.props.satelliteImageUrl, (img) => {
         mesh.material.map = img;
         mesh.material.needsUpdate = true;
         resolve();
-      }.bind(this));
+      });
     });
   }
 
-  clearMap() {
-    this.scene.children.forEach(function(object) {
-      this.scene.remove(object);
-    }.bind(this));
-
-    this.renderMap();
+  clearMap(scene) {
+    scene.children.forEach((object) => scene.remove(object));
   }
 
   createMesh(scene) {
@@ -51,22 +47,23 @@ export default class Terrain extends React.Component {
     return {scene, renderer, camera};
   }
 
-  draw() {
-    this.clearMap();
-    this.drawMap();
-  }
-
   componentDidMount() {
     const {scene, renderer, camera} = this.initializeCanvas();
     const mesh = this.createMesh();
     scene.add(mesh);
-    this.updateMesh(mesh).then(() => {
-      renderer.render(scene, camera)
-    });
+    this.updateMesh(mesh).then(() => renderer.render(scene, camera));
+    Object.assign({}, this, {scene, renderer, camera, mesh});
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.index !== prevProps.index) this.drawMap();
+    if (this.props.index == prevProps.index) return;
+
+    this.clearMap(this.scene);
+    renderer.render(this.scene, this.camera);
+
+    this.updateMesh(this.mesh).then(() => {
+      renderer.render(this.scene, this.camera);
+    });
   }
 
   render() {
