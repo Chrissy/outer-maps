@@ -25,7 +25,7 @@ export function selectTrail({properties, geometry}) {
     if (!cachedTrail) dispatch({type: 'ADD_TRAIL', center, bounds, properties, geometry});
     if (!cachedTrail || !cachedTrail.hasElevationData) dispatch(getTrailData({id: properties.id, bounds}));
     if (!cachedTrail || !cachedTrail.hasWeatherData) dispatch(getWeatherData({...properties, center, reducer: 'trail'}));
-    if (!cachedTrail || !cachedTrail.hasSatelliteImage) dispatch(getReducerSatelliteImage({id: properties.id, bounds, reducer: 'trail'}));
+    if (!cachedTrail || !cachedTrail.satelliteImageRequested) dispatch(getReducerSatelliteImage({id: properties.id, bounds, reducer: 'trail'}));
     if (cachedTrail) return  dispatch({type: 'SELECT_TRAIL', ...cachedTrail});
   };
 };
@@ -58,7 +58,7 @@ export function selectBoundary({properties, geometry}) {
     if (!cachedBoundary) dispatch({type: 'ADD_BOUNDARY', properties, geometry, bounds});
     if (!cachedBoundary || !cachedBoundary.hasElevationData) dispatch(getBoundaryData({id: properties.id, bounds}));
     if (!cachedBoundary || !cachedBoundary.hasWeatherData) dispatch(getWeatherData({...properties, center: geometry.coordinates, reducer: 'boundary'}));
-    if (!cachedBoundary || !cachedBoundary.hasSatelliteImage) dispatch(getReducerSatelliteImage({id: properties.id, bounds, reducer: 'boundary'}));
+    if (!cachedBoundary || !cachedBoundary.satelliteImageRequested) dispatch(getReducerSatelliteImage({id: properties.id, bounds, reducer: 'boundary'}));
     if (cachedBoundary) return dispatch({type: 'SELECT_BOUNDARY', id: properties.id});
   };
 };
@@ -71,6 +71,7 @@ export function clearSelected() {
 
 function getReducerSatelliteImage({id, bounds, reducer}) {
   return dispatch => {
+    dispatch({type: `SET_${reducer.toUpperCase()}_SATELLITE_IMAGE_REQUESTED`, id});
     getSatelliteImage({bounds, minZoom: 12, maxZoom: 14}).then(image => {
       return dispatch({type:  `SET_${reducer.toUpperCase()}_SATELLITE_IMAGE`, id, url: URL.createObjectURL(image)});
     });
