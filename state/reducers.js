@@ -52,19 +52,13 @@ const trail = (state = {}, action) => {
       }
     case 'SET_TRAIL_ELEVATION_DATA_REQUESTED':
       if (action.id !== state.id) return state
-      return {...state,
-        elevationDataRequested: true
-      }
+      return {...state, elevationDataRequested: true }
     case 'SET_TRAIL_SATELLITE_IMAGE':
       if (action.id !== state.id) return state
-      return {...state,
-        satelliteImageUrl: action.url
-      }
+      return {...state, satelliteImageUrl: action.url }
     case 'SET_TRAIL_SATELLITE_IMAGE_REQUESTED':
       if (action.id !== state.id) return state
-      return {...state,
-        satelliteImageRequested: true
-      }
+      return {...state, satelliteImageRequested: true }
     case 'SET_TRAIL_WEATHER_DATA':
       if (action.id !== state.id) return state
       return { ...state,
@@ -149,9 +143,7 @@ const boundary = (state = {}, action) => {
       }
     case 'SET_BOUNDARY_ELEVATION_DATA_REQUESTED':
       if (action.id !== state.id) return state
-      return {...state,
-        elevationDataRequested: true
-      }
+      return {...state, elevationDataRequested: true }
     case 'SET_BOUNDARY_ELEVATION_DATA':
       if (action.id !== state.id) return state;
       return {...state,
@@ -165,19 +157,13 @@ const boundary = (state = {}, action) => {
       }
     case 'SET_BOUNDARY_SATELLITE_IMAGE':
       if (action.id !== state.id) return state
-      return {...state,
-        satelliteImageUrl: action.url,
-      }
+      return {...state, satelliteImageUrl: action.url }
     case 'SET_BOUNDARY_SATELLITE_IMAGE_REQUESTED':
       if (action.id !== state.id) return state
-      return {...state,
-        satelliteImageRequested: true,
-      }
+      return {...state, satelliteImageRequested: true }
     case 'SET_BOUNDARY_WEATHER_DATA_REQUESTED':
       if (action.id !== state.id) return state
-      return {...state,
-        weatherDataRequested: true
-      }
+      return {...state, weatherDataRequested: true }
     case 'SET_BOUNDARY_WEATHER_DATA':
       if (action.id !== state.id) return state
       return { ...state,
