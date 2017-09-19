@@ -9,21 +9,17 @@ import _ from 'underscore';
 
 export default class Terrain extends React.Component {
 
-  drawMap() {
-    const size = Math.sqrt(this.props.vertices.length) - 1;
-    const geometry = new PlaneGeometry(200, 200, size, size);
-    const material = new MeshBasicMaterial();
-    const mesh = new Mesh(geometry, material);
+  updateMesh(mesh) {
+    return new Promise((resolve, reject) => {
+      mesh.geometry.vertices.map((v,i) => Object.assign(v, { z: this.props.vertices[i] / 100 }));
+      mesh.rotation.x = 5.7;
 
-    mesh.geometry.vertices.map((v,i) => Object.assign(v, { z: this.props.vertices[i] / 100 }));
-    mesh.rotation.x = 5.7;
-
-    new TextureLoader().load(this.props.satelliteImageUrl, function(img){
-      mesh.material.map = img;
-      mesh.material.needsUpdate = true;
-      this.scene.add(mesh);
-      this.renderMap();
-    }.bind(this));
+      new TextureLoader().load(this.props.satelliteImageUrl, function(img){
+        mesh.material.map = img;
+        mesh.material.needsUpdate = true;
+        resolve();
+      }.bind(this));
+    });
   }
 
   clearMap() {
@@ -34,25 +30,25 @@ export default class Terrain extends React.Component {
     this.renderMap();
   }
 
+  createMesh(scene) {
+    const size = Math.sqrt(this.props.vertices.length) - 1;
+    const geometry = new PlaneGeometry(200, 200, size, size);
+    const material = new MeshBasicMaterial();
+    return new Mesh(geometry, material);
+  }
+
   initializeCanvas() {
-    this.scene = new Scene({autoUpdate: false});
-
+    const scene = new Scene({autoUpdate: false});
     const aspectRatio = this.refs.canvasContainer.offsetWidth / this.refs.canvasContainer.offsetHeight;
-
     const camera = new PerspectiveCamera(52 / aspectRatio, aspectRatio, 0.1, 1000);
+    const renderer = new WebGLRenderer({canvas: this.refs.canvas});
+
     camera.position.y = -20;
     camera.position.z = 200;
-
-    const renderer = new WebGLRenderer({canvas: this.refs.canvas});
     renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
     renderer.setSize(this.refs.canvasContainer.offsetWidth, this.refs.canvasContainer.offsetHeight);
 
-    this.renderMap = function() {
-      renderer.render(this.scene, camera);
-      console.log("render called")
-    }
-
-    this.initialized = true;
+    return {scene, renderer, camera};
   }
 
   draw() {
@@ -61,8 +57,12 @@ export default class Terrain extends React.Component {
   }
 
   componentDidMount() {
-    this.initializeCanvas();
-    this.draw()
+    const {scene, renderer, camera} = this.initializeCanvas();
+    const mesh = this.createMesh();
+    scene.add(mesh);
+    this.updateMesh(mesh).then(() => {
+      renderer.render(scene, camera)
+    });
   }
 
   componentDidUpdate(prevProps) {
