@@ -30,7 +30,7 @@ const trail = (state = {}, action) => {
       return state;
     case 'CLEAR_TRAIL_SELECTED':
       return { ...state, selected: false, selectedId: null, handles: null }
-    case 'SET_TRAIL_DATA':
+    case 'SET_TRAIL_ELEVATION_DATA':
       if (action.id !== state.id) return state
       const points = action.points;
       return { ...state,
@@ -49,6 +49,11 @@ const trail = (state = {}, action) => {
             distanceFromPreviousPoint: (p) ? distance(e.coordinates, p.coordinates) * 1000 : 0
           }
         })
+      }
+    case 'SET_TRAIL_ELEVATION_DATA_REQUESTED':
+      if (action.id !== state.id) return state
+      return {...state,
+        elevationDataRequested: true
       }
     case 'SET_TRAIL_SATELLITE_IMAGE':
       if (action.id !== state.id) return state
@@ -91,21 +96,18 @@ const trails = (state = [], action) => {
       return [...state, trail(undefined, action)]
     case 'SELECT_TRAIL':
       return state.map(t => trail(t, {...action, selectedTrailCount: state.filter(e => e.selected).length + 1}))
-    case 'UNSELECT_TRAIL':
-      return state.map(t => trail(t, action))
     case 'CLEAR_TRAIL_SELECTED':
     case 'CLEAR_SELECTED':
     case 'ADD_BOUNDARY':
     case 'SELECT_BOUNDARY':
       return state.map(t => trail(t, {...action, type: 'CLEAR_TRAIL_SELECTED'}))
-    case 'SET_TRAIL_DATA':
-      return state.map(t => trail(t, action))
-    case 'SET_TRAIL_SATELLITE_IMAGE':
-      return state.map(t => trail(t, action))
-    case 'SET_TRAIL_SATELLITE_IMAGE_REQUESTED':
-      return state.map(t => trail(t, action))
+    case 'UNSELECT_TRAIL':
+    case 'SET_TRAIL_ELEVATION_DATA':
+    case 'SET_TRAIL_ELEVATION_DATA_REQUESTED':
     case 'SET_TRAIL_WEATHER_DATA':
-      return state.map(t => trail(t, action))
+    case 'SET_TRAIL_WEATHER_DATA_REQUESTED':
+    case 'SET_TRAIL_SATELLITE_IMAGE':
+    case 'SET_TRAIL_SATELLITE_IMAGE_REQUESTED':
     case 'SET_TRAIL_ADDITIONAL_WEATHER_DATA':
       return state.map(t => trail(t, action))
     default: return state
@@ -117,16 +119,13 @@ const boundaries = (state = [], action) => {
     case 'ADD_BOUNDARY':
       if (state.some(b => b.id == action.id)) return state;
       return [...state.map(b => ({...b, selected: false})), boundary(undefined, action)]
-    case 'SET_BOUNDARY_DATA':
-      return state.map(b => boundary(b, action))
+    case 'SET_BOUNDARY_ELEVATION_DATA':
+    case 'SET_BOUNDARY_ELEVATION_DATA_REQUESTED':
     case 'SET_BOUNDARY_WEATHER_DATA':
-      return state.map(b => boundary(b, action))
-    case 'SET_BOUNDARY_SATELLITE_IMAGE':
-      return state.map(b => boundary(b, action))
-    case 'SET_BOUNDARY_SATELLITE_IMAGE_REQUESTED':
-      return state.map(b => boundary(b, action))
+    case 'SET_BOUNDARY_WEATHER_DATA_REQUESTED':
     case 'SET_BOUNDARY_ADDITIONAL_WEATHER_DATA':
-      return state.map(b => boundary(b, action))
+    case 'SET_BOUNDARY_SATELLITE_IMAGE':
+    case 'SET_BOUNDARY_SATELLITE_IMAGE_REQUESTED':
     case 'SELECT_BOUNDARY':
       return state.map(b => boundary(b, action))
     case 'CLEAR_BOUNDARY_SELECTED':
@@ -148,7 +147,12 @@ const boundary = (state = {}, action) => {
         hasBaseData: true,
         selected: true
       }
-    case 'SET_BOUNDARY_DATA':
+    case 'SET_BOUNDARY_ELEVATION_DATA_REQUESTED':
+      if (action.id !== state.id) return state
+      return {...state,
+        elevationDataRequested: true
+      }
+    case 'SET_BOUNDARY_ELEVATION_DATA':
       if (action.id !== state.id) return state;
       return {...state,
         area: action.area,
@@ -168,6 +172,11 @@ const boundary = (state = {}, action) => {
       if (action.id !== state.id) return state
       return {...state,
         satelliteImageRequested: true,
+      }
+    case 'SET_BOUNDARY_WEATHER_DATA_REQUESTED':
+      if (action.id !== state.id) return state
+      return {...state,
+        weatherDataRequested: true
       }
     case 'SET_BOUNDARY_WEATHER_DATA':
       if (action.id !== state.id) return state
@@ -223,7 +232,6 @@ const handles = (state = [], action) => {
     case 'UNSELECT_TRAIL':
      return state.filter(h => h.trailId !== action.id)
     case 'UPDATE_HANDLE':
-      return state.map(h => handle(h, action))
     case 'SET_HANDLE_INDEX':
       return state.map(h => handle(h, action))
     default: return state
