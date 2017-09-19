@@ -5,6 +5,7 @@ import styles from '../styles/terrain.css';
 import center from '../styles/center.css';
 import cx from 'classnames';
 import _ from 'underscore';
+import LoadingSpinner from './loadingSpinner';
 
 
 export default class Terrain extends React.Component {
@@ -84,6 +85,7 @@ export default class Terrain extends React.Component {
     return (
       <div ref="canvasContainer" className={cx(styles.terrain, styles.center)}>
         <canvas ref="canvas" className={cx(styles.canvas, {[styles.visible]: this.isVisible()})}></canvas>
+        <div className={cx(styles.loadingSpinner, {[styles.visible]: !this.isVisible()})}><LoadingSpinner speed="1s"/></div>
       </div>
     )
   }
