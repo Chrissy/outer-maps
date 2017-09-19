@@ -53,7 +53,6 @@ const trail = (state = {}, action) => {
     case 'SET_TRAIL_SATELLITE_IMAGE':
       if (action.id !== state.id) return state
       return {...state,
-        hasSatelliteImage: true,
         satelliteImageUrl: action.url
       }
     case 'SET_TRAIL_WEATHER_DATA':
@@ -154,7 +153,6 @@ const boundary = (state = {}, action) => {
     case 'SET_BOUNDARY_SATELLITE_IMAGE':
       if (action.id !== state.id) return state
       return {...state,
-        hasSatelliteImage: true,
         satelliteImageUrl: action.url
       }
     case 'SET_BOUNDARY_WEATHER_DATA':
