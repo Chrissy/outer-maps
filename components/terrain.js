@@ -10,30 +10,20 @@ import _ from 'underscore';
 export default class Terrain extends React.Component {
 
   drawMap() {
-    let vertices = this.props.vertices;
-    const size = Math.sqrt(vertices.length) - 1;
+    const size = Math.sqrt(this.props.vertices.length) - 1;
     const geometry = new PlaneGeometry(200, 200, size, size);
     const material = new MeshBasicMaterial();
     const mesh = new Mesh(geometry, material);
 
-    const texture = new TextureLoader().load(this.props.satelliteImageUrl, function(img){
-      mesh.material.map = img;
-      mesh.material.needsUpdate = true;
-      this.renderMap();
-    }.bind(this));
-
-    mesh.geometry.vertices.map((v,i) => {
-      let z = vertices[i];
-      if (z == null || z == NaN || z == undefined) {
-        z = vertices[i - 1] || vertices[i + 1] || vertices[i - this.props.height] || vertices[i + this.props.height];
-      };
-      return Object.assign(v, { z: z / 100 })
-    });
-
+    mesh.geometry.vertices.map((v,i) => Object.assign(v, { z: this.props.vertices[i] / 100 }));
     mesh.rotation.x = 5.7;
 
-    this.scene.add(mesh);
-    this.renderMap();
+    new TextureLoader().load(this.props.satelliteImageUrl, function(img){
+      mesh.material.map = img;
+      mesh.material.needsUpdate = true;
+      this.scene.add(mesh);
+      this.renderMap();
+    }.bind(this));
   }
 
   clearMap() {
