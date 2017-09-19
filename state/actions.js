@@ -1,84 +1,74 @@
 import {getNoaaData} from '../modules/NOAA';
-import getSatelliteImage from '../modules/getSatelliteImage';
+import requestSatelliteImage from '../modules/getSatelliteImage';
 import GeoViewport from '@mapbox/geo-viewport';
 import bbox from '@turf/bbox';
 import centroid from '@turf/centroid';
 
-function getTrailData({id, bounds}) {
-  return (dispatch) => {
-    const view = GeoViewport.viewport(bounds, [1024, 1024], 12, 14);
-    const tileBounds = GeoViewport.bounds(view.center, view.zoom, [1024, 1024]);
-
-    return fetch(`/api/elevation/${id}/${tileBounds.join("/")}`)
-      .then(response => response.json())
-      .then(response => {
-        dispatch({type: 'SET_TRAIL_DATA', ...response, points: response.elevations, id });
-      });
-  };
-};
-
-export function selectTrail({properties, geometry}) {
+const selectTrail = ({properties, geometry}) => {
   return (dispatch, getState) => {
     const cachedTrail = getState().trails.find(t => t.id == properties.id);
     const center = centroid(geometry).geometry.coordinates;
     const bounds = bbox(geometry);
+
     if (!cachedTrail) dispatch({type: 'ADD_TRAIL', center, bounds, properties, geometry});
-    if (!cachedTrail || !cachedTrail.hasElevationData) dispatch(getTrailData({id: properties.id, bounds}));
-    if (!cachedTrail || !cachedTrail.hasWeatherData) dispatch(getWeatherData({...properties, center, reducer: 'trail'}));
-    if (!cachedTrail || !cachedTrail.hasSatelliteImage) dispatch(getReducerSatelliteImage({id: properties.id, bounds, reducer: 'trail'}));
+    if (!cachedTrail || !cachedTrail.elevationDataRequested) dispatch(getElevationData({id: properties.id, bounds, reducer: 'trail'}));
+    if (!cachedTrail || !cachedTrail.weatherDataRequested) dispatch(getWeatherData({...properties, center, reducer: 'trail'}));
+    if (!cachedTrail || !cachedTrail.satelliteImageRequested) dispatch(getSatelliteImage({id: properties.id, bounds, reducer: 'trail'}));
     if (cachedTrail) return  dispatch({type: 'SELECT_TRAIL', ...cachedTrail});
   };
 };
 
-export function unselectTrail(id) {
-  return dispatch => {
-    dispatch({type: 'REMOVE_TRAIL_HANDLES', id})
-    return dispatch({type: 'UNSELECT_TRAIL', id});
-  }
-}
-
-function getBoundaryData({id, bounds}) {
-  return dispatch => {
-    const view = GeoViewport.viewport(bounds, [1024, 1024], 12, 14);
-    const viewBounds = GeoViewport.bounds(view.center, view.zoom, [1024, 1024]);
-
-    return fetch(`/api/boundaries/${id}/${viewBounds.join("/")}`)
-      .then(response => response.json())
-      .then(response => {
-        dispatch({type: 'SET_BOUNDARY_DATA', ...response, id: id });
-      });
-  };
-};
-
-export function selectBoundary({properties, geometry}) {
+const selectBoundary = ({properties, geometry}) => {
   return (dispatch, getState) => {
     const cachedBoundary = getState().boundaries.find(b => b.id == properties.id);
     const bounds = bbox(JSON.parse(properties.bounds));
 
     if (!cachedBoundary) dispatch({type: 'ADD_BOUNDARY', properties, geometry, bounds});
-    if (!cachedBoundary || !cachedBoundary.hasElevationData) dispatch(getBoundaryData({id: properties.id, bounds}));
-    if (!cachedBoundary || !cachedBoundary.hasWeatherData) dispatch(getWeatherData({...properties, center: geometry.coordinates, reducer: 'boundary'}));
-    if (!cachedBoundary || !cachedBoundary.hasSatelliteImage) dispatch(getReducerSatelliteImage({id: properties.id, bounds, reducer: 'boundary'}));
+    if (!cachedBoundary || !cachedBoundary.elevationDataRequested) dispatch(getElevationData({id: properties.id, bounds, reducer: 'boundary'}));
+    if (!cachedBoundary || !cachedBoundary.weatherDataRequested) dispatch(getWeatherData({...properties, center: geometry.coordinates, reducer: 'boundary'}));
+    if (!cachedBoundary || !cachedBoundary.satelliteImageRequested) dispatch(getSatelliteImage({id: properties.id, bounds, reducer: 'boundary'}));
     if (cachedBoundary) return dispatch({type: 'SELECT_BOUNDARY', id: properties.id});
   };
 };
 
-export function clearSelected() {
+const unselectTrail = (id) => {
   return dispatch => {
-    dispatch({type: 'CLEAR_SELECTED'});
-  }
-}
+    dispatch({type: 'REMOVE_TRAIL_HANDLES', id})
+    return dispatch({type: 'UNSELECT_TRAIL', id});
+  };
+};
 
-function getReducerSatelliteImage({id, bounds, reducer}) {
+const clearSelected = () => {
+  return dispatch => dispatch({type: 'CLEAR_SELECTED'});
+};
+
+const getElevationData = ({id, bounds, reducer}) => {
+  return (dispatch) => {
+    dispatch({type: `SET_${reducer.toUpperCase()}_ELEVATION_DATA_REQUESTED`, id });
+
+    const view = GeoViewport.viewport(bounds, [1024, 1024], 12, 14);
+    const tileBounds = GeoViewport.bounds(view.center, view.zoom, [1024, 1024]);
+
+    return fetch(`/api/${reducer}/${id}/${tileBounds.join("/")}`)
+      .then(response => response.json())
+      .then(response => {
+        dispatch({type: `SET_${reducer.toUpperCase()}_ELEVATION_DATA`, ...response, id });
+      });
+  };
+};
+
+const getSatelliteImage = ({id, bounds, reducer}) => {
   return dispatch => {
-    getSatelliteImage({bounds, minZoom: 12, maxZoom: 14}).then(image => {
+    dispatch({type: `SET_${reducer.toUpperCase()}_SATELLITE_IMAGE_REQUESTED`, id});
+    requestSatelliteImage({bounds, minZoom: 12, maxZoom: 14}).then(image => {
       return dispatch({type:  `SET_${reducer.toUpperCase()}_SATELLITE_IMAGE`, id, url: URL.createObjectURL(image)});
     });
-  }
-}
+  };
+};
 
-function getWeatherData({id, center, stationId, reducer}) {
+const getWeatherData = ({id, center, stationId, reducer}) => {
   return dispatch => {
+    dispatch({type: `SET_${reducer.toUpperCase()}_WEATHER_IMAGE_REQUESTED`, id});
     getNoaaData({
       x: center[1],
       y: center[0],
@@ -93,10 +83,10 @@ function getWeatherData({id, center, stationId, reducer}) {
     }).then(response => {
       return dispatch({type: `SET_${reducer.toUpperCase()}_WEATHER_DATA`, ...response, id: id});
     });
-  }
-}
+  };
+};
 
-function getAdditionalWeatherData({id, center, stationId, hasWeatherData, reducer}) {
+const getAdditionalWeatherData = ({id, center, stationId, hasWeatherData, reducer}) => {
   return dispatch => {
     getNoaaData({
       x: center[1],
@@ -111,5 +101,7 @@ function getAdditionalWeatherData({id, center, stationId, hasWeatherData, reduce
     }).then(response => {
       return dispatch({type: `SET_${reducer.toUpperCase()}_ADDITIONAL_WEATHER_DATA`, ...response, id: id});
     });
-  }
-}
+  };
+};
+
+export {selectTrail, selectBoundary, unselectTrail, clearSelected};

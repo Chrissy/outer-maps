@@ -24,7 +24,7 @@ const app = express();
 
 const pool = createPool();
 
-app.get('/api/elevation/:id/:x1/:y1/:x2/:y2', function(request, response){
+app.get('/api/trail/:id/:x1/:y1/:x2/:y2', function(request, response){
   const box = `ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)`;
 
   const sql = `
@@ -57,7 +57,7 @@ app.get('/api/elevation/:id/:x1/:y1/:x2/:y2', function(request, response){
     const elevations = statUtils.rollingAverage(statUtils.glitchDetector(points.map(r => r.elevation)), 15);
     const vertices = rows[0].dump.valarray
     return response.json({
-      elevations: elevations.map((r, i) => {
+      points: elevations.map((r, i) => {
         return {
           elevation: r,
           coordinates: [points[i].x, points[i].y]
@@ -68,7 +68,7 @@ app.get('/api/elevation/:id/:x1/:y1/:x2/:y2', function(request, response){
   });
 });
 
-app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
+app.get('/api/boundary/:id/:x1/:y1/:x2/:y2', function(request, response){
   const box = `ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)`;
 
   const sql = `
