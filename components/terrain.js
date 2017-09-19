@@ -62,15 +62,20 @@ export default class Terrain extends React.Component {
     Object.assign(this, {scene, renderer, camera, mesh});
   }
 
+  isVisible() {
+    return (this.props.vertices && this.props.satelliteImageUrl);
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.vertices && prevProps.vertices !== this.props.vertices) {
-      this.updateVertices(this.mesh, this.props.vertices);
-      this.renderScene({...this});
+      this.updateVertices(this.mesh, this.props.vertices).then(() => {
+        this.renderScene({...this});
+      });
     }
 
     if (this.props.satelliteImageUrl && prevProps.satelliteImageUrl !== this.props.satelliteImageUrl) {
       this.updateSatelliteImage(this.mesh, this.props.satelliteImageUrl).then(() => {
-          this.renderScene({...this});
+        this.renderScene({...this});
       });
     }
   }
@@ -78,7 +83,7 @@ export default class Terrain extends React.Component {
   render() {
     return (
       <div ref="canvasContainer" className={cx(styles.terrain, styles.center)}>
-        <canvas ref="canvas" className={styles.canvas}></canvas>
+        <canvas ref="canvas" className={cx(styles.canvas, {[styles.visible]: this.isVisible()})}></canvas>
       </div>
     )
   }

@@ -36,7 +36,7 @@ const trail = (state = {}, action) => {
       return { ...state,
         hasElevationData: true,
         geometry: lineString(points.map(p => p.coordinates)).geometry,
-        dump: action.dump,
+        vertices: action.dump.vertices,
         points: points.map((e, i) => {
           const p = points[i - 1];
           return {
