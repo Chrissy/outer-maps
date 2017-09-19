@@ -1,110 +1,97 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {WebGLRenderer, Scene, PerspectiveCamera, TextureLoader, PlaneGeometry, MeshBasicMaterial, Mesh, DefaultLoadingManager} from 'three';
-import GeoViewport from '@mapbox/geo-viewport';
+import {WebGLRenderer, Scene, PerspectiveCamera, TextureLoader, PlaneGeometry, MeshBasicMaterial, Mesh} from 'three';
 import styles from '../styles/terrain.css';
 import center from '../styles/center.css';
 import cx from 'classnames';
 import _ from 'underscore';
+import LoadingSpinner from './loadingSpinner';
 
 
 export default class Terrain extends React.Component {
 
-  getEarth() {
-    fetch(new Request(`/api/terrain/${this.view.center.join("/")}/${this.view.zoom}`)).then((r) => r.json()).then(function(resp) {
-      this.earth = resp;
-      this.drawMap();
-    }.bind(this));
-  }
-
-  drawMap() {
-    if (!this.earth) return;
-
-    let vertices = this.props.vertices;
-    const loader = new TextureLoader();
-    loader.crossOrigin = '';
-    const texture = loader.load(this.earth.url);
-    const geometry = new PlaneGeometry(200, 200, this.props.height - 1, this.props.width - 1);
-    const material = new MeshBasicMaterial({map: texture});
-    const plane = new Mesh(geometry, material);
-            
-    plane.geometry.vertices.map((v,i) => {
-      let z = vertices[i];
-      if (z == null || z == NaN || z == undefined) {
-        z = vertices[i - 1] || vertices[i + 1] || vertices[i - this.props.height] || vertices[i + this.props.height];
-      };
-      return Object.assign(v, { z: z / 100 })
+  updateSatelliteImage(mesh, satelliteImageUrl) {
+    return new Promise((resolve, reject) => {
+      new TextureLoader().load(this.props.satelliteImageUrl, (img) => {
+        mesh.material.map = img;
+        mesh.material.needsUpdate = true;
+        resolve();
+      });
     });
-
-    plane.rotation.x = 5.7;
-
-    this.scene.add(plane);
   }
 
-  clearMap() {
-    this.earth = null;
-    this.altitude = null;
+  updateVertices(mesh, vertices) {
+    return new Promise((resolve, reject) => {
+      mesh.geometry.vertices.map((v,i) => Object.assign(v, { z: this.props.vertices[i] / 100 }));
+      mesh.geometry.verticesNeedUpdate = true;
+      resolve();
+    });
+  }
 
-    this.scene.children.forEach(function(object) {
-      this.scene.remove(object);
-    }.bind(this));
-
-    this.renderMap();
+  createMesh(scene) {
+    const geometry = new PlaneGeometry(200, 200, 99, 99);
+    const material = new MeshBasicMaterial();
+    const mesh = new Mesh(geometry, material);
+    mesh.rotation.x = 5.7;
+    return mesh;
   }
 
   initializeCanvas() {
-    this.scene = new Scene({autoUpdate: false});
-
+    const scene = new Scene({autoUpdate: false});
     const aspectRatio = this.refs.canvasContainer.offsetWidth / this.refs.canvasContainer.offsetHeight;
-    
-    const camera = new PerspectiveCamera(52 / aspectRatio, aspectRatio, 0.1, 1000);    
+    const camera = new PerspectiveCamera(52 / aspectRatio, aspectRatio, 0.1, 1000);
+    const renderer = new WebGLRenderer({canvas: this.refs.canvas});
+
     camera.position.y = -20;
     camera.position.z = 200;
-    
-    const renderer = new WebGLRenderer({canvas: this.refs.canvas});
     renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
     renderer.setSize(this.refs.canvasContainer.offsetWidth, this.refs.canvasContainer.offsetHeight);
 
-    this.renderMap = function() {
-      renderer.render(this.scene, camera);
+    return {scene, renderer, camera};
+  }
+
+  renderScene({renderer, scene, camera}) {
+    window.requestAnimationFrame(() => {
+      renderer.render(scene, camera);
+    })
+  }
+
+  componentDidMount() {
+    const {scene, renderer, camera} = this.initializeCanvas();
+    const mesh = this.createMesh();
+    scene.add(mesh);
+    Object.assign(this, {scene, renderer, camera, mesh});
+  }
+
+  isVisible() {
+    return (this.props.vertices && this.props.satelliteImageUrl);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.vertices && prevProps.vertices !== this.props.vertices) {
+      this.updateVertices(this.mesh, this.props.vertices).then(() => {
+        this.renderScene({...this});
+      });
     }
 
-    DefaultLoadingManager.onLoad = function() {
-      this.renderMap();
-    }.bind(this);
-
-    this.initialized = true;
-  }
-  
-  draw() {
-    this.view = GeoViewport.viewport(_.flatten(this.props.bounds), [1024, 1024], 12, 14);
-
-    this.clearMap();
-    this.getEarth();
-  }
-  
-  componentDidMount() {
-    this.initializeCanvas();
-    this.draw()
-  }
-
-  componentDidUpdate(prevProps) {    
-    if (this.props.index !== prevProps.index) this.draw();
+    if (this.props.satelliteImageUrl && prevProps.satelliteImageUrl !== this.props.satelliteImageUrl) {
+      this.updateSatelliteImage(this.mesh, this.props.satelliteImageUrl).then(() => {
+        this.renderScene({...this});
+      });
+    }
   }
 
   render() {
     return (
       <div ref="canvasContainer" className={cx(styles.terrain, styles.center)}>
-        <canvas ref="canvas" className={styles.canvas}></canvas>
+        <canvas ref="canvas" className={cx(styles.canvas, {[styles.visible]: this.isVisible()})}></canvas>
+        <div className={cx(styles.loadingSpinner, {[styles.visible]: !this.isVisible()})}><LoadingSpinner speed="1s"/></div>
       </div>
     )
   }
 };
 
 Terrain.propTypes = {
-  index: PropTypes.string,
-  height: PropTypes.number,
-  width: PropTypes.number,
-  bounds: PropTypes.array,
-  vertices: PropTypes.array
+  vertices: PropTypes.array,
+  satelliteImageUrl: PropTypes.string
 }

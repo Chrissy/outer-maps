@@ -36,7 +36,7 @@ const trail = (state = {}, action) => {
       return { ...state,
         hasElevationData: true,
         geometry: lineString(points.map(p => p.coordinates)).geometry,
-        dump: action.dump,
+        vertices: action.dump.vertices,
         points: points.map((e, i) => {
           const p = points[i - 1];
           return {
@@ -49,6 +49,11 @@ const trail = (state = {}, action) => {
             distanceFromPreviousPoint: (p) ? distance(e.coordinates, p.coordinates) * 1000 : 0
           }
         })
+      }
+    case 'SET_TRAIL_SATELLITE_IMAGE':
+      if (action.id !== state.id) return state
+      return {...state,
+        satelliteImageUrl: action.url
       }
     case 'SET_TRAIL_WEATHER_DATA':
       if (action.id !== state.id) return state
@@ -90,6 +95,8 @@ const trails = (state = [], action) => {
       return state.map(t => trail(t, {...action, type: 'CLEAR_TRAIL_SELECTED'}))
     case 'SET_TRAIL_DATA':
       return state.map(t => trail(t, action))
+    case 'SET_TRAIL_SATELLITE_IMAGE':
+      return state.map(t => trail(t, action))
     case 'SET_TRAIL_WEATHER_DATA':
       return state.map(t => trail(t, action))
     case 'SET_TRAIL_ADDITIONAL_WEATHER_DATA':
@@ -106,6 +113,8 @@ const boundaries = (state = [], action) => {
     case 'SET_BOUNDARY_DATA':
       return state.map(b => boundary(b, action))
     case 'SET_BOUNDARY_WEATHER_DATA':
+      return state.map(b => boundary(b, action))
+    case 'SET_BOUNDARY_SATELLITE_IMAGE':
       return state.map(b => boundary(b, action))
     case 'SET_BOUNDARY_ADDITIONAL_WEATHER_DATA':
       return state.map(b => boundary(b, action))
@@ -134,12 +143,17 @@ const boundary = (state = {}, action) => {
       if (action.id !== state.id) return state;
       return {...state,
         area: action.area,
-        dump: action.dump,
+        vertices: action.dump.vertices,
         trailsCount: action.trailsCount,
         trailLengths: action.trailLengths,
         trailTypes: action.trailTypes,
         trails: action.trails,
         hasElevationData: true
+      }
+    case 'SET_BOUNDARY_SATELLITE_IMAGE':
+      if (action.id !== state.id) return state
+      return {...state,
+        satelliteImageUrl: action.url
       }
     case 'SET_BOUNDARY_WEATHER_DATA':
       if (action.id !== state.id) return state

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-import Terrain from './terrain';
 import TrailTypes from './trailTypes';
 import HorizontalBarGraph from './horizontalBarGraph';
 import BoundaryTotals from './boundaryTotals';
@@ -11,24 +10,13 @@ import label from '../styles/label.css';
 import spacing from '../styles/spacing.css';
 import ImportantWeather from './importantWeather';
 
-const BoundarySidebar = ({id, hasElevationData, dump, area, trails, trailTypes, trailLengths, bounds, trailsCount, hasWeatherData, weatherData}) => {
-  const terrain = () => {
-    if (hasElevationData) {
-      return <Terrain
-        index={`boundary:${id}`}
-        height={dump.height}
-        width={dump.width}
-        bounds={bounds}
-        vertices={dump.vertices}/>
-    }
-  }
-
+const BoundarySidebar = ({id, hasElevationData, vertices, area, trails, trailTypes, trailLengths, bounds, trailsCount, hasWeatherData, weatherData}) => {
   const boundaryTotals = () => {
     if (hasElevationData) {
       return <BoundaryTotals
         area={area}
         trailsCount={trailsCount}
-        highPoint={Math.max(...dump.vertices)}/>
+        highPoint={Math.max(...vertices)}/>
     }
   }
 
@@ -77,7 +65,6 @@ const BoundarySidebar = ({id, hasElevationData, dump, area, trails, trailTypes, 
 
   return (
     <div className={styles.boundarySidebar}>
-      {terrain()}
       {boundaryTotals()}
       <div className={styles.boundarySidebarGridLayout}>
         {trailTypesBreakdown()}
@@ -98,7 +85,8 @@ BoundarySidebar.propTypes = {
   trailTypes: PropTypes.object,
   trailLengths: PropTypes.array,
   bounds: PropTypes.array,
-  weatherData: PropTypes.object
+  hasWeatherData: PropTypes.bool,
+  weatherData: PropTypes.object,
 };
 
 export default BoundarySidebar;

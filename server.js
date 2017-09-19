@@ -6,12 +6,13 @@ const pg = require('pg');
 const express = require('express');
 const _ = require('underscore');
 const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
-const statUtils = require('./modules/statUtils');
-const query = require('./modules/genericQuery').query;
-const createPool = require('./modules/genericQuery').pool;
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 const terrain = require('./modules/terrain');
+const statUtils = require('./modules/statUtils');
+const query = require('./modules/genericQuery').query;
+const createPool = require('./modules/genericQuery').pool;
+const uploadImageToS3 = require('./modules/uploadImageToS3').upload;
 
 const webpackMiddleware = optional("webpack-dev-middleware");
 const webpackConfig = optional('./webpack.dev.config.js')
@@ -36,7 +37,7 @@ app.get('/api/elevation/:id/:x1/:y1/:x2/:y2', function(request, response){
         SELECT (ST_DumpPoints(path)).geom AS point
         FROM trail
       ), raster AS (
-        SELECT ST_Clip(ST_Union(rast), ST_Envelope(${box})) AS rast FROM elevation
+        SELECT ST_Resize(ST_Clip(ST_Union(rast), ${box}), 100, 100) AS rast FROM elevation
         CROSS JOIN trail
         WHERE ST_Intersects(rast, ${box}) GROUP BY path
       ), elevations as (
@@ -76,7 +77,7 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
           FROM boundaries
           WHERE id = ${request.params.id}
         ), raster AS (
-          SELECT ST_Clip(ST_Union(rast), ${box}) AS rast FROM elevation
+          SELECT ST_Resize(ST_Clip(ST_Union(rast), ${box}), 100, 100) AS rast FROM elevation
           WHERE ST_Intersects(rast, ${box})
         ), park_trails AS (
           SELECT trails.name, trails.id, trails.type, ST_Length(trails.geog) as length FROM boundary LEFT OUTER JOIN trails
@@ -118,14 +119,6 @@ app.get('/api/boundaries/:id/:x1/:y1/:x2/:y2', function(request, response){
   });
 });
 
-app.get('/api/static/', function(request, response) {
-  const output = terrain.render()
-  output.then(png => {
-    response.setHeader('Content-Type', 'image/png');
-    png.pack().pipe(response);
-  });
-});
-
 app.get('/api/elevations/:x1/:y1/:x2/:y2', function(request, response){
   const {x1, y1, x2, y2} = request.params;
   const box = `ST_MakeEnvelope(${x1}, ${y1}, ${x2}, ${y2}, 4326)`;
@@ -145,25 +138,17 @@ app.get('/api/elevations/:x1/:y1/:x2/:y2', function(request, response){
 });
 
 app.get('/api/terrain/:x/:y/:zoom', function(request, response){
-  const params = request.params;
-  const cachedImageKey = `terrain-${params.x}-${params.y}-${params.zoom}.jpg`;
-  const cachedImagePath = `https://s3-us-west-2.amazonaws.com/chrissy-gunk/${cachedImageKey}`;
+  const {x, y, zoom} = request.params;
+  const key = `terrain-${x}-${y}-${zoom}.jpg`;
+  const cachedImagePath = `https://s3-us-west-2.amazonaws.com/chrissy-gunk/${key}`;
+  const url = `https://api.mapbox.com/v4/mapbox.satellite/${x},${y},${zoom}/1024x1024.jpg70?access_token=${accessToken}`;
 
-  s3.headObject({Bucket: 'chrissy-gunk', Key: cachedImageKey}, (err, metadata) => {
+  s3.headObject({Bucket: 'chrissy-gunk', Key: key}, (err, metadata) => {
     if (err && err.code == 'NotFound') {
-      http.get({
-        host: 'api.mapbox.com',
-        path: `/v4/mapbox.satellite/${params.x},${params.y},${params.zoom}/1024x1024.jpg70?access_token=${accessToken}`
-      }, function(r){
-        let body = [];
-        r.on('data', (chunk) => body.push(chunk)).on('end', () => {
-          s3.putObject({Bucket: 'chrissy-gunk', Key: cachedImageKey, Body: Buffer.concat(body), ACL:'public-read'}, function(err, data) {
-            response.json({url: cachedImagePath})
-          });
-        });
-      });
+      response.redirect(url);
+      uploadImageToS3({url, key, quality: 30})
     } else {
-      response.json({url: cachedImagePath})
+      response.redirect(cachedImagePath);
     }
   })
 });

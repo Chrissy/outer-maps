@@ -1,4 +1,5 @@
 import {getNoaaData} from '../modules/NOAA';
+import getSatelliteImage from '../modules/getSatelliteImage';
 import GeoViewport from '@mapbox/geo-viewport';
 import bbox from '@turf/bbox';
 import centroid from '@turf/centroid';
@@ -24,6 +25,7 @@ export function selectTrail({properties, geometry}) {
     if (!cachedTrail) dispatch({type: 'ADD_TRAIL', center, bounds, properties, geometry});
     if (!cachedTrail || !cachedTrail.hasElevationData) dispatch(getTrailData({id: properties.id, bounds}));
     if (!cachedTrail || !cachedTrail.hasWeatherData) dispatch(getWeatherData({...properties, center, reducer: 'trail'}));
+    if (!cachedTrail || !cachedTrail.hasSatelliteImage) dispatch(getReducerSatelliteImage({id: properties.id, bounds, reducer: 'trail'}));
     if (cachedTrail) return  dispatch({type: 'SELECT_TRAIL', ...cachedTrail});
   };
 };
@@ -56,6 +58,7 @@ export function selectBoundary({properties, geometry}) {
     if (!cachedBoundary) dispatch({type: 'ADD_BOUNDARY', properties, geometry, bounds});
     if (!cachedBoundary || !cachedBoundary.hasElevationData) dispatch(getBoundaryData({id: properties.id, bounds}));
     if (!cachedBoundary || !cachedBoundary.hasWeatherData) dispatch(getWeatherData({...properties, center: geometry.coordinates, reducer: 'boundary'}));
+    if (!cachedBoundary || !cachedBoundary.hasSatelliteImage) dispatch(getReducerSatelliteImage({id: properties.id, bounds, reducer: 'boundary'}));
     if (cachedBoundary) return dispatch({type: 'SELECT_BOUNDARY', id: properties.id});
   };
 };
@@ -63,6 +66,14 @@ export function selectBoundary({properties, geometry}) {
 export function clearSelected() {
   return dispatch => {
     dispatch({type: 'CLEAR_SELECTED'});
+  }
+}
+
+function getReducerSatelliteImage({id, bounds, reducer}) {
+  return dispatch => {
+    getSatelliteImage({bounds, minZoom: 12, maxZoom: 14}).then(image => {
+      return dispatch({type:  `SET_${reducer.toUpperCase()}_SATELLITE_IMAGE`, id, url: URL.createObjectURL(image)});
+    });
   }
 }
 
@@ -92,10 +103,10 @@ function getAdditionalWeatherData({id, center, stationId, hasWeatherData, reduce
       y: center[0],
       dataSetID: "NORMAL_DLY",
       dataTypeIDs: [
-        ["DLY-SNOW-PCTALL-GE001TI"],
-        ["DLY-SNOW-PCTALL-GE030TI"],
-        ["DLY-SNWD-PCTALL-GE001WI"],
-        ["DLY-SNWD-PCTALL-GE010WI"]
+        "DLY-SNOW-PCTALL-GE001TI",
+        "DLY-SNOW-PCTALL-GE030TI",
+        "DLY-SNWD-PCTALL-GE001WI",
+        "DLY-SNWD-PCTALL-GE010WI"
       ]
     }).then(response => {
       return dispatch({type: `SET_${reducer.toUpperCase()}_ADDITIONAL_WEATHER_DATA`, ...response, id: id});
