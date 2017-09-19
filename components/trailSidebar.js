@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import ElevationTotals from './elevationTotals';
-import Terrain from './terrain';
 import TrailListContainer from './trailListContainer';
 import ImportantWeather from './importantWeather';
 import sliceElevationsWithHandles from '../modules/sliceElevationsWithHandles';
@@ -22,21 +21,10 @@ const TrailSidebar = ({firstTrail, trails, handles}) => {
     }, []);
   }
 
-  const terrain = () => {
-    if (firstTrail.hasElevationData && firstTrail.hasSatelliteImage) {
-      return <Terrain
-        index={`trail:${firstTrail.id}`}
-        satelliteImageUrl={firstTrail.satelliteImageUrl}
-        vertices={firstTrail.dump.vertices}/>
-    }
-  }
-
   const trailList = () => {
-    return <TrailListContainer trails={slicedTrails()} />
-  }
-
-  const terrainOrTrailList = () => {
-    return (trails.length > 1) ? trailList() : terrain()
+    return (<div style={{display: (trails.length > 1) ? 'block' : 'none'}}>
+      <TrailListContainer trails={slicedTrails()} />
+    </div>)
   }
 
   const elevationTotals = () => {
@@ -53,7 +41,7 @@ const TrailSidebar = ({firstTrail, trails, handles}) => {
 
   return (
     <div>
-      {terrainOrTrailList()}
+      {trailList()}
       {elevationTotals()}
       {importantWeather()}
     </div>

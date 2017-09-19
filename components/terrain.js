@@ -9,11 +9,8 @@ import _ from 'underscore';
 
 export default class Terrain extends React.Component {
 
-  updateMesh(mesh) {
+  updateSatelliteImage(mesh, satelliteImageUrl) {
     return new Promise((resolve, reject) => {
-      mesh.geometry.vertices.map((v,i) => Object.assign(v, { z: this.props.vertices[i] / 100 }));
-      mesh.rotation.x = 5.7;
-
       new TextureLoader().load(this.props.satelliteImageUrl, (img) => {
         mesh.material.map = img;
         mesh.material.needsUpdate = true;
@@ -22,15 +19,20 @@ export default class Terrain extends React.Component {
     });
   }
 
-  clearMap(scene) {
-    scene.children.forEach((object) => scene.remove(object));
+  updateVertices(mesh, vertices) {
+    return new Promise((resolve, reject) => {
+      mesh.geometry.vertices.map((v,i) => Object.assign(v, { z: this.props.vertices[i] / 100 }));
+      mesh.geometry.verticesNeedUpdate = true;
+      resolve();
+    });
   }
 
   createMesh(scene) {
-    const size = Math.sqrt(this.props.vertices.length) - 1;
-    const geometry = new PlaneGeometry(200, 200, size, size);
+    const geometry = new PlaneGeometry(200, 200, 99, 99);
     const material = new MeshBasicMaterial();
-    return new Mesh(geometry, material);
+    const mesh = new Mesh(geometry, material);
+    mesh.rotation.x = 5.7;
+    return mesh;
   }
 
   initializeCanvas() {
@@ -47,23 +49,30 @@ export default class Terrain extends React.Component {
     return {scene, renderer, camera};
   }
 
+  renderScene({renderer, scene, camera}) {
+    window.requestAnimationFrame(() => {
+      renderer.render(scene, camera);
+    })
+  }
+
   componentDidMount() {
     const {scene, renderer, camera} = this.initializeCanvas();
     const mesh = this.createMesh();
     scene.add(mesh);
-    this.updateMesh(mesh).then(() => renderer.render(scene, camera));
-    Object.assign({}, this, {scene, renderer, camera, mesh});
+    Object.assign(this, {scene, renderer, camera, mesh});
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.index == prevProps.index) return;
+    if (this.props.vertices && prevProps.vertices !== this.props.vertices) {
+      this.updateVertices(this.mesh, this.props.vertices);
+      this.renderScene({...this});
+    }
 
-    this.clearMap(this.scene);
-    renderer.render(this.scene, this.camera);
-
-    this.updateMesh(this.mesh).then(() => {
-      renderer.render(this.scene, this.camera);
-    });
+    if (this.props.satelliteImageUrl && prevProps.satelliteImageUrl !== this.props.satelliteImageUrl) {
+      this.updateSatelliteImage(this.mesh, this.props.satelliteImageUrl).then(() => {
+          this.renderScene({...this});
+      });
+    }
   }
 
   render() {

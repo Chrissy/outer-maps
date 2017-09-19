@@ -11,14 +11,12 @@ import label from '../styles/label.css';
 import spacing from '../styles/spacing.css';
 import ImportantWeather from './importantWeather';
 
-const BoundarySidebar = ({id, hasElevationData, dump, area, trails, trailTypes, trailLengths, bounds, trailsCount, hasWeatherData, weatherData, hasSatelliteImage, satelliteImageUrl}) => {
+const BoundarySidebar = ({id, hasElevationData, vertices, area, trails, trailTypes, trailLengths, bounds, trailsCount, hasWeatherData, weatherData, hasSatelliteImage, satelliteImageUrl}) => {
   const terrain = () => {
-    if (hasElevationData && hasSatelliteImage) {
-      return <Terrain
-        index={`boundary:${id}`}
-        satelliteImageUrl={satelliteImageUrl}
-        vertices={dump.vertices}/>
-    }
+    return <Terrain
+      index={`boundary:${id}`}
+      satelliteImageUrl={satelliteImageUrl}
+      vertices={vertices}/>
   }
 
   const boundaryTotals = () => {
@@ -26,7 +24,7 @@ const BoundarySidebar = ({id, hasElevationData, dump, area, trails, trailTypes, 
       return <BoundaryTotals
         area={area}
         trailsCount={trailsCount}
-        highPoint={Math.max(...dump.vertices)}/>
+        highPoint={Math.max(...vertices)}/>
     }
   }
 
@@ -75,7 +73,6 @@ const BoundarySidebar = ({id, hasElevationData, dump, area, trails, trailTypes, 
 
   return (
     <div className={styles.boundarySidebar}>
-      {terrain()}
       {boundaryTotals()}
       <div className={styles.boundarySidebarGridLayout}>
         {trailTypesBreakdown()}

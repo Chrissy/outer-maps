@@ -144,7 +144,7 @@ const boundary = (state = {}, action) => {
       if (action.id !== state.id) return state;
       return {...state,
         area: action.area,
-        dump: action.dump,
+        vertices: action.dump.vertices,
         trailsCount: action.trailsCount,
         trailLengths: action.trailLengths,
         trailTypes: action.trailTypes,
