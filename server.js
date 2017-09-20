@@ -25,19 +25,20 @@ const app = express();
 const pool = createPool();
 
 app.get('/api/trail/:id/:x1/:y1/:x2/:y2', function(request, response){
-  const box = `ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)`;
+  const {id, x1, y1, x2, y2} = request.params;
+  const box = `ST_MakeEnvelope(${x1}, ${y1}, ${x2}, ${y2}, 4326)`;
 
   const sql = `
     WITH trail AS (
         SELECT ST_SimplifyVW(geog::geometry, 0.00000001) AS path
         FROM trails
-        WHERE id = ${request.params.id}
+        WHERE id = ${id}
       ),
       points AS (
         SELECT (ST_DumpPoints(path)).geom AS point
         FROM trail
       ), raster AS (
-        SELECT ST_Resize(ST_Clip(ST_Union(rast), ${box}), 100, 100) AS rast FROM elevation
+        SELECT ST_Clip(ST_Union(rast), ${box}) AS rast FROM elevation
         CROSS JOIN trail
         WHERE ST_Intersects(rast, ${box}) GROUP BY path
       ), elevations as (
@@ -48,7 +49,7 @@ app.get('/api/trail/:id/:x1/:y1/:x2/:y2', function(request, response){
         FROM raster, trail
         CROSS JOIN points
       )
-      SELECT to_json(ST_DumpValues(rast)) as dump,
+      SELECT to_json(ST_DumpValues(ST_Resize(rast, 100, 100))) as dump,
       to_json(array_agg(elevations)) as points from trail, raster, elevations GROUP BY rast;
   `;
 

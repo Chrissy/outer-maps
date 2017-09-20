@@ -24,7 +24,8 @@ const queries = [
     minZoom: 9,
     maxZoom: 9.75,
     query: `
-      SELECT name, id, type, station1, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.000003) as geom
+      SELECT name, id, type, station1, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.000003) as geom,
+      ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds
       FROM trails
       WHERE ST_Length(geog) > 1500 AND type = 'hike' OR type = 'horse' OR type = 'bike' OR
       type = 'motorcycle' OR type = 'atv' AND name != ''
@@ -36,7 +37,7 @@ const queries = [
     maxZoom: 11.75,
     query: `
       SELECT name, id, type, station1, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.0000005) as geom,
-      ST_X(ST_Centroid(geog::geometry)) as cx, ST_Y(ST_Centroid(geog::geometry)) as cy
+      ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds
       FROM trails
       WHERE type = 'hike' OR type = 'horse' OR type = 'bike' OR
       type = 'motorcycle' OR type = 'atv' AND name != ''
@@ -48,7 +49,7 @@ const queries = [
     maxZoom: 14,
     query: `
       SELECT name, id, type, station1, ST_Length(geog) as distance, geog::geometry as geom,
-      ST_X(ST_Centroid(geog::geometry)) as cx, ST_Y(ST_Centroid(geog::geometry)) as cy
+      ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds
       FROM trails
       WHERE type = 'hike' OR type = 'horse' OR type = 'bike' OR
       type = 'motorcycle' OR type = 'atv' AND name != ''
