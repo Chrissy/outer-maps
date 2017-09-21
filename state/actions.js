@@ -7,8 +7,8 @@ import centroid from '@turf/centroid';
 const selectTrail = ({properties, geometry}) => {
   return (dispatch, getState) => {
     const cachedTrail = getState().trails.find(t => t.id == properties.id);
-    const center = centroid(geometry).geometry.coordinates;
-    const bounds = bbox(geometry);
+    const bounds = bbox(JSON.parse(properties.bounds));
+    const center = centroid(JSON.parse(properties.bounds)).geometry.coordinates;
 
     if (!cachedTrail) dispatch({type: 'ADD_TRAIL', center, bounds, properties, geometry});
     if (!cachedTrail || !cachedTrail.elevationDataRequested) dispatch(getElevationData({id: properties.id, bounds, reducer: 'trail'}));
@@ -46,7 +46,7 @@ const getElevationData = ({id, bounds, reducer}) => {
   return (dispatch) => {
     dispatch({type: `SET_${reducer.toUpperCase()}_ELEVATION_DATA_REQUESTED`, id });
 
-    const view = GeoViewport.viewport(bounds, [1024, 1024], 12, 14);
+    const view = GeoViewport.viewport(bounds, [1024, 1024]);
     const tileBounds = GeoViewport.bounds(view.center, view.zoom, [1024, 1024]);
 
     return fetch(`/api/${reducer}/${id}/${tileBounds.join("/")}`)
@@ -60,7 +60,7 @@ const getElevationData = ({id, bounds, reducer}) => {
 const getSatelliteImage = ({id, bounds, reducer}) => {
   return dispatch => {
     dispatch({type: `SET_${reducer.toUpperCase()}_SATELLITE_IMAGE_REQUESTED`, id});
-    requestSatelliteImage({bounds, minZoom: 12, maxZoom: 14}).then(image => {
+    requestSatelliteImage({bounds, minZoom: 1, maxZoom: 14}).then(image => {
       return dispatch({type:  `SET_${reducer.toUpperCase()}_SATELLITE_IMAGE`, id, url: URL.createObjectURL(image)});
     });
   };
