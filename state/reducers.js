@@ -195,7 +195,7 @@ const boundary = (state = {}, action) => {
 const handles = (state = [], action) => {
   switch (action.type) {
     case 'SELECT_TRAIL':
-    case 'SET_TRAIL_DATA':
+    case 'SET_TRAIL_ELEVATION_DATA':
       return [...state,
         handle(null, {...action,
           type: 'ADD_HANDLE',

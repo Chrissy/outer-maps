@@ -5,7 +5,6 @@ import BoundarySidebar from './boundarySidebar';
 import Terrain from './terrain';
 import cx from 'classnames';
 import styles from '../styles/sidebar.css';
-import spacing from '../styles/spacing.css';
 
 const Sidebar = ({trails, boundary, handles}) => {
   const trailOrBoundary = () => {
