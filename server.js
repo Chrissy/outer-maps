@@ -38,7 +38,7 @@ app.get('/api/trail/:id/:x1/:y1/:x2/:y2', function(request, response){
         SELECT (ST_DumpPoints(path)).geom AS point
         FROM trail
       ), raster AS (
-        SELECT ST_Clip(ST_Union(rast), ${box}) AS rast FROM elevation
+        SELECT ST_Resize(ST_Clip(ST_Union(rast), ${box}), 100, 100) AS rast FROM elevation
         CROSS JOIN trail
         WHERE ST_Intersects(rast, ${box}) GROUP BY path
       ), elevations as (
@@ -49,7 +49,7 @@ app.get('/api/trail/:id/:x1/:y1/:x2/:y2', function(request, response){
         FROM raster, trail
         CROSS JOIN points
       )
-      SELECT to_json(ST_DumpValues(ST_Resize(rast, 100, 100))) as dump,
+      SELECT to_json(ST_DumpValues(rast)) as dump,
       to_json(array_agg(elevations)) as points from trail, raster, elevations GROUP BY rast;
   `;
 
