@@ -6,7 +6,7 @@
   },
   "source": "composite",
   "source-layer": "contour",
-  "minzoom": 11,
+  "minzoom": 7,
   "filter": [
     "!in",
     "index",
@@ -19,7 +19,7 @@
   "paint": {
     "line-opacity": {
       "base": 1,
-      "stops": [[11, 0.25],[12, 0.34]]
+      "stops": [[8, 0.15], [11, 0.25],[12, 0.34]]
     },
     "line-color": "hsl(100, 100%, 20%)",
     "line-width": {
@@ -40,7 +40,7 @@
   },
   "source": "composite",
   "source-layer": "contour",
-  "minzoom": 11,
+  "minzoom": 7,
   "filter": [
     "in",
     "index",
@@ -86,7 +86,7 @@
   "paint": {
     "fill-color": "hsl(0, 0%, 100%)",
     "fill-opacity": {
-      "stops": [[15, 0.1],[18, 0]]
+      "stops": [[7, 0.04], [15, 0.1],[18, 0.2]]
     },
     "fill-antialias": false
   }
@@ -110,7 +110,7 @@
   "paint": {
     "fill-color": "hsl(0, 0%, 100%)",
     "fill-opacity": {
-      "stops": [[15, 0.1],[18, 0]]
+      "stops": [[7, 0.04], [15, 0.1],[18, 0.2]]
     },
     "fill-antialias": false
   }
@@ -135,7 +135,7 @@
   "paint": {
     "fill-color": "hsl(56, 59%, 22%)",
     "fill-opacity": {
-      "stops": [[15, 0.02],[17, 0]]
+      "stops": [[7, 0.04], [15, 0.02],[17, 0.04]]
     },
     "fill-antialias": false
   }
@@ -159,7 +159,7 @@
   "paint": {
     "fill-color": "hsl(56, 59%, 22%)",
     "fill-opacity": {
-      "stops": [[15, 0.04],[17, 0]]
+      "stops": [[7, 0.02], [15, 0.04],[17, 0.08]]
     },
     "fill-antialias": false
   }
@@ -183,7 +183,7 @@
   "paint": {
     "fill-color": "hsl(56, 59%, 22%)",
     "fill-opacity": {
-      "stops": [[15, 0.02],[17, 0]]
+      "stops": [[7, 0.01], [15, 0.02],[17, 0.04]]
     },
     "fill-antialias": false
   }
@@ -208,7 +208,7 @@
   "paint": {
     "fill-color": "hsl(56, 59%, 22%)",
     "fill-opacity": {
-      "stops": [[15, 0.02],[17, 0]]
+      "stops": [[7, 0.01], [15, 0.02],[17, 0.04]]
     },
     "fill-antialias": false
   }
@@ -227,7 +227,7 @@
   "paint": {
     "line-opacity": {
       "base": 1,
-      "stops": [[15, 0],[15.25, 1]]
+      "stops": [[15, 0], [15.25, 1]]
     },
     "line-width": 10,
     "line-pattern": "cliff"
