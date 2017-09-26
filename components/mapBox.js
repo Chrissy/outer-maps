@@ -57,8 +57,6 @@ export default class MapBox extends React.PureComponent {
 
       this.mapboxed.on(eventName, _.throttle((event) => {
         const eventMod = Object.assign({}, event, {
-          bounds: this.mapboxed.getBounds().toArray(),
-          zoom: this.mapboxed.getZoom(),
           features: (event.point) ? this.mapboxed.queryRenderedFeatures(event.point, { layers: this.props.watchLayers }) : null
         });
         this.props[eventName](eventMod);

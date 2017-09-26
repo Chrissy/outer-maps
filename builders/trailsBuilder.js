@@ -76,6 +76,15 @@ const queries = [
       FROM trails
       WHERE (type = 'hike' OR type = 'horse' OR type = 'bike') AND name != ''
     `
+  },
+  {
+    name: "park-boundary-labels",
+    minZoom: 1,
+    maxZoom: 12,
+    query: `
+      SELECT name, id, ST_Area(geog) as area, ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds, station1, ST_PointOnSurface(geog::geometry) as geom
+      FROM boundaries
+    `,
   }
 ]
 
