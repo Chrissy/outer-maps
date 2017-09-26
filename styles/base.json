@@ -34,7 +34,7 @@
   },
   "remote": {
     "composite": {
-      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.park-boundaries,fivefourths.local,fivefourths.park-boundary-labels",
+      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.park-boundaries,fivefourths.local",
       "type": "vector"
     },
     "handles": {

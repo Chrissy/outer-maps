@@ -15,7 +15,7 @@ const queries = [
     query: `
       SELECT name, id, type, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.000005) as geom
       FROM trails
-      WHERE ST_Length(geog) > 3000 AND type = 'hike' OR type = 'horse' OR type = 'bike' OR
+      WHERE ST_Length(geog) > 5000 AND type = 'hike' OR type = 'horse' OR type = 'bike' OR
       type = 'motorcycle' OR type = 'atv' AND name != ''
     `
   },
@@ -27,7 +27,7 @@ const queries = [
       SELECT name, id, type, station1, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.000003) as geom,
       ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds
       FROM trails
-      WHERE ST_Length(geog) > 1500 AND type = 'hike' OR type = 'horse' OR type = 'bike' OR
+      WHERE ST_Length(geog) > 3000 AND type = 'hike' OR type = 'horse' OR type = 'bike' OR
       type = 'motorcycle' OR type = 'atv' AND name != ''
     `
   },
@@ -36,10 +36,10 @@ const queries = [
     minZoom: 10,
     maxZoom: 11.75,
     query: `
-      SELECT name, id, type, station1, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.0000005) as geom,
+      SELECT name, id, type, station1, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.000001) as geom,
       ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds
       FROM trails
-      WHERE type = 'hike' OR type = 'horse' OR type = 'bike' OR
+      WHERE ST_Length(geog) > 1500 AND type = 'hike' OR type = 'horse' OR type = 'bike' OR
       type = 'motorcycle' OR type = 'atv' AND name != ''
     `
   },
@@ -57,18 +57,18 @@ const queries = [
   },
   {
     name: "trail-labels-zoomed-out",
-    labelLength: 2,
-    minZoom: 10,
+    labelLength: 1.5,
+    minZoom: 9,
     maxZoom: 11.75,
     query: `
       SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.000004) as geom
       FROM trails
-      WHERE (type = 'hike' OR type = 'horse' OR type = 'bike') AND name != ''
+      WHERE ST_Length(geog) > 3000 AND (type = 'hike' OR type = 'horse' OR type = 'bike') AND name != ''
     `
   },
   {
     name: "trail-labels",
-    labelLength: 1,
+    labelLength: 0.75,
     minZoom: 12,
     maxZoom: 14,
     query: `
@@ -76,6 +76,15 @@ const queries = [
       FROM trails
       WHERE (type = 'hike' OR type = 'horse' OR type = 'bike') AND name != ''
     `
+  },
+  {
+    name: "park-boundary-labels",
+    minZoom: 1,
+    maxZoom: 12,
+    query: `
+      SELECT name, id, ST_Area(geog) as area, ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds, station1, ST_PointOnSurface(geog::geometry) as geom
+      FROM boundaries
+    `,
   }
 ]
 

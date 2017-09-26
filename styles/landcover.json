@@ -119,25 +119,6 @@
   }
 },
 {
-  "id": "national-parks-border",
-  "type": "line",
-  "source": "composite",
-  "source-layer": "park-boundaries",
-  "minzoom": 5,
-  "paint": {
-    "line-color": "rgb(255, 255, 255)",
-    "line-offset": {
-      "base": 1.4,
-      "stops": [[9, 0],[14, -2.5]]
-    },
-    "line-width": 0.5,
-    "line-opacity": {
-      "base": 1,
-      "stops": [[9, 0.5],[10, 0.75]]
-    }
-  }
-},
-{
   "id": "national-parks-active",
   "type": "line",
   "source": "composite",

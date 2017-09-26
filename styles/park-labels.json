@@ -1,7 +1,7 @@
 {"layers": [{
   "id": "national-park-labels",
   "type": "symbol",
-  "source": "composite",
+  "source": "$source",
   "source-layer": "park-boundary-labels",
   "layout": {
     "icon-image": "park-11",
@@ -14,9 +14,6 @@
     "text-offset": [0, 0.5],
     "text-anchor": "top",
     "text-font": ["DIN Offc Pro Medium","Arial Unicode MS Regular"],
-    "text-padding": {
-      "stops": [[0, 75], [7, 50], [9, 10]]
-    },
     "text-field": "{name}",
     "text-letter-spacing": 0.01,
     "text-max-width": 8
@@ -32,7 +29,7 @@
 {
   "id": "national-park-labels-active",
   "type": "symbol",
-  "source": "composite",
+  "source": "$source",
   "text-ignore-placement": false,
   "source-layer": "park-boundary-labels",
   "layout": {
@@ -46,9 +43,6 @@
     "text-offset": [0, 0.5],
     "text-anchor": "top",
     "text-font": ["DIN Offc Pro Medium","Arial Unicode MS Regular"],
-    "text-padding": {
-      "stops": [[0, 75], [7, 50], [9, 10]]
-    },
     "text-field": "{name}",
     "text-letter-spacing": 0.01,
     "text-max-width": 8
