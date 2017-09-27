@@ -16,8 +16,8 @@ const Sidebar = ({trails, boundary, handles}) => {
 
   const projectedPoints = () => {
     if (!trails[0] || !trails[0].points || !trails[0].tileBounds) return null;
-    const tile = GeoViewport.viewport(trails[0].tileBounds, [256, 256])
-    const projecter = FlatMercatorViewport({longitude: tile.center[0], latitude: tile.center[1], zoom: tile.zoom - 1, width: 256, height: 256});
+    const tile = GeoViewport.viewport(trails[0].tileBounds, [1024, 1024])
+    const projecter = FlatMercatorViewport({longitude: tile.center[0], latitude: tile.center[1], zoom: tile.zoom - 1, width: 1024, height: 1024});
     return slicedTrails()[0].points.map(p => {
       return {...p, coordinates: projecter.project(p.coordinates)}
     });

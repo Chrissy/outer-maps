@@ -28,8 +28,9 @@ export default class Terrain extends React.Component {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.moveTo(...points[0].coordinates);
     points.slice(1).forEach(p => ctx.lineTo(...p.coordinates))
-    ctx.strokeStyle = 'red';
-    ctx.lineWidth = 3;
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 10;
+    ctx.setLineDash([15, 10]);
     ctx.stroke();
     mesh.material.map = new CanvasTexture(canvas);
   }
