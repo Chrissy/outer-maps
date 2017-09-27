@@ -20,11 +20,16 @@ export default class Terrain extends React.Component {
     });
   }
 
-  updateVertices(mesh, vertices) {
+  updatePathLayer() {
+  }
+
+  updateVertices(meshes, vertices) {
     return new Promise((resolve, reject) => {
-      mesh.geometry.vertices.map((v,i) => Object.assign(v, { z: this.props.vertices[i] / 100 }));
-      mesh.geometry.verticesNeedUpdate = true;
-      resolve();
+      meshes.forEach(mesh => {
+        mesh.geometry.vertices.map((v,i) => Object.assign(v, { z: this.props.vertices[i] / 100 }));
+        mesh.geometry.verticesNeedUpdate = true;
+        resolve();
+      })
     });
   }
 
@@ -58,9 +63,9 @@ export default class Terrain extends React.Component {
 
   componentDidMount() {
     const {scene, renderer, camera} = this.initializeCanvas();
-    const mesh = this.createMesh();
-    scene.add(mesh);
-    Object.assign(this, {scene, renderer, camera, mesh});
+    const meshes = [this.createMesh(), this.createMesh()];
+    meshes.forEach(mesh => scene.add(mesh));
+    Object.assign(this, {scene, renderer, camera, meshes});
   }
 
   isVisible() {
@@ -69,13 +74,13 @@ export default class Terrain extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.vertices && prevProps.vertices !== this.props.vertices) {
-      this.updateVertices(this.mesh, this.props.vertices).then(() => {
+      this.updateVertices(this.meshes, this.props.vertices).then(() => {
         this.renderScene({...this});
       });
     }
 
     if (this.props.satelliteImageUrl && prevProps.satelliteImageUrl !== this.props.satelliteImageUrl) {
-      this.updateSatelliteImage(this.mesh, this.props.satelliteImageUrl).then(() => {
+      this.updateSatelliteImage(this.meshes[0], this.props.satelliteImageUrl).then(() => {
         this.renderScene({...this});
       });
     }
