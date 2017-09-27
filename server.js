@@ -64,7 +64,12 @@ app.get('/api/trail/:id/:x1/:y1/:x2/:y2', function(request, response){
           coordinates: [points[i].x, points[i].y]
         };
       }),
-      dump: {length: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices)}
+      dump: {
+        length: vertices.length,
+        height: vertices[0].length,
+        vertices: _.flatten(vertices),
+        bounds: [x1, y1, x2, y2]
+      }
     });
   });
 });

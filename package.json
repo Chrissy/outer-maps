@@ -63,6 +63,7 @@
     "svg-inline-loader": "^0.8.0",
     "three": "^0.84.0",
     "underscore": "^1.8.3",
+    "viewport-mercator-project": "^4.1.1",
     "webpack": "^3.5.2"
   },
   "devDependencies": {

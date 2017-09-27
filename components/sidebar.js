@@ -5,8 +5,19 @@ import BoundarySidebar from './boundarySidebar';
 import Terrain from './terrain';
 import cx from 'classnames';
 import styles from '../styles/sidebar.css';
+import {FlatMercatorViewport} from 'viewport-mercator-project';
+import GeoViewport from '@mapbox/geo-viewport';
 
 const Sidebar = ({trails, boundary, handles}) => {
+  const projectedPoints = () => {
+    if (!trails[0] || !trails[0].points || !trails[0].tileBounds) return null;
+    const tile = GeoViewport.viewport(trails[0].tileBounds, [256, 256])
+    const projecter = FlatMercatorViewport({longitude: tile.center[0], latitude: tile.center[1], zoom: tile.zoom - 1, width: 256, height: 256});
+    return trails[0].points.map(p => {
+      return {...p, coordinates: projecter.project(p.coordinates)}
+    });
+  }
+
   const trailOrBoundary = () => {
     if (trails && trails.length) return <TrailSidebar firstTrail={trails[0]} trails={trails} handles={handles}/>
     if (boundary && boundary.selected) return <BoundarySidebar {...boundary}/>
@@ -15,7 +26,9 @@ const Sidebar = ({trails, boundary, handles}) => {
   const terrain = () => {
     return <Terrain
       satelliteImageUrl={(trails[0] || boundary || {}).satelliteImageUrl}
-      vertices={(trails[0] || boundary || {}).vertices}/>
+      vertices={(trails[0] || boundary || {}).vertices}
+      points={projectedPoints()}
+      />
   }
 
   const hasContent = () => ((boundary && boundary.selected) || (trails && trails.some(t => t.selected)))

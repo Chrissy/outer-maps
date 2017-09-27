@@ -20,14 +20,16 @@ export default class Terrain extends React.Component {
     });
   }
 
-  updatePathLayer(mesh) {
+  updatePathLayer(mesh, points) {
+    if (!points.length) return;
     const canvas = document.getElementById('test-canvas');
     const ctx = canvas.getContext('2d');
     ctx.beginPath();
-    ctx.lineTo(200, 200);
-    ctx.lineTo(200, 0);
-    ctx.lineTo(0, 200);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.moveTo(...points[0].coordinates);
+    points.slice(1).forEach(p => ctx.lineTo(...p.coordinates))
     ctx.strokeStyle = 'red';
+    ctx.lineWidth = 3;
     ctx.stroke();
     mesh.material.map = new CanvasTexture(canvas);
   }
@@ -44,7 +46,7 @@ export default class Terrain extends React.Component {
 
   createMesh(scene) {
     const geometry = new PlaneGeometry(200, 200, 99, 99);
-    const material = new MeshBasicMaterial();
+    const material = new MeshBasicMaterial({transparent: true});
     const mesh = new Mesh(geometry, material);
     mesh.rotation.x = 5.7;
     return mesh;
@@ -75,8 +77,6 @@ export default class Terrain extends React.Component {
     const meshes = [this.createMesh(), this.createMesh()];
     meshes.forEach(mesh => scene.add(mesh));
     Object.assign(this, {scene, renderer, camera, meshes});
-    this.updatePathLayer(this.meshes[1]);
-    this.renderScene({...this});
   }
 
   isVisible() {
@@ -94,6 +94,11 @@ export default class Terrain extends React.Component {
       this.updateSatelliteImage(this.meshes[0], this.props.satelliteImageUrl).then(() => {
         this.renderScene({...this});
       });
+    }
+
+    if (this.props.points && prevProps.points !== this.props.points) {
+      this.updatePathLayer(this.meshes[1], this.props.points);
+      this.renderScene({...this});
     }
   }
 
