@@ -30,7 +30,6 @@ export default class Terrain extends React.Component {
     points.slice(1).forEach(p => ctx.lineTo(...p.coordinates))
     ctx.strokeStyle = 'white';
     ctx.lineWidth = 10;
-    ctx.setLineDash([15, 10]);
     ctx.stroke();
     mesh.material.map = new CanvasTexture(canvas);
   }
@@ -38,7 +37,7 @@ export default class Terrain extends React.Component {
   updateVertices(meshes, vertices) {
     return new Promise((resolve, reject) => {
       meshes.forEach(mesh => {
-        mesh.geometry.vertices.map((v,i) => Object.assign(v, { z: this.props.vertices[i] / 100 }));
+        mesh.geometry.vertices.map((v,i) => Object.assign(v, { z: this.props.vertices[i] / 150 }));
         mesh.geometry.verticesNeedUpdate = true;
         resolve();
       })
@@ -56,7 +55,7 @@ export default class Terrain extends React.Component {
   initializeCanvas() {
     const scene = new Scene({autoUpdate: false});
     const aspectRatio = this.refs.canvasContainer.offsetWidth / this.refs.canvasContainer.offsetHeight;
-    const camera = new PerspectiveCamera(90 / aspectRatio, aspectRatio, 0.1, 1000);
+    const camera = new PerspectiveCamera(62 / aspectRatio, aspectRatio, 0.1, 1000);
     const renderer = new WebGLRenderer({canvas: this.refs.canvas});
 
     camera.position.y = -20;

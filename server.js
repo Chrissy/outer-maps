@@ -30,7 +30,7 @@ app.get('/api/trail/:id/:x1/:y1/:x2/:y2', function(request, response){
 
   const sql = `
     WITH trail AS (
-        SELECT ST_SimplifyVW(geog::geometry, 0.00000001) AS path
+        SELECT ST_SimplifyVW(geog::geometry, 0.0000001) AS path
         FROM trails
         WHERE id = ${id}
       ),

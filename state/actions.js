@@ -47,7 +47,7 @@ const getElevationData = ({id, bounds, reducer}) => {
     dispatch({type: `SET_${reducer.toUpperCase()}_ELEVATION_DATA_REQUESTED`, id });
 
     const view = GeoViewport.viewport(bounds, [1024, 1024]);
-    const tileBounds = GeoViewport.bounds(view.center, view.zoom, [1024, 1024]);
+    const tileBounds = GeoViewport.bounds(view.center, view.zoom - 1, [1024, 1024]);
 
     return fetch(`/api/${reducer}/${id}/${tileBounds.join("/")}`)
       .then(response => response.json())
