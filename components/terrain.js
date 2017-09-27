@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {WebGLRenderer, Scene, PerspectiveCamera, TextureLoader, PlaneGeometry, MeshBasicMaterial, Mesh} from 'three';
+import {WebGLRenderer, Scene, PerspectiveCamera, TextureLoader, CanvasTexture, PlaneGeometry, MeshBasicMaterial, Mesh} from 'three';
 import styles from '../styles/terrain.css';
 import center from '../styles/center.css';
 import cx from 'classnames';
@@ -20,7 +20,16 @@ export default class Terrain extends React.Component {
     });
   }
 
-  updatePathLayer() {
+  updatePathLayer(mesh) {
+    const canvas = document.getElementById('test-canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.beginPath();
+    ctx.lineTo(200, 200);
+    ctx.lineTo(200, 0);
+    ctx.lineTo(0, 200);
+    ctx.strokeStyle = 'red';
+    ctx.stroke();
+    mesh.material.map = new CanvasTexture(canvas);
   }
 
   updateVertices(meshes, vertices) {
@@ -44,7 +53,7 @@ export default class Terrain extends React.Component {
   initializeCanvas() {
     const scene = new Scene({autoUpdate: false});
     const aspectRatio = this.refs.canvasContainer.offsetWidth / this.refs.canvasContainer.offsetHeight;
-    const camera = new PerspectiveCamera(52 / aspectRatio, aspectRatio, 0.1, 1000);
+    const camera = new PerspectiveCamera(90 / aspectRatio, aspectRatio, 0.1, 1000);
     const renderer = new WebGLRenderer({canvas: this.refs.canvas});
 
     camera.position.y = -20;
@@ -66,6 +75,8 @@ export default class Terrain extends React.Component {
     const meshes = [this.createMesh(), this.createMesh()];
     meshes.forEach(mesh => scene.add(mesh));
     Object.assign(this, {scene, renderer, camera, meshes});
+    this.updatePathLayer(this.meshes[1]);
+    this.renderScene({...this});
   }
 
   isVisible() {
