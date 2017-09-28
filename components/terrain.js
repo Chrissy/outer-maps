@@ -7,6 +7,7 @@ import LoadingSpinner from './loadingSpinner';
 import {FlatMercatorViewport} from 'viewport-mercator-project';
 import GeoViewport from '@mapbox/geo-viewport';
 import pin from '../modules/pin';
+import arrayEquals from '../modules/arrayEquals';
 
 export default class Terrain extends React.Component {
 
@@ -53,7 +54,7 @@ export default class Terrain extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.points !== this.props.points) {
+    if (!prevProps.points || !this.props.points || !arrayEquals(prevProps.points, this.props.points)) {
       this.drawPath(this.projectPoints(this.props));
     }
   }
