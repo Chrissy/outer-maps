@@ -1,90 +1,75 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {WebGLRenderer, Scene, PerspectiveCamera, TextureLoader, PlaneGeometry, MeshBasicMaterial, Mesh} from 'three';
 import styles from '../styles/terrain.css';
 import center from '../styles/center.css';
 import cx from 'classnames';
-import _ from 'underscore';
 import LoadingSpinner from './loadingSpinner';
-
+import {FlatMercatorViewport} from 'viewport-mercator-project';
+import pin from '../modules/pin';
 
 export default class Terrain extends React.Component {
 
-  updateSatelliteImage(mesh, satelliteImageUrl) {
-    return new Promise((resolve, reject) => {
-      new TextureLoader().load(this.props.satelliteImageUrl, (img) => {
-        mesh.material.map = img;
-        mesh.material.needsUpdate = true;
-        resolve();
-      });
+  projectPoints({points, zoom, center}) {
+    if (!points || !zoom || !center) return [];
+
+    const projecter = FlatMercatorViewport({
+      longitude: center[0],
+      latitude: center[1],
+      zoom: zoom - 1,
+      width: 1024,
+      height: 1024
+    });
+
+    return this.props.points.map(p => {
+      return {...p, coordinates: projecter.project(p.coordinates)}
     });
   }
 
-  updateVertices(mesh, vertices) {
-    return new Promise((resolve, reject) => {
-      mesh.geometry.vertices.map((v,i) => Object.assign(v, { z: this.props.vertices[i] / 100 }));
-      mesh.geometry.verticesNeedUpdate = true;
-      resolve();
-    });
-  }
+  drawPath(points) {
+    const canvas = this.refs.canvas;
+    const ctx = canvas.getContext('2d');
 
-  createMesh(scene) {
-    const geometry = new PlaneGeometry(200, 200, 99, 99);
-    const material = new MeshBasicMaterial();
-    const mesh = new Mesh(geometry, material);
-    mesh.rotation.x = 5.7;
-    return mesh;
-  }
+    ctx.beginPath();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  initializeCanvas() {
-    const scene = new Scene({autoUpdate: false});
-    const aspectRatio = this.refs.canvasContainer.offsetWidth / this.refs.canvasContainer.offsetHeight;
-    const camera = new PerspectiveCamera(52 / aspectRatio, aspectRatio, 0.1, 1000);
-    const renderer = new WebGLRenderer({canvas: this.refs.canvas});
+    if (!points.length) return;
 
-    camera.position.y = -20;
-    camera.position.z = 200;
-    renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
-    renderer.setSize(this.refs.canvasContainer.offsetWidth, this.refs.canvasContainer.offsetHeight);
+    ctx.moveTo(...points[0].coordinates);
+    points.slice(1).forEach(p => ctx.lineTo(...p.coordinates))
+    ctx.lineJoin = "round";
+    ctx.lineWidth = 8;
+    ctx.strokeStyle = 'white';
+    ctx.setLineDash([10, 10]);
+    ctx.stroke();
 
-    return {scene, renderer, camera};
-  }
-
-  renderScene({renderer, scene, camera}) {
-    window.requestAnimationFrame(() => {
-      renderer.render(scene, camera);
-    })
-  }
-
-  componentDidMount() {
-    const {scene, renderer, camera} = this.initializeCanvas();
-    const mesh = this.createMesh();
-    scene.add(mesh);
-    Object.assign(this, {scene, renderer, camera, mesh});
+    const image = new Image();
+    const [x1, y1] = points[0].coordinates;
+    const [x2, y2] = points[points.length - 1].coordinates;
+    const pinWidth = 44;
+    const pinHeight = 60;
+    image.onload = () => {
+      ctx.drawImage(image, x1 - pinWidth / 2, y1 - pinHeight - 2, pinWidth, pinHeight);
+      ctx.drawImage(image, x2 - pinWidth / 2, y2 - pinHeight - 2, pinWidth, pinHeight);
+    }
+    image.src = pin;
   }
 
   isVisible() {
-    return (this.props.vertices && this.props.satelliteImageUrl);
+    return (this.props.satelliteImageUrl);
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.vertices && prevProps.vertices !== this.props.vertices) {
-      this.updateVertices(this.mesh, this.props.vertices).then(() => {
-        this.renderScene({...this});
-      });
-    }
-
-    if (this.props.satelliteImageUrl && prevProps.satelliteImageUrl !== this.props.satelliteImageUrl) {
-      this.updateSatelliteImage(this.mesh, this.props.satelliteImageUrl).then(() => {
-        this.renderScene({...this});
-      });
+    if (this.props.satelliteImageUrl) {
+      this.projectedPoints = this.projectPoints(this.props);
+      this.drawPath(this.projectedPoints);
     }
   }
 
   render() {
     return (
-      <div ref="canvasContainer" className={cx(styles.terrain, styles.center)}>
-        <canvas ref="canvas" className={cx(styles.canvas, {[styles.visible]: this.isVisible()})}></canvas>
+      <div className={cx(styles.terrain, styles.center)}>
+        <img src={this.props.satelliteImageUrl} className={cx(styles.image, {[styles.visible]: this.isVisible()})}/>
+        <canvas ref="canvas" width="1026" height="1026" className={cx(styles.canvas, {[styles.visible]: this.isVisible()})}></canvas>
         <div className={cx(styles.loadingSpinner, {[styles.visible]: !this.isVisible()})}><LoadingSpinner speed="1s"/></div>
       </div>
     )
@@ -92,6 +77,8 @@ export default class Terrain extends React.Component {
 };
 
 Terrain.propTypes = {
-  vertices: PropTypes.array,
-  satelliteImageUrl: PropTypes.string
+  points: PropTypes.array,
+  satelliteImageUrl: PropTypes.string,
+  zoom: PropTypes.number,
+  center: PropTypes.array
 }

@@ -23,8 +23,12 @@
   fill: var(--brand-color);
 }
 
-.mountain svg {
-  height: 0.8em;
+.elevationGain svg, .elevationLoss svg {
+  height: .8em;
+}
+
+.elevationLoss svg {
+  transform: rotate(180deg);
 }
 
 .path svg {
@@ -32,10 +36,12 @@
 }
 
 .total {
-  font-size: 2.2em;
+  font-size: 1.6em;
   font-weight: 800;
+  margin-bottom: .25em;
 }
 
 .label {
-  font-size: .8em;
+  font-size: .7em;
+  line-height: 1.4;
 }

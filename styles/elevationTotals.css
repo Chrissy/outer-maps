@@ -1,17 +1,11 @@
 .elevationTotals {
   display: grid;
-  grid-template-columns: 143px .5fr .5fr;
-}
-
-@media (max-width: 900px) {
-  .elevationTotals {
-    grid-template-columns: 120px .5fr .5fr;
-  }
+  grid-template-columns: 120px .33fr .33fr .33fr;
 }
 
 @media (max-width: 360px) {
   .elevationTotals {
-    grid-template-columns: 90px .5fr .5fr;
+    grid-template-columns: 90px  .33fr .33fr .33fr;
   }
 }
 

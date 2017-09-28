@@ -4,17 +4,13 @@ import cx from 'classnames';
 import ElevationTotals from './elevationTotals';
 import TrailListContainer from './trailListContainer';
 import ImportantWeather from './importantWeather';
-import sliceElevationsWithHandles from '../modules/sliceElevationsWithHandles';
 import connectPaths from '../modules/connectPaths';
 import spacing from '../styles/spacing.css';
 
 const TrailSidebar = ({firstTrail, trails, handles}) => {
-  const slicedTrails = () => {
-    return trails.map(t => sliceElevationsWithHandles(t, handles));
-  }
 
   const cumulativeElevations = () => {
-    return slicedTrails().filter(t => t.hasElevationData).reduce((accumulator, trail) => {
+    return trails.filter(t => t.hasElevationData).reduce((accumulator, trail) => {
       const points = trail.points;
       if (accumulator.length == 0) return points;
       return connectPaths(accumulator, points);
@@ -23,7 +19,7 @@ const TrailSidebar = ({firstTrail, trails, handles}) => {
 
   const trailList = () => {
     return (<div style={{display: (trails.length > 1) ? 'block' : 'none'}}>
-      <TrailListContainer trails={slicedTrails()} />
+      <TrailListContainer trails={trails} />
     </div>)
   }
 

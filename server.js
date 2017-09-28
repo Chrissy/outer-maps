@@ -8,7 +8,6 @@ const _ = require('underscore');
 const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
-const terrain = require('./modules/terrain');
 const statUtils = require('./modules/statUtils');
 const query = require('./modules/genericQuery').query;
 const createPool = require('./modules/genericQuery').pool;
@@ -24,23 +23,21 @@ const app = express();
 
 const pool = createPool();
 
-app.get('/api/trail/:id/:x1/:y1/:x2/:y2', function(request, response){
-  const {id, x1, y1, x2, y2} = request.params;
-  const box = `ST_MakeEnvelope(${x1}, ${y1}, ${x2}, ${y2}, 4326)`;
+app.get('/api/trail/:id', function(request, response){
 
   const sql = `
     WITH trail AS (
-        SELECT ST_SimplifyVW(geog::geometry, 0.00000001) AS path
+        SELECT geog::geometry AS path
         FROM trails
-        WHERE id = ${id}
+        WHERE id = ${request.params.id}
       ),
       points AS (
         SELECT (ST_DumpPoints(path)).geom AS point
         FROM trail
       ), raster AS (
-        SELECT ST_Resize(ST_Clip(ST_Union(rast), ${box}), 100, 100) AS rast FROM elevation
+        SELECT ST_Union(rast) AS rast FROM elevation
         CROSS JOIN trail
-        WHERE ST_Intersects(rast, ${box}) GROUP BY path
+        WHERE ST_Intersects(rast, ST_Envelope(path)) GROUP BY path
       ), elevations as (
         SELECT
           ST_Value(rast, point) as elevation,
@@ -49,28 +46,24 @@ app.get('/api/trail/:id/:x1/:y1/:x2/:y2', function(request, response){
         FROM raster, trail
         CROSS JOIN points
       )
-      SELECT to_json(ST_DumpValues(rast)) as dump,
-      to_json(array_agg(elevations)) as points from trail, raster, elevations GROUP BY rast;
+      SELECT to_json(array_agg(elevations)) as points from trail, raster, elevations GROUP BY rast;
   `;
 
   query(sql, pool, ({rows}) => {
     const points = rows[0].points;
-    const elevations = statUtils.rollingAverage(statUtils.glitchDetector(points.map(r => r.elevation)), 15);
-    const vertices = rows[0].dump.valarray
+    const elevations = statUtils.rollingAverage(statUtils.glitchDetector(points.map(r => r.elevation)), 40);
     return response.json({
       points: elevations.map((r, i) => {
         return {
           elevation: r,
           coordinates: [points[i].x, points[i].y]
         };
-      }),
-      dump: {length: vertices.length, height: vertices[0].length, vertices: _.flatten(vertices)}
+      })
     });
   });
 });
 
-app.get('/api/boundary/:id/:x1/:y1/:x2/:y2', function(request, response){
-  const box = `ST_MakeEnvelope(${request.params.x1}, ${request.params.y1}, ${request.params.x2}, ${request.params.y2}, 4326)`;
+app.get('/api/boundary/:id', function(request, response){
 
   const sql = `
       WITH boundary AS (
@@ -78,8 +71,8 @@ app.get('/api/boundary/:id/:x1/:y1/:x2/:y2', function(request, response){
           FROM boundaries
           WHERE id = ${request.params.id}
         ), raster AS (
-          SELECT ST_Resize(ST_Clip(ST_Union(rast), ${box}), 100, 100) AS rast FROM elevation
-          WHERE ST_Intersects(rast, ${box})
+          SELECT ST_Resize(ST_Clip(ST_Union(rast), ST_Envelope(geom)), 100, 100) AS rast FROM elevation, boundary
+          WHERE ST_Intersects(rast, ST_Envelope(geom)) GROUP BY geom
         ), park_trails AS (
           SELECT trails.name, trails.id, trails.type, ST_Length(trails.geog) as length FROM boundary LEFT OUTER JOIN trails
           ON ST_Length(ST_Simplify(trails.geog::geometry, 1)::geography) > 1600
@@ -101,6 +94,7 @@ app.get('/api/boundary/:id/:x1/:y1/:x2/:y2', function(request, response){
       id: row.id,
       trailsCount: trails.length,
       trails: trails.slice(0, 8),
+      highPoint: Math.max(...flatVertices),
       trailTypes: {
         hike: trails.filter(t => t.type == "hike").length || 0,
         bike: trails.filter(t => t.type == "bike").length || 0,
@@ -114,27 +108,7 @@ app.get('/api/boundary/:id/:x1/:y1/:x2/:y2', function(request, response){
         ["15-25", trails.filter(t => t.length > 24140 && t.length <= 32186).length || 0],
         ["25+", trails.filter(t => t.length >= 40233).length || 0]
       ],
-      dump: {width: vertices.length, height: vertices[0].length, vertices: flatVertices},
-      maxElevation: Math.max(...flatVertices)
     });
-  });
-});
-
-app.get('/api/elevations/:x1/:y1/:x2/:y2', function(request, response){
-  const {x1, y1, x2, y2} = request.params;
-  const box = `ST_MakeEnvelope(${x1}, ${y1}, ${x2}, ${y2}, 4326)`;
-
-  const sql = `
-    WITH raster AS (
-      SELECT ST_Resize(ST_Clip(ST_Union(rast), ${box}), 100, 100) AS rast FROM elevation
-      WHERE ST_Intersects(rast, ${box})
-    )
-    SELECT to_json(ST_DumpValues(rast)) as dump
-    FROM raster;
-  `;
-
-  query(sql, pool, ({rows: [row]}) => {
-    response.json(row.dump.valarray.reduce((a, v) => [...a, ...v]))
   });
 });
 

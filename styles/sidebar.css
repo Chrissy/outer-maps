@@ -7,7 +7,7 @@
   height: 100%;
   width: 43vw;
   min-width: 320px;
-  max-width: 600px;
+  max-width: 500px;
   background: var(--gray-1);
   color: var(--gray-7);
   border-right: 1px solid var(--gray-4);

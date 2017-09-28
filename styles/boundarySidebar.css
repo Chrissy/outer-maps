@@ -1,17 +1,10 @@
 .boundarySidebarGridLayout {
   display: grid;
-  grid-template-columns: .5fr .5fr;
   grid-template-rows: max-content;
+  grid-template-columns: 1fr;
+  grid-template-areas: "type" "trails" "lengths";
   grid-gap: 1.5em;
   padding: 1em;
-  grid-template-areas: "type trails" "lengths trails";
-}
-
-@media (max-width: 1200px) {
-  .boundarySidebarGridLayout {
-    grid-template-columns: 1fr;
-    grid-template-areas: "type" "trails" "lengths";
-  }
 }
 
 .trailTypesBreakdown {

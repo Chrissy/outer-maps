@@ -5,17 +5,25 @@ import BoundarySidebar from './boundarySidebar';
 import Terrain from './terrain';
 import cx from 'classnames';
 import styles from '../styles/sidebar.css';
+import sliceElevationsWithHandles from '../modules/sliceElevationsWithHandles';
 
 const Sidebar = ({trails, boundary, handles}) => {
+  const slicedTrails = () => {
+    return trails.map(t => sliceElevationsWithHandles(t, handles));
+  }
+
   const trailOrBoundary = () => {
-    if (trails && trails.length) return <TrailSidebar firstTrail={trails[0]} trails={trails} handles={handles}/>
+    if (trails && trails.length) return <TrailSidebar firstTrail={slicedTrails()[0]} trails={slicedTrails()} handles={handles}/>
     if (boundary && boundary.selected) return <BoundarySidebar {...boundary}/>
   }
 
   const terrain = () => {
     return <Terrain
       satelliteImageUrl={(trails[0] || boundary || {}).satelliteImageUrl}
-      vertices={(trails[0] || boundary || {}).vertices}/>
+      points={(slicedTrails()[0] || {}).points}
+      zoom={(trails[0] || boundary || {}).satelliteZoom}
+      center={(trails[0] || boundary || {}).satelliteCenter}
+      />
   }
 
   const hasContent = () => ((boundary && boundary.selected) || (trails && trails.some(t => t.selected)))

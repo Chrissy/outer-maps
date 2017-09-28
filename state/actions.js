@@ -1,19 +1,18 @@
 import {getNoaaData} from '../modules/NOAA';
 import requestSatelliteImage from '../modules/getSatelliteImage';
-import GeoViewport from '@mapbox/geo-viewport';
 import bbox from '@turf/bbox';
-import centroid from '@turf/centroid';
+import GeoViewport from '@mapbox/geo-viewport';
 
 const selectTrail = ({properties, geometry}) => {
   return (dispatch, getState) => {
     const cachedTrail = getState().trails.find(t => t.id == properties.id);
     const bounds = bbox(JSON.parse(properties.bounds));
-    const center = centroid(JSON.parse(properties.bounds)).geometry.coordinates;
+    const {center, zoom} = GeoViewport.viewport(bounds, [1024, 800]);
 
     if (!cachedTrail) dispatch({type: 'ADD_TRAIL', center, bounds, properties, geometry});
-    if (!cachedTrail || !cachedTrail.elevationDataRequested) dispatch(getElevationData({id: properties.id, bounds, reducer: 'trail'}));
+    if (!cachedTrail || !cachedTrail.elevationDataRequested) dispatch(getElevationData({id: properties.id, center, zoom, reducer: 'trail'}));
     if (!cachedTrail || !cachedTrail.weatherDataRequested) dispatch(getWeatherData({...properties, center, reducer: 'trail'}));
-    if (!cachedTrail || !cachedTrail.satelliteImageRequested) dispatch(getSatelliteImage({id: properties.id, bounds, reducer: 'trail'}));
+    if (!cachedTrail || !cachedTrail.satelliteImageRequested) dispatch(getSatelliteImage({id: properties.id, center, zoom, reducer: 'trail'}));
     if (cachedTrail) return  dispatch({type: 'SELECT_TRAIL', ...cachedTrail});
   };
 };
@@ -22,11 +21,12 @@ const selectBoundary = ({properties, geometry}) => {
   return (dispatch, getState) => {
     const cachedBoundary = getState().boundaries.find(b => b.id == properties.id);
     const bounds = bbox(JSON.parse(properties.bounds));
+    const {center, zoom} = GeoViewport.viewport(bounds, [1024, 1024]);
 
     if (!cachedBoundary) dispatch({type: 'ADD_BOUNDARY', properties, geometry, bounds});
-    if (!cachedBoundary || !cachedBoundary.elevationDataRequested) dispatch(getElevationData({id: properties.id, bounds, reducer: 'boundary'}));
+    if (!cachedBoundary || !cachedBoundary.elevationDataRequested) dispatch(getElevationData({id: properties.id, reducer: 'boundary'}));
     if (!cachedBoundary || !cachedBoundary.weatherDataRequested) dispatch(getWeatherData({...properties, center: geometry.coordinates, reducer: 'boundary'}));
-    if (!cachedBoundary || !cachedBoundary.satelliteImageRequested) dispatch(getSatelliteImage({id: properties.id, bounds, reducer: 'boundary'}));
+    if (!cachedBoundary || !cachedBoundary.satelliteImageRequested) dispatch(getSatelliteImage({id: properties.id, center, zoom, reducer: 'boundary'}));
     if (cachedBoundary) return dispatch({type: 'SELECT_BOUNDARY', id: properties.id});
   };
 };
@@ -42,14 +42,11 @@ const clearSelected = () => {
   return dispatch => dispatch({type: 'CLEAR_SELECTED'});
 };
 
-const getElevationData = ({id, bounds, reducer}) => {
+const getElevationData = ({id, reducer}) => {
   return (dispatch) => {
     dispatch({type: `SET_${reducer.toUpperCase()}_ELEVATION_DATA_REQUESTED`, id });
 
-    const view = GeoViewport.viewport(bounds, [1024, 1024]);
-    const tileBounds = GeoViewport.bounds(view.center, view.zoom, [1024, 1024]);
-
-    return fetch(`/api/${reducer}/${id}/${tileBounds.join("/")}`)
+    return fetch(`/api/${reducer}/${id}`)
       .then(response => response.json())
       .then(response => {
         dispatch({type: `SET_${reducer.toUpperCase()}_ELEVATION_DATA`, ...response, id });
@@ -57,11 +54,12 @@ const getElevationData = ({id, bounds, reducer}) => {
   };
 };
 
-const getSatelliteImage = ({id, bounds, reducer}) => {
+const getSatelliteImage = ({id, center, zoom, reducer}) => {
   return dispatch => {
     dispatch({type: `SET_${reducer.toUpperCase()}_SATELLITE_IMAGE_REQUESTED`, id});
-    requestSatelliteImage({bounds, minZoom: 1, maxZoom: 14}).then(image => {
-      return dispatch({type:  `SET_${reducer.toUpperCase()}_SATELLITE_IMAGE`, id, url: URL.createObjectURL(image)});
+
+    return fetch(`/api/terrain/${center.join("/")}/${zoom}`).then((r) => r.blob()).then(image => {
+      return dispatch({type:  `SET_${reducer.toUpperCase()}_SATELLITE_IMAGE`, id, center, zoom, url: URL.createObjectURL(image)});
     });
   };
 };
