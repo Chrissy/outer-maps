@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {WebGLRenderer, Scene, PerspectiveCamera, TextureLoader, CanvasTexture, PlaneGeometry, MeshBasicMaterial, Mesh} from 'three';
 import styles from '../styles/terrain.css';
 import center from '../styles/center.css';
 import cx from 'classnames';
@@ -55,6 +54,6 @@ export default class Terrain extends React.Component {
 };
 
 Terrain.propTypes = {
-  vertices: PropTypes.array,
+  points: PropTypes.array,
   satelliteImageUrl: PropTypes.string
 }
