@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'underscore';
 import cx from 'classnames';
 import styles from '../styles/lineGraph.css';
 import {metersToMiles} from '../modules/conversions'
@@ -13,7 +12,7 @@ export default class LineGraph extends React.Component {
 
   distances() {
     var points = this.props.elevations;
-    return points.map(p => p.distanceFromPreviousPoint).reduce((a, p) => a.concat(p + _.last(a) || 0), []);
+    return points.map(p => p.distanceFromPreviousPoint).reduce((a, p) => a.concat(p + a[a.length - 1] || 0), []);
   }
 
   pointsToPathString() {
@@ -21,7 +20,7 @@ export default class LineGraph extends React.Component {
     const maxElevation = Math.max(...elevations);
     const elevationWindow = maxElevation - Math.min(...elevations);
     const distances = this.distances();
-    const fullDistance = _.last(distances);
+    const fullDistance = distances[distances.length - 1];
     const relativePoints = elevations.map((elevation, i) => [((maxElevation - elevation)/elevationWindow), (distances[i]/fullDistance)]);
 
     return relativePoints.reduce((a,p,i) => a + `${p[1] * width},${p[0] * height} `, `0,${height} `) + `${width},${height}`;
@@ -49,7 +48,8 @@ export default class LineGraph extends React.Component {
   }
 
   mileMarkers(){
-    const miles = metersToMiles(_.last(this.distances()));
+    const distances = this.distances();
+    const miles = metersToMiles(distances[distances.length - 1]);
     const iterations = Math.ceil(miles);
     const stepWidth = parseInt(width / miles) + ((width % miles) / miles);
     const leftOver = stepWidth * iterations - width;

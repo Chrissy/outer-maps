@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 import distance from '@turf/distance';
 import {lineString} from '@turf/helpers';
-import _ from 'underscore';
 
 const trail = (state = {}, action) => {
   switch (action.type) {

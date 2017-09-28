@@ -5,7 +5,7 @@ import helpers from '@turf/helpers';
 import {accessToken, styleUrl} from '../modules/mapboxStaticData';
 import styles from '../styles/mapbox.css';
 import mapboxStyles from '../public/dist/mapbox-styles.json';
-import _ from 'underscore';
+import throttle from 'lodash.throttle';
 const WATCH_EVENTS = ['mousedown','mouseup','click','dblclick','mousemove','mouseenter', 'mouseleave','mouseover','mouseout','contextmenu','touchstart','touchend','touchcancel'];
 
 export default class MapBox extends React.PureComponent {
@@ -55,7 +55,7 @@ export default class MapBox extends React.PureComponent {
     WATCH_EVENTS.forEach((eventName) => {
       if (!this.props[eventName]) return;
 
-      this.mapboxed.on(eventName, _.throttle((event) => {
+      this.mapboxed.on(eventName, throttle((event) => {
         const eventMod = Object.assign({}, event, {
           features: (event.point) ? this.mapboxed.queryRenderedFeatures(event.point, { layers: this.props.watchLayers }) : null
         });

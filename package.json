@@ -9,7 +9,8 @@
     "upload": "nf run node builders/uploader.js",
     "migrate": "nf run migrate up",
     "migrate down": "nf run migrate down",
-    "heroku-postbuild": " gulp mapify && ./node_modules/.bin/webpack --config webpack.production.config.js -p && node builders/uploadBundle.js"
+    "size": "webpack --config webpack.production.config.js --json | webpack-bundle-size-analyzer",
+    "heroku-postbuild": "gulp mapify && ./node_modules/.bin/webpack --config webpack.production.config.js -p && node builders/uploadBundle.js"
   },
   "license": "ISC",
   "dependencies": {
@@ -34,6 +35,7 @@
     "babel-preset-react": "^6.11.1",
     "classnames": "^2.2.5",
     "css-loader": "^0.28.4",
+    "dateformat": "^3.0.2",
     "dbgeo": "^1.1.0",
     "express": "^4.14.0",
     "foreman": "^2.0.0",
@@ -44,6 +46,7 @@
     "isomorphic-fetch": "^2.2.1",
     "jimp": "^0.2.28",
     "jsonfile": "^3.0.0",
+    "lodash.throttle": "^4.1.1",
     "mapbox-gl": "^0.39.1",
     "moment": "^2.17.1",
     "node-fetch": "^1.7.3",
@@ -68,6 +71,7 @@
     "@mapbox/tilelive": "^5.12.6",
     "fixy": "^1.1.0",
     "glob": "^7.1.1",
+    "webpack-bundle-size-analyzer": "^2.7.0",
     "webpack-dev-middleware": "^1.12.0",
     "xml2js": "^0.4.17"
   },
