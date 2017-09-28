@@ -1,5 +1,5 @@
 :root {
-  --latLongColor: rgba(20, 20, 20, 0.9);
+  --latLongColor: rgba(220, 220, 220, 0.9);
 }
 
 .terrain {
@@ -41,30 +41,4 @@
 
 .visible {
   opacity: 1;
-}
-
-.latLong {
-  background: var(--latLongColor);
-  padding: 0 1em;
-  font-size: .7em;
-  line-height: 1.8;
-  color: #fff;
-  border-radius: 99px;
-  position: absolute;
-  transform: translateX(-50%) translateY(-7vw);
-}
-
-.triangle {
-  position: absolute;
-  left: 50%;
-  top: 100%;
-  transform: translateX(-50%);
-  display: flex;
-  margin-top: -.2em;
-}
-
-.triangle svg {
-  width: .9em;
-  height: .9em;
-  fill: var(--latLongColor);
 }

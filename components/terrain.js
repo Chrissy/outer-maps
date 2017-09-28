@@ -21,15 +21,6 @@ export default class Terrain extends React.Component {
     });
   }
 
-  pointCloseToEdge(point, buffer) {
-    const canvas = this.refs.canvas;
-
-    if (point[0] < buffer) return 'left';
-    if (point[1] < buffer) return 'top';
-    if (point[0] > canvas.width - buffer) return 'right';
-    if (point[1] > canvas.height - buffer) return 'bottom';
-  }
-
   drawPath(points) {
     const canvas = this.refs.canvas;
     const ctx = canvas.getContext('2d');
@@ -63,27 +54,6 @@ export default class Terrain extends React.Component {
     return (this.props.satelliteImageUrl);
   }
 
-  latLongElement(point, index) {
-    const [x, y] = point.coordinates;
-    return <div
-      className={cx(styles.latLong, styles[this.pointCloseToEdge(point, 20)])}
-      style={{left: (x / 1024) * 100 + '%', top: (y / 1024) * 100 + '%'}}>
-        {this.props.points[index].coordinates[0].toString().slice(0, 7)},&nbsp;
-        {this.props.points[index].coordinates[1].toString().slice(0, 5)}
-        <Triangle className={cx(styles.triangle)} />
-      </div>
-  }
-
-  latLongElementFirst() {
-    if (!this.projectedPoints || !this.projectedPoints.length || !this.props.points) return '';
-    return this.latLongElement(this.projectedPoints[0], 0);
-  }
-
-  latLongElementSecond() {
-    if (!this.projectedPoints || !this.projectedPoints.length || !this.props.points) return '';
-    return this.latLongElement(this.projectedPoints[this.projectedPoints.length - 1], this.projectedPoints.length - 1);
-  }
-
   componentDidUpdate(prevProps) {
     if (!prevProps.points || !this.props.points || !arrayEquals(prevProps.points, this.props.points)) {
       this.projectedPoints = this.projectPoints(this.props);
@@ -97,8 +67,6 @@ export default class Terrain extends React.Component {
         <img src={this.props.satelliteImageUrl} className={cx(styles.image, {[styles.visible]: this.isVisible()})}/>
         <canvas ref="canvas" width="1026" height="1026" className={cx(styles.canvas, {[styles.visible]: this.isVisible()})}></canvas>
         <div className={cx(styles.loadingSpinner, {[styles.visible]: !this.isVisible()})}><LoadingSpinner speed="1s"/></div>
-        {this.latLongElementFirst()}
-        {this.latLongElementSecond()}
       </div>
     )
   }
