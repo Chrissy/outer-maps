@@ -8,7 +8,6 @@ const _ = require('underscore');
 const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
-const terrain = require('./modules/terrain');
 const statUtils = require('./modules/statUtils');
 const query = require('./modules/genericQuery').query;
 const createPool = require('./modules/genericQuery').pool;
