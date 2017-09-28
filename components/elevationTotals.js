@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import LineGraph from './lineGraph';
 import DifficultyChart from './difficultyChart';
 import Hiker from '../svg/hiker.svg';
-import Mountain from '../svg/mountain.svg';
+import Up from '../svg/up.svg';
 import {metersToFeet, metersToMiles} from '../modules/conversions';
 import styles from '../styles/elevationTotals.css';
 import stat from '../styles/stat.css';
@@ -42,12 +42,19 @@ const ElevationTotals = ({elevations}) => {
           <div className={stat.total}>{miles()}</div>
           <div className={stat.label}>Miles</div>
         </div>
-        <div className={stat.stat}>
-          <Mountain className={cx(stat.icon, stat.mountain)} />
+        <div className={cx(stat.stat, stat.border)}>
+          <Up className={cx(stat.icon, stat.elevationGain)} />
           <div className={stat.total}>
-            {new Intl.NumberFormat().format(metersToFeet(elevationGain()))}
+            +{new Intl.NumberFormat().format(metersToFeet(elevationGain()))}
           </div>
           <div className={stat.label}>Elevation Gain</div>
+        </div>
+        <div className={stat.stat}>
+          <Up className={cx(stat.icon, stat.elevationLoss)} />
+          <div className={stat.total}>
+            -{new Intl.NumberFormat().format(metersToFeet(elevationLoss()))}
+          </div>
+          <div className={stat.label}>Elevation Loss</div>
         </div>
       </div>
       <LineGraph elevations={elevations}/>

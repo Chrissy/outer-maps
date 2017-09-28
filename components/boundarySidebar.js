@@ -10,13 +10,13 @@ import label from '../styles/label.css';
 import spacing from '../styles/spacing.css';
 import ImportantWeather from './importantWeather';
 
-const BoundarySidebar = ({id, hasElevationData, vertices, area, trails, trailTypes, trailLengths, bounds, trailsCount, hasWeatherData, weatherData}) => {
+const BoundarySidebar = ({id, hasElevationData, area, trails, trailTypes, trailLengths, bounds, highPoint, trailsCount, hasWeatherData, weatherData}) => {
   const boundaryTotals = () => {
     if (hasElevationData) {
       return <BoundaryTotals
         area={area}
         trailsCount={trailsCount}
-        highPoint={Math.max(...vertices)}/>
+        highPoint={highPoint}/>
     }
   }
 
@@ -79,7 +79,7 @@ const BoundarySidebar = ({id, hasElevationData, vertices, area, trails, trailTyp
 BoundarySidebar.propTypes = {
   id: PropTypes.number,
   hasElevationData: PropTypes.bool,
-  dump: PropTypes.object,
+  highPoint: PropTypes.number,
   area: PropTypes.number,
   trails: PropTypes.array,
   trailTypes: PropTypes.object,

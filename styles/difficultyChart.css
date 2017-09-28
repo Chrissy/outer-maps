@@ -1,11 +1,11 @@
 :root {
-  --border-width: 9px;
+  --border-width: 6px;
 }
 
 .body {
-  width: 160px;
-  height: 160px;
-  font-size: .9em;
+  width: 130px;
+  height: 130px;
+  font-size: .75em;
   position: relative;
   background: var(--gray-6);
   border-radius: 100%;

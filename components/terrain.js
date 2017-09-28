@@ -5,17 +5,22 @@ import center from '../styles/center.css';
 import cx from 'classnames';
 import LoadingSpinner from './loadingSpinner';
 import {FlatMercatorViewport} from 'viewport-mercator-project';
-import GeoViewport from '@mapbox/geo-viewport';
 import pin from '../modules/pin';
-import arrayEquals from '../modules/arrayEquals';
 import Triangle from '../svg/triangle.svg';
 
 export default class Terrain extends React.Component {
 
-  projectPoints({points, bounds}) {
-    if (!points || !bounds) return [];
-    const tile = GeoViewport.viewport(bounds, [1024, 1024])
-    const projecter = FlatMercatorViewport({longitude: tile.center[0], latitude: tile.center[1], zoom: tile.zoom - 1, width: 1024, height: 1024});
+  projectPoints({points, zoom, center}) {
+    if (!points || !zoom || !center) return [];
+
+    const projecter = FlatMercatorViewport({
+      longitude: center[0],
+      latitude: center[1],
+      zoom: zoom - 1,
+      width: 1024,
+      height: 1024
+    });
+
     return this.props.points.map(p => {
       return {...p, coordinates: projecter.project(p.coordinates)}
     });
@@ -55,7 +60,7 @@ export default class Terrain extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!prevProps.points || !this.props.points || !arrayEquals(prevProps.points, this.props.points)) {
+    if (this.props.satelliteImageUrl) {
       this.projectedPoints = this.projectPoints(this.props);
       this.drawPath(this.projectedPoints);
     }
@@ -74,5 +79,7 @@ export default class Terrain extends React.Component {
 
 Terrain.propTypes = {
   points: PropTypes.array,
-  satelliteImageUrl: PropTypes.string
+  satelliteImageUrl: PropTypes.string,
+  zoom: PropTypes.number,
+  center: PropTypes.array
 }

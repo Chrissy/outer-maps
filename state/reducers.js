@@ -36,7 +36,6 @@ const trail = (state = {}, action) => {
       return { ...state,
         hasElevationData: true,
         geometry: lineString(points.map(p => p.coordinates)).geometry,
-        tileBounds: action.bounds.map(b => parseFloat(b)),
         points: points.map((e, i) => {
           const p = points[i - 1];
           return {
@@ -55,7 +54,12 @@ const trail = (state = {}, action) => {
       return {...state, elevationDataRequested: true }
     case 'SET_TRAIL_SATELLITE_IMAGE':
       if (action.id !== state.id) return state
-      return {...state, satelliteImageUrl: action.url }
+      return {
+        ...state,
+        satelliteImageUrl: action.url,
+        satelliteZoom: action.zoom,
+        satelliteCenter: action.center
+      }
     case 'SET_TRAIL_SATELLITE_IMAGE_REQUESTED':
       if (action.id !== state.id) return state
       return {...state, satelliteImageRequested: true }
@@ -152,6 +156,7 @@ const boundary = (state = {}, action) => {
         trailLengths: action.trailLengths,
         trailTypes: action.trailTypes,
         trails: action.trails,
+        highPoint: action.highPoint,
         hasElevationData: true
       }
     case 'SET_BOUNDARY_SATELLITE_IMAGE':

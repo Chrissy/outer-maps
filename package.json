@@ -48,6 +48,7 @@
     "jsonfile": "^3.0.0",
     "mapbox-gl": "^0.39.1",
     "moment": "^2.17.1",
+    "moving-averages": "^4.0.5",
     "node-fetch": "^1.7.3",
     "optional": "^0.1.4",
     "pg": "^6.0.1",
