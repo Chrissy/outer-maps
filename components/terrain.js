@@ -6,7 +6,7 @@ import cx from 'classnames';
 import LoadingSpinner from './loadingSpinner';
 import {FlatMercatorViewport} from 'viewport-mercator-project';
 import GeoViewport from '@mapbox/geo-viewport';
-
+import pin from '../modules/pin';
 
 export default class Terrain extends React.Component {
 
@@ -22,16 +22,30 @@ export default class Terrain extends React.Component {
   drawPath(points) {
     const canvas = this.refs.canvas;
     const ctx = canvas.getContext('2d');
+
     ctx.beginPath();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     if (!points.length) return;
+
     ctx.moveTo(...points[0].coordinates);
     points.slice(1).forEach(p => ctx.lineTo(...p.coordinates))
-    ctx.strokeStyle = 'white';
     ctx.lineJoin = "round";
-    ctx.lineWidth = 6;
+    ctx.lineWidth = 8;
+    ctx.strokeStyle = 'white';
     ctx.setLineDash([10, 10]);
     ctx.stroke();
+
+    const image = new Image();
+    const [x1, y1] = points[0].coordinates;
+    const [x2, y2] = points[points.length - 1].coordinates;
+    const pinWidth = 44;
+    const pinHeight = 60;
+    image.onload = () => {
+      ctx.drawImage(image, x1 - pinWidth / 2, y1 - pinHeight - 2, pinWidth, pinHeight);
+      ctx.drawImage(image, x2 - pinWidth / 2, y2 - pinHeight - 2, pinWidth, pinHeight);
+    }
+    image.src = pin;
   }
 
   isVisible() {
