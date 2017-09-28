@@ -36,7 +36,7 @@ app.get('/api/trail/:id', function(request, response){
         SELECT (ST_DumpPoints(path)).geom AS point
         FROM trail
       ), raster AS (
-        SELECT ST_Resize(ST_Union(rast), 200, 200) AS rast FROM elevation
+        SELECT ST_Union(rast) AS rast FROM elevation
         CROSS JOIN trail
         WHERE ST_Intersects(rast, ST_Envelope(path)) GROUP BY path
       ), elevations as (
@@ -52,7 +52,7 @@ app.get('/api/trail/:id', function(request, response){
 
   query(sql, pool, ({rows}) => {
     const points = rows[0].points;
-    const elevations = statUtils.rollingAverage(statUtils.glitchDetector(points.map(r => r.elevation)), 50);
+    const elevations = statUtils.rollingAverage(statUtils.glitchDetector(points.map(r => r.elevation)), 40);
     return response.json({
       points: elevations.map((r, i) => {
         return {
