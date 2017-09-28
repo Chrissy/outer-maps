@@ -6,7 +6,6 @@ import cx from 'classnames';
 import LoadingSpinner from './loadingSpinner';
 import {FlatMercatorViewport} from 'viewport-mercator-project';
 import pin from '../modules/pin';
-import Triangle from '../svg/triangle.svg';
 
 export default class Terrain extends React.Component {
 
