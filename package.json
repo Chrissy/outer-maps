@@ -16,6 +16,7 @@
     "@mapbox/geo-viewport": "^0.2.1",
     "@turf/bbox": "^4.0.2",
     "@turf/bezier": "^4.1.0",
+    "@turf/buffer": "^4.7.4",
     "@turf/centroid": "^4.6.1",
     "@turf/distance": "^4.0.1",
     "@turf/helpers": "^4.0.1",
