@@ -56,20 +56,14 @@ app.get('/api/trail/:id/:x1/:y1/:x2/:y2', function(request, response){
   query(sql, pool, ({rows}) => {
     const points = rows[0].points;
     const elevations = statUtils.rollingAverage(statUtils.glitchDetector(points.map(r => r.elevation)), 15);
-    const vertices = rows[0].dump.valarray
     return response.json({
+      bounds: [x1, y1, x2, y2],
       points: elevations.map((r, i) => {
         return {
           elevation: r,
           coordinates: [points[i].x, points[i].y]
         };
-      }),
-      dump: {
-        length: vertices.length,
-        height: vertices[0].length,
-        vertices: _.flatten(vertices),
-        bounds: [x1, y1, x2, y2]
-      }
+      })
     });
   });
 });
@@ -119,7 +113,6 @@ app.get('/api/boundary/:id/:x1/:y1/:x2/:y2', function(request, response){
         ["15-25", trails.filter(t => t.length > 24140 && t.length <= 32186).length || 0],
         ["25+", trails.filter(t => t.length >= 40233).length || 0]
       ],
-      dump: {width: vertices.length, height: vertices[0].length, vertices: flatVertices},
       maxElevation: Math.max(...flatVertices)
     });
   });
