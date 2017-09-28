@@ -5,22 +5,11 @@ import BoundarySidebar from './boundarySidebar';
 import Terrain from './terrain';
 import cx from 'classnames';
 import styles from '../styles/sidebar.css';
-import {FlatMercatorViewport} from 'viewport-mercator-project';
-import GeoViewport from '@mapbox/geo-viewport';
 import sliceElevationsWithHandles from '../modules/sliceElevationsWithHandles';
 
 const Sidebar = ({trails, boundary, handles}) => {
   const slicedTrails = () => {
     return trails.map(t => sliceElevationsWithHandles(t, handles));
-  }
-
-  const projectedPoints = () => {
-    if (!trails[0] || !trails[0].points || !trails[0].tileBounds) return null;
-    const tile = GeoViewport.viewport(trails[0].tileBounds, [1024, 1024])
-    const projecter = FlatMercatorViewport({longitude: tile.center[0], latitude: tile.center[1], zoom: tile.zoom - 1, width: 1024, height: 1024});
-    return slicedTrails()[0].points.map(p => {
-      return {...p, coordinates: projecter.project(p.coordinates)}
-    });
   }
 
   const trailOrBoundary = () => {
@@ -31,8 +20,8 @@ const Sidebar = ({trails, boundary, handles}) => {
   const terrain = () => {
     return <Terrain
       satelliteImageUrl={(trails[0] || boundary || {}).satelliteImageUrl}
-      vertices={(trails[0] || boundary || {}).vertices}
-      points={projectedPoints()}
+      points={(slicedTrails()[0] || {}).points}
+      bounds={(trails[0] || {}).tileBounds}
       />
   }
 
