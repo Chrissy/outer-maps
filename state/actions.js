@@ -7,7 +7,7 @@ const selectTrail = ({properties, geometry}) => {
   return (dispatch, getState) => {
     const cachedTrail = getState().trails.find(t => t.id == properties.id);
     const bounds = bbox(JSON.parse(properties.bounds));
-    const {center, zoom} = GeoViewport.viewport(bounds, [1224, 1224]);
+    const {center, zoom} = GeoViewport.viewport(bounds, [1024, 1024]);
 
     if (!cachedTrail) dispatch({type: 'ADD_TRAIL', center, bounds, properties, geometry});
     if (!cachedTrail || !cachedTrail.elevationDataRequested) dispatch(getElevationData({id: properties.id, center, zoom, reducer: 'trail'}));
