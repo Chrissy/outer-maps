@@ -4,7 +4,7 @@ import styles from '../styles/terrain.css';
 import center from '../styles/center.css';
 import cx from 'classnames';
 import LoadingSpinner from './loadingSpinner';
-import {FlatMercatorViewport} from 'viewport-mercator-project';
+import FlatMercatorViewport from '../node_modules/viewport-mercator-project/src/flat-mercator-viewport';
 import pin from '../modules/pin';
 
 export default class Terrain extends React.Component {
