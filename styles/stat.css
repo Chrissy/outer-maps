@@ -17,21 +17,21 @@
   border-right: 1px solid var(--gray-4);
 }
 
-.icon svg {
+.icon {
   height: 1.1em;
   width: auto;
   fill: var(--brand-color);
 }
 
-.elevationGain svg, .elevationLoss svg {
+.elevationGain, .elevationLoss {
   height: .8em;
 }
 
-.elevationLoss svg {
+.elevationLoss {
   transform: rotate(180deg);
 }
 
-.path svg {
+.path {
   height: 1.3em;
 }
 

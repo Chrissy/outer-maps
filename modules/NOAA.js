@@ -1,6 +1,5 @@
-import Moment from 'moment';
+import dateFormat from 'dateformat';
 import distance from '@turf/distance';
-const moment = new Moment;
 const key = 'aMjnYsZqxVmjzkbPYtHBVXUnYHUROvwS';
 
 const get = path => {
@@ -41,7 +40,7 @@ const getDataFromNearestStation = ({x, y, dataSetId, dataTypeIds}) => {
     if (!stations.length) return null;
     return getStation({
       stationId: getBestStation({x, y, stations}).id,
-      date: moment.format("MM-DD"),
+      date: dateFormat(new Date(), "mm-dd"),
       dataSetId,
       dataTypeIds
     });
@@ -50,7 +49,7 @@ const getDataFromNearestStation = ({x, y, dataSetId, dataTypeIds}) => {
 
 export const getNoaaData = ({x, y, dataSetId, dataTypeIds, stationId}) => {
   if (stationId && stationId !== '') {
-    return getStation({dataSetId, stationId: "GHCND:" + stationId, date: moment.format("MM-DD"), dataTypeIds});
+    return getStation({dataSetId, stationId: "GHCND:" + stationId, date: dateFormat(new Date(), "mm-dd"), dataTypeIds});
   } else {
     return getDataFromNearestStation({x, y, dataSetId, dataTypeIds});
   }

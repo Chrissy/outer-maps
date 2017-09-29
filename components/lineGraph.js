@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'underscore';
 import cx from 'classnames';
 import styles from '../styles/lineGraph.css';
 import {metersToMiles} from '../modules/conversions'
@@ -9,30 +8,29 @@ import spacing from '../styles/spacing.css';
 const width = 275;
 const height = 100;
 
-export default class LineGraph extends React.Component {
+const LineGraph = ({elevations}) => {
 
-  distances() {
-    var points = this.props.elevations;
-    return points.map(p => p.distanceFromPreviousPoint).reduce((a, p) => a.concat(p + _.last(a) || 0), []);
+  const getDistances = () => {
+    return elevations.map(p => p.distanceFromPreviousPoint).reduce((a, p) => a.concat(p + a[a.length - 1] || 0), []);
   }
 
-  pointsToPathString() {
-    const elevations = this.props.elevations.map(e => e.elevation);
-    const maxElevation = Math.max(...elevations);
-    const elevationWindow = maxElevation - Math.min(...elevations);
-    const distances = this.distances();
-    const fullDistance = _.last(distances);
-    const relativePoints = elevations.map((elevation, i) => [((maxElevation - elevation)/elevationWindow), (distances[i]/fullDistance)]);
+  const pointsToPathString = () => {
+    const es = elevations.map(e => e.elevation);
+    const maxElevation = Math.max(...es);
+    const elevationWindow = maxElevation - Math.min(...es);
+    const distances = getDistances();
+    const fullDistance = distances[distances.length - 1];
+    const relativePoints = es.map((elevation, i) => [((maxElevation - elevation)/elevationWindow), (distances[i]/fullDistance)]);
 
     return relativePoints.reduce((a,p,i) => a + `${p[1] * width},${p[0] * height} `, `0,${height} `) + `${width},${height}`;
   }
 
-  textMarker({stepWidth, step, iterations, every}) {
+  const textMarker = ({stepWidth, step, iterations, every}) => {
     if (step % every !== 0) return;
     return <text x={stepWidth * step + 2} y={7} fill="#D5D5D5" fontSize="7px">{step + 1}</text>
   }
 
-  mileMarker({stepWidth, step, iterations, leftOver}) {
+  const mileMarker = ({stepWidth, step, iterations, leftOver}) => {
     let every = 1;
     if (iterations > 7) every = 2;
     if (iterations > 20) every = 5;
@@ -44,35 +42,34 @@ export default class LineGraph extends React.Component {
         height={height}
         fill={(Math.floor(step / every) % 2 !== 0) ? "transparent" : "#EAEAEA"}
       />
-      {this.textMarker({stepWidth, step, iterations, every})}
+      {textMarker({stepWidth, step, iterations, every})}
     </g>
   }
 
-  mileMarkers(){
-    const miles = metersToMiles(_.last(this.distances()));
+  const mileMarkers = () => {
+    const distances = getDistances();
+    const miles = metersToMiles(distances[distances.length - 1]);
     const iterations = Math.ceil(miles);
     const stepWidth = parseInt(width / miles) + ((width % miles) / miles);
     const leftOver = stepWidth * iterations - width;
     let markers = [];
     for (let step = 0; step < iterations; step++) {
-      markers.push(this.mileMarker({stepWidth, step, iterations, leftOver}));
+      markers.push(mileMarker({stepWidth, step, iterations, leftOver}));
     }
     return markers;
   }
 
-  viewBox() {
-    return `0 0 ${width} ${height}`;
-  }
+  const viewBox = () => `0 0 ${width} ${height}`;
 
-  render() {
-    return (
-      <div className={spacing.marginTop}>
-        <div className={label.label}>Altitude Change</div>
-        <svg viewBox={this.viewBox()} overflow="hidden" className={styles.lineGraph}>
-          <g>{this.mileMarkers()}</g>
-          <polyline points={this.pointsToPathString()} fill="#344632"/>
-        </svg>
-      </div>
-    )
-  }
+  return (
+    <div className={spacing.marginTop}>
+      <div className={label.label}>Altitude Change</div>
+      <svg viewBox={viewBox()} overflow="hidden" className={styles.lineGraph}>
+        <g>{mileMarkers()}</g>
+        <polyline points={pointsToPathString()} fill="#344632"/>
+      </svg>
+    </div>
+  )
 };
+
+export default LineGraph;
