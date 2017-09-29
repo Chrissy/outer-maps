@@ -10,7 +10,7 @@ module.exports = {
     noParse: /(mapbox-gl)\.js$/,
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|svg)$/,
         exclude: /(node_modules|bower_components)/,
         use: {
           loader: 'babel-loader',
@@ -30,8 +30,7 @@ module.exports = {
       },
       {
         test: /\.svg$/,
-        exclude: /(node_modules)/,
-        loaders: ['react-svg-inline-loader']
+        loaders: ['svg-to-jsx-loader']
       }
     ]
   }

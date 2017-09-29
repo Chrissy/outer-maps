@@ -47,21 +47,25 @@
   color: var(--accent-color-tint-lighter);
 }
 
-.type svg {
+.type .icon {
   height: auto;
   width: 1.8em;
-  margin-right: .3em;
+  height: 1.8em;
+  margin: 0 .3em 1em .3em;
+}
+
+.type .icon path {
   fill: var(--accent-color-tint-darker);
 }
 
-.type:nth-of-type(4n+2) svg {
+.type:nth-of-type(4n+2) .icon path {
   fill: var(--accent-color-tint-dark);
 }
 
-.type:nth-of-type(4n+3) svg {
+.type:nth-of-type(4n+3) .icon path {
   fill: var(--accent-color);
 }
 
-.type:nth-of-type(4n+4) svg {
+.type:nth-of-type(4n+4) .icon path {
   fill: var(--accent-color-tint-lighter);
 }

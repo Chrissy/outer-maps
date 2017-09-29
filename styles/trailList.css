@@ -29,12 +29,12 @@
   border-right: 1px solid var(--accent-color-tint-light);
 }
 
-.close svg {
+.close {
   width: .75em;
   height: .75em;
   padding: 0 .3em 0 .1em;
 }
 
-.close svg path {
+.close path {
   stroke: #fff;
 }

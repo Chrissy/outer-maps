@@ -57,11 +57,10 @@
     "react": "^15.6.2",
     "react-dom": "^15.6.2",
     "react-redux": "^5.0.2",
-    "react-svg-inline-loader": "^0.2.2",
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
     "style-loader": "^0.18.2",
-    "svg-inline-loader": "^0.8.0",
+    "svg-to-jsx-loader": "^2.0.1",
     "underscore": "^1.8.3",
     "viewport-mercator-project": "^4.1.1",
     "webpack": "^3.5.2"

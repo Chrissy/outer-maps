@@ -29,7 +29,7 @@
   margin-right: .25em;
 }
 
-.icon svg {
+.icon path {
   fill: var(--gray-6);
 }
 
@@ -48,11 +48,11 @@
   text-align: center;
 }
 
-.hot svg {
+.hot .icon path {
   fill: var(--accent-color);
 }
 
-.cold svg {
+.cold .icon path {
   fill: var(--purple);
 }
 
