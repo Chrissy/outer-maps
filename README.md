@@ -6,7 +6,7 @@ Beautiful outdoor maps for backpackers &amp; trailrunners; built on National Par
 # Installation (OSX)
 
 1. Install Homebrew, XCode & Developer Tools 
-2. `brew install node npm postgres postgis` (if you have multiple versions of postgres, check out [pex](https://github.com/petere/pex) for postgis installation)
+2. `brew install node npm postgres postgis`
 3. `createdb mountains`
 4. `psql -d mountains -c 'create extension postgis'` 
 5. npm install
