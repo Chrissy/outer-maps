@@ -9,6 +9,6 @@ Beautiful outdoor maps for backpackers &amp; trailrunners; built on National Par
 2. `brew install node npm postgres postgis`
 3. `createdb mountains`
 4. `psql -d mountains -c 'create extension postgis'` 
-5. npm install
+5. `npm install`
 6. `npm run migrate` (currently, you will need access to the dropbox lib directory for this step to work!)
 7. `npm run dev`
