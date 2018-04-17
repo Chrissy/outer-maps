@@ -1,20 +1,10 @@
 const pg = require('pg');
 const execSync = require('child_process').execSync;
 const path = require('path').normalize;
-const query = require('../modules/genericQuery').query;
-const createPool = require('../modules/genericQuery').pool;
 
 const databaseName = process.env.DATABASE_NAME;
 const user = process.env.DATABASE_USER || '';
 if (!databaseName) console.log("warning: no database name");
-
-
-const genericQuery = function(sql, cb) {
-  const pool = createPool();
-  return query(sql, pool, cb);
-};
-
-exports.genericQuery = genericQuery;
 
 exports.uploadShapeFile = function({directoryName, filename, srid = '4326', tableName}, cb) {
   console.log("uploading...");
@@ -43,9 +33,10 @@ exports.deleteDuplicateTrails = function({from, using}) {
     DELETE FROM trails WHERE id IN
     (SELECT t2.id AS id FROM t1, t2 WHERE ST_Intersects(t1.geom, t2.geom) AND ST_NumGeometries(ST_Intersection(t1.geom, t2.geom)) > 5);
   `
+
   console.log("deleting duplicates. this job takes a while and will continue to run asynchonously");
 
-  return query(query, pool, () => {});
+  return query;
 }
 
 exports.packTrails = function(baseTableName, callback) {
@@ -57,9 +48,8 @@ exports.packTrails = function(baseTableName, callback) {
     DROP TABLE ${baseTableName};
     ALTER TABLE merge_line_attempt RENAME TO ${baseTableName};
     `
-    console.log("packing trails...");
 
-    return genericQuery(query, callback);
+    return query;
 }
 
 
@@ -84,15 +74,14 @@ exports.explodeTrails = function(baseTableName, callback) {
     ALTER TABLE explode_attempt RENAME TO ${baseTableName};
     `
 
-    console.log("exploding trails...")
-
-    return genericQuery(query, callback);
+    return query
 }
 
 exports.packandExplodeTrails = function(baseTableName, callback) {
-  exports.packTrails(baseTableName, function(){
-    exports.explodeTrails(baseTableName, callback);
-  })
+  return `
+    ${exports.packTrails(baseTableName)}
+    ${exports.explodeTrails(baseTableName)}
+  `;
 }
 
 exports.patchDisconnectedTrails = function(baseTableName, callback) {
@@ -114,11 +103,11 @@ exports.patchDisconnectedTrails = function(baseTableName, callback) {
 
     console.log("connecting broken trails...")
 
-    genericQuery(query, () => {
-      exports.packTrails(baseTableName, function(){
-        exports.explodeTrails(baseTableName, callback);
-      })
-    });
+    return `
+      ${query}
+      ${exports.packTrails(baseTableName)}
+      ${exports.explodeTrails(baseTableName)}
+    `
 }
 
 exports.mergeIntoTrailsTable = function({mergingTableName, sourceUrl} = {}, callback) {
@@ -138,7 +127,7 @@ exports.mergeIntoTrailsTable = function({mergingTableName, sourceUrl} = {}, call
 
   console.log("merging...")
 
-  return genericQuery(query, callback);
+  return query;
 }
 
 exports.mergeIntoBoundariesTable = function({baseTableName, mergingTableName, name = 'name', region = 'region', geog = 'geog', sourceUrl} = {}, callback) {
@@ -160,5 +149,5 @@ exports.mergeIntoBoundariesTable = function({baseTableName, mergingTableName, na
 
   console.log("merging...")
 
-  return genericQuery(query, callback);
+  return query;
 }

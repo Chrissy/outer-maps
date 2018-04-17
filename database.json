@@ -1,0 +1,4 @@
+{
+  "dev": "postgresql://localhost:5432/mountains",
+  "prod": "postgresql://localhost:5432/mountains"
+}

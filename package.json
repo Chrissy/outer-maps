@@ -36,6 +36,7 @@
     "classnames": "^2.2.5",
     "css-loader": "^0.28.4",
     "dateformat": "^3.0.2",
+    "db-migrate-pg": "^0.4.0",
     "dbgeo": "^1.1.0",
     "express": "^4.14.0",
     "foreman": "^2.0.0",
