@@ -4,8 +4,9 @@ const path = require('path').normalize;
 const gQuery = require('../modules/genericQuery');
 const labelMaker = require('../modules/labelMaker').labelMaker;
 const exec = require('child_process').execSync;
-const tempFileName = 'temp-trails.geojson';
 const fs = require('fs');
+
+const tempFileName = 'temp-trails.geojson';
 
 const queries = [
   {
