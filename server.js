@@ -20,7 +20,6 @@ const tilelive = optional('@mapbox/tilelive');
 const mbtiles = optional('@mapbox/mbtiles');
 
 const app = express();
-
 const pool = createPool();
 
 app.get('/api/trail/:id', function(request, response){
