@@ -11,4 +11,6 @@ Beautiful outdoor maps for backpackers &amp; trailrunners; built on National Par
 4. `psql -d mountains -c 'create extension postgis'` 
 5. `npm install`
 6. `npm run migrate` (currently, you will need access to the dropbox lib directory for this step to work!)
-7. `npm run dev`
+7. `gulp mapify` (this generates the tile styles, gulp will watch for further changes once you start the dev server)
+8. `npm run trails` (generate the local trails tiles)
+9. `npm run dev`
