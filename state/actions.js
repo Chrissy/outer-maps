@@ -1,5 +1,4 @@
 import {getNoaaData} from '../modules/NOAA';
-import requestSatelliteImage from '../modules/getSatelliteImage';
 import bbox from '@turf/bbox';
 import GeoViewport from '@mapbox/geo-viewport';
 
