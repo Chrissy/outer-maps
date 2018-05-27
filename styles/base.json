@@ -17,6 +17,16 @@
       "tiles": ["http://localhost:5000/tiles/{z}/{x}/{y}.pbf"],
       "type": "vector"
     },
+    "compositeHover": {
+      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.park-boundaries,fivefourths.park-boundary-labels",
+      "type": "vector",
+      "tolerance": 100
+    },
+    "localHover": {
+      "tiles": ["http://localhost:5000/tiles/{z}/{x}/{y}.pbf"],
+      "type": "vector",
+      "tolerance": 100,
+    },
     "handles": {
       "data": {
         "type": "FeatureCollection",
@@ -34,6 +44,10 @@
   },
   "remote": {
     "composite": {
+      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.park-boundaries,fivefourths.local",
+      "type": "vector"
+    },
+    "compositeHover": {
       "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.park-boundaries,fivefourths.local",
       "type": "vector"
     },

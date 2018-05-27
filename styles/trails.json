@@ -129,7 +129,7 @@
 },
 {
   "id": "trails-preview",
-  "source": "$source",
+  "source": "$sourceHover",
   "source-layer": "trails",
   "filter": ["in", "id", 0],
   "type": "line",
@@ -150,7 +150,7 @@
   "type": "line",
   "paint": {
     "line-color": "transparent",
-    "line-width": 15
+    "line-width": 8
   },
   "filter": ["in", "type", "hike", "horse", "bike", "atv", "motorcycle", "trail"]
 },
