@@ -1,4 +1,5 @@
 import React, { Proptypes } from 'react';
+import {fromJS, is} from 'immutable';
 import MapboxGL from 'mapbox-gl';
 import bbox from '@turf/bbox';
 import helpers from '@turf/helpers';
@@ -11,6 +12,7 @@ const WATCH_EVENTS = ['mousedown','mouseup','click','dblclick','mousemove','mous
 export default class MapBox extends React.PureComponent {
 
   updateSources(oldSources = [], newSources = []) {
+    console.log(newSources)
     newSources.forEach(function(source) {
       this.mapboxed.getSource(source.id).setData(source.data);
     }.bind(this))
@@ -38,7 +40,9 @@ export default class MapBox extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps, q) {
-    this.updateSources(prevProps.sources, this.props.sources);
+    if (!is(fromJS(prevProps.sources), fromJS(this.props.sources))) {
+      this.updateSources(prevProps.sources, this.props.sources);
+    }
 
     if (this.props.filters && prevProps.filters !== this.props.filters) {
       this.updateFilters(this.props.filters);
