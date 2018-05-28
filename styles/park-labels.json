@@ -1,7 +1,7 @@
 {"layers": [{
   "id": "national-park-labels",
   "type": "symbol",
-  "source": "$source",
+  "source": "$sourceHover",
   "source-layer": "park-boundary-labels",
   "layout": {
     "icon-image": "park-11",
@@ -29,7 +29,7 @@
 {
   "id": "national-park-labels-active",
   "type": "symbol",
-  "source": "$source",
+  "source": "$sourceHover",
   "text-ignore-placement": false,
   "source-layer": "park-boundary-labels",
   "layout": {
