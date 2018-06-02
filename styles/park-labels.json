@@ -12,6 +12,8 @@
       "stops": [[9, 10],[10, 11],[18, 14]]
     },
     "text-offset": [0, 0.5],
+    "text-allow-overlap": true,
+    "icon-allow-overlap": true,
     "text-anchor": "top",
     "text-font": ["DIN Offc Pro Medium","Arial Unicode MS Regular"],
     "text-field": "{name}",
@@ -24,17 +26,20 @@
     "text-halo-width": 0.5,
     "text-halo-blur": 0.5
   },
+  "interactive": true,
   "filter": [">", "area", 500000000]
 },
 {
   "id": "national-park-labels-active",
   "type": "symbol",
-  "source": "$source",
+  "source": "$sourceHover",
   "text-ignore-placement": false,
   "source-layer": "park-boundary-labels",
   "layout": {
     "icon-image": "park-11",
     "icon-size": 0.8,
+    "icon-allow-overlap": true,
+    "text-allow-overlap": true,
     "text-line-height": 1.1,
     "text-size": {
       "base": 1,
@@ -53,5 +58,6 @@
     "text-halo-width": 0.5,
     "text-halo-blur": 0.5
   },
-  "filter": ["in", "id", 0]
+  "interactive": true,
+  "filter": ["all", ["in", "id", 0], [">", "area", 500000000]]
 }]}

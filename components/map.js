@@ -120,8 +120,14 @@ export default class Map extends React.Component {
 
   sources() {
     return [
-      {id: 'trails-selected', data: trailsToFeatureCollection(this.selectedTrails().map(t => sliceElevationsWithHandles(t, this.props.handles)))},
-      {id: 'handles', data: featureCollection(this.props.handles.map(p => pointToPoint(p)))}
+      {
+        id: 'trails-selected',
+        data: trailsToFeatureCollection(this.selectedTrails().map(t => sliceElevationsWithHandles(t, this.props.handles)))
+      },
+      {
+        id: 'handles',
+        data: featureCollection(this.props.handles.map(p => pointToPoint(p)))
+      }
     ];
   }
 

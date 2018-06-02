@@ -10,10 +10,14 @@
   "pitch": 0,
   "local": {
     "composite": {
-      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.park-boundaries,fivefourths.park-boundary-labels",
+      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.park-boundaries",
       "type": "vector"
     },
     "local": {
+      "tiles": ["http://localhost:5000/tiles/{z}/{x}/{y}.pbf"],
+      "type": "vector"
+    },
+    "localHover": {
       "tiles": ["http://localhost:5000/tiles/{z}/{x}/{y}.pbf"],
       "type": "vector"
     },
@@ -35,6 +39,10 @@
   "remote": {
     "composite": {
       "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.park-boundaries,fivefourths.local",
+      "type": "vector"
+    },
+    "compositeHover": {
+      "url": "fivefourths.local",
       "type": "vector"
     },
     "handles": {

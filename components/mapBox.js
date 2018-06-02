@@ -1,11 +1,12 @@
 import React, { Proptypes } from 'react';
+import {fromJS, is} from 'immutable';
 import MapboxGL from 'mapbox-gl';
 import bbox from '@turf/bbox';
 import helpers from '@turf/helpers';
 import {accessToken, styleUrl} from '../modules/mapboxStaticData';
 import styles from '../styles/mapbox.css';
 import mapboxStyles from '../public/dist/mapbox-styles.json';
-import throttle from 'lodash.throttle';
+import debounce from 'lodash.debounce';
 const WATCH_EVENTS = ['mousedown','mouseup','click','dblclick','mousemove','mouseenter', 'mouseleave','mouseover','mouseout','contextmenu','touchstart','touchend','touchcancel'];
 
 export default class MapBox extends React.PureComponent {
@@ -38,7 +39,9 @@ export default class MapBox extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps, q) {
-    this.updateSources(prevProps.sources, this.props.sources);
+    if (!is(fromJS(prevProps.sources), fromJS(this.props.sources))) {
+      this.updateSources(prevProps.sources, this.props.sources);
+    }
 
     if (this.props.filters && prevProps.filters !== this.props.filters) {
       this.updateFilters(this.props.filters);
@@ -55,12 +58,12 @@ export default class MapBox extends React.PureComponent {
     WATCH_EVENTS.forEach((eventName) => {
       if (!this.props[eventName]) return;
 
-      this.mapboxed.on(eventName, throttle((event) => {
+      this.mapboxed.on(eventName, debounce((event) => {
         const eventMod = Object.assign({}, event, {
           features: (event.point) ? this.mapboxed.queryRenderedFeatures(event.point, { layers: this.props.watchLayers }) : null
         });
         this.props[eventName](eventMod);
-      }, 100, true));
+      }, 2, {leading: true}));
     });
   }
 
