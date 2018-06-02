@@ -138,6 +138,7 @@
     "line-cap": "round",
     "line-join": "bevel"
   },
+  "interactive": true,
   "paint": {
     "line-color": "#FF9100",
     "line-width": 2
@@ -152,6 +153,7 @@
     "line-color": "transparent",
     "line-width": 8
   },
+  "interactive": true,
   "filter": ["in", "type", "hike", "horse", "bike", "atv", "motorcycle", "trail"]
 },
 {
@@ -165,7 +167,8 @@
   "paint": {
     "line-color": "#FFF",
     "line-width": 4
-  }
+  },
+  "interactive": true
 },
 {
   "id": "trails-selected",
@@ -178,7 +181,8 @@
   "paint": {
     "line-color": "#FF9100",
     "line-width": 2
-  }
+  },
+  "interactive": true
 },
 {
   "id": "handles-outline",
@@ -187,7 +191,8 @@
   "paint": {
     "circle-radius": 6,
     "circle-color": "#FFF"
-  }
+  },
+  "interactive": true
 },
 {
   "id": "trail-labels",

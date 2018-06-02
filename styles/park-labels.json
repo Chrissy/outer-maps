@@ -1,7 +1,7 @@
 {"layers": [{
   "id": "national-park-labels",
   "type": "symbol",
-  "source": "$sourceHover",
+  "source": "$source",
   "source-layer": "park-boundary-labels",
   "layout": {
     "icon-image": "park-11",
@@ -24,6 +24,7 @@
     "text-halo-width": 0.5,
     "text-halo-blur": 0.5
   },
+  "interactive": true,
   "filter": [">", "area", 500000000]
 },
 {
@@ -53,5 +54,6 @@
     "text-halo-width": 0.5,
     "text-halo-blur": 0.5
   },
+  "interactive": true,
   "filter": ["in", "id", 0]
 }]}
