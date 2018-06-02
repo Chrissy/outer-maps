@@ -18,7 +18,6 @@ const Sidebar = ({trails, boundary, handles}) => {
   }
 
   const terrain = () => {
-    return null;
     return <Terrain
       satelliteImageUrl={(trails[0] || boundary || {}).satelliteImageUrl}
       points={(slicedTrails()[0] || {}).points}
