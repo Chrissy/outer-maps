@@ -42,7 +42,7 @@
       "type": "vector"
     },
     "compositeHover": {
-      "url": "fivefourths.local",
+      "url": "mapbox://fivefourths.local",
       "type": "vector"
     },
     "handles": {
