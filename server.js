@@ -11,7 +11,6 @@ const webpack = optional('webpack');
 const tilelive = optional('@mapbox/tilelive');
 const mbtiles = optional('@mapbox/mbtiles');
 
-const query = require('./modules/genericQuery').query;
 const createPool = require('./modules/genericQuery').pool;
 
 const getTrail = require('./modules/getTrail');

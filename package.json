@@ -10,7 +10,7 @@
     "migrate": "nf run db-migrate up",
     "migrate-down": "nf run db-migrate down",
     "size": "webpack --config webpack.production.config.js --json | webpack-bundle-size-analyzer",
-    "test": "jest",
+    "test": "nf run jest",
     "heroku-postbuild": "gulp mapify && ./node_modules/.bin/webpack --config webpack.production.config.js -p && node builders/uploadBundle.js"
   },
   "license": "ISC",
