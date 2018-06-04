@@ -3,7 +3,7 @@ import {fromJS, is} from 'immutable';
 import MapboxGL from 'mapbox-gl';
 import bbox from '@turf/bbox';
 import helpers from '@turf/helpers';
-import {accessToken, styleUrl} from '../modules/mapboxStaticData';
+import {accessToken} from '../data/mapboxStaticData';
 import styles from '../styles/mapbox.css';
 import mapboxStyles from '../public/dist/mapbox-styles.json';
 import debounce from 'lodash.debounce';

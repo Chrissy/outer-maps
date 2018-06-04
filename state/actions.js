@@ -1,4 +1,4 @@
-import {getWeather} from '../modules/getWeather';
+import {getWeather} from '../services/getNOAAWeather';
 import bbox from '@turf/bbox';
 import GeoViewport from '@mapbox/geo-viewport';
 

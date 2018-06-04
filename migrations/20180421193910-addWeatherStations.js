@@ -1,7 +1,7 @@
 'use strict';
 
 const Moment = require('moment');
-const utils = require('../modules/migrationUtils');
+const utils = require('../db/migrationUtils');
 
 var dbm;
 var type;

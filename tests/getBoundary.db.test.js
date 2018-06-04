@@ -1,5 +1,5 @@
-const createPool = require('../modules/genericQuery').pool;
-const getBoundary = require('../modules/getBoundary');
+const createPool = require('../db/genericQuery').pool;
+const getBoundary = require('../db/getBoundary');
 
 let pool, boundary;
 

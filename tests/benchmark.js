@@ -1,7 +1,7 @@
 const Benchmark = require('benchmark');
 const getTrail = require('../modules/getTrail');
 const getBoundary = require('../modules/getBoundary');
-const createPool = require('../modules/genericQuery').pool;
+const createPool = require('../db/genericQuery').pool;
 
 const pool = createPool();
 const suite = new Benchmark.Suite;

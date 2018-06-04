@@ -1,5 +1,5 @@
-const createPool = require('../modules/genericQuery').pool;
-const getTrail = require('../modules/getTrail');
+const createPool = require('../db/genericQuery').pool;
+const getTrail = require('../db/getTrail');
 
 let pool, trail;
 

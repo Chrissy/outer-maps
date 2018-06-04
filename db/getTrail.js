@@ -1,5 +1,5 @@
 const query = require('./genericQuery').query;
-const statUtils = require('./statUtils');
+const statUtils = require('../modules/statUtils');
 
 const sql = (id) => `
   WITH trail AS (

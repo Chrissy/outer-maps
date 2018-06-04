@@ -11,11 +11,11 @@ const webpack = optional('webpack');
 const tilelive = optional('@mapbox/tilelive');
 const mbtiles = optional('@mapbox/mbtiles');
 
-const createPool = require('./modules/genericQuery').pool;
+const createPool = require('./db/genericQuery').pool;
 
-const getTrail = require('./modules/getTrail');
-const getBoundary = require('./modules/getBoundary');
-const getTerrain = require('./modules/getTerrain');
+const getTrail = require('./db/getTrail');
+const getBoundary = require('./db/getBoundary');
+const getMapboxTerrain = require('./services/getMapboxTerrain');
 
 const app = express();
 const pool = createPool();
@@ -31,7 +31,7 @@ app.get('/api/boundary/:id', async function(request, response){
 });
 
 app.get('/api/terrain/:x/:y/:zoom', async function(request, response){
-  const terrain = await getTerrain(request.params, pool);
+  const terrain = await getMapboxTerrain(request.params, pool);
   return response.redirect(terrain.url);
 });
 
