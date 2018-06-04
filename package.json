@@ -11,7 +11,7 @@
     "migrate-down": "nf run db-migrate down",
     "size": "webpack --config webpack.production.config.js --json | webpack-bundle-size-analyzer",
     "test": "nf run jest",
-    "benchmarks": "nf run node tests/benchmark.js", 
+    "benchmarks": "nf run node tests/benchmark.js",
     "heroku-postbuild": "gulp mapify && ./node_modules/.bin/webpack --config webpack.production.config.js -p && node builders/uploadBundle.js"
   },
   "license": "ISC",
@@ -67,7 +67,8 @@
     "svg-to-jsx-loader": "^2.0.1",
     "underscore": "^1.9.0",
     "viewport-mercator-project": "^4.1.1",
-    "webpack": "^3.12.0"
+    "webpack": "^3.12.0",
+    "whatwg-fetch": "^2.0.4"
   },
   "devDependencies": {
     "@mapbox/mbtiles": "^0.9.0",
