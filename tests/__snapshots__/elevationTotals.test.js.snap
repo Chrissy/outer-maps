@@ -1,0 +1,127 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders 1`] = `
+<div
+  className="marginBottomHalf horizontalPadding"
+>
+  <div
+    className="elevationTotals"
+  >
+    <div
+      className="difficultyChart"
+    >
+      <div
+        className="body flex veryeasy halfEmpty"
+      >
+        <div
+          className="circle1"
+        />
+        <div
+          className="circle2"
+          style={
+            Object {
+              "transform": "rotate(-135deg)",
+            }
+          }
+        />
+        <div
+          className="innerCircle flex"
+        >
+          <div
+            className="data"
+          >
+            <div
+              className="label label"
+            >
+              Difficulty
+            </div>
+            <div
+              className="score"
+            >
+              0
+            </div>
+            <div
+              className="difficulty"
+            >
+              Very Easy
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="stat border"
+    >
+      <test-file-stub
+        className="icon"
+      />
+      <div
+        className="total"
+      >
+        0
+      </div>
+      <div
+        className="label"
+      >
+        Miles
+      </div>
+    </div>
+    <div
+      className="stat border"
+    >
+      <test-file-stub
+        className="icon elevationGain"
+      />
+      <div
+        className="total"
+      >
+        +
+        13
+      </div>
+      <div
+        className="label"
+      >
+        Elevation Gain
+      </div>
+    </div>
+    <div
+      className="stat"
+    >
+      <test-file-stub
+        className="icon elevationLoss"
+      />
+      <div
+        className="total"
+      >
+        -
+        0
+      </div>
+      <div
+        className="label"
+      >
+        Elevation Loss
+      </div>
+    </div>
+  </div>
+  <div
+    className="marginTop"
+  >
+    <div
+      className="label"
+    >
+      Altitude Change
+    </div>
+    <svg
+      className="lineGraph"
+      overflow="hidden"
+      viewBox="0 0 275 100"
+    >
+      <g />
+      <polyline
+        fill="#344632"
+        points="0,100 0,100 184.83145699143336,50 275,0 275,100"
+      />
+    </svg>
+  </div>
+</div>
+`;
