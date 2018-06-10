@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders 1`] = `
+<div
+  className="marginTop"
+>
+  <div
+    className="label"
+  >
+    Altitude Change
+  </div>
+  <svg
+    className="lineGraph"
+    overflow="hidden"
+    viewBox="0 0 275 100"
+  >
+    <g>
+      <g>
+        <rect
+          fill="#EAEAEA"
+          height={100}
+          width={275}
+          x={0}
+        />
+        <text
+          fill="#D5D5D5"
+          fontSize="7px"
+          x={2}
+          y={7}
+        >
+          1
+        </text>
+      </g>
+    </g>
+    <polyline
+      fill="#344632"
+      points="0,100 0,90.29798334503863 1.3681592039800994,0 275,100 275,100"
+    />
+  </svg>
+</div>
+`;

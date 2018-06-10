@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders 1`] = `
+<div>
+  <div
+    className="label"
+  >
+    Average weather this week
+  </div>
+  <div
+    className="importantWeather"
+  >
+    <div
+      className="importantWeatherUnit high hot"
+    >
+      <div
+        className="flex"
+      >
+        <test-file-stub
+          className="icon"
+        />
+        <div
+          className="data"
+        >
+          100
+          °
+        </div>
+      </div>
+      <div
+        className="label"
+      >
+        High Temperature
+      </div>
+    </div>
+    <div
+      className="importantWeatherUnit low cold"
+    >
+      <div
+        className="flex"
+      >
+        <test-file-stub
+          className="icon"
+        />
+        <div
+          className="data"
+        >
+          0
+          °
+        </div>
+      </div>
+      <div
+        className="label"
+      >
+        Low Temperature
+      </div>
+    </div>
+    <div
+      className="importantWeatherUnit precip"
+    >
+      <div
+        className="flex"
+      >
+        <test-file-stub
+          className="icon"
+        />
+        <div
+          className="data"
+        >
+          1%
+        </div>
+      </div>
+      <div
+        className="label"
+      >
+        Chance percipitation
+      </div>
+    </div>
+  </div>
+</div>
+`;
