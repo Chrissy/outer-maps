@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders 1`] = `
+<div
+  className="trailList marginBottomTriple marginTopHalf horizontalPadding"
+>
+  <div
+    className="listElement marginBottomHalf"
+  >
+    <div
+      className="name"
+    >
+      fun trail
+    </div>
+    <div
+      className="info"
+    >
+      <div
+        className="dataElement"
+      >
+        0m
+      </div>
+      <test-file-stub
+        className="close"
+        onClick={[Function]}
+      />
+    </div>
+  </div>
+  <div
+    className="listElement marginBottomHalf"
+  >
+    <div
+      className="name"
+    >
+      not fun trail
+    </div>
+    <div
+      className="info"
+    >
+      <div
+        className="dataElement"
+      >
+        
+      </div>
+      <test-file-stub
+        className="close"
+        onClick={[Function]}
+      />
+    </div>
+  </div>
+  <div
+    className="listElement marginBottomHalf"
+  >
+    <div
+      className="name"
+    >
+      super fun trail
+    </div>
+    <div
+      className="info"
+    >
+      <div
+        className="dataElement"
+      >
+        31.1m
+      </div>
+      <test-file-stub
+        className="close"
+        onClick={[Function]}
+      />
+    </div>
+  </div>
+</div>
+`;

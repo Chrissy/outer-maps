@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders 1`] = `
+<div>
+  <div
+    className="bar"
+  >
+    <div
+      className="barColor"
+      style={
+        Object {
+          "width": "1%",
+        }
+      }
+    />
+    <div
+      className="barLabel"
+    >
+      cat
+    </div>
+  </div>
+  <div
+    className="bar"
+  >
+    <div
+      className="barColor"
+      style={
+        Object {
+          "width": "10%",
+        }
+      }
+    />
+    <div
+      className="barLabel"
+    >
+      dog
+    </div>
+  </div>
+  <div
+    className="bar"
+  >
+    <div
+      className="barColor"
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+    />
+    <div
+      className="barLabel"
+    >
+      bird
+    </div>
+  </div>
+</div>
+`;

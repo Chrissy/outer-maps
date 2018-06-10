@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders 1`] = `
+<div>
+  <div
+    className="percentBar marginBottom"
+  >
+    <div
+      className="percentBarBar"
+      style={
+        Object {
+          "width": "30%",
+        }
+      }
+    />
+    <div
+      className="percentBarBar"
+      style={
+        Object {
+          "width": "40%",
+        }
+      }
+    />
+    <div
+      className="percentBarBar"
+      style={
+        Object {
+          "width": "30%",
+        }
+      }
+    />
+    <div
+      className="percentBarBar"
+      style={
+        Object {
+          "width": "0%",
+        }
+      }
+    />
+  </div>
+  <div
+    className="trailTypes"
+  >
+    <div
+      className="type"
+    >
+      <test-file-stub
+        className="icon"
+      />
+      30%
+       Hike
+    </div>
+    <div
+      className="type"
+    >
+      <test-file-stub
+        className="icon"
+      />
+      40%
+       Horse
+    </div>
+    <div
+      className="type"
+    >
+      <test-file-stub
+        className="icon"
+      />
+      30%
+       Bike
+    </div>
+    <div
+      className="type"
+    >
+      <test-file-stub
+        className="icon"
+      />
+      0%
+       OHV
+    </div>
+  </div>
+</div>
+`;
