@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders 1`] = `
+<div
+  className="body flex strenuous"
+>
+  <div
+    className="circle1"
+  />
+  <div
+    className="circle2"
+    style={
+      Object {
+        "transform": "rotate(333deg)",
+      }
+    }
+  />
+  <div
+    className="innerCircle flex"
+  >
+    <div
+      className="data"
+    >
+      <div
+        className="label label"
+      >
+        Difficulty
+      </div>
+      <div
+        className="score"
+      >
+        80
+      </div>
+      <div
+        className="difficulty"
+      >
+        Strenuous
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -10,6 +10,8 @@ const reversePoints = (points) => {
   });
 }
 
+//todo: this is spaghetti code
+
 const connectPaths = (p1, p2) => {
   const arr = [p1[0], p1[p1.length - 1], p2[0], p2[p2.length - 1]].map(f => ({...f, pid: f.id + ":" + f.index}));
   const [a1, a2, b1, b2] = arr;

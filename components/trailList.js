@@ -1,45 +1,48 @@
 import React from 'react'
-import {metersToMiles} from '../modules/conversions';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
+import {metersToMiles} from '../modules/conversions';
 import styles from '../styles/trailList.css';
 import spacing from '../styles/spacing.css';
 import Close from '../svg/close.svg';
 
-export default class TrailList extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.unselectTrail = this.unselectTrail.bind(this);
-  }
-
-  unselectTrail(trail) {
-    this.props.unselectTrail(trail.id);
-  }
-
-  trailDistance(trail) {
-    if (!trail.hasElevationData) return '';
-    return metersToMiles(trail.points.reduce((a, e) => {
+const TrailList = ({trails, unselectTrail}) => {
+  const trailDistance = ({points, hasElevationData}) => {
+    if (!hasElevationData) return '';
+    return metersToMiles(points.reduce((a, e) => {
       return a + e.distanceFromPreviousPoint
     }, 0)) + "m";
   }
 
-  listElement(trail) {
+  const listElement = (trail) => {
     return (
       <div className={cx(styles.listElement, spacing.marginBottomHalf)} key={trail.id}>
         <div className={styles.name}>{trail.name}</div>
         <div className={styles.info}>
-          <div className={styles.dataElement}>{this.trailDistance(trail)}</div>
-          <Close className={styles.close} onClick={(e) => this.unselectTrail(trail)}/>
+          <div className={styles.dataElement}>{trailDistance(trail)}</div>
+          <Close className={styles.close} onClick={(e) => unselectTrail(trail.id)}/>
         </div>
       </div>
     )
   }
 
-  render() {
-    return (
-      <div className={cx(styles.trailList, spacing.marginBottomTriple, spacing.marginTopHalf, spacing.horizontalPadding)}>
-        {this.props.trails.map(t => this.listElement(t))}
-      </div>
-    )
-  }
+  return (
+    <div className={cx(styles.trailList, spacing.marginBottomTriple, spacing.marginTopHalf, spacing.horizontalPadding)}>
+      {trails.map(t => listElement(t))}
+    </div>
+  )
 };
+
+TrailList.propTypes = {
+  unselectTrail: PropTypes.func,
+  trails: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string,
+    hasElevationData: PropTypes.bool,
+    id: PropTypes.number,
+    points: PropTypes.arrayOf(PropTypes.shape({
+      distanceFromPreviousPoint: PropTypes.number
+    }))
+  }))
+}
+
+export default TrailList;

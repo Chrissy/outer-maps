@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
 import styles from '../styles/lineGraph.css';
 import {metersToMiles} from '../modules/conversions'
@@ -71,5 +72,12 @@ const LineGraph = ({elevations}) => {
     </div>
   )
 };
+
+LineGraph.propTypes = {
+  elevations: PropTypes.arrayOf(PropTypes.shape({
+    distanceFromPreviousPoint: PropTypes.number,
+    elevation: PropTypes.number
+  }))
+}
 
 export default LineGraph;

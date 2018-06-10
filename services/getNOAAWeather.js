@@ -1,5 +1,7 @@
 import dateFormat from 'dateformat';
 import distance from '@turf/distance';
+import 'whatwg-fetch';
+
 const key = 'aMjnYsZqxVmjzkbPYtHBVXUnYHUROvwS';
 
 const get = path => {
@@ -47,7 +49,7 @@ const getDataFromNearestStation = ({x, y, dataSetId, dataTypeIds}) => {
   });
 };
 
-export const getNoaaData = ({x, y, dataSetId, dataTypeIds, stationId}) => {
+export const getWeather = ({x, y, dataSetId, dataTypeIds, stationId}) => {
   if (stationId && stationId !== '') {
     return getStation({dataSetId, stationId: "GHCND:" + stationId, date: dateFormat(new Date(), "mm-dd"), dataTypeIds});
   } else {

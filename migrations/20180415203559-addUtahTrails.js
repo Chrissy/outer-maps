@@ -1,6 +1,6 @@
 'use strict';
 
-const utils = require('../modules/migrationUtils');
+const utils = require('../db/migrationUtils');
 
 var dbm;
 var type;

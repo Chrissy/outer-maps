@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders 1`] = `
+<div
+  className="trailsChartElement"
+>
+  <div
+    className="name"
+    id={1001}
+  >
+    Fun Trail
+  </div>
+  <div
+    className="distance"
+  >
+    0
+  </div>
+</div>
+`;

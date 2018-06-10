@@ -6,7 +6,7 @@ import numberShortener from '../modules/numberShortener';
 
 const TrailsChartElement = ({name, url, distance, id}) => {
   const formatDistance = (distance) => numberShortener({number: metersToMiles(distance), oneDecimal: true});
-   
+
   return (
     <div className={styles.trailsChartElement}>
       <div id={id} className={styles.name}>{name}</div>
@@ -16,10 +16,10 @@ const TrailsChartElement = ({name, url, distance, id}) => {
 }
 
 TrailsChartElement.propTypes = {
-    name: PropTypes.string,
-    url: PropTypes.string,
-    distance: PropTypes.number,
-    id: PropTypes.number
+  name: PropTypes.string,
+  url: PropTypes.string,
+  distance: PropTypes.number,
+  id: PropTypes.number
 }
 
 export default TrailsChartElement;

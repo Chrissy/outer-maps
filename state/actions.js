@@ -1,4 +1,4 @@
-import {getNoaaData} from '../modules/NOAA';
+import {getWeather} from '../services/getNOAAWeather';
 import bbox from '@turf/bbox';
 import GeoViewport from '@mapbox/geo-viewport';
 
@@ -63,13 +63,13 @@ const getSatelliteImage = ({id, center, zoom, reducer}) => {
   };
 };
 
-const getWeatherData = ({id, center, stationId, reducer}) => {
+const getWeatherData = ({id, center, station1, reducer}) => {
   return dispatch => {
     dispatch({type: `SET_${reducer.toUpperCase()}_WEATHER_IMAGE_REQUESTED`, id});
-    getNoaaData({
+    getWeather({
       x: center[1],
       y: center[0],
-      stationId: stationId,
+      stationId: station1,
       dataSetId: "NORMAL_DLY",
       dataTypeIds: [
         "DLY-TMAX-NORMAL",
