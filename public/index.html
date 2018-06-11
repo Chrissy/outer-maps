@@ -79,6 +79,13 @@
     </div>
 </div>
 
+<script src=https://cdn.ravenjs.com/3.24.0/raven.min.js crossorigin=anonymous></script>
+<script>
+ Raven.config('https://1d7d9df9feef46a38f670ee5a2b82868@sentry.io/1223100', {
+   release: '0-0-0',
+   environment: 'development-test',
+ }).install()
+</script>
 <script src='/dist/bundle.js'></script>
 
 </body>
