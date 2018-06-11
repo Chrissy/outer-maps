@@ -11,6 +11,7 @@
     "migrate-down": "nf run db-migrate down",
     "size": "webpack --config webpack.production.config.js --json | webpack-bundle-size-analyzer",
     "test": "nf run jest",
+    "lint": "./node_modules/.bin/eslint ",
     "benchmarks": "nf run node tests/benchmarkTests.js",
     "heroku-postbuild": "gulp mapify && ./node_modules/.bin/webpack --config webpack.production.config.js -p && node builders/uploadBundle.js"
   },
@@ -82,6 +83,8 @@
     "@mapbox/mbtiles": "^0.9.0",
     "@mapbox/tilelive": "^5.12.6",
     "benchmark": "^2.1.4",
+    "eslint": "^4.19.1",
+    "eslint-plugin-react": "^7.9.1",
     "fixy": "^1.1.0",
     "glob": "^7.1.1",
     "jest": "^23.1.0",
