@@ -1,10 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import cx from 'classnames';
-import styles from '../styles/lineGraph.css';
-import {metersToMiles} from '../modules/conversions'
-import label from '../styles/label.css';
-import spacing from '../styles/spacing.css';
+import React from "react";
+import PropTypes from "prop-types";
+import cx from "classnames";
+import styles from "../styles/lineGraph.css";
+import {metersToMiles} from "../modules/conversions";
+import label from "../styles/label.css";
+import spacing from "../styles/spacing.css";
 
 const width = 275;
 const height = 100;
@@ -13,7 +13,7 @@ const LineGraph = ({elevations}) => {
 
   const getDistances = () => {
     return elevations.map(p => p.distanceFromPreviousPoint).reduce((a, p) => a.concat(p + a[a.length - 1] || 0), []);
-  }
+  };
 
   const pointsToPathString = () => {
     const es = elevations.map(e => e.elevation);
@@ -24,12 +24,12 @@ const LineGraph = ({elevations}) => {
     const relativePoints = es.map((elevation, i) => [((maxElevation - elevation)/elevationWindow), (distances[i]/fullDistance)]);
 
     return relativePoints.reduce((a,p,i) => a + `${p[1] * width},${p[0] * height} `, `0,${height} `) + `${width},${height}`;
-  }
+  };
 
   const textMarker = ({stepWidth, step, iterations, every}) => {
     if (step % every !== 0) return;
-    return <text x={stepWidth * step + 2} y={7} fill="#D5D5D5" fontSize="7px">{step + 1}</text>
-  }
+    return <text x={stepWidth * step + 2} y={7} fill="#D5D5D5" fontSize="7px">{step + 1}</text>;
+  };
 
   const mileMarker = ({stepWidth, step, iterations, leftOver}) => {
     let every = 1;
@@ -44,8 +44,8 @@ const LineGraph = ({elevations}) => {
         fill={(Math.floor(step / every) % 2 !== 0) ? "transparent" : "#EAEAEA"}
       />
       {textMarker({stepWidth, step, iterations, every})}
-    </g>
-  }
+    </g>;
+  };
 
   const mileMarkers = () => {
     const distances = getDistances();
@@ -58,7 +58,7 @@ const LineGraph = ({elevations}) => {
       markers.push(mileMarker({stepWidth, step, iterations, leftOver}));
     }
     return markers;
-  }
+  };
 
   const viewBox = () => `0 0 ${width} ${height}`;
 
@@ -70,7 +70,7 @@ const LineGraph = ({elevations}) => {
         <polyline points={pointsToPathString()} fill="#344632"/>
       </svg>
     </div>
-  )
+  );
 };
 
 LineGraph.propTypes = {
@@ -78,6 +78,6 @@ LineGraph.propTypes = {
     distanceFromPreviousPoint: PropTypes.number,
     elevation: PropTypes.number
   }))
-}
+};
 
 export default LineGraph;

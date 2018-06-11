@@ -1,5 +1,5 @@
-import {connect} from 'react-redux';
-import Sidebar from './sidebar';
+import {connect} from "react-redux";
+import Sidebar from "./sidebar";
 
 const mapStateToProps = (state) => {
   const sortedTrails = state.trails.filter(t => t.selected && t.hasBaseData).sort((a,b) => a.selectedId - b.selectedId);
@@ -9,7 +9,7 @@ const mapStateToProps = (state) => {
     trails: sortedTrails,
     boundary: boundary,
     handles: state.handles
-  }
-}
+  };
+};
 
 export default connect(mapStateToProps)(Sidebar);

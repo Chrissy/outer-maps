@@ -1,4 +1,4 @@
-import distance from '@turf/distance';
+import distance from "@turf/distance";
 
 const reversePoints = (points) => {
   return [...points].reverse().map((point, i) => {
@@ -8,7 +8,7 @@ const reversePoints = (points) => {
       elevationLoss: point.elevationGain
     };
   });
-}
+};
 
 //todo: this is spaghetti code
 
@@ -19,13 +19,13 @@ const connectPaths = (p1, p2) => {
     const closestPoint = arr.filter(e => e.pid !== el.pid).sort((a1, b1) => {
       return distance(a1.coordinates, el.coordinates) - distance(b1.coordinates, el.coordinates);
     })[0];
-    return {...el, distance: distance(closestPoint.coordinates, el.coordinates)}
+    return {...el, distance: distance(closestPoint.coordinates, el.coordinates)};
   }).sort((a, b) => a.distance - b.distance);
 
   if (close1.pid == a1.pid && close2.pid == b1.pid) return [...reversePoints(p1), ...p2];
   if (close1.pid == a1.pid && close2.pid == b2.pid) return [...reversePoints(p1), ...reversePoints(p2)];
   if (close1.pid == a2.pid && close2.pid == b2.pid) return [...p1, ...reversePoints(p2)];
   return [...p1, ...p2];
-}
+};
 
 export default connectPaths;

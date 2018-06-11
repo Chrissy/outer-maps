@@ -6,4 +6,4 @@ export default (trail, handles) => {
   return Object.assign({}, trail, {
     points: trail.points.slice(indeces[0], indeces[1])
   });
-}
+};

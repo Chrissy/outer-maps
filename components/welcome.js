@@ -1,21 +1,21 @@
-import React from 'react';
-import styles from '../styles/welcome.css';
-import center from '../styles/center.css'
-import spacing from '../styles/spacing.css';
-import cx from 'classnames';
-import Close from '../svg/close.svg';
+import React from "react";
+import styles from "../styles/welcome.css";
+import center from "../styles/center.css";
+import spacing from "../styles/spacing.css";
+import cx from "classnames";
+import Close from "../svg/close.svg";
 
 export default class Tooltip extends React.Component {
 
   close(e) {
     this.setState({closed: true});
-    localStorage.setItem('welcomeMessageClosed', true);
+    localStorage.setItem("welcomeMessageClosed", true);
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      closed: localStorage.getItem('welcomeMessageClosed') == 'true'
+      closed: localStorage.getItem("welcomeMessageClosed") == "true"
     };
   }
 
@@ -36,6 +36,6 @@ export default class Tooltip extends React.Component {
         </div>
         <Close className={styles.close}/>
       </div>
-    )
+    );
   }
-};
+}

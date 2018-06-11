@@ -1,5 +1,5 @@
-import { connect } from 'react-redux';
-import Tooltip from './tooltip';
+import { connect } from "react-redux";
+import Tooltip from "./tooltip";
 
 export default connect((state) => {
   return {

@@ -1,20 +1,20 @@
-import React, { Proptypes } from 'react';
-import {fromJS, is} from 'immutable';
-import MapboxGL from 'mapbox-gl';
-import bbox from '@turf/bbox';
-import helpers from '@turf/helpers';
-import {accessToken} from '../data/mapboxStaticData';
-import styles from '../styles/mapbox.css';
-import mapboxStyles from '../public/dist/mapbox-styles.json';
-import debounce from 'lodash.debounce';
-const WATCH_EVENTS = ['mousedown','mouseup','click','dblclick','mousemove','mouseenter', 'mouseleave','mouseover','mouseout','contextmenu','touchstart','touchend','touchcancel'];
+import React, { Proptypes } from "react";
+import {fromJS, is} from "immutable";
+import MapboxGL from "mapbox-gl";
+import bbox from "@turf/bbox";
+import helpers from "@turf/helpers";
+import {accessToken} from "../data/mapboxStaticData";
+import styles from "../styles/mapbox.css";
+import mapboxStyles from "../public/dist/mapbox-styles.json";
+import debounce from "lodash.debounce";
+const WATCH_EVENTS = ["mousedown","mouseup","click","dblclick","mousemove","mouseenter", "mouseleave","mouseover","mouseout","contextmenu","touchstart","touchend","touchcancel"];
 
 export default class MapBox extends React.PureComponent {
 
   updateSources(oldSources = [], newSources = []) {
     newSources.forEach(function(source) {
       this.mapboxed.getSource(source.id).setData(source.data);
-    }.bind(this))
+    }.bind(this));
   }
 
   updateFilters(filters) {
@@ -27,7 +27,7 @@ export default class MapBox extends React.PureComponent {
     MapboxGL.accessToken = accessToken;
 
     this.mapboxed = new MapboxGL.Map({
-      container: 'mapbox-gl-element',
+      container: "mapbox-gl-element",
       style: mapboxStyles,
       center: [-121.06, 48.35],
       zoom: 8,
@@ -51,7 +51,7 @@ export default class MapBox extends React.PureComponent {
       this.mapboxed.flyTo(this.props.flyTo);
     }
 
-    this.mapboxed.getCanvas().style.cursor = (this.props.pointer) ? 'pointer' : '';
+    this.mapboxed.getCanvas().style.cursor = (this.props.pointer) ? "pointer" : "";
   }
 
   mapEvents() {

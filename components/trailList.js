@@ -1,18 +1,18 @@
-import React from 'react'
-import PropTypes from 'prop-types';
-import cx from 'classnames';
-import {metersToMiles} from '../modules/conversions';
-import styles from '../styles/trailList.css';
-import spacing from '../styles/spacing.css';
-import Close from '../svg/close.svg';
+import React from "react";
+import PropTypes from "prop-types";
+import cx from "classnames";
+import {metersToMiles} from "../modules/conversions";
+import styles from "../styles/trailList.css";
+import spacing from "../styles/spacing.css";
+import Close from "../svg/close.svg";
 
 const TrailList = ({trails, unselectTrail}) => {
   const trailDistance = ({points, hasElevationData}) => {
-    if (!hasElevationData) return '';
+    if (!hasElevationData) return "";
     return metersToMiles(points.reduce((a, e) => {
-      return a + e.distanceFromPreviousPoint
+      return a + e.distanceFromPreviousPoint;
     }, 0)) + "m";
-  }
+  };
 
   const listElement = (trail) => {
     return (
@@ -23,14 +23,14 @@ const TrailList = ({trails, unselectTrail}) => {
           <Close className={styles.close} onClick={(e) => unselectTrail(trail.id)}/>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div className={cx(styles.trailList, spacing.marginBottomTriple, spacing.marginTopHalf, spacing.horizontalPadding)}>
       {trails.map(t => listElement(t))}
     </div>
-  )
+  );
 };
 
 TrailList.propTypes = {
@@ -43,6 +43,6 @@ TrailList.propTypes = {
       distanceFromPreviousPoint: PropTypes.number
     }))
   }))
-}
+};
 
 export default TrailList;

@@ -1,17 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import pointOnLine from '@turf/point-on-line';
-import nearest from '@turf/nearest';
-import bbox from '@turf/bbox';
-import {point, featureCollection} from '@turf/helpers';
-import {pointToPoint, pointsToFeatureCollection, trailsToFeatureCollection} from '../modules/stateToGeoJson'
-import TooltipContainer from './tooltipContainer';
-import MapBox from './mapBox';
-import styles from '../styles/map.css';
-import getOffsetCenter from '../modules/getOffsetCenter';
-import sliceElevationsWithHandles from '../modules/sliceElevationsWithHandles';
+import React from "react";
+import PropTypes from "prop-types";
+import pointOnLine from "@turf/point-on-line";
+import nearest from "@turf/nearest";
+import bbox from "@turf/bbox";
+import {point, featureCollection} from "@turf/helpers";
+import {pointToPoint, pointsToFeatureCollection, trailsToFeatureCollection} from "../modules/stateToGeoJson";
+import TooltipContainer from "./tooltipContainer";
+import MapBox from "./mapBox";
+import styles from "../styles/map.css";
+import getOffsetCenter from "../modules/getOffsetCenter";
+import sliceElevationsWithHandles from "../modules/sliceElevationsWithHandles";
 
-const WATCH_LAYERS = ['trails', 'national-park-labels', 'national-park-labels-active', 'handles'];
+const WATCH_LAYERS = ["trails", "national-park-labels", "national-park-labels-active", "handles"];
 
 export default class Map extends React.Component {
 
@@ -32,12 +32,12 @@ export default class Map extends React.Component {
 
     if (!feature && !draggingPoint) {
       target.dragPan.enable();
-      if (previewTrailId) return this.setState({previewTrailId: 0})
-      if (previewBoundaryId) return this.setState({previewBoundaryId: 0})
+      if (previewTrailId) return this.setState({previewTrailId: 0});
+      if (previewBoundaryId) return this.setState({previewBoundaryId: 0});
     } else {
-      if (draggingPoint || feature.layer.id == 'handles') {
+      if (draggingPoint || feature.layer.id == "handles") {
         this.handleDrag({target, lngLat});
-      } else if (feature.layer.id == 'trails' || feature.layer.id == 'national-park-labels') {
+      } else if (feature.layer.id == "trails" || feature.layer.id == "national-park-labels") {
         target.dragPan.enable();
         this.handleFeature(feature);
       }
@@ -121,11 +121,11 @@ export default class Map extends React.Component {
   sources() {
     return [
       {
-        id: 'trails-selected',
+        id: "trails-selected",
         data: trailsToFeatureCollection(this.selectedTrails().map(t => sliceElevationsWithHandles(t, this.props.handles)))
       },
       {
-        id: 'handles',
+        id: "handles",
         data: featureCollection(this.props.handles.map(p => pointToPoint(p)))
       }
     ];
@@ -138,14 +138,14 @@ export default class Map extends React.Component {
         ["in", "id", this.state.previewTrailId],
         ["!in", "id", ...(this.selectedTrails().map(t => t.id) || [] )]
       ]},
-      {
-        id: "national-parks-active",
-        filter: ["in", "id", (this.selectedBoundary()) ? this.selectedBoundary().id : 0]
-      },
-      {
-        id: "national-park-labels-active",
-        filter: ["in", "id", this.state.previewBoundaryId]
-      }
+    {
+      id: "national-parks-active",
+      filter: ["in", "id", (this.selectedBoundary()) ? this.selectedBoundary().id : 0]
+    },
+    {
+      id: "national-park-labels-active",
+      filter: ["in", "id", this.state.previewBoundaryId]
+    }
     ];
   }
 
@@ -162,8 +162,8 @@ export default class Map extends React.Component {
   render() {
 
     return (
-        <div ref="map" id="the-map" className={styles.body}>
-          <MapBox
+      <div ref="map" id="the-map" className={styles.body}>
+        <MapBox
           sources={this.sources()}
           filters={this.filters()}
           flyTo={this.state.flyTo}
@@ -173,8 +173,8 @@ export default class Map extends React.Component {
           mousemove={this.onMapMouseMove.bind(this)}
           mouseup={this.onMapMouseUp.bind(this)}
           mousedown={this.onMapMouseDown.bind(this)}
-          />
-        </div>
+        />
+      </div>
     );
   }
 }
@@ -188,4 +188,4 @@ Map.propTypes = {
   onNonFeatureClick: PropTypes.func,
   updateHandle: PropTypes.func,
   setHandleIndex: PropTypes.func
-}
+};

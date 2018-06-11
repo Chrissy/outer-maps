@@ -1,14 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import cx from 'classnames';
-import TrailTypes from './trailTypes';
-import HorizontalBarGraph from './horizontalBarGraph';
-import BoundaryTotals from './boundaryTotals';
-import TrailsChartElement from './trailsChartElement';
-import styles from '../styles/boundarySidebar.css';
-import label from '../styles/label.css';
-import spacing from '../styles/spacing.css';
-import ImportantWeather from './importantWeather';
+import React from "react";
+import PropTypes from "prop-types";
+import cx from "classnames";
+import TrailTypes from "./trailTypes";
+import HorizontalBarGraph from "./horizontalBarGraph";
+import BoundaryTotals from "./boundaryTotals";
+import TrailsChartElement from "./trailsChartElement";
+import styles from "../styles/boundarySidebar.css";
+import label from "../styles/label.css";
+import spacing from "../styles/spacing.css";
+import ImportantWeather from "./importantWeather";
 
 const BoundarySidebar = ({id, hasElevationData, area, trails, trailTypes, trailLengths, bounds, highPoint, trailsCount, hasWeatherData, weatherData}) => {
   const boundaryTotals = () => {
@@ -16,9 +16,9 @@ const BoundarySidebar = ({id, hasElevationData, area, trails, trailTypes, trailL
       return <BoundaryTotals
         area={area}
         trailsCount={trailsCount}
-        highPoint={highPoint}/>
+        highPoint={highPoint}/>;
     }
-  }
+  };
 
   const trailTypesBreakdown = () => {
     if (hasElevationData) {
@@ -27,9 +27,9 @@ const BoundarySidebar = ({id, hasElevationData, area, trails, trailTypes, trailL
           <div className={cx(label.label, spacing.marginBottomHalf)}>Trail Breakdown</div>
           <TrailTypes {...trailTypes}/>
         </div>
-      )
+      );
     }
-  }
+  };
 
   const trailsChart = () => {
     if (hasElevationData && trails.length) {
@@ -38,9 +38,9 @@ const BoundarySidebar = ({id, hasElevationData, area, trails, trailTypes, trailL
           <div className={cx(label.label, spacing.marginBottomHalf)}>Long Trails</div>
           {trails.map(t => <TrailsChartElement key={t.id} id={t.id} name={t.name} distance={t.length}/>)}
         </div>
-      )
+      );
     }
-  }
+  };
 
   const trailLengthsBreakdown = () => {
     if (hasElevationData && trailLengths.length) {
@@ -51,17 +51,17 @@ const BoundarySidebar = ({id, hasElevationData, area, trails, trailTypes, trailL
             keys={trailLengths.map(p => p[0])}
             values={trailLengths.map(p => p[1])} />
         </div>
-      )
+      );
     }
-  }
+  };
 
   const importantWeather = () => {
     if (hasWeatherData) return (
       <div className={cx(spacing.horizontalPadding, spacing.marginTop, spacing.marginBottom)}>
         <ImportantWeather {...weatherData}/>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div className={styles.boundarySidebar}>
@@ -73,7 +73,7 @@ const BoundarySidebar = ({id, hasElevationData, area, trails, trailTypes, trailL
       </div>
       {importantWeather()}
     </div>
-  )
+  );
 };
 
 BoundarySidebar.propTypes = {

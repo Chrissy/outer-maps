@@ -1,13 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import cx from 'classnames';
-import numberShortener from '../modules/numberShortener';
-import {metersToFeet, metersToMiles} from '../modules/conversions';
-import styles from '../styles/boundaryTotals.css';
-import stat from '../styles/stat.css';
-import Mountain from '../svg/mountain.svg';
-import Path from '../svg/path.svg';
-import Squares from '../svg/squares.svg';
+import React from "react";
+import PropTypes from "prop-types";
+import cx from "classnames";
+import numberShortener from "../modules/numberShortener";
+import {metersToFeet, metersToMiles} from "../modules/conversions";
+import styles from "../styles/boundaryTotals.css";
+import stat from "../styles/stat.css";
+import Mountain from "../svg/mountain.svg";
+import Path from "../svg/path.svg";
+import Squares from "../svg/squares.svg";
 
 const BoundaryTotals = ({area, trailsCount, highPoint}) => {
   return (
@@ -28,13 +28,13 @@ const BoundaryTotals = ({area, trailsCount, highPoint}) => {
         <div className={stat.label}>High Point</div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 BoundaryTotals.propTypes = {
   area: PropTypes.number,
   trailsCount: PropTypes.number,
   highPoint: PropTypes.number
-}
+};
 
 export default BoundaryTotals;
