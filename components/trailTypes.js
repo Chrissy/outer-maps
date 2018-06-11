@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import cx from "classnames";
 import styles from "../styles/trailTypes.css";
 import spacing from "../styles/spacing.css";
-import label from "../styles/label.css";
 import Hike from "../svg/transportation-hike.svg";
 import Bike from "../svg/transportation-bike.svg";
 import Ohv from "../svg/transportation-ohv.svg";
@@ -11,9 +10,9 @@ import Horse from "../svg/transportation-horse.svg";
 
 const TrailTypes = ({hike, bike, ohv, horse}) => {
   const total = () => hike + bike + ohv + horse;
-  
+
   const percent = (number) => Math.round(number / total() * 100) + "%";
-  
+
   return (
     <div>
       <div className={cx(styles.percentBar, spacing.marginBottom)}>

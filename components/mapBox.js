@@ -1,8 +1,7 @@
-import React, { Proptypes } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 import {fromJS, is} from "immutable";
 import MapboxGL from "mapbox-gl";
-import bbox from "@turf/bbox";
-import helpers from "@turf/helpers";
 import {accessToken} from "../data/mapboxStaticData";
 import styles from "../styles/mapbox.css";
 import mapboxStyles from "../public/dist/mapbox-styles.json";
@@ -11,7 +10,7 @@ const WATCH_EVENTS = ["mousedown","mouseup","click","dblclick","mousemove","mous
 
 export default class MapBox extends React.PureComponent {
 
-  updateSources(oldSources = [], newSources = []) {
+  updateSources(newSources = []) {
     newSources.forEach(function(source) {
       this.mapboxed.getSource(source.id).setData(source.data);
     }.bind(this));
@@ -38,9 +37,9 @@ export default class MapBox extends React.PureComponent {
     this.mapboxed.addControl(new MapboxGL.NavigationControl());
   }
 
-  componentDidUpdate(prevProps, q) {
+  componentDidUpdate(prevProps) {
     if (!is(fromJS(prevProps.sources), fromJS(this.props.sources))) {
-      this.updateSources(prevProps.sources, this.props.sources);
+      this.updateSources(this.props.sources);
     }
 
     if (this.props.filters && prevProps.filters !== this.props.filters) {
@@ -73,3 +72,11 @@ export default class MapBox extends React.PureComponent {
     );
   }
 }
+
+MapBox.propTypes = {
+  sources: PropTypes.array,
+  filters: PropTypes.array,
+  flyTo: PropTypes.object,
+  pointer: PropTypes.number,
+  watchLayers: PropTypes.array
+};

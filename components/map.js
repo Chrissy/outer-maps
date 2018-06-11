@@ -2,10 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import pointOnLine from "@turf/point-on-line";
 import nearest from "@turf/nearest";
-import bbox from "@turf/bbox";
 import {point, featureCollection} from "@turf/helpers";
 import {pointToPoint, pointsToFeatureCollection, trailsToFeatureCollection} from "../modules/stateToGeoJson";
-import TooltipContainer from "./tooltipContainer";
 import MapBox from "./mapBox";
 import styles from "../styles/map.css";
 import getOffsetCenter from "../modules/getOffsetCenter";
@@ -27,8 +25,8 @@ export default class Map extends React.Component {
     return !!(this.selectedBoundary() || this.selectedTrails().length);
   }
 
-  onMapMouseMove({features, target, features: [feature], lngLat}) {
-    const {draggingPoint, props, state: {previewTrailId, previewBoundaryId}} = this;
+  onMapMouseMove({target, features: [feature], lngLat}) {
+    const {draggingPoint, state: {previewTrailId, previewBoundaryId}} = this;
 
     if (!feature && !draggingPoint) {
       target.dragPan.enable();
@@ -44,7 +42,7 @@ export default class Map extends React.Component {
     }
   }
 
-  handleFeature({properties, geometry, layer}) {
+  handleFeature({properties, layer}) {
     const {previewBoundaryId, previewTrailId} = this.state;
     if (previewBoundaryId && properties.id == previewBoundaryId) return;
     if (previewTrailId && properties.id == previewTrailId) return;
@@ -64,7 +62,7 @@ export default class Map extends React.Component {
     draggingPoint.currentPointOnLine = snapToPoint;
   }
 
-  onMapClick({point, features, features: [feature]}) {
+  onMapClick({features: [feature]}) {
     const {draggingPoint, props} = this;
 
     if (draggingPoint) return;

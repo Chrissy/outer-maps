@@ -11,7 +11,7 @@
     "migrate-down": "nf run db-migrate down",
     "size": "webpack --config webpack.production.config.js --json | webpack-bundle-size-analyzer",
     "test": "nf run jest",
-    "lint": "./node_modules/.bin/eslint ",
+    "lint": "./node_modules/.bin/eslint components modules --fix",
     "benchmarks": "nf run node tests/benchmarkTests.js",
     "heroku-postbuild": "gulp mapify && ./node_modules/.bin/webpack --config webpack.production.config.js -p && node builders/uploadBundle.js"
   },

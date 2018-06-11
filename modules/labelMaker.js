@@ -9,7 +9,7 @@ const threePointsToAngle = (a, b, c) => {
   return Math.acos((bc*bc+ab*ab-ac*ac)/(2*bc*ab));
 };
 
-explodeLineByAngle = (line, threshold) => {
+const explodeLineByAngle = (line, threshold) => {
   const coords = line.coordinates;
 
   if (coords.length == 1 || coords.length == 0) return line;

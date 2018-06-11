@@ -8,4 +8,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect((state) => ({}), mapDispatchToProps)(TrailList);
+export default connect(() => ({}), mapDispatchToProps)(TrailList);

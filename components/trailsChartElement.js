@@ -4,7 +4,7 @@ import {metersToMiles} from "../modules/conversions";
 import styles from "../styles/trailsChartElement.css";
 import numberShortener from "../modules/numberShortener";
 
-const TrailsChartElement = ({name, url, distance, id}) => {
+const TrailsChartElement = ({name, distance, id}) => {
   const formatDistance = (distance) => numberShortener({number: metersToMiles(distance), oneDecimal: true});
 
   return (

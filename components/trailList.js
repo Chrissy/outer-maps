@@ -20,7 +20,7 @@ const TrailList = ({trails, unselectTrail}) => {
         <div className={styles.name}>{trail.name}</div>
         <div className={styles.info}>
           <div className={styles.dataElement}>{trailDistance(trail)}</div>
-          <Close className={styles.close} onClick={(e) => unselectTrail(trail.id)}/>
+          <Close className={styles.close} onClick={() => unselectTrail(trail.id)}/>
         </div>
       </div>
     );

@@ -63,7 +63,7 @@ const ElevationTotals = ({elevations}) => {
 };
 
 ElevationTotals.propTypes = {
-  trails: PropTypes.array
+  elevations: PropTypes.array
 };
 
 export default ElevationTotals;

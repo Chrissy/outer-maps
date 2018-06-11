@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import cx from "classnames";
 import styles from "../styles/importantWeather.css";
-import spacing from "../styles/spacing.css";
 import label from "../styles/label.css";
 import center from "../styles/center.css";
 import HighIcon from "../svg/weather-high.svg";

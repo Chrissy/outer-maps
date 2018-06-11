@@ -7,7 +7,7 @@ import ImportantWeather from "./importantWeather";
 import connectPaths from "../modules/connectPaths";
 import spacing from "../styles/spacing.css";
 
-const TrailSidebar = ({firstTrail, trails, handles}) => {
+const TrailSidebar = ({firstTrail, trails}) => {
 
   const cumulativeElevations = () => {
     return trails.filter(t => t.hasElevationData).reduce((accumulator, trail) => {

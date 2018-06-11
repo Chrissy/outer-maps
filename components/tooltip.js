@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import TrailTooltip from "./trailTooltip";
 import BoundaryTooltip from "./boundaryTooltip";
 
@@ -28,3 +29,8 @@ export default class Tooltip extends React.Component {
     );
   }
 }
+
+Tooltip.propTypes = { //this is bad
+  trail: PropTypes.object,
+  boundary: PropTypes.object
+};

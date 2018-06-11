@@ -1,4 +1,4 @@
-import {point, feature, featureCollection, lineString} from "@turf/helpers";
+import {point, featureCollection, lineString} from "@turf/helpers";
 
 export const pointToPoint = (toConvert) => {
   const asFeature = point(toConvert.coordinates);
@@ -10,7 +10,7 @@ export const pointsToFeatureCollection = (points) => {
   return featureCollection(points.map(p => pointToPoint(p)));
 };
 
-export const trailToLine = (toConvert, opts) => {
+export const trailToLine = (toConvert) => {
   return lineString(toConvert.points.map(p => p.coordinates));
 };
 

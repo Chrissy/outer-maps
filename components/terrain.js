@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styles from "../styles/terrain.css";
-import center from "../styles/center.css";
 import cx from "classnames";
 import LoadingSpinner from "./loadingSpinner";
 import FlatMercatorViewport from "../node_modules/viewport-mercator-project/dist/flat-mercator-viewport";
@@ -58,7 +57,7 @@ export default class Terrain extends React.Component {
     return (this.props.satelliteImageUrl);
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     if (this.props.satelliteImageUrl) {
       this.projectedPoints = this.projectPoints(this.props);
       this.drawPath(this.projectedPoints);
@@ -67,7 +66,7 @@ export default class Terrain extends React.Component {
 
   render() {
     return (
-      <div className={cx(styles.terrain, styles.center)}>
+      <div className={cx(styles.terrain)}>
         <img src={this.props.satelliteImageUrl} className={cx(styles.image, {[styles.visible]: this.isVisible()})}/>
         <canvas ref="canvas" width="1026" height="1026" className={cx(styles.canvas, {[styles.visible]: this.isVisible()})}></canvas>
         <div className={cx(styles.loadingSpinner, {[styles.visible]: !this.isVisible()})}><LoadingSpinner speed="1s"/></div>
