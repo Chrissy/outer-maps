@@ -2,9 +2,9 @@
   "name": "mountains",
   "version": "0.0.1",
   "scripts": {
-    "precommit": "nf run jest",
+    "precommit": "npm test",
     "prettier": "prettier --write --tab-width 2 \"modules/*.js\" \"tests/*.js\" \"components/*.js\"",
-    "start": "nf start",
+    "start": "nf start", 
     "dev": "nf start && gulp watch",
     "trails": "nf run node builders/trailsBuilder.js",
     "parks": "nf run node builders/parksBuilder.js",
