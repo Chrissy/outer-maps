@@ -16,7 +16,10 @@
     "heroku-postbuild": "gulp mapify && ./node_modules/.bin/webpack --config webpack.production.config.js -p && node builders/uploadBundle.js"
   },
   "lint-staged": {
-    "*.{js,json,css,md}": ["prettier --write", "git add"]
+    "*.{js,json,css,md}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "jest": {
     "moduleNameMapper": {
@@ -90,6 +93,7 @@
     "eslint-plugin-react": "^7.9.1",
     "fixy": "^1.1.0",
     "glob": "^7.1.1",
+    "husky": "^0.14.3",
     "jest": "^23.1.0",
     "prettier": "1.13.5",
     "webpack-bundle-size-analyzer": "^2.7.0",
