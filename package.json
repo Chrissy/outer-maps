@@ -11,9 +11,12 @@
     "migrate-down": "nf run db-migrate down",
     "size": "webpack --config webpack.production.config.js --json | webpack-bundle-size-analyzer",
     "test": "nf run jest",
-    "lint": "./node_modules/.bin/eslint components modules --fix",
+    "precommit": "lint-staged",
     "benchmarks": "nf run node tests/benchmarkTests.js",
     "heroku-postbuild": "gulp mapify && ./node_modules/.bin/webpack --config webpack.production.config.js -p && node builders/uploadBundle.js"
+  },
+  "lint-staged": {
+    "*.{js,json,css,md}": ["prettier --write", "git add"]
   },
   "jest": {
     "moduleNameMapper": {
@@ -88,6 +91,7 @@
     "fixy": "^1.1.0",
     "glob": "^7.1.1",
     "jest": "^23.1.0",
+    "prettier": "1.13.5",
     "webpack-bundle-size-analyzer": "^2.7.0",
     "webpack-dev-middleware": "^1.12.2",
     "xml2js": "^0.4.19"
