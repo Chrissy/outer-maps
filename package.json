@@ -11,9 +11,11 @@
     "migrate-down": "nf run db-migrate down",
     "size": "webpack --config webpack.production.config.js --json | webpack-bundle-size-analyzer",
     "test": "nf run jest",
-    "precommit": "npm test",
     "benchmarks": "nf run node tests/benchmarkTests.js",
     "heroku-postbuild": "gulp mapify && ./node_modules/.bin/webpack --config webpack.production.config.js -p && node builders/uploadBundle.js"
+  },
+  "husky": {
+    "precommit": "npm test"    
   },
   "lint-staged": {
     "*.{js,json,css,md}": [
