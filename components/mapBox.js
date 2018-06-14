@@ -81,8 +81,8 @@ export default class MapBox extends React.PureComponent {
             const eventMod = Object.assign({}, event, {
               features: event.point
                 ? this.mapboxed.queryRenderedFeatures(event.point, {
-                    layers: this.props.watchLayers
-                  })
+                  layers: this.props.watchLayers
+                })
                 : null
             });
             this.props[eventName](eventMod);

@@ -7,6 +7,11 @@ import FlatMercatorViewport from "../node_modules/viewport-mercator-project/dist
 import pin from "../data/pin";
 
 export default class Terrain extends React.Component {
+  constructor(props) {
+    super(props);
+    this.canvas = React.createRef();
+  }
+
   projectPoints({ points, zoom, center }) {
     if (!points || !zoom || !center) return [];
 
@@ -24,7 +29,7 @@ export default class Terrain extends React.Component {
   }
 
   drawPath(points) {
-    const canvas = this.refs.canvas;
+    const canvas = this.canvas;
     const ctx = canvas.getContext("2d");
 
     ctx.beginPath();
@@ -83,7 +88,7 @@ export default class Terrain extends React.Component {
           className={cx(styles.image, { [styles.visible]: this.isVisible() })}
         />
         <canvas
-          ref="canvas"
+          ref={this.canvas}
           width="1026"
           height="1026"
           className={cx(styles.canvas, { [styles.visible]: this.isVisible() })}

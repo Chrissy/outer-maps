@@ -108,7 +108,7 @@ export default class Map extends React.Component {
   }
 
   sidebarAwareZoom(coordinates) {
-    const sidebar = this.refs.map.nextSibling; //probably wanna do something better here one day
+    const sidebar = this.map.nextSibling; //probably wanna do something better here one day
     this.setState({
       flyTo: {
         center: getOffsetCenter({
@@ -116,8 +116,8 @@ export default class Map extends React.Component {
           zoom: 10,
           offsetX: window.innerWidth < 600 ? 0 : sidebar.offsetWidth * 0.5,
           offsetY: window.innerWidth > 600 ? 0 : sidebar.offsetHeight * 0.5,
-          width: this.refs.map.clientWidth,
-          height: this.refs.map.clientHeight
+          width: this.map.clientWidth,
+          height: this.map.clientHeight
         }),
         zoom: 10
       }
@@ -207,11 +207,13 @@ export default class Map extends React.Component {
       previewTrailId: 0,
       flyTo: null
     };
+
+    this.map = React.createRef();
   }
 
   render() {
     return (
-      <div ref="map" id="the-map" className={styles.body}>
+      <div ref={this.map} id="the-map" className={styles.body}>
         <MapBox
           sources={this.sources()}
           filters={this.filters()}
