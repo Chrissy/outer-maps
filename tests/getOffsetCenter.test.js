@@ -14,7 +14,7 @@ const mockData = {
 const coords = getOffsetCenter(mockData);
 
 test('latitude is correct', () => {
-  expect(coords[0]).toBe(-125.15447998046875);
+  expect(coords[0]).toBe(-121.15447998046875);
 });
 
 test('longitude is correct', () => {
