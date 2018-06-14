@@ -2,8 +2,9 @@
   "name": "mountains",
   "version": "0.0.1",
   "scripts": {
-    "precommit": "npm test",
+    "precommit": "npm test && lint-staged",
     "prettier": "prettier --write --tab-width 2 \"modules/*.js\" \"tests/*.js\" \"components/*.js\"",
+    "lint": "./node_modules/.bin/eslint components modules --fix",
     "start": "nf start",
     "dev": "nf start && gulp watch",
     "trails": "nf run node builders/trailsBuilder.js",
@@ -21,6 +22,12 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|less)$": "identity-obj-proxy"
     }
+  },
+  "lint-staged": {
+    "*.{js,json,css,md}": [
+      "npm run prettier",
+      "git add"
+    ]
   },
   "license": "ISC",
   "dependencies": {
