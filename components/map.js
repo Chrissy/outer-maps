@@ -22,7 +22,7 @@ export default class Map extends React.Component {
   }
 
   elementIsSelected() {
-    return !!(this.selectedBoundary() || this.selectedTrails().length); 
+    return !!(this.selectedBoundary() || this.selectedTrails().length);
   }
 
   onMapMouseMove({target, features: [feature], lngLat}) {
