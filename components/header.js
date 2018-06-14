@@ -7,8 +7,8 @@ import Wordmark from "../svg/wordmark.svg";
 const Header = () => {
   return (
     <div className={cx(styles.body, center.flex)}>
-      <img className={styles.mark} src="/mark.png"/>
-      <Wordmark className={styles.wordmark}/>
+      <img className={styles.mark} src="/mark.png" />
+      <Wordmark className={styles.wordmark} />
     </div>
   );
 };

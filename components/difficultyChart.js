@@ -5,10 +5,9 @@ import center from "../styles/center.css";
 import label from "../styles/label.css";
 import cx from "classnames";
 
-const DifficultyChart = ({score}) => {
-
+const DifficultyChart = ({ score }) => {
   const rotation = () => {
-    return ((score > 50) ? 225 : 45) + (((score - 50) / 100) * 360);
+    return (score > 50 ? 225 : 45) + ((score - 50) / 100) * 360;
   };
 
   const difficulty = () => {
@@ -20,13 +19,22 @@ const DifficultyChart = ({score}) => {
   };
 
   const difficultyClass = () => {
-    return difficulty().replace(/\s+/g, "").toLowerCase();
+    return difficulty()
+      .replace(/\s+/g, "")
+      .toLowerCase();
   };
 
   return (
-    <div className={cx(styles.body, center.flex, styles[difficultyClass()], {[styles.halfEmpty]: score < 50})}>
-      <div className={styles.circle1}></div>
-      <div className={styles.circle2} style={{transform: `rotate(${rotation()}deg)`}}></div>
+    <div
+      className={cx(styles.body, center.flex, styles[difficultyClass()], {
+        [styles.halfEmpty]: score < 50
+      })}
+    >
+      <div className={styles.circle1} />
+      <div
+        className={styles.circle2}
+        style={{ transform: `rotate(${rotation()}deg)` }}
+      />
       <div className={cx(styles.innerCircle, center.flex)}>
         <div className={styles.data}>
           <div className={cx(styles.label, label.label)}>Difficulty</div>

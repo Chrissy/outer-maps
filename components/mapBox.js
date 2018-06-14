@@ -1,19 +1,34 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {fromJS, is} from "immutable";
+import { fromJS, is } from "immutable";
 import MapboxGL from "mapbox-gl";
-import {accessToken} from "../data/mapboxStaticData";
+import { accessToken } from "../data/mapboxStaticData";
 import styles from "../styles/mapbox.css";
 import mapboxStyles from "../public/dist/mapbox-styles.json";
 import debounce from "lodash.debounce";
-const WATCH_EVENTS = ["mousedown","mouseup","click","dblclick","mousemove","mouseenter", "mouseleave","mouseover","mouseout","contextmenu","touchstart","touchend","touchcancel"];
+const WATCH_EVENTS = [
+  "mousedown",
+  "mouseup",
+  "click",
+  "dblclick",
+  "mousemove",
+  "mouseenter",
+  "mouseleave",
+  "mouseover",
+  "mouseout",
+  "contextmenu",
+  "touchstart",
+  "touchend",
+  "touchcancel"
+];
 
 export default class MapBox extends React.PureComponent {
-
   updateSources(newSources = []) {
-    newSources.forEach(function(source) {
-      this.mapboxed.getSource(source.id).setData(source.data);
-    }.bind(this));
+    newSources.forEach(
+      function(source) {
+        this.mapboxed.getSource(source.id).setData(source.data);
+      }.bind(this)
+    );
   }
 
   updateFilters(filters) {
@@ -50,26 +65,37 @@ export default class MapBox extends React.PureComponent {
       this.mapboxed.flyTo(this.props.flyTo);
     }
 
-    this.mapboxed.getCanvas().style.cursor = (this.props.pointer) ? "pointer" : "";
+    this.mapboxed.getCanvas().style.cursor = this.props.pointer
+      ? "pointer"
+      : "";
   }
 
   mapEvents() {
-    WATCH_EVENTS.forEach((eventName) => {
+    WATCH_EVENTS.forEach(eventName => {
       if (!this.props[eventName]) return;
 
-      this.mapboxed.on(eventName, debounce((event) => {
-        const eventMod = Object.assign({}, event, {
-          features: (event.point) ? this.mapboxed.queryRenderedFeatures(event.point, { layers: this.props.watchLayers }) : null
-        });
-        this.props[eventName](eventMod);
-      }, 2, {leading: true}));
+      this.mapboxed.on(
+        eventName,
+        debounce(
+          event => {
+            const eventMod = Object.assign({}, event, {
+              features: event.point
+                ? this.mapboxed.queryRenderedFeatures(event.point, {
+                    layers: this.props.watchLayers
+                  })
+                : null
+            });
+            this.props[eventName](eventMod);
+          },
+          2,
+          { leading: true }
+        )
+      );
     });
   }
 
   render() {
-    return (
-      <div className={styles.body} id="mapbox-gl-element"></div>
-    );
+    return <div className={styles.body} id="mapbox-gl-element" />;
   }
 }
 

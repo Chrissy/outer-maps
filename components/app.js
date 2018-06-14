@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import {store} from "../state/configureStore";
+import { store } from "../state/configureStore";
 import MapContainer from "./mapContainer";
 import SidebarContainer from "./sidebarContainer";
 import Header from "./header";
@@ -14,8 +14,8 @@ ReactDOM.render(
       <div className={styles.body}>
         <Header />
         <MapContainer />
-        <SidebarContainer/>
-        <Welcome/>
+        <SidebarContainer />
+        <Welcome />
       </div>
     </div>
   </Provider>,

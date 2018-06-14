@@ -4,13 +4,13 @@ import LineGraph from "./lineGraph";
 import DifficultyChart from "./difficultyChart";
 import Hiker from "../svg/hiker.svg";
 import Up from "../svg/up.svg";
-import {metersToFeet, metersToMiles} from "../modules/conversions";
+import { metersToFeet, metersToMiles } from "../modules/conversions";
 import styles from "../styles/elevationTotals.css";
 import stat from "../styles/stat.css";
 import cx from "classnames";
 import spacing from "../styles/spacing.css";
 
-const ElevationTotals = ({elevations}) => {
+const ElevationTotals = ({ elevations }) => {
   const elevationGain = () => {
     return elevations.reduce((a, e) => a + e.elevationGain, 0);
   };
@@ -28,14 +28,17 @@ const ElevationTotals = ({elevations}) => {
   };
 
   const score = () => {
-    return Math.min(100, parseInt((metersToFeet(elevationGain()) / 100) + (miles() / 14 * 50)));
+    return Math.min(
+      100,
+      parseInt(metersToFeet(elevationGain()) / 100 + (miles() / 14) * 50)
+    );
   };
 
   return (
     <div className={cx(spacing.marginBottomHalf, spacing.horizontalPadding)}>
       <div className={styles.elevationTotals}>
         <div className={styles.difficultyChart}>
-          <DifficultyChart score={score()}/>
+          <DifficultyChart score={score()} />
         </div>
         <div className={cx(stat.stat, stat.border)}>
           <Hiker className={stat.icon} />
@@ -57,7 +60,7 @@ const ElevationTotals = ({elevations}) => {
           <div className={stat.label}>Elevation Loss</div>
         </div>
       </div>
-      <LineGraph elevations={elevations}/>
+      <LineGraph elevations={elevations} />
     </div>
   );
 };

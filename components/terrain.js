@@ -7,8 +7,7 @@ import FlatMercatorViewport from "../node_modules/viewport-mercator-project/dist
 import pin from "../data/pin";
 
 export default class Terrain extends React.Component {
-
-  projectPoints({points, zoom, center}) {
+  projectPoints({ points, zoom, center }) {
     if (!points || !zoom || !center) return [];
 
     const projecter = FlatMercatorViewport({
@@ -20,7 +19,7 @@ export default class Terrain extends React.Component {
     });
 
     return this.props.points.map(p => {
-      return {...p, coordinates: projecter.project(p.coordinates)};
+      return { ...p, coordinates: projecter.project(p.coordinates) };
     });
   }
 
@@ -47,14 +46,26 @@ export default class Terrain extends React.Component {
     const pinWidth = 44;
     const pinHeight = 60;
     image.onload = () => {
-      ctx.drawImage(image, x1 - pinWidth / 2, y1 - pinHeight - 2, pinWidth, pinHeight);
-      ctx.drawImage(image, x2 - pinWidth / 2, y2 - pinHeight - 2, pinWidth, pinHeight);
+      ctx.drawImage(
+        image,
+        x1 - pinWidth / 2,
+        y1 - pinHeight - 2,
+        pinWidth,
+        pinHeight
+      );
+      ctx.drawImage(
+        image,
+        x2 - pinWidth / 2,
+        y2 - pinHeight - 2,
+        pinWidth,
+        pinHeight
+      );
     };
     image.src = pin;
   }
 
   isVisible() {
-    return (this.props.satelliteImageUrl);
+    return this.props.satelliteImageUrl;
   }
 
   componentDidUpdate() {
@@ -67,9 +78,23 @@ export default class Terrain extends React.Component {
   render() {
     return (
       <div className={cx(styles.terrain)}>
-        <img src={this.props.satelliteImageUrl} className={cx(styles.image, {[styles.visible]: this.isVisible()})}/>
-        <canvas ref="canvas" width="1026" height="1026" className={cx(styles.canvas, {[styles.visible]: this.isVisible()})}></canvas>
-        <div className={cx(styles.loadingSpinner, {[styles.visible]: !this.isVisible()})}><LoadingSpinner speed="1s"/></div>
+        <img
+          src={this.props.satelliteImageUrl}
+          className={cx(styles.image, { [styles.visible]: this.isVisible() })}
+        />
+        <canvas
+          ref="canvas"
+          width="1026"
+          height="1026"
+          className={cx(styles.canvas, { [styles.visible]: this.isVisible() })}
+        />
+        <div
+          className={cx(styles.loadingSpinner, {
+            [styles.visible]: !this.isVisible()
+          })}
+        >
+          <LoadingSpinner speed="1s" />
+        </div>
       </div>
     );
   }

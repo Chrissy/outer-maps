@@ -1,11 +1,14 @@
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import TrailList from "./trailList";
-import {unselectTrail} from "../state/actions";
+import { unselectTrail } from "../state/actions";
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    unselectTrail: (id) => dispatch(unselectTrail(id))
+    unselectTrail: id => dispatch(unselectTrail(id))
   };
 };
 
-export default connect(() => ({}), mapDispatchToProps)(TrailList);
+export default connect(
+  () => ({}),
+  mapDispatchToProps
+)(TrailList);

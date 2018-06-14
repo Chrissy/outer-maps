@@ -8,34 +8,43 @@ import Bike from "../svg/transportation-bike.svg";
 import Ohv from "../svg/transportation-ohv.svg";
 import Horse from "../svg/transportation-horse.svg";
 
-const TrailTypes = ({hike, bike, ohv, horse}) => {
+const TrailTypes = ({ hike, bike, ohv, horse }) => {
   const total = () => hike + bike + ohv + horse;
 
-  const percent = (number) => Math.round(number / total() * 100) + "%";
+  const percent = number => Math.round((number / total()) * 100) + "%";
 
   return (
     <div>
       <div className={cx(styles.percentBar, spacing.marginBottom)}>
-        <div className={styles.percentBarBar} style={{width: percent(hike)}}></div>
-        <div className={styles.percentBarBar} style={{width: percent(horse)}}></div>
-        <div className={styles.percentBarBar} style={{width: percent(bike)}}></div>
-        <div className={styles.percentBarBar} style={{width: percent(ohv)}}></div>
+        <div
+          className={styles.percentBarBar}
+          style={{ width: percent(hike) }}
+        />
+        <div
+          className={styles.percentBarBar}
+          style={{ width: percent(horse) }}
+        />
+        <div
+          className={styles.percentBarBar}
+          style={{ width: percent(bike) }}
+        />
+        <div className={styles.percentBarBar} style={{ width: percent(ohv) }} />
       </div>
       <div className={styles.trailTypes}>
         <div className={styles.type}>
-          <Hike className={styles.icon}/>
+          <Hike className={styles.icon} />
           {percent(hike)} Hike
         </div>
         <div className={styles.type}>
-          <Horse className={styles.icon}/>
+          <Horse className={styles.icon} />
           {percent(horse)} Horse
         </div>
         <div className={styles.type}>
-          <Bike className={styles.icon}/>
+          <Bike className={styles.icon} />
           {percent(bike)} Bike
         </div>
         <div className={styles.type}>
-          <Ohv className={styles.icon}/>
+          <Ohv className={styles.icon} />
           {percent(ohv)} OHV
         </div>
       </div>
