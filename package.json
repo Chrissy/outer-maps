@@ -2,6 +2,7 @@
   "name": "mountains",
   "version": "0.0.1",
   "scripts": {
+    "precommit": "npm test",
     "start": "nf start",
     "dev": "nf start && gulp watch",
     "trails": "nf run node builders/trailsBuilder.js",
@@ -13,9 +14,6 @@
     "test": "nf run jest",
     "benchmarks": "nf run node tests/benchmarkTests.js",
     "heroku-postbuild": "gulp mapify && ./node_modules/.bin/webpack --config webpack.production.config.js -p && node builders/uploadBundle.js"
-  },
-  "husky": {
-    "precommit": "npm test"    
   },
   "lint-staged": {
     "*.{js,json,css,md}": [
