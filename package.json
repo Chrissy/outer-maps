@@ -1,5 +1,5 @@
 {
-  "name": "mountains", 
+  "name": "mountains",
   "version": "0.0.1",
   "scripts": {
     "start": "nf start",
