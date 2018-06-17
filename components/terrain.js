@@ -29,7 +29,7 @@ export default class Terrain extends React.Component {
   }
 
   drawPath(points) {
-    const canvas = this.canvas;
+    const canvas = this.canvas.current;
     const ctx = canvas.getContext("2d");
 
     ctx.beginPath();
