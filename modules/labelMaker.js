@@ -1,15 +1,15 @@
-const helpers = require('@turf/helpers');
-const lineDistance = require('@turf/line-distance');
-const bezier = require ('@turf/bezier');
+const helpers = require("@turf/helpers");
+const lineDistance = require("@turf/line-distance");
+const bezier = require("@turf/bezier");
 
 const threePointsToAngle = (a, b, c) => {
-  var ab = Math.sqrt(Math.pow(b[0]-a[0],2)+ Math.pow(b[1]-a[1],2));
-  var bc = Math.sqrt(Math.pow(b[0]-c[0],2)+ Math.pow(b[1]-c[1],2));
-  var ac = Math.sqrt(Math.pow(a[0]-c[0],2)+ Math.pow(a[1]-c[1],2));
-  return Math.acos((bc*bc+ab*ab-ac*ac)/(2*bc*ab));
-}
+  var ab = Math.sqrt(Math.pow(b[0] - a[0], 2) + Math.pow(b[1] - a[1], 2));
+  var bc = Math.sqrt(Math.pow(b[0] - c[0], 2) + Math.pow(b[1] - c[1], 2));
+  var ac = Math.sqrt(Math.pow(a[0] - c[0], 2) + Math.pow(a[1] - c[1], 2));
+  return Math.acos((bc * bc + ab * ab - ac * ac) / (2 * bc * ab));
+};
 
-explodeLineByAngle = (line, threshold) => {
+const explodeLineByAngle = (line, threshold) => {
   const coords = line.coordinates;
 
   if (coords.length == 1 || coords.length == 0) return line;
@@ -26,7 +26,7 @@ explodeLineByAngle = (line, threshold) => {
   });
 
   return multiArray.map(l => helpers.lineString(l));
-}
+};
 
 const lineStringToLabelMultiLineString = (geom, minlength) => {
   const multiArray = explodeLineByAngle(geom, 150);
@@ -36,13 +36,17 @@ const lineStringToLabelMultiLineString = (geom, minlength) => {
 
   const bezierLines = filteredLines.map(f => bezier(f, 500, 0.5));
   return helpers.multiLineString(bezierLines.map(l => l.geometry.coordinates));
-}
+};
 
 exports.labelMaker = (geojson, minLength) => {
   const features = geojson.features.map(p => {
-    return Object.assign({}, lineStringToLabelMultiLineString(p.geometry, minLength), {
-      properties: p.properties
-    });
+    return Object.assign(
+      {},
+      lineStringToLabelMultiLineString(p.geometry, minLength),
+      {
+        properties: p.properties
+      }
+    );
   });
   return helpers.featureCollection(features.filter(r => r.geometry !== null));
-}
+};

@@ -1,15 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styles from '../styles/terrain.css';
-import center from '../styles/center.css';
-import cx from 'classnames';
-import LoadingSpinner from './loadingSpinner';
-import FlatMercatorViewport from '../node_modules/viewport-mercator-project/dist/flat-mercator-viewport';
-import pin from '../data/pin';
+import React from "react";
+import PropTypes from "prop-types";
+import styles from "../styles/terrain.css";
+import cx from "classnames";
+import LoadingSpinner from "./loadingSpinner";
+import FlatMercatorViewport from "../node_modules/viewport-mercator-project/dist/flat-mercator-viewport";
+import pin from "../data/pin";
 
 export default class Terrain extends React.Component {
+  constructor(props) {
+    super(props);
+    this.canvas = React.createRef();
+  }
 
-  projectPoints({points, zoom, center}) {
+  projectPoints({ points, zoom, center }) {
     if (!points || !zoom || !center) return [];
 
     const projecter = FlatMercatorViewport({
@@ -21,13 +24,13 @@ export default class Terrain extends React.Component {
     });
 
     return this.props.points.map(p => {
-      return {...p, coordinates: projecter.project(p.coordinates)}
+      return { ...p, coordinates: projecter.project(p.coordinates) };
     });
   }
 
   drawPath(points) {
-    const canvas = this.refs.canvas;
-    const ctx = canvas.getContext('2d');
+    const canvas = this.canvas.current;
+    const ctx = canvas.getContext("2d");
 
     ctx.beginPath();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -35,10 +38,10 @@ export default class Terrain extends React.Component {
     if (!points.length) return;
 
     ctx.moveTo(...points[0].coordinates);
-    points.slice(1).forEach(p => ctx.lineTo(...p.coordinates))
+    points.slice(1).forEach(p => ctx.lineTo(...p.coordinates));
     ctx.lineJoin = "round";
     ctx.lineWidth = 8;
-    ctx.strokeStyle = 'white';
+    ctx.strokeStyle = "white";
     ctx.setLineDash([10, 10]);
     ctx.stroke();
 
@@ -48,17 +51,29 @@ export default class Terrain extends React.Component {
     const pinWidth = 44;
     const pinHeight = 60;
     image.onload = () => {
-      ctx.drawImage(image, x1 - pinWidth / 2, y1 - pinHeight - 2, pinWidth, pinHeight);
-      ctx.drawImage(image, x2 - pinWidth / 2, y2 - pinHeight - 2, pinWidth, pinHeight);
-    }
+      ctx.drawImage(
+        image,
+        x1 - pinWidth / 2,
+        y1 - pinHeight - 2,
+        pinWidth,
+        pinHeight
+      );
+      ctx.drawImage(
+        image,
+        x2 - pinWidth / 2,
+        y2 - pinHeight - 2,
+        pinWidth,
+        pinHeight
+      );
+    };
     image.src = pin;
   }
 
   isVisible() {
-    return (this.props.satelliteImageUrl);
+    return this.props.satelliteImageUrl;
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     if (this.props.satelliteImageUrl) {
       this.projectedPoints = this.projectPoints(this.props);
       this.drawPath(this.projectedPoints);
@@ -67,18 +82,32 @@ export default class Terrain extends React.Component {
 
   render() {
     return (
-      <div className={cx(styles.terrain, styles.center)}>
-        <img src={this.props.satelliteImageUrl} className={cx(styles.image, {[styles.visible]: this.isVisible()})}/>
-        <canvas ref="canvas" width="1026" height="1026" className={cx(styles.canvas, {[styles.visible]: this.isVisible()})}></canvas>
-        <div className={cx(styles.loadingSpinner, {[styles.visible]: !this.isVisible()})}><LoadingSpinner speed="1s"/></div>
+      <div className={cx(styles.terrain)}>
+        <img
+          src={this.props.satelliteImageUrl}
+          className={cx(styles.image, { [styles.visible]: this.isVisible() })}
+        />
+        <canvas
+          ref={this.canvas}
+          width="1026"
+          height="1026"
+          className={cx(styles.canvas, { [styles.visible]: this.isVisible() })}
+        />
+        <div
+          className={cx(styles.loadingSpinner, {
+            [styles.visible]: !this.isVisible()
+          })}
+        >
+          <LoadingSpinner speed="1s" />
+        </div>
       </div>
-    )
+    );
   }
-};
+}
 
 Terrain.propTypes = {
   points: PropTypes.array,
   satelliteImageUrl: PropTypes.string,
   zoom: PropTypes.number,
   center: PropTypes.array
-}
+};

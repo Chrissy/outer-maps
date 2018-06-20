@@ -1,6 +1,6 @@
-import React from 'react';
-import TrailList from '../components/trailList.js';
-import renderer from 'react-test-renderer';
+import React from "react";
+import TrailList from "../components/trailList.js";
+import renderer from "react-test-renderer";
 
 // the data piped into this is really complicated and probably a smell.
 
@@ -15,7 +15,7 @@ const trails = [
       },
       {
         distanceFromPreviousPoint: 2
-      },
+      }
     ]
   },
   {
@@ -28,7 +28,7 @@ const trails = [
       },
       {
         distanceFromPreviousPoint: 1
-      },
+      }
     ]
   },
   {
@@ -41,12 +41,14 @@ const trails = [
       },
       {
         distanceFromPreviousPoint: 11
-      },
+      }
     ]
   }
-]
+];
 
-it('renders', () => {
-  const tree = renderer.create(<TrailList unselectTrail={() => {}} trails={trails}/>).toJSON();
+it("renders", () => {
+  const tree = renderer
+    .create(<TrailList unselectTrail={() => {}} trails={trails} />)
+    .toJSON();
   expect(tree).toMatchSnapshot();
 });

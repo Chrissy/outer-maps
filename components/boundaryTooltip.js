@@ -1,13 +1,21 @@
-import React from 'react'
-import {metersToMiles} from '../modules/conversions'
+import React from "react";
+import PropTypes from "prop-types";
 
-const BoundaryTooltip = ({name, area}) => {
+import { metersToMiles } from "../modules/conversions";
+
+const BoundaryTooltip = ({ name, area }) => {
   return (
     <span>
-      name: {name}<br/>
+      name: {name}
+      <br />
       distance: {metersToMiles(area)} Miles
     </span>
-  )
+  );
+};
+
+BoundaryTooltip.propTypes = {
+  name: PropTypes.string,
+  area: PropTypes.number
 };
 
 export default BoundaryTooltip;
