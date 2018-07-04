@@ -1,5 +1,5 @@
 import React from "react";
-import TrailList from "../components/trailList.js";
+import TrailList from "../components/trailList";
 import renderer from "react-test-renderer";
 
 // the data piped into this is really complicated and probably a smell.

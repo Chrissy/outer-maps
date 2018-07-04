@@ -1,21 +1,21 @@
-const optional = require("optional");
-const http = require("http");
-const fs = require("fs");
-const path = require("path").normalize;
-const pg = require("pg");
-const express = require("express");
+import optional from "optional";
+import http from "http";
+import fs from "fs";
+import {normalize} from "path";
+import pg from "pg"
+import express from "express";
 
-const webpackMiddleware = optional("webpack-dev-middleware");
-const webpackConfig = optional("./webpack.dev.config.js");
-const webpack = optional("webpack");
-const tilelive = optional("@mapbox/tilelive");
-const mbtiles = optional("@mapbox/mbtiles");
+import webpackMiddleware from "webpack-dev-middleware";
+import webpackConfig from "./webpack.dev.config.js";
+import webpack from "webpack";
+import tilelive from "@mapbox/tilelive";
+import mbtiles from "@mapbox/mbtiles";
 
-const createPool = require("./db/genericQuery").pool;
+import {pool} from "./db/genericQuery";
 
-const getTrail = require("./db/getTrail");
-const getBoundary = require("./db/getBoundary");
-const getMapboxTerrain = require("./services/getMapboxTerrain");
+import getTrail from "./db/getTrail";
+import getBoundary from "./db/getBoundary";
+import getMapboxTerrain from "./services/getMapboxTerrain";
 
 const app = express();
 const pool = createPool();

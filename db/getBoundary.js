@@ -1,5 +1,5 @@
-const query = require('./genericQuery').query;
-const _ = require('underscore');
+import query from './genericQuery'.query;
+import _ from 'underscore';
 
 const sql = (id) => `
   WITH boundary AS (

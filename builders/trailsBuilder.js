@@ -1,10 +1,10 @@
-const jsonfile = require('jsonfile')
-const helpers = require('@turf/helpers');
-const path = require('path').normalize;
-const gQuery = require('../db/genericQuery');
-const labelMaker = require('../modules/labelMaker').labelMaker;
-const exec = require('child_process').execSync;
-const fs = require('fs');
+import jsonfile from 'jsonfile'
+import helpers from '@turf/helpers';
+import path from 'path'.normalize;
+import gQuery from '../db/genericQuery';
+import labelMaker from '../modules/labelMaker'.labelMaker;
+import exec from 'child_process'.execSync;
+import fs from 'fs';
 
 const tempFileName = 'temp-trails.geojson';
 

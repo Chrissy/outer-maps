@@ -1,6 +1,6 @@
-const helpers = require("@turf/helpers");
-const lineDistance = require("@turf/line-distance");
-const bezier = require("@turf/bezier");
+import helpers from "@turf/helpers";
+import lineDistance from "@turf/line-distance";
+import bezier from "@turf/bezier";
 
 const threePointsToAngle = (a, b, c) => {
   var ab = Math.sqrt(Math.pow(b[0] - a[0], 2) + Math.pow(b[1] - a[1], 2));

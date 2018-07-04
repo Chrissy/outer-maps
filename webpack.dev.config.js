@@ -1,5 +1,5 @@
-const path = require("path");
-const production = require("./webpack.production.config.js");
+import path from "path";
+import production from "./webpack.production.config.js";
 
 module.exports = Object.assign({}, production, {
   entry: "./components/app.js",

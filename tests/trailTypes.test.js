@@ -1,5 +1,5 @@
 import React from "react";
-import TrailTypes from "../components/trailTypes.js";
+import TrailTypes from "../components/trailTypes";
 import renderer from "react-test-renderer";
 
 it("renders", () => {

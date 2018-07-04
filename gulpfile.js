@@ -1,8 +1,8 @@
-const fs = require("fs");
-const gulp = require("gulp");
-const merge = require("gulp-merge-json");
-const plumber = require("gulp-plumber");
-const jeditor = require("gulp-json-editor");
+import fs from "fs"
+import gulp from "gulp"
+import merge from "merge"
+import plumber from "plumber"
+import jeditor from "jeditor"
 
 gulp.task("mapify", () => {
   const index = JSON.parse(fs.readFileSync("./styles/base.json")).imports;

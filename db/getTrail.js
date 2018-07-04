@@ -1,5 +1,5 @@
-const query = require('./genericQuery').query;
-const statUtils = require('../modules/statUtils');
+import query from './genericQuery'.query;
+import statUtils from '../modules/statUtils';
 
 const sql = (id) => `
   WITH trail AS (

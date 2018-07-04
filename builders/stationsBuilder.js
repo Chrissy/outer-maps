@@ -1,5 +1,5 @@
-const fs = require('fs');
-const fixy = require('fixy');
+import fs from 'fs';
+import fixy from 'fixy';
 
 const precip = fs.readFileSync(process.env.LIB + "/noaa_stations/normals-prcp-inventory.txt").toString();
 const temp = fs.readFileSync(process.env.LIB + "/noaa_stations/normals-temp-inventory.txt").toString();

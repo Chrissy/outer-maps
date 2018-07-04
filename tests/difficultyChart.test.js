@@ -1,5 +1,5 @@
 import React from "react";
-import DifficultyChart from "../components/difficultyChart.js";
+import DifficultyChart from "../components/difficultyChart";
 import renderer from "react-test-renderer";
 
 it("renders", () => {

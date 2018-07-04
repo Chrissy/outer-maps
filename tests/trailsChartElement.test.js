@@ -1,5 +1,5 @@
 import React from "react";
-import TrailsChartElement from "../components/trailsChartElement.js";
+import TrailsChartElement from "../components/trailsChartElement";
 import renderer from "react-test-renderer";
 
 const props = {

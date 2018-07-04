@@ -1,8 +1,8 @@
-const AWS = require('aws-sdk');
+import AWS from 'aws-sdk';
 
 const s3 = new AWS.S3();
 const accessToken =  'pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg';
-const uploadImageToS3 = require('./uploadImageToS3').upload;
+import uploadImageToS3 from './uploadImageToS3'.upload;
 
 const getTerrain = ({x, y, zoom, cache}) => new Promise((resolve) => {
   const key = `terrain-${x}-${y}-${zoom}.jpg`;

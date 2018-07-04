@@ -1,5 +1,5 @@
 import React from "react";
-import ImportantWeather from "../components/importantWeather.js";
+import ImportantWeather from "../components/importantWeather";
 import renderer from "react-test-renderer";
 
 const props = {

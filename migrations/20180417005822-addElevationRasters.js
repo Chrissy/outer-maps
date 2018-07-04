@@ -4,7 +4,7 @@ var dbm;
 var type;
 var seed;
 
-const utils = require('../db/migrationUtils');
+import utils from '../db/migrationUtils';
 
 /**
   * We receive the dbmigrate dependency from dbmigrate initially.

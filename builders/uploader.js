@@ -1,5 +1,5 @@
-const glob = require('glob');
-const exec = require('child_process').execSync;
+import glob from 'glob';
+import exec from 'child_process'.execSync;
 
 glob("./tiles/*", (err, files) => {
   files.map(f => {

@@ -1,4 +1,4 @@
-const utils = require("../modules/statUtils");
+import utils from "../modules/statUtils";
 
 const testArray = [1, 1, 1, 2, 1, 1, 1];
 

@@ -1,5 +1,5 @@
-const Jimp = require('jimp');
-const AWS = require('aws-sdk');
+import Jimp from 'jimp';
+import AWS from 'aws-sdk';
 const s3 = new AWS.S3();
 
 const uploadImageToS3 = ({url, key, quality}) => {

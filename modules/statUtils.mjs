@@ -1,4 +1,4 @@
-exports.rollingAverage = function(array, size) {
+export const rollingAverage = function(array, size) {
   return array.map((element, index) => {
     var total = 0;
     for (var offset = -size; offset <= size; offset++) {
@@ -11,7 +11,7 @@ exports.rollingAverage = function(array, size) {
   });
 };
 
-exports.glitchDetector = function(array) {
+export const glitchDetector = function(array) {
   return array.map((element, index) => {
     if (index == 0 || index >= array.length - 2) return element;
     if (array[index - 1] == array[index + 1] && array[index - 1] !== element)

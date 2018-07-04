@@ -1,6 +1,6 @@
-const jsonfile = require('jsonfile');
-const gQuery = require('../db/genericQuery');
-const exec = require('child_process').execSync;
+import jsonfile from 'jsonfile';
+import gQuery from '../db/genericQuery';
+import exec from 'child_process'.execSync;
 const pool = gQuery.pool();
 
 // large polygons are very intensive on vector tiles, so

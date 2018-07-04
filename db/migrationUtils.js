@@ -1,6 +1,6 @@
-const pg = require('pg');
-const execSync = require('child_process').execSync;
-const path = require('path').normalize;
+import pg from 'pg';
+import execSync from 'child_process'.execSync;
+import path from 'path'.normalize;
 
 const databaseName = process.env.DATABASE_NAME;
 const user = process.env.DATABASE_USER || '';

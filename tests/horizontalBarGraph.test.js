@@ -1,5 +1,5 @@
 import React from "react";
-import HorizontalBarGraph from "../components/horizontalBarGraph.js";
+import HorizontalBarGraph from "../components/horizontalBarGraph";
 import renderer from "react-test-renderer";
 
 it("renders", () => {

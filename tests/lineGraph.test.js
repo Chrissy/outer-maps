@@ -1,5 +1,5 @@
 import React from "react";
-import LineGraph from "../components/lineGraph.js";
+import LineGraph from "../components/lineGraph";
 import renderer from "react-test-renderer";
 
 const elevations = [
