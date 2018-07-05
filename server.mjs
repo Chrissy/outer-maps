@@ -1,7 +1,6 @@
 import optional from "optional";
 import http from "http";
 import fs from "fs";
-import {normalize} from "path";
 import pg from "pg"
 import express from "express";
 
@@ -10,6 +9,8 @@ import webpackConfig from "./webpack.dev.config";
 import webpack from "webpack";
 import tilelive from "@mapbox/tilelive";
 import mbtiles from "@mapbox/mbtiles";
+
+console.log(webpackConfig)
 
 import {pool as createPool} from "./db/genericQuery";
 
@@ -46,11 +47,11 @@ if (process.env.NODE_ENV == "production") {
 if (process.env.NODE_ENV !== "production") {
   mbtiles.registerProtocols(tilelive);
 
-  app.use(
-    webpackMiddleware(webpack(webpackConfig), {
-      publicPath: webpackConfig.output.publicPath
-    })
-  );
+  // app.use(
+  //   webpackMiddleware(webpack(webpackConfig), {
+  //     publicPath: webpackConfig.output.publicPath
+  //   })
+  // );
 
   tilelive.load("mbtiles://./tiles/local.mbtiles", function(err, source) {
     if (err) throw err;

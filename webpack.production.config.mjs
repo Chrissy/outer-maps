@@ -1,9 +1,12 @@
-import {normalize} from "path";
+import path from "path";
+import url from "url";
+
+const __dirname = path.dirname(new url.URL(import.meta.url).pathname);
 
 export default {
   entry: "./components/app.js",
   output: {
-    path: normalize(import.meta.url + "/public/dist"),
+    path: path.normalize(__dirname + "/public/dist"),
     filename: "bundle.js"
   },
   module: {
