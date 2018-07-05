@@ -3,7 +3,7 @@ const path = require("path").normalize;
 module.exports = {
   entry: "./components/app.js",
   output: {
-    path: path.join(__dirname + "/public/dist"),
+    path: path(__dirname + "/public/dist"),
     filename: "bundle.js"
   },
   module: {
