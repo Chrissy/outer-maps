@@ -47,11 +47,11 @@ if (process.env.NODE_ENV == "production") {
 if (process.env.NODE_ENV !== "production") {
   mbtiles.registerProtocols(tilelive);
 
-  // app.use(
-  //   webpackMiddleware(webpack(webpackConfig), {
-  //     publicPath: webpackConfig.output.publicPath
-  //   })
-  // );
+  app.use(
+    webpackMiddleware(webpack(webpackConfig), {
+      publicPath: webpackConfig.output.publicPath
+    })
+  );
 
   tilelive.load("mbtiles://./tiles/local.mbtiles", function(err, source) {
     if (err) throw err;
