@@ -18,7 +18,7 @@ const pool = createPool();
 
 app.get("/api/trail/:id", async function(request, response) {
   const trail = await getTrail(request.params.id, pool);
-  return response.json(trail);
+  return trail.url ? response.redirect(trail.url) : response.json(trail);
 });
 
 app.get("/api/boundary/:id", async function(request, response) {

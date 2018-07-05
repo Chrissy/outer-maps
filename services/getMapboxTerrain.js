@@ -1,7 +1,9 @@
+const Jimp = require("jimp");
+const uploadFileToS3 = require("./uploadFileToS3");
+const tryCachedFile = require("./tryCachedFile");
+
 const accessToken =
   "pk.eyJ1IjoiZml2ZWZvdXJ0aHMiLCJhIjoiY2lvMXM5MG45MWFhenUybTNkYzB1bzJ0MiJ9._5Rx_YN9mGwR8dwEB9D2mg";
-const uploadImageToS3 = require("./uploadImageToS3").upload;
-const tryCachedFile = require("./tryCachedFile");
 
 const getTerrain = ({ x, y, zoom }) =>
   new Promise(resolve => {
@@ -12,7 +14,12 @@ const getTerrain = ({ x, y, zoom }) =>
       if (file.cached) {
         resolve(file.url);
       } else {
-        uploadImageToS3({ url, key, quality: 30 });
+        Jimp.read(url).then(image => {
+          image.quality(30).getBuffer(Jimp.MIME_JPEG, (err, data) => {
+            if (err) throw err;
+            uploadFileToS3({ key, data });
+          });
+        });
         resolve(url);
       }
     });

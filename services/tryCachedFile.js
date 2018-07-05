@@ -10,7 +10,7 @@ const tryCachedFile = key =>
       if (metadata) {
         resolve({ url: cachedFile, cached: true });
       } else {
-        resolve({ url: key, cached: false });
+        resolve({ url: cachedFile, cached: false });
       }
     });
   });

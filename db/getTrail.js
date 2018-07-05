@@ -1,7 +1,9 @@
-const query = require('./genericQuery').query;
-const statUtils = require('../modules/statUtils');
+const query = require("./genericQuery").query;
+const statUtils = require("../modules/statUtils");
+const uploadFileToS3 = require("../services/uploadFileToS3");
+const tryCachedFile = require("../services/tryCachedFile");
 
-const sql = (id) => `
+const sql = id => `
   WITH trail AS (
       SELECT geog::geometry AS path
       FROM trails
@@ -25,16 +27,36 @@ const sql = (id) => `
     SELECT to_json(array_agg(elevations)) as points from trail, raster, elevations GROUP BY rast;
 `;
 
-const getTrail = (id, pool) => new Promise((resolve) => {
-  query(sql(id), pool, ({rows}) => {
-    const elevations = statUtils.rollingAverage(statUtils.glitchDetector(rows[0].points.map(r => r.elevation)), 40);
-    const points = elevations.map((r, i) => ({
-      elevation: r,
-      coordinates: [rows[0].points[i].x, rows[0].points[i].y]
-    }));
+const getTrail = (id, pool) =>
+  new Promise(resolve => {
+    const key = `trail-${id}.json`;
 
-    resolve({points});
+    tryCachedFile(key).then(file => {
+      if (file.cached) {
+        resolve({ url: file.url });
+      } else {
+        queryTrail({ id, pool }).then(data => {
+          uploadFileToS3({ key, data: JSON.stringify(data) });
+          resolve(data);
+        });
+      }
+    });
   });
-});
+
+const queryTrail = ({ id, pool }) =>
+  new Promise(resolve => {
+    query(sql(id), pool, ({ rows }) => {
+      const elevations = statUtils.rollingAverage(
+        statUtils.glitchDetector(rows[0].points.map(r => r.elevation)),
+        40
+      );
+      const points = elevations.map((r, i) => ({
+        elevation: r,
+        coordinates: [rows[0].points[i].x, rows[0].points[i].y]
+      }));
+
+      resolve({ points });
+    });
+  });
 
 module.exports = getTrail;
