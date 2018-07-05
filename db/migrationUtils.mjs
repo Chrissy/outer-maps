@@ -1,6 +1,6 @@
 import pg from 'pg';
-import execSync from 'child_process'.execSync;
-import path from 'path'.normalize;
+import execSync from 'child_process';
+import path from 'path';
 
 const databaseName = process.env.DATABASE_NAME;
 const user = process.env.DATABASE_USER || '';

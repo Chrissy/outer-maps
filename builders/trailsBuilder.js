@@ -1,9 +1,9 @@
 import jsonfile from 'jsonfile'
 import helpers from '@turf/helpers';
-import path from 'path'.normalize;
+import {normalize} from 'path';
 import gQuery from '../db/genericQuery';
-import labelMaker from '../modules/labelMaker'.labelMaker;
-import exec from 'child_process'.execSync;
+import {labelMaker} from '../modules/labelMaker';
+import execSync from 'child_process';
 import fs from 'fs';
 
 const tempFileName = 'temp-trails.geojson';

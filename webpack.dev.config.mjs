@@ -1,7 +1,7 @@
 import path from "path";
-import production from "./webpack.production.config.js";
+import production from "./webpack.production.config";
 
-module.exports = Object.assign({}, production, {
+export default Object.assign({}, production, {
   entry: "./components/app.js",
   output: {
     path: "/",

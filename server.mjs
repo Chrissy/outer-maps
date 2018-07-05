@@ -6,12 +6,12 @@ import pg from "pg"
 import express from "express";
 
 import webpackMiddleware from "webpack-dev-middleware";
-import webpackConfig from "./webpack.dev.config.js";
+import webpackConfig from "./webpack.dev.config";
 import webpack from "webpack";
 import tilelive from "@mapbox/tilelive";
 import mbtiles from "@mapbox/mbtiles";
 
-import {pool} from "./db/genericQuery";
+import {pool as createPool} from "./db/genericQuery";
 
 import getTrail from "./db/getTrail";
 import getBoundary from "./db/getBoundary";

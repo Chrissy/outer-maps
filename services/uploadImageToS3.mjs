@@ -11,4 +11,4 @@ const uploadImageToS3 = ({url, key, quality}) => {
   });
 };
 
-exports.upload = uploadImageToS3;
+export default uploadImageToS3;

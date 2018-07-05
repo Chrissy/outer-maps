@@ -1,5 +1,5 @@
-import query from './genericQuery'.query;
-import statUtils from '../modules/statUtils';
+import {query} from './genericQuery';
+import {rollingAverage, glitchDetector} from '../modules/statUtils';
 
 const sql = (id) => `
   WITH trail AS (
@@ -27,7 +27,7 @@ const sql = (id) => `
 
 const getTrail = (id, pool) => new Promise((resolve) => {
   query(sql(id), pool, ({rows}) => {
-    const elevations = statUtils.rollingAverage(statUtils.glitchDetector(rows[0].points.map(r => r.elevation)), 40);
+    const elevations = rollingAverage(glitchDetector(rows[0].points.map(r => r.elevation)), 40);
     const points = elevations.map((r, i) => ({
       elevation: r,
       coordinates: [rows[0].points[i].x, rows[0].points[i].y]
@@ -37,4 +37,4 @@ const getTrail = (id, pool) => new Promise((resolve) => {
   });
 });
 
-module.exports = getTrail;
+export default getTrail;

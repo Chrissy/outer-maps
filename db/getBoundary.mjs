@@ -1,4 +1,4 @@
-import query from './genericQuery'.query;
+import {query} from './genericQuery';
 import _ from 'underscore';
 
 const sql = (id) => `
@@ -49,4 +49,4 @@ const getBoundary = (id, pool) => new Promise((resolve) => {
   });
 });
 
-module.exports = getBoundary;
+export default getBoundary;

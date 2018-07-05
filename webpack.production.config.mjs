@@ -1,16 +1,16 @@
-const path = require("path").normalize;
+import {normalize} from "path";
 
-module.exports = {
+export default {
   entry: "./components/app.js",
   output: {
-    path: path(__dirname + "/public/dist"),
+    path: "./public/dist",
     filename: "bundle.js"
   },
   module: {
     noParse: /(mapbox-gl)\.js$/,
     rules: [
       {
-        test: /\.(js|svg)$/,
+        test: /\.(js|mjs|svg)$/,
         exclude: /(node_modules|bower_components)/,
         use: {
           loader: "babel-loader",
