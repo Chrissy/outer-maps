@@ -3,7 +3,7 @@ import {normalize} from "path";
 export default {
   entry: "./components/app.js",
   output: {
-    path: "./public/dist",
+    path: normalize(import.meta.url + "/public/dist"),
     filename: "bundle.js"
   },
   module: {

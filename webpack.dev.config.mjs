@@ -1,4 +1,3 @@
-import path from "path";
 import production from "./webpack.production.config";
 
 export default Object.assign({}, production, {
