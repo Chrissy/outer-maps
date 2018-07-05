@@ -3,7 +3,7 @@ const path = require("path").normalize;
 module.exports = {
   entry: "./components/app.js",
   output: {
-    path: path(__dirname + "/public/dist"),
+    path: path.join(__dirname + "/public/dist"),
     filename: "bundle.js"
   },
   module: {
@@ -19,10 +19,6 @@ module.exports = {
             plugins: ["transform-object-rest-spread"]
           }
         }
-      },
-      {
-        test: /\.json$/,
-        loader: "json-loader"
       },
       {
         test: /\.css$/,
