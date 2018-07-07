@@ -1,7 +1,6 @@
 const query = require("./genericQuery").query;
 const statUtils = require("../modules/statUtils");
 const uploadFileToS3 = require("../services/uploadFileToS3");
-const tryCachedFile = require("../services/tryCachedFile");
 
 const sql = id => `
   WITH trail AS (
@@ -29,17 +28,9 @@ const sql = id => `
 
 const getTrail = (id, pool) =>
   new Promise(resolve => {
-    const key = `trail-${id}.json`;
-
-    tryCachedFile(key).then(file => {
-      if (file.cached) {
-        resolve({ url: file.url });
-      } else {
-        queryTrail({ id, pool }).then(data => {
-          uploadFileToS3({ key, data: JSON.stringify(data) });
-          resolve(data);
-        });
-      }
+    queryTrail({ id, pool }).then(data => {
+      uploadFileToS3({ key: `trail-${id}.json`, data: JSON.stringify(data) });
+      resolve(data);
     });
   });
 
