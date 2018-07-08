@@ -30,7 +30,7 @@ const getTrail = (id, pool) =>
   new Promise(resolve => {
     queryTrail({ id, pool }).then(data => {
       uploadFileToS3({
-        key: `api-trail-${id}.json`,
+        key: `trail-${id}.json`,
         data: JSON.stringify(data)
       });
       resolve(data);
