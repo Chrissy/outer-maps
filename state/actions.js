@@ -77,13 +77,15 @@ const getElevationData = ({ id, reducer }) => {
       id
     });
 
-    return fetchWithCache({ model: reducer, id }).then(response => {
-      dispatch({
-        type: `SET_${reducer.toUpperCase()}_ELEVATION_DATA`,
-        ...response,
-        id
+    return fetchWithCache({ path: `/api/${reducer}/${id}`, extension: "json" })
+      .then(response => response.json())
+      .then(response => {
+        dispatch({
+          type: `SET_${reducer.toUpperCase()}_ELEVATION_DATA`,
+          ...response,
+          id
+        });
       });
-    });
   };
 };
 
@@ -94,7 +96,10 @@ const getSatelliteImage = ({ id, center, zoom, reducer }) => {
       id
     });
 
-    return fetch(`/api/terrain/${center.join("/")}/${zoom}`)
+    return fetchWithCache({
+      path: `/api/terrain/${center.join("/")}/${zoom}`,
+      extension: "jpg"
+    })
       .then(r => r.blob())
       .then(image => {
         return dispatch({

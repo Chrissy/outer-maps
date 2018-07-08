@@ -1,20 +1,21 @@
-const fetchWithFailure = url =>
-  fetch(url).then(response => {
+const fetchWithFailure = path =>
+  fetch(path).then(response => {
     return response.ok
-      ? response.json()
+      ? response
       : { failure: true, message: response.statusText };
   });
 
-const tryCachedFile = ({ model, id }) =>
+const tryCachedFile = ({ path, extension }) =>
   new Promise((resolve, reject) => {
-    const cachedPath = `https://s3-us-west-2.amazonaws.com/chrissy-gunk/${model}-${id}.json`;
-    const apiPath = `/api/${model}/${id}`;
+    const cachedPath = `https://s3-us-west-2.amazonaws.com/chrissy-gunk/${path
+      .slice(5)
+      .replace(/\//g, "-")}.${extension}`;
 
     fetchWithFailure(cachedPath).then(response => {
       if (!response.failure) {
         return resolve(response);
       } else {
-        fetchWithFailure(apiPath).then(response => {
+        fetchWithFailure(path).then(response => {
           if (!response.failure) {
             return resolve(response);
           } else {
