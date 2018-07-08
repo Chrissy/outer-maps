@@ -1,8 +1,4 @@
 const optional = require("optional");
-const http = require("http");
-const fs = require("fs");
-const path = require("path").normalize;
-const pg = require("pg");
 const express = require("express");
 
 const webpackMiddleware = optional("webpack-dev-middleware");
@@ -22,7 +18,7 @@ const pool = createPool();
 
 app.get("/api/trail/:id", async function(request, response) {
   const trail = await getTrail(request.params.id, pool);
-  return response.json(trail);
+  return trail.url ? response.redirect(trail.url) : response.json(trail);
 });
 
 app.get("/api/boundary/:id", async function(request, response) {
@@ -32,7 +28,7 @@ app.get("/api/boundary/:id", async function(request, response) {
 
 app.get("/api/terrain/:x/:y/:zoom", async function(request, response) {
   const terrain = await getMapboxTerrain(request.params, pool);
-  return response.redirect(terrain.url);
+  return response.redirect(terrain);
 });
 
 if (process.env.NODE_ENV == "production") {
@@ -59,7 +55,7 @@ if (process.env.NODE_ENV !== "production") {
         request.params.z,
         request.params.x,
         request.params.y,
-        function(err, tile, headers) {
+        function(err, tile) {
           response.setHeader("Content-Encoding", "gzip");
           response.send(tile);
         }
@@ -69,7 +65,4 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 app.use(express.static("public"));
-
-app.listen(process.env.PORT || 5000, function() {
-  console.log("listening on port 5000");
-});
+app.listen(process.env.PORT || 5000);

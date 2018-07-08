@@ -1,7 +1,8 @@
-const query = require('./genericQuery').query;
-const _ = require('underscore');
+const query = require("./genericQuery").query;
+const _ = require("underscore");
+const uploadFileToS3 = require("../services/uploadFileToS3");
 
-const sql = (id) => `
+const sql = id => `
   WITH boundary AS (
       SELECT ST_Area(geog) as area, id, ST_Simplify(geog::geometry, 0.05) as geom
       FROM boundaries
@@ -20,33 +21,58 @@ const sql = (id) => `
     FROM boundary, raster, park_trails GROUP BY rast, area, boundary.id;
 `;
 
-const getBoundary = (id, pool) => new Promise((resolve) => {
-  query(sql(id), pool, ({rows: [row]}) => {
-    const vertices = row.dump.valarray;
-    const flatVertices = _.flatten(vertices);
-    const trails = (row.trails[0].id == null) ? [] : row.trails;
-
-    resolve({
-      area: parseInt(row.area),
-      id: row.id,
-      trailsCount: trails.length,
-      trails: trails.slice(0, 8),
-      highPoint: Math.max(...flatVertices),
-      trailTypes: {
-        hike: trails.filter(t => t.type == "hike").length || 0,
-        bike: trails.filter(t => t.type == "bike").length || 0,
-        horse: trails.filter(t => t.type == "horse").length || 0,
-        ohv: trails.filter(t => t.type == "atv" || t.type == "motorcycle").length || 0
-      },
-      trailLengths: [
-        ["1-3", trails.filter(t => t.length <= 4828).length || 0],
-        ["3-7", trails.filter(t => t.length > 4828 && t.length <= 11265).length || 0],
-        ["7-15", trails.filter(t => t.length > 11265 && t.length <= 24140).length || 0],
-        ["15-25", trails.filter(t => t.length > 24140 && t.length <= 32186).length || 0],
-        ["25+", trails.filter(t => t.length >= 40233).length || 0]
-      ],
+const getBoundary = (id, pool) =>
+  new Promise(resolve => {
+    queryBoundary(id, pool).then(data => {
+      uploadFileToS3({
+        key: `boundary-${id}.json`,
+        data: JSON.stringify(data)
+      });
+      resolve(data);
     });
   });
-});
+
+const queryBoundary = (id, pool) =>
+  new Promise(resolve => {
+    query(sql(id), pool, ({ rows: [row] }) => {
+      const vertices = row.dump.valarray;
+      const flatVertices = _.flatten(vertices);
+      const trails = row.trails[0].id == null ? [] : row.trails;
+
+      resolve({
+        area: parseInt(row.area),
+        id: row.id,
+        trailsCount: trails.length,
+        trails: trails.slice(0, 8),
+        highPoint: Math.max(...flatVertices),
+        trailTypes: {
+          hike: trails.filter(t => t.type == "hike").length || 0,
+          bike: trails.filter(t => t.type == "bike").length || 0,
+          horse: trails.filter(t => t.type == "horse").length || 0,
+          ohv:
+            trails.filter(t => t.type == "atv" || t.type == "motorcycle")
+              .length || 0
+        },
+        trailLengths: [
+          ["1-3", trails.filter(t => t.length <= 4828).length || 0],
+          [
+            "3-7",
+            trails.filter(t => t.length > 4828 && t.length <= 11265).length || 0
+          ],
+          [
+            "7-15",
+            trails.filter(t => t.length > 11265 && t.length <= 24140).length ||
+              0
+          ],
+          [
+            "15-25",
+            trails.filter(t => t.length > 24140 && t.length <= 32186).length ||
+              0
+          ],
+          ["25+", trails.filter(t => t.length >= 40233).length || 0]
+        ]
+      });
+    });
+  });
 
 module.exports = getBoundary;
