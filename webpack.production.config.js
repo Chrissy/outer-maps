@@ -2,6 +2,7 @@ const path = require("path").normalize;
 
 module.exports = {
   entry: "./components/app.js",
+  mode: "production",
   output: {
     path: path(__dirname + "/public/dist"),
     filename: "bundle.js"
