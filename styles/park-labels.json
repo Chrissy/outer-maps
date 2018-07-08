@@ -12,8 +12,8 @@
       "stops": [[9, 10],[10, 11],[18, 14]]
     },
     "text-offset": [0, 0.5],
-    "text-allow-overlap": true,
-    "icon-allow-overlap": true,
+    "text-allow-overlap": false,
+    "icon-allow-overlap": false,
     "text-anchor": "top",
     "text-font": ["DIN Offc Pro Medium","Arial Unicode MS Regular"],
     "text-field": "{name}",
@@ -21,7 +21,12 @@
     "text-max-width": 8
   },
   "paint": {
-    "text-color": "hsl(100, 100%, 20%)",
+    "text-color": [
+      "case",
+      ["boolean", ["feature-state", "preview"], false],
+      "blue",
+      "red"
+    ],
     "text-halo-color": "hsl(0, 0%, 100%)",
     "text-halo-width": 0.5,
     "text-halo-blur": 0.5
@@ -53,7 +58,12 @@
     "text-max-width": 8
   },
   "paint": {
-    "text-color": "rgb(50, 50, 255)",
+    "text-color": [
+      "case",
+      ["boolean", ["feature-state", "hover"], false],
+      "blue",
+      "red"
+    ],
     "text-halo-color": "hsl(0, 0%, 100%)",
     "text-halo-width": 0.5,
     "text-halo-blur": 0.5
