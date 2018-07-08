@@ -66,3 +66,8 @@ if (process.env.NODE_ENV !== "production") {
 
 app.use(express.static("public"));
 app.listen(process.env.PORT || 5000);
+
+const Raven = require("raven");
+Raven.config(
+  "https://d23f02a0fa444c62b2f0b6b643a476ba@sentry.io/1239266"
+).install();
