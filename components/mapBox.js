@@ -111,6 +111,6 @@ MapBox.propTypes = {
   sources: PropTypes.array,
   filters: PropTypes.array,
   flyTo: PropTypes.object,
-  pointer: PropTypes.number,
+  pointer: PropTypes.bool,
   watchLayers: PropTypes.array
 };

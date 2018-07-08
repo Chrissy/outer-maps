@@ -150,8 +150,13 @@
   "source-layer": "trails",
   "type": "line",
   "paint": {
-    "line-color": "transparent",
-    "line-width": 8
+    "line-color": [
+      "case",
+      ["boolean", ["feature-state", "preview"], false],
+      "red",
+      "transparent"
+    ],
+    "line-width": 4
   },
   "interactive": true,
   "filter": ["in", "type", "hike", "horse", "bike", "atv", "motorcycle", "trail"]
