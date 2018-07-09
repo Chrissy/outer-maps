@@ -13,12 +13,7 @@ import styles from "../styles/map.css";
 import getOffsetCenter from "../modules/getOffsetCenter";
 import sliceElevationsWithHandles from "../modules/sliceElevationsWithHandles";
 
-const WATCH_LAYERS = [
-  "trails",
-  "national-park-labels",
-  "national-park-labels-active",
-  "handles"
-];
+const WATCH_LAYERS = ["trails", "national-park-labels", "handles"];
 
 export default class Map extends React.Component {
   constructor(props) {
@@ -45,7 +40,6 @@ export default class Map extends React.Component {
   }
 
   setPreviewElement(feature) {
-    if (this.state.previewElement) this.clearPreviewElement();
     this.setState({ previewElement: feature });
   }
 
@@ -200,20 +194,15 @@ export default class Map extends React.Component {
         source: "local",
         state: { preview: true }
       });
-    return featureStates;
-  }
 
-  filters() {
-    return [
-      {
-        id: "national-parks-active",
-        filter: [
-          "in",
-          "id",
-          this.selectedBoundary() ? this.selectedBoundary().id : 0
-        ]
-      }
-    ];
+    if (this.selectedBoundary())
+      featureStates.push({
+        source: "composite",
+        sourceLayer: "national-parks-active",
+        id: this.selectedBoundary().id,
+        state: { preview: true }
+      });
+    return featureStates;
   }
 
   render() {

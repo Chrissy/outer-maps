@@ -37,7 +37,7 @@
 {
   "id": "national-park-labels-active",
   "type": "symbol",
-  "source": "$sourceHover",
+  "source": "$source",
   "text-ignore-placement": false,
   "source-layer": "park-boundary-labels",
   "layout": {

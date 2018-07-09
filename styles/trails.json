@@ -129,7 +129,7 @@
 },
 {
   "id": "trails-preview",
-  "source": "$sourceHover",
+  "source": "$source",
   "source-layer": "trails",
   "filter": ["in", "id", 0],
   "type": "line",

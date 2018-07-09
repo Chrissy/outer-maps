@@ -123,10 +123,16 @@
   "type": "line",
   "source": "composite",
   "source-layer": "park-boundaries",
-  "filter": ["in", "id", 0],
+  "filter": ["==", "$type", "Polygon"],
   "paint": {
     "line-color": "rgb(229,255,228)",
-    "line-width": 4
+    "line-width": 4,
+    "line-opacity": [
+      "case",
+      ["boolean", ["feature-state", "preview"], false],
+      1,
+      0
+    ]
   }
 },
 {
