@@ -44,6 +44,12 @@ export default class Map extends React.Component {
     return !!(this.selectedBoundary() || this.selectedTrails().length);
   }
 
+  setPreviewElement(feature) {
+    if (this.state.previewElement) this.clearPreviewElement();
+    feature.setFeatureState({ preview: true });
+    this.setState({ previewElement: feature });
+  }
+
   clearPreviewElement() {
     this.state.previewElement.setFeatureState({ preview: false });
     this.setState({ previewElement: null });
@@ -73,12 +79,11 @@ export default class Map extends React.Component {
 
   handleFeature(feature) {
     const { previewElement } = this.state;
-    const { properties, setFeatureState } = feature;
+    const { properties } = feature;
 
     if (previewElement && properties.id == previewElement.properties.id) return;
 
-    setFeatureState({ preview: true });
-    this.setState({ previewElement: feature });
+    this.setPreviewElement(feature);
   }
 
   handleDrag({ target, lngLat }) {
