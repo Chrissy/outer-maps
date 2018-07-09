@@ -37,6 +37,19 @@ export default class MapBox extends React.PureComponent {
     });
   }
 
+  updateFeatureStates(featureStates, oldFeatureStates) {
+    oldFeatureStates.forEach(feature => {
+      const nullifyObject = Object.keys(feature.state).reduce((obj, val) => {
+        return { ...obj, [val]: null };
+      }, {});
+      this.mapboxed.setFeatureState(feature, nullifyObject);
+    });
+
+    featureStates.forEach(feature => {
+      this.mapboxed.setFeatureState(feature, feature.state);
+    });
+  }
+
   componentDidMount() {
     MapboxGL.accessToken = accessToken;
 
@@ -55,6 +68,15 @@ export default class MapBox extends React.PureComponent {
   componentDidUpdate(prevProps) {
     if (!is(fromJS(prevProps.sources), fromJS(this.props.sources))) {
       this.updateSources(this.props.sources);
+    }
+
+    if (
+      !is(fromJS(prevProps.featureStates), fromJS(this.props.featureStates))
+    ) {
+      this.updateFeatureStates(
+        this.props.featureStates,
+        prevProps.featureStates
+      );
     }
 
     if (this.props.filters && prevProps.filters !== this.props.filters) {
@@ -80,17 +102,9 @@ export default class MapBox extends React.PureComponent {
           event => {
             const eventMod = Object.assign({}, event, {
               features: event.point
-                ? this.mapboxed
-                  .queryRenderedFeatures(event.point, {
-                    layers: this.props.watchLayers
-                  })
-                  .map(feature => {
-                    return {
-                      ...feature,
-                      setFeatureState: state =>
-                        this.mapboxed.setFeatureState(feature, state)
-                    };
-                  })
+                ? this.mapboxed.queryRenderedFeatures(event.point, {
+                  layers: this.props.watchLayers
+                })
                 : null
             });
             this.props[eventName](eventMod);
@@ -110,6 +124,13 @@ export default class MapBox extends React.PureComponent {
 MapBox.propTypes = {
   sources: PropTypes.array,
   filters: PropTypes.array,
+  featureStates: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      source: PropTypes.string,
+      sourceLayer: PropTypes.string
+    })
+  ),
   flyTo: PropTypes.object,
   pointer: PropTypes.bool,
   watchLayers: PropTypes.array

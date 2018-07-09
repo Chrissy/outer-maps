@@ -46,12 +46,10 @@ export default class Map extends React.Component {
 
   setPreviewElement(feature) {
     if (this.state.previewElement) this.clearPreviewElement();
-    feature.setFeatureState({ preview: true });
     this.setState({ previewElement: feature });
   }
 
   clearPreviewElement() {
-    this.state.previewElement.setFeatureState({ preview: false });
     this.setState({ previewElement: null });
   }
 
@@ -194,6 +192,17 @@ export default class Map extends React.Component {
     ];
   }
 
+  featureStates() {
+    let featureStates = [];
+    if (this.state.previewElement)
+      featureStates.push({
+        ...this.state.previewElement,
+        source: "local",
+        state: { preview: true }
+      });
+    return featureStates;
+  }
+
   filters() {
     return [
       {
@@ -212,6 +221,7 @@ export default class Map extends React.Component {
       <div ref={this.map} id="the-map" className={styles.body}>
         <MapBox
           sources={this.sources()}
+          featureStates={this.featureStates()}
           flyTo={this.state.flyTo}
           pointer={!!(this.state.previewTrail || this.state.previewBoundary)}
           watchLayers={WATCH_LAYERS}
