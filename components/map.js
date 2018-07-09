@@ -25,8 +25,7 @@ export default class Map extends React.Component {
     super(props);
 
     this.state = {
-      previewBoundary: null,
-      previewTrail: null,
+      previewElement: null,
       flyTo: null
     };
 
@@ -45,26 +44,20 @@ export default class Map extends React.Component {
     return !!(this.selectedBoundary() || this.selectedTrails().length);
   }
 
-  clearPreviewBoundary() {
-    this.state.previewBoundary.setFeatureState({ preview: false });
-    this.setState({ previewBoundary: null });
-  }
-
-  clearPreviewTrail() {
-    this.state.previewTrail.setFeatureState({ preview: false });
-    this.setState({ previewTrail: null });
+  clearPreviewElement() {
+    this.state.previewElement.setFeatureState({ preview: false });
+    this.setState({ previewElement: null });
   }
 
   onMapMouseMove({ target, features: [feature], lngLat }) {
     const {
       draggingPoint,
-      state: { previewTrail, previewBoundary }
+      state: { previewElement }
     } = this;
 
     if (!feature && !draggingPoint) {
       target.dragPan.enable();
-      if (previewTrail) return this.clearPreviewTrail();
-      if (previewBoundary) return this.clearPreviewBoundary();
+      if (previewElement) return this.clearPreviewElement();
     } else {
       if (draggingPoint || feature.layer.id == "handles") {
         this.handleDrag({ target, lngLat });
@@ -79,21 +72,13 @@ export default class Map extends React.Component {
   }
 
   handleFeature(feature) {
-    const { previewBoundary, previewTrail } = this.state;
-    const { layer, properties, setFeatureState } = feature;
+    const { previewElement } = this.state;
+    const { properties, setFeatureState } = feature;
 
-    if (previewBoundary && properties.id == previewBoundary.properties.id)
-      return;
-    if (previewTrail && properties.id == previewTrail.properties.id) return;
+    if (previewElement && properties.id == previewElement.properties.id) return;
 
-    if (layer.id == "trails") {
-      setFeatureState({ preview: true });
-      this.setState({ previewTrail: feature });
-    }
-    if (layer.id == "national-park-labels") {
-      setFeatureState({ preview: true });
-      this.setState({ previewBoundary: feature });
-    }
+    setFeatureState({ preview: true });
+    this.setState({ previewElement: feature });
   }
 
   handleDrag({ target, lngLat }) {
