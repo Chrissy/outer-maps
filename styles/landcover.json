@@ -106,11 +106,10 @@
   }
 },
 {
-  "id": "national-parks",
+  "id": "national-parks-fill",
   "type": "fill",
   "source": "$source",
   "source-layer": "national-parks",
-  "filter": ["==", "$type", "Polygon"],
   "paint": {
     "fill-color": {
       "base": 1.04,
@@ -119,19 +118,17 @@
   }
 },
 {
-  "id": "national-parks-active",
+  "id": "national-parks",
   "type": "line",
   "source": "$source",
   "source-layer": "national-parks",
-  "filter": ["==", "$type", "Polygon"],
   "paint": {
-    "line-color": "red",
     "line-width": 4,
-    "line-opacity": [
+    "line-color": [
       "case",
       ["boolean", ["feature-state", "preview"], false],
-      1,
-      0
+      "red",
+      "transparent"
     ]
   }
 },

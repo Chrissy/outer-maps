@@ -96,7 +96,8 @@ export default class Map extends React.Component {
     draggingPoint.currentPointOnLine = snapToPoint;
   }
 
-  onMapClick({ features: [feature] }) {
+  onMapClick({ features }) {
+    const feature = features[0] || null;
     const { draggingPoint, props } = this;
 
     if (draggingPoint) return;
@@ -197,8 +198,8 @@ export default class Map extends React.Component {
 
     if (this.selectedBoundary())
       featureStates.push({
-        source: "composite",
-        sourceLayer: "national-parks-active",
+        source: "local",
+        sourceLayer: "national-parks",
         id: this.selectedBoundary().id,
         state: { preview: true }
       });
