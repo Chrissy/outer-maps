@@ -10,7 +10,7 @@
   "pitch": 0,
   "local": {
     "composite": {
-      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.park-boundaries",
+      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7",
       "type": "vector"
     },
     "local": {
@@ -34,7 +34,7 @@
   },
   "remote": {
     "composite": {
-      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.park-boundaries,fivefourths.local",
+      "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.local",
       "type": "vector"
     },
     "handles": {
