@@ -214,7 +214,7 @@ export default class Map extends React.Component {
           sources={this.sources()}
           featureStates={this.featureStates()}
           flyTo={this.state.flyTo}
-          pointer={!!(this.state.previewTrail || this.state.previewBoundary)}
+          pointer={!!this.state.previewElementId}
           watchLayers={WATCH_LAYERS}
           click={this.onMapClick.bind(this)}
           mousemove={this.onMapMouseMove.bind(this)}
