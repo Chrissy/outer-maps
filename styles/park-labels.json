@@ -24,8 +24,8 @@
     "text-color": [
       "case",
       ["boolean", ["feature-state", "preview"], false],
-      "blue",
-      "red"
+      "rgb(50, 50, 255)",
+      "hsl(100, 100%, 20%)"
     ],
     "text-halo-color": "hsl(0, 0%, 100%)",
     "text-halo-width": 0.5,

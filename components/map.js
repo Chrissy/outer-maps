@@ -20,7 +20,8 @@ export default class Map extends React.Component {
     super(props);
 
     this.state = {
-      previewElement: null,
+      previewTrailId: null,
+      previewBoundaryId: null,
       flyTo: null
     };
 
@@ -39,23 +40,16 @@ export default class Map extends React.Component {
     return !!(this.selectedBoundary() || this.selectedTrails().length);
   }
 
-  setPreviewElement(feature) {
-    this.setState({ previewElement: feature });
-  }
-
-  clearPreviewElement() {
-    this.setState({ previewElement: null });
-  }
-
   onMapMouseMove({ target, features: [feature], lngLat }) {
     const {
       draggingPoint,
-      state: { previewElement }
+      state: { previewTrailId, previewBoundaryId }
     } = this;
 
     if (!feature && !draggingPoint) {
       target.dragPan.enable();
-      if (previewElement) return this.clearPreviewElement();
+      if (previewTrailId) return this.setState({ previewTrailId: 0 });
+      if (previewBoundaryId) return this.setState({ previewBoundaryId: 0 });
     } else {
       if (draggingPoint || feature.layer.id == "handles") {
         this.handleDrag({ target, lngLat });
@@ -69,13 +63,14 @@ export default class Map extends React.Component {
     }
   }
 
-  handleFeature(feature) {
-    const { previewElement } = this.state;
-    const { properties } = feature;
-
-    if (previewElement && properties.id == previewElement.properties.id) return;
-
-    this.setPreviewElement(feature);
+  handleFeature({ properties, layer }) {
+    const { previewBoundaryId, previewTrailId } = this.state;
+    if (previewBoundaryId && properties.id == previewBoundaryId) return;
+    if (previewTrailId && properties.id == previewTrailId) return;
+    if (layer.id == "trails")
+      this.setState({ previewTrailId: properties.id, previewBoundaryId: 0 });
+    if (layer.id == "national-park-labels")
+      this.setState({ previewBoundaryId: properties.id, previewTrailId: 0 });
   }
 
   handleDrag({ target, lngLat }) {
@@ -189,10 +184,19 @@ export default class Map extends React.Component {
 
   featureStates() {
     let featureStates = [];
-    if (this.state.previewElement)
+    if (this.state.previewTrailId)
       featureStates.push({
-        ...this.state.previewElement,
         source: "local",
+        sourceLayer: "trails",
+        id: this.state.previewTrailId,
+        state: { preview: true }
+      });
+
+    if (this.state.previewBoundaryId)
+      featureStates.push({
+        source: "local",
+        sourceLayer: "park-boundary-labels",
+        id: this.state.previewBoundaryId,
         state: { preview: true }
       });
 

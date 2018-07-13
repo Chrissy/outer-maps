@@ -127,7 +127,7 @@
     "line-color": [
       "case",
       ["boolean", ["feature-state", "preview"], false],
-      "red",
+      "rgb(229,255,228)",
       "transparent"
     ]
   }

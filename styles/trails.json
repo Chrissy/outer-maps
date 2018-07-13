@@ -131,7 +131,6 @@
   "id": "trails-preview",
   "source": "$source",
   "source-layer": "trails",
-  "filter": ["in", "id", 0],
   "type": "line",
   "before": "handles-outline",
   "line": {
@@ -140,7 +139,12 @@
   },
   "interactive": true,
   "paint": {
-    "line-color": "#FF9100",
+    "line-color": [
+      "case",
+      ["boolean", ["feature-state", "preview"], false],
+      "#FF9100",
+      "transparent"
+    ],
     "line-width": 2
   }
 },
@@ -150,13 +154,8 @@
   "source-layer": "trails",
   "type": "line",
   "paint": {
-    "line-color": [
-      "case",
-      ["boolean", ["feature-state", "preview"], false],
-      "red",
-      "transparent"
-    ],
-    "line-width": 4
+    "line-color": "transparent",
+    "line-width": 8
   },
   "interactive": true,
   "filter": ["in", "type", "hike", "horse", "bike", "atv", "motorcycle", "trail"]
