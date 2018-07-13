@@ -20,8 +20,8 @@ export default class Map extends React.Component {
     super(props);
 
     this.state = {
-      previewTrailId: null,
-      previewBoundaryId: null,
+      previewElementLayer: null,
+      previewElementId: null,
       flyTo: null
     };
 
@@ -41,15 +41,14 @@ export default class Map extends React.Component {
   }
 
   onMapMouseMove({ target, features: [feature], lngLat }) {
-    const {
-      draggingPoint,
-      state: { previewTrailId, previewBoundaryId }
-    } = this;
+    const { draggingPoint } = this;
 
     if (!feature && !draggingPoint) {
       target.dragPan.enable();
-      if (previewTrailId) return this.setState({ previewTrailId: 0 });
-      if (previewBoundaryId) return this.setState({ previewBoundaryId: 0 });
+      return this.setState({
+        previewElementId: null,
+        previewElementLayer: null
+      });
     } else {
       if (draggingPoint || feature.layer.id == "handles") {
         this.handleDrag({ target, lngLat });
@@ -64,13 +63,18 @@ export default class Map extends React.Component {
   }
 
   handleFeature({ properties, layer }) {
-    const { previewBoundaryId, previewTrailId } = this.state;
-    if (previewBoundaryId && properties.id == previewBoundaryId) return;
-    if (previewTrailId && properties.id == previewTrailId) return;
-    if (layer.id == "trails")
-      this.setState({ previewTrailId: properties.id, previewBoundaryId: 0 });
-    if (layer.id == "national-park-labels")
-      this.setState({ previewBoundaryId: properties.id, previewTrailId: 0 });
+    const { previewElementId, previewElementLayer } = this.state;
+    if (
+      previewElementId &&
+      previewElementLayer &&
+      previewElementId == properties.id &&
+      previewElementLayer == layer["source-layer"]
+    )
+      return;
+    this.setState({
+      previewElementId: properties.id,
+      previewElementLayer: layer["source-layer"]
+    });
   }
 
   handleDrag({ target, lngLat }) {
@@ -161,6 +165,7 @@ export default class Map extends React.Component {
       draggingPoint.properties.id,
       snapToPoint.properties.index
     );
+
     this.draggingPoint = null;
     target.dragPan.enable();
   }
@@ -184,19 +189,11 @@ export default class Map extends React.Component {
 
   featureStates() {
     let featureStates = [];
-    if (this.state.previewTrailId)
+    if (this.state.previewElementId && this.state.previewElementLayer)
       featureStates.push({
         source: "local",
-        sourceLayer: "trails",
-        id: this.state.previewTrailId,
-        state: { preview: true }
-      });
-
-    if (this.state.previewBoundaryId)
-      featureStates.push({
-        source: "local",
-        sourceLayer: "park-boundary-labels",
-        id: this.state.previewBoundaryId,
+        sourceLayer: this.state.previewElementLayer,
+        id: this.state.previewElementId,
         state: { preview: true }
       });
 
