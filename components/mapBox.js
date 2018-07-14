@@ -31,9 +31,16 @@ export default class MapBox extends React.PureComponent {
     );
   }
 
-  updateFilters(filters) {
-    filters.forEach(f => {
-      this.mapboxed.setFilter(f.id, f.filter);
+  updateFeatureStates(featureStates, oldFeatureStates) {
+    oldFeatureStates.forEach(feature => {
+      const nullifyObject = Object.keys(feature.state).reduce((obj, val) => {
+        return { ...obj, [val]: null };
+      }, {});
+      this.mapboxed.setFeatureState(feature, nullifyObject);
+    });
+
+    featureStates.forEach(feature => {
+      this.mapboxed.setFeatureState(feature, feature.state);
     });
   }
 
@@ -57,8 +64,13 @@ export default class MapBox extends React.PureComponent {
       this.updateSources(this.props.sources);
     }
 
-    if (this.props.filters && prevProps.filters !== this.props.filters) {
-      this.updateFilters(this.props.filters);
+    if (
+      !is(fromJS(prevProps.featureStates), fromJS(this.props.featureStates))
+    ) {
+      this.updateFeatureStates(
+        this.props.featureStates,
+        prevProps.featureStates
+      );
     }
 
     if (this.props.flyTo && prevProps.flyTo !== this.props.flyTo) {
@@ -101,8 +113,14 @@ export default class MapBox extends React.PureComponent {
 
 MapBox.propTypes = {
   sources: PropTypes.array,
-  filters: PropTypes.array,
+  featureStates: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      source: PropTypes.string,
+      sourceLayer: PropTypes.string
+    })
+  ),
   flyTo: PropTypes.object,
-  pointer: PropTypes.number,
+  pointer: PropTypes.bool,
   watchLayers: PropTypes.array
 };

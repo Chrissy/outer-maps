@@ -129,9 +129,8 @@
 },
 {
   "id": "trails-preview",
-  "source": "$sourceHover",
+  "source": "$source",
   "source-layer": "trails",
-  "filter": ["in", "id", 0],
   "type": "line",
   "before": "handles-outline",
   "line": {
@@ -140,7 +139,12 @@
   },
   "interactive": true,
   "paint": {
-    "line-color": "#FF9100",
+    "line-color": [
+      "case",
+      ["boolean", ["feature-state", "preview"], false],
+      "#FF9100",
+      "transparent"
+    ],
     "line-width": 2
   }
 },

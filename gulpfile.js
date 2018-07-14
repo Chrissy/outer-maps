@@ -28,10 +28,7 @@ gulp.task(
           json.sources = json[tileSource];
           json.layers = json.layers.map(l => {
             const source = tileSource == "local" ? "local" : "composite";
-            const sourceHover =
-              tileSource == "local" ? "localHover" : "compositeHover";
             l.source = l.source == "$source" ? source : l.source;
-            l.source = l.source == "$sourceHover" ? sourceHover : l.source;
             return l;
           });
           return json;

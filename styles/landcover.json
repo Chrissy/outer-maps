@@ -106,11 +106,10 @@
   }
 },
 {
-  "id": "national-parks",
+  "id": "national-parks-fill",
   "type": "fill",
-  "source": "composite",
-  "source-layer": "park-boundaries",
-  "filter": ["==", "$type", "Polygon"],
+  "source": "$source",
+  "source-layer": "national-parks",
   "paint": {
     "fill-color": {
       "base": 1.04,
@@ -119,14 +118,18 @@
   }
 },
 {
-  "id": "national-parks-active",
+  "id": "national-parks",
   "type": "line",
-  "source": "composite",
-  "source-layer": "park-boundaries",
-  "filter": ["in", "id", 0],
+  "source": "$source",
+  "source-layer": "national-parks",
   "paint": {
-    "line-color": "rgb(229,255,228)",
-    "line-width": 4
+    "line-width": 4,
+    "line-color": [
+      "case",
+      ["boolean", ["feature-state", "preview"], false],
+      "rgb(229,255,228)",
+      "transparent"
+    ]
   }
 },
 {

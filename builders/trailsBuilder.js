@@ -1,12 +1,10 @@
-const jsonfile = require('jsonfile')
-const helpers = require('@turf/helpers');
-const path = require('path').normalize;
-const gQuery = require('../db/genericQuery');
-const labelMaker = require('../modules/labelMaker').labelMaker;
-const exec = require('child_process').execSync;
-const fs = require('fs');
+const jsonfile = require("jsonfile");
+const gQuery = require("../db/genericQuery");
+const labelMaker = require("../modules/labelMaker").labelMaker;
+const exec = require("child_process").execSync;
+const fs = require("fs");
 
-const tempFileName = 'temp-trails.geojson';
+const tempFileName = "temp-trails.geojson";
 
 const queries = [
   {
@@ -85,27 +83,37 @@ const queries = [
     query: `
       SELECT name, id, ST_Area(geog) as area, ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds, station1, ST_PointOnSurface(geog::geometry) as geom
       FROM boundaries
-    `,
+    `
+  },
+  {
+    name: "national-parks",
+    minZoom: 1,
+    maxZoom: 12,
+    query: `
+      SELECT name, id, ST_Simplify(geog::geometry, 0.0005) as geom
+      FROM boundaries
+    `
   }
-]
+];
 
-addTippecanoeProps = (data, props) => {
+const addTippecanoeProps = (data, props) => {
   return Object.assign({}, data, {
-    features: data.features.map(f => Object.assign({}, f, {
-      "tippecanoe" : props
-    }))
+    features: data.features.map(f =>
+      Object.assign({}, f, {
+        tippecanoe: props
+      })
+    )
   });
-}
+};
 
-build = (data, {name, minZoom = 0, maxZoom = 99, labelLength} = {}, resolve) => {
-
+const build = (data, { name, minZoom = 0, maxZoom = 99 } = {}, resolve) => {
   const newObj = addTippecanoeProps(data, {
-    "maxzoom" : maxZoom,
-    "minzoom" : minZoom,
+    maxzoom: maxZoom,
+    minzoom: minZoom,
     layer: name
   });
 
-  jsonfile.writeFile("./" + tempFileName, newObj, {flag: 'a'}, () => {
+  jsonfile.writeFile("./" + tempFileName, newObj, { flag: "a" }, () => {
     console.log(name + " done!");
     resolve();
   });
@@ -114,19 +122,27 @@ build = (data, {name, minZoom = 0, maxZoom = 99, labelLength} = {}, resolve) => 
 const pool = gQuery.pool();
 
 const processes = queries.map(q => {
-  return new Promise((resolve, reject) => {
-    gQuery.query(q.query, pool, (result) => {
-      gQuery.geoJson(result, (result) => {
-        build((q.labelLength) ? labelMaker(result, q.labelLength) : result, q, resolve);
+  return new Promise(resolve => {
+    gQuery.query(q.query, pool, result => {
+      gQuery.geoJson(result, result => {
+        build(
+          q.labelLength ? labelMaker(result, q.labelLength) : result,
+          q,
+          resolve
+        );
       });
     });
   });
-})
+});
 
 Promise.all(processes).then(() => {
-  console.log("making tiles...")
-  exec(`tippecanoe --quiet -f -P -M 100000 -as -an -al -ap -o tiles/local.mbtiles ${tempFileName}`);
+  console.log("making tiles...");
+  exec(
+    `tippecanoe --quiet -f -P -M 100000 -as -an -al -ap -o tiles/local.mbtiles ${tempFileName}`
+  );
   fs.unlink("./" + tempFileName, () => {
-    console.log("Done! Tiles are cached into memory by the server. You will need to restart.")
+    console.log(
+      "Done! Tiles are cached into memory by the server. You will need to restart."
+    );
   });
-})
+});

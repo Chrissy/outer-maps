@@ -13,14 +13,21 @@ import styles from "../styles/map.css";
 import getOffsetCenter from "../modules/getOffsetCenter";
 import sliceElevationsWithHandles from "../modules/sliceElevationsWithHandles";
 
-const WATCH_LAYERS = [
-  "trails",
-  "national-park-labels",
-  "national-park-labels-active",
-  "handles"
-];
+const WATCH_LAYERS = ["trails", "national-park-labels", "handles"];
 
 export default class Map extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      previewElementLayer: null,
+      previewElementId: null,
+      flyTo: null
+    };
+
+    this.map = React.createRef();
+  }
+
   selectedTrails() {
     return this.props.trails.filter(t => t.selected && t.hasElevationData);
   }
@@ -34,15 +41,14 @@ export default class Map extends React.Component {
   }
 
   onMapMouseMove({ target, features: [feature], lngLat }) {
-    const {
-      draggingPoint,
-      state: { previewTrailId, previewBoundaryId }
-    } = this;
+    const { draggingPoint } = this;
 
     if (!feature && !draggingPoint) {
       target.dragPan.enable();
-      if (previewTrailId) return this.setState({ previewTrailId: 0 });
-      if (previewBoundaryId) return this.setState({ previewBoundaryId: 0 });
+      return this.setState({
+        previewElementId: null,
+        previewElementLayer: null
+      });
     } else {
       if (draggingPoint || feature.layer.id == "handles") {
         this.handleDrag({ target, lngLat });
@@ -57,13 +63,18 @@ export default class Map extends React.Component {
   }
 
   handleFeature({ properties, layer }) {
-    const { previewBoundaryId, previewTrailId } = this.state;
-    if (previewBoundaryId && properties.id == previewBoundaryId) return;
-    if (previewTrailId && properties.id == previewTrailId) return;
-    if (layer.id == "trails")
-      this.setState({ previewTrailId: properties.id, previewBoundaryId: 0 });
-    if (layer.id == "national-park-labels")
-      this.setState({ previewBoundaryId: properties.id, previewTrailId: 0 });
+    const { previewElementId, previewElementLayer } = this.state;
+    if (
+      previewElementId &&
+      previewElementLayer &&
+      previewElementId == properties.id &&
+      previewElementLayer == layer["source-layer"]
+    )
+      return;
+    this.setState({
+      previewElementId: properties.id,
+      previewElementLayer: layer["source-layer"]
+    });
   }
 
   handleDrag({ target, lngLat }) {
@@ -84,7 +95,8 @@ export default class Map extends React.Component {
     draggingPoint.currentPointOnLine = snapToPoint;
   }
 
-  onMapClick({ features: [feature] }) {
+  onMapClick({ features }) {
+    const feature = features[0] || null;
     const { draggingPoint, props } = this;
 
     if (draggingPoint) return;
@@ -153,6 +165,7 @@ export default class Map extends React.Component {
       draggingPoint.properties.id,
       snapToPoint.properties.index
     );
+
     this.draggingPoint = null;
     target.dragPan.enable();
   }
@@ -174,41 +187,24 @@ export default class Map extends React.Component {
     ];
   }
 
-  filters() {
-    return [
-      {
-        id: "trails-preview",
-        filter: [
-          "all",
-          ["in", "id", this.state.previewTrailId],
-          ["!in", "id", ...(this.selectedTrails().map(t => t.id) || [])]
-        ]
-      },
-      {
-        id: "national-parks-active",
-        filter: [
-          "in",
-          "id",
-          this.selectedBoundary() ? this.selectedBoundary().id : 0
-        ]
-      },
-      {
-        id: "national-park-labels-active",
-        filter: ["in", "id", this.state.previewBoundaryId]
-      }
-    ];
-  }
+  featureStates() {
+    let featureStates = [];
+    if (this.state.previewElementId && this.state.previewElementLayer)
+      featureStates.push({
+        source: "local",
+        sourceLayer: this.state.previewElementLayer,
+        id: this.state.previewElementId,
+        state: { preview: true }
+      });
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      previewBoundaryId: 0,
-      previewTrailId: 0,
-      flyTo: null
-    };
-
-    this.map = React.createRef();
+    if (this.selectedBoundary())
+      featureStates.push({
+        source: "local",
+        sourceLayer: "national-parks",
+        id: this.selectedBoundary().id,
+        state: { preview: true }
+      });
+    return featureStates;
   }
 
   render() {
@@ -216,9 +212,9 @@ export default class Map extends React.Component {
       <div ref={this.map} id="the-map" className={styles.body}>
         <MapBox
           sources={this.sources()}
-          filters={this.filters()}
+          featureStates={this.featureStates()}
           flyTo={this.state.flyTo}
-          pointer={this.state.previewTrailId || this.state.previewBoundaryId}
+          pointer={!!this.state.previewElementId}
           watchLayers={WATCH_LAYERS}
           click={this.onMapClick.bind(this)}
           mousemove={this.onMapMouseMove.bind(this)}
