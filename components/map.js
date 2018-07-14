@@ -20,8 +20,7 @@ export default class Map extends React.Component {
     super(props);
 
     this.state = {
-      previewElementLayer: null,
-      previewElementId: null,
+      previewElement: null,
       flyTo: null
     };
 
@@ -46,8 +45,7 @@ export default class Map extends React.Component {
     if (!feature && !draggingPoint) {
       target.dragPan.enable();
       return this.setState({
-        previewElementId: null,
-        previewElementLayer: null
+        previewElement: null
       });
     } else {
       if (draggingPoint || feature.layer.id == "handles") {
@@ -63,17 +61,19 @@ export default class Map extends React.Component {
   }
 
   handleFeature({ properties, layer }) {
-    const { previewElementId, previewElementLayer } = this.state;
+    const { previewElement } = this.state;
     if (
-      previewElementId &&
-      previewElementLayer &&
-      previewElementId == properties.id &&
-      previewElementLayer == layer["source-layer"]
+      previewElement &&
+      previewElement.id == properties.id &&
+      previewElement.sourceLayer == layer["source-layer"]
     )
       return;
     this.setState({
-      previewElementId: properties.id,
-      previewElementLayer: layer["source-layer"]
+      previewElement: {
+        id: properties.id,
+        sourceLayer: layer["source-layer"],
+        source: layer.source
+      }
     });
   }
 
@@ -189,11 +189,9 @@ export default class Map extends React.Component {
 
   featureStates() {
     let featureStates = [];
-    if (this.state.previewElementId && this.state.previewElementLayer)
+    if (this.state.previewElement)
       featureStates.push({
-        source: "local",
-        sourceLayer: this.state.previewElementLayer,
-        id: this.state.previewElementId,
+        ...this.state.previewElement,
         state: { preview: true }
       });
 
@@ -214,7 +212,7 @@ export default class Map extends React.Component {
           sources={this.sources()}
           featureStates={this.featureStates()}
           flyTo={this.state.flyTo}
-          pointer={!!this.state.previewElementId}
+          pointer={!!this.state.previewElement}
           watchLayers={WATCH_LAYERS}
           click={this.onMapClick.bind(this)}
           mousemove={this.onMapMouseMove.bind(this)}
