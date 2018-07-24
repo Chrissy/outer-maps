@@ -1,4 +1,10 @@
 {
-  "dev": "postgresql://localhost:5432/mountains",
+  "dev": {
+    "driver": "pg",
+    "database": "mountains",
+    "host": "localhost",
+    "user": {"ENV": "DEV_USERNAME"},
+    "password": {"ENV": "DEV_PASSWORD"}
+  },
   "prod": "postgresql://localhost:5432/mountains"
 }
