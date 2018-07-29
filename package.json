@@ -93,6 +93,7 @@
     "@mapbox/mbtiles": "^0.10.0",
     "@mapbox/tilelive": "^5.12.6",
     "benchmark": "^2.1.4",
+    "dotenv": "^6.0.0",
     "eslint": "^4.19.1",
     "eslint-plugin-react": "^7.9.1",
     "fixy": "^1.1.0",

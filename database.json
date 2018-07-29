@@ -1,8 +1,8 @@
 {
   "dev": {
     "driver": "pg",
-    "database": "mountains",
     "host": "localhost",
+    "database": {"ENV": "DEV_DATABASE"},
     "user": {"ENV": "DEV_USERNAME"},
     "password": {"ENV": "DEV_PASSWORD"}
   },

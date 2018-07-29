@@ -2,8 +2,9 @@ const pg = require('pg');
 const execSync = require('child_process').execSync;
 const path = require('path').normalize;
 
-const databaseName = process.env.DATABASE_NAME;
-const user = process.env.DATABASE_USER || '';
+const databaseName = process.env.DEV_DATABASE || process.env.DATABASE_NAME;
+const user = process.env.DEV_USER || process.env.DATABASE_USER || '';
+const password = process.env.DEV_PASSWORD || null
 if (!databaseName) console.log("warning: no database name");
 
 exports.uploadShapeFile = function({directoryName, filename, srid = '4326', tableName}, cb) {
@@ -11,7 +12,7 @@ exports.uploadShapeFile = function({directoryName, filename, srid = '4326', tabl
 
   const pathStr = path(process.env.LIB + "/" + directoryName);
 
-  execSync(`shp2pgsql -G -c -s ${srid}:4326 ${filename}.shp public.${tableName} | psql -d ${databaseName} ${user}`, {cwd: pathStr});
+  execSync(`shp2pgsql -G -c -s ${srid}:4326 ${filename}.shp public.${tableName} | psql -d ${databaseName} ${user} ${password ? `-P ${password}` : ''}`, {cwd: pathStr});
 
   if (cb) cb();
 }
@@ -21,9 +22,9 @@ exports.insertElevationRasters = function({directoryName, srid = '4326', tableNa
 
   const pathStr = path(process.env.LIB + "/" + directoryName);
 
-  execSync(`raster2pgsql -s ${srid} -t "auto" -C *.tif public.${tableName} | psql -d ${databaseName} ${user}`, {cwd: pathStr});
+  execSync(`raster2pgsql -s ${srid} -t "auto" -C *.tif public.${tableName} | psql -d ${databaseName} ${user} -P ${password ? `-P ${password}` : ''}`, {cwd: pathStr});
 
-  if (cb) cb()
+  if (cb) cb();
 }
 
 exports.deleteDuplicateTrails = function({from, using}) {
