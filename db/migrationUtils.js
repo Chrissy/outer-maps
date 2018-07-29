@@ -1,46 +1,59 @@
-const pg = require('pg');
-const execSync = require('child_process').execSync;
-const path = require('path').normalize;
+const execSync = require("child_process").execSync;
+const path = require("path").normalize;
 
 const databaseName = process.env.DEV_DATABASE || process.env.DATABASE_NAME;
-const user = process.env.DEV_USER || process.env.DATABASE_USER || '';
-const password = process.env.DEV_PASSWORD || null
+const user = process.env.DEV_USER || process.env.DATABASE_USER || "";
+
 if (!databaseName) console.log("warning: no database name");
 
-exports.uploadShapeFile = function({directoryName, filename, srid = '4326', tableName}, cb) {
+exports.uploadShapeFile = function(
+  { directoryName, filename, srid = "4326", tableName },
+  cb
+) {
   console.log("uploading...");
 
   const pathStr = path(process.env.LIB + "/" + directoryName);
 
-  execSync(`shp2pgsql -G -c -s ${srid}:4326 ${filename}.shp public.${tableName} | psql -d ${databaseName} ${user} ${password ? `-P ${password}` : ''}`, {cwd: pathStr});
+  execSync(
+    `shp2pgsql -G -c -s ${srid}:4326 ${filename}.shp public.${tableName} | psql -d ${databaseName} ${user}`,
+    { cwd: pathStr }
+  );
 
   if (cb) cb();
-}
+};
 
-exports.insertElevationRasters = function({directoryName, srid = '4326', tableName} = {}, cb) {
+exports.insertElevationRasters = function(
+  { directoryName, srid = "4326", tableName } = {},
+  cb
+) {
   console.log("inserting...");
 
   const pathStr = path(process.env.LIB + "/" + directoryName);
 
-  execSync(`raster2pgsql -s ${srid} -t "auto" -C *.tif public.${tableName} | psql -d ${databaseName} ${user} -P ${password ? `-P ${password}` : ''}`, {cwd: pathStr});
+  execSync(
+    `raster2pgsql -s ${srid} -t "auto" -C *.tif public.${tableName} | psql -d ${databaseName} ${user}`,
+    { cwd: pathStr }
+  );
 
   if (cb) cb();
-}
+};
 
-exports.deleteDuplicateTrails = function({from, using}) {
+exports.deleteDuplicateTrails = function({ from, using }) {
   const query = `
     WITH t1 AS (select geog::geometry as geom FROM trails WHERE source = '${using}'),
     t2 AS (select geog::geometry as geom, id FROM trails WHERE source = '${from}')
     DELETE FROM trails WHERE id IN
     (SELECT t2.id AS id FROM t1, t2 WHERE ST_Intersects(t1.geom, t2.geom) AND ST_NumGeometries(ST_Intersection(t1.geom, t2.geom)) > 5);
-  `
+  `;
 
-  console.log("deleting duplicates. this job takes a while and will continue to run asynchonously");
+  console.log(
+    "deleting duplicates. this job takes a while and will continue to run asynchonously"
+  );
 
   return query;
-}
+};
 
-exports.packTrails = function(baseTableName, callback) {
+exports.packTrails = function(baseTableName) {
   const query = `
     CREATE TABLE merge_line_attempt(name, geog, type) AS
     SELECT name, ST_LineMerge(ST_Union(geog::geometry)) as geog, type
@@ -48,13 +61,12 @@ exports.packTrails = function(baseTableName, callback) {
 
     DROP TABLE ${baseTableName};
     ALTER TABLE merge_line_attempt RENAME TO ${baseTableName};
-    `
+    `;
 
-    return query;
-}
+  return query;
+};
 
-
-exports.explodeTrails = function(baseTableName, callback) {
+exports.explodeTrails = function(baseTableName) {
   const query = `
     CREATE TABLE explode_attempt(name, geog, type) AS
     SELECT
@@ -73,19 +85,19 @@ exports.explodeTrails = function(baseTableName, callback) {
 
     DROP TABLE ${baseTableName};
     ALTER TABLE explode_attempt RENAME TO ${baseTableName};
-    `
+    `;
 
-    return query
-}
+  return query;
+};
 
-exports.packandExplodeTrails = function(baseTableName, callback) {
+exports.packandExplodeTrails = function(baseTableName) {
   return `
     ${exports.packTrails(baseTableName)}
     ${exports.explodeTrails(baseTableName)}
   `;
-}
+};
 
-exports.patchDisconnectedTrails = function(baseTableName, callback) {
+exports.patchDisconnectedTrails = function(baseTableName) {
   const query = `
     ALTER TABLE ${baseTableName} ADD COLUMN id SERIAL PRIMARY KEY;
 
@@ -100,18 +112,18 @@ exports.patchDisconnectedTrails = function(baseTableName, callback) {
       from pool p1, pool p2 WHERE p1.name = p2.name AND p1.type = p2.type AND p1.id != p2.id)
     INSERT INTO ${baseTableName}(name, geog, type)
     SELECT name, geom, type from values where ST_Length(geom) < 0.002;
-    `
+    `;
 
-    console.log("connecting broken trails...")
+  console.log("connecting broken trails...");
 
-    return `
+  return `
       ${query}
       ${exports.packTrails(baseTableName)}
       ${exports.explodeTrails(baseTableName)}
-    `
-}
+    `;
+};
 
-exports.mergeIntoTrailsTable = function({mergingTableName, sourceUrl} = {}, callback) {
+exports.mergeIntoTrailsTable = function({ mergingTableName, sourceUrl } = {}) {
   const query = `
     CREATE TABLE merge_table AS SELECT * FROM trails;
 
@@ -126,12 +138,19 @@ exports.mergeIntoTrailsTable = function({mergingTableName, sourceUrl} = {}, call
     ALTER TABLE trails ADD COLUMN id SERIAL PRIMARY KEY;
   `;
 
-  console.log("merging...")
+  console.log("merging...");
 
   return query;
-}
+};
 
-exports.mergeIntoBoundariesTable = function({baseTableName, mergingTableName, name = 'name', region = 'region', geog = 'geog', sourceUrl} = {}, callback) {
+exports.mergeIntoBoundariesTable = function({
+  baseTableName,
+  mergingTableName,
+  name = "name",
+  region = "region",
+  geog = "geog",
+  sourceUrl
+} = {}) {
   const query = `
     CREATE TABLE ${baseTableName}__new AS SELECT * FROM ${baseTableName};
 
@@ -148,7 +167,7 @@ exports.mergeIntoBoundariesTable = function({baseTableName, mergingTableName, na
     DROP TABLE ${mergingTableName};
   `;
 
-  console.log("merging...")
+  console.log("merging...");
 
   return query;
-}
+};
