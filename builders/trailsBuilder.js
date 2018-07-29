@@ -12,7 +12,7 @@ const queries = [
   {
     name: "trails-zoomed-out",
     minZoom: 6,
-    maxZoom: 8.75,
+    maxZoom: 8,
     query: `
       SELECT name, id, type, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.000005) as geom
       FROM trails
@@ -23,7 +23,7 @@ const queries = [
   {
     name: "trails",
     minZoom: 9,
-    maxZoom: 9.75,
+    maxZoom: 10,
     query: `
       SELECT name, id, type, station1, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.000003) as geom,
       ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds
@@ -34,19 +34,7 @@ const queries = [
   },
   {
     name: "trails",
-    minZoom: 10,
-    maxZoom: 11.75,
-    query: `
-      SELECT name, id, type, station1, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.000001) as geom,
-      ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds
-      FROM trails
-      WHERE ST_Length(geog) > 1500 AND type = 'hike' OR type = 'horse' OR type = 'bike' OR
-      type = 'motorcycle' OR type = 'atv' AND name != ''
-    `
-  },
-  {
-    name: "trails",
-    minZoom: 12,
+    minZoom: 11,
     maxZoom: 14,
     query: `
       SELECT name, id, type, station1, ST_Length(geog) as distance, geog::geometry as geom,
@@ -60,7 +48,7 @@ const queries = [
     name: "trail-labels-zoomed-out",
     labelLength: 1.5,
     minZoom: 9,
-    maxZoom: 11.75,
+    maxZoom: 12,
     query: `
       SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.000004) as geom
       FROM trails
