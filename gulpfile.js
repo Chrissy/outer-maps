@@ -1,3 +1,4 @@
+require("dotenv").config();
 const fs = require("fs");
 const gulp = require("gulp");
 const merge = require("gulp-merge-json");
@@ -9,9 +10,7 @@ gulp.task(
   gulp.series(() => {
     const index = JSON.parse(fs.readFileSync("./styles/base.json")).imports;
     const tileSource =
-      process.env.NODE_ENV === "production"
-        ? "remote"
-        : JSON.parse(fs.readFileSync("./.env")).tiles;
+      process.env.NODE_ENV === "production" ? "remote" : process.env.TILES;
 
     return gulp
       .src(["base", ...index].map(l => `styles/${l}.json`))

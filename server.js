@@ -13,6 +13,8 @@ const getTrail = require("./db/getTrail");
 const getBoundary = require("./db/getBoundary");
 const getMapboxTerrain = require("./services/getMapboxTerrain");
 
+require("dotenv").config();
+
 const app = express();
 const pool = createPool();
 
