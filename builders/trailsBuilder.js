@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const jsonfile = require("jsonfile");
 const gQuery = require("../db/genericQuery");
 const labelMaker = require("../modules/labelMaker").labelMaker;
