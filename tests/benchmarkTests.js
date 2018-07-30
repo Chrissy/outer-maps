@@ -1,6 +1,6 @@
 const Benchmark = require("benchmark");
-const getTrail = require("../modules/getTrail");
-const getBoundary = require("../modules/getBoundary");
+const getTrail = require("../db/getTrail");
+const getBoundary = require("../db/getBoundary");
 const createPool = require("../db/genericQuery").pool;
 
 const pool = createPool();
