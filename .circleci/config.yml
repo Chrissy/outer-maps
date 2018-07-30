@@ -35,3 +35,6 @@ jobs:
 
       # run tests!
       - run: yarn test
+
+      # run map styles
+      - run: gulp mapify
