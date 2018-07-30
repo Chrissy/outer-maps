@@ -8,12 +8,12 @@ const jeditor = require("gulp-json-editor");
 gulp.task(
   "mapify",
   gulp.series(() => {
-    const index = JSON.parse(fs.readFileSync("./styles/base.json")).imports;
+    const index = JSON.parse(fs.readFileSync("./styles/map/base.json")).imports;
     const tileSource =
       process.env.NODE_ENV === "production" ? "remote" : process.env.TILES;
 
     return gulp
-      .src(["base", ...index].map(l => `styles/${l}.json`))
+      .src(["base", ...index].map(l => `styles/map/${l}.json`))
       .pipe(plumber())
       .pipe(
         merge({
