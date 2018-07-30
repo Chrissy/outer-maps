@@ -35,3 +35,11 @@ jobs:
 
       # run tests!
       - run: yarn test
+
+      # run map style builder
+
+      - run: gulp mapify
+
+      # build js bundle
+
+      - run: ./node_modules/.bin/webpack --config webpack.production.config.js -p
