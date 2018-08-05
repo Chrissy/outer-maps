@@ -5,7 +5,7 @@
   "paint": {
     "background-color": {
       "base": 1,
-      "stops": [[11, "hsl(35, 12%, 89%)"],[13, "hsl(35, 12%, 89%)"]]
+      "stops": [[11, "hsl(66, 24%, 90%)"],[13, "hsl(66, 24%, 95%)"]]
     }
   }
 },
@@ -17,14 +17,13 @@
   },
   "source": "composite",
   "source-layer": "landcover",
-  "maxzoom": 12,
   "filter": ["==", "class", "crop"],
   "layout": {},
   "paint": {
-    "fill-color": "hsl(75, 62%, 81%)",
+    "fill-color": "hsl(54, 45%, 85%)",
     "fill-opacity": {
       "base": 1.5,
-      "stops": [[2, 0.3],[12, 0]]
+      "stops": [[2, 0.2],[12, 0.6]]
     },
     "fill-antialias": false
   }
@@ -37,14 +36,13 @@
   },
   "source": "composite",
   "source-layer": "landcover",
-  "maxzoom": 12,
   "filter": ["==", "class", "grass"],
   "layout": {},
   "paint": {
-    "fill-color": "hsl(75, 62%, 81%)",
+    "fill-color": "hsl(72, 59%, 90%)",
     "fill-opacity": {
       "base": 1.5,
-      "stops": [[2, 0.3],[12, 0]]
+      "stops": [[2, 0.2],[12, 0.6]]
     },
     "fill-antialias": false
   }
@@ -57,14 +55,13 @@
   },
   "source": "composite",
   "source-layer": "landcover",
-  "maxzoom": 12,
   "filter": ["==", "class", "scrub"],
   "layout": {},
   "paint": {
-    "fill-color": "hsl(75, 62%, 81%)",
+    "fill-color": "hsl(89, 45%, 85%)",
     "fill-opacity": {
       "base": 1.5,
-      "stops": [[2, 0.3],[12, 0]]
+      "stops": [[2, 0.2],[12, 0.6]]
     },
     "fill-antialias": false
   }
@@ -77,14 +74,13 @@
   },
   "source": "composite",
   "source-layer": "landcover",
-  "maxzoom": 12,
   "filter": ["==", "class", "wood"],
   "layout": {},
   "paint": {
-    "fill-color": "hsl(75, 62%, 81%)",
+    "fill-color": "hsl(114, 45%, 80%)",
     "fill-opacity": {
       "base": 1.5,
-      "stops": [[2, 0.3],[12, 0]]
+      "stops": [[2, 0.2],[12, 0.6]]
     },
     "fill-antialias": false
   }
@@ -100,8 +96,11 @@
   "filter": ["==", "class", "snow"],
   "layout": {},
   "paint": {
-    "fill-color": "hsl(0, 0%, 100%)",
-    "fill-opacity": 0.2,
+    "fill-color": "hsl(40, 8%, 95%)",
+    "fill-opacity": {
+      "base": 1.5,
+      "stops": [[6, 0.5],[14, 0.75]]
+    },
     "fill-antialias": false
   }
 },
@@ -109,6 +108,9 @@
   "id": "national-parks-fill",
   "type": "fill",
   "source": "$source",
+  "layout": {
+    "visibility": "none"
+  },
   "source-layer": "national-parks",
   "paint": {
     "fill-color": {
@@ -139,7 +141,9 @@
   "source-layer": "landuse",
   "minzoom": 9,
   "filter": ["==", "class", "scrub"],
-  "layout": {},
+  "layout": {
+    "visibility": "none"
+  },
   "paint": {
     "fill-color": "hsl(75, 41%, 74%)",
     "fill-opacity": {
@@ -156,7 +160,7 @@
   "minzoom": 9,
   "filter": ["==", "class", "grass"],
   "layout": {
-    "visibility": "visible"
+    "visibility": "none"
   },
   "paint": {
     "fill-color": "hsl(75, 41%, 74%)",
@@ -173,7 +177,9 @@
   "source-layer": "landuse",
   "minzoom": 6,
   "filter": ["==", "class", "wood"],
-  "layout": {},
+  "layout": {
+    "visibility": "none"
+  },
   "paint": {
     "fill-color": "hsl(75, 41%, 74%)",
     "fill-opacity": {
@@ -190,7 +196,7 @@
   "minzoom": 11,
   "filter": ["==", "class", "agriculture"],
   "layout": {
-    "visibility": "visible"
+    "visibility": "none"
   },
   "paint": {
     "fill-opacity": {
@@ -207,7 +213,9 @@
   "source": "composite",
   "source-layer": "landuse",
   "filter": ["==", "class", "hospital"],
-  "layout": {},
+  "layout": {
+    "visibility": "none"
+  },
   "paint": {
     "fill-color": {
       "base": 1,
@@ -221,7 +229,9 @@
   "source": "composite",
   "source-layer": "landuse",
   "filter": ["==", "class", "school"],
-  "layout": {},
+  "layout": {
+    "visibility": "none"
+  },
   "paint": {
     "fill-color": {
       "base": 1,
@@ -272,10 +282,10 @@
   "filter": ["==", "class", "glacier"],
   "layout": {},
   "paint": {
-    "fill-color": "hsl(196, 71%, 93%)",
+    "fill-color": "hsl(38, 5%, 90%)",
     "fill-opacity": {
       "base": 1,
-      "stops": [[9, 0],[10, 0.5]]
+      "stops": [[9, 0.5],[10, 0.8]]
     }
   }
 },
@@ -330,7 +340,7 @@
     "line-join": "round"
   },
   "paint": {
-    "line-color": "hsl(215, 84%, 69%)",
+    "line-color": "hsl(250, 84%, 69%)",
     "line-width": {
       "base": 1.3,
       "stops": [[8.5, 0.4],[20, 8]]
@@ -358,7 +368,7 @@
   "id": "waterway-river-canal",
   "ref": "waterway-river-canal-shadow",
   "paint": {
-    "line-color": "hsl(205, 87%, 76%)",
+    "line-color": "hsl(250, 87%, 76%)",
     "line-width": {
       "base": 1.3,
       "stops": [[8.5, 0.4],[20, 8]]
@@ -381,7 +391,7 @@
     "line-cap": "round"
   },
   "paint": {
-    "line-color": "hsl(205, 87%, 76%)",
+    "line-color": "hsl(250, 87%, 76%)",
     "line-width": {
       "base": 1.35,
       "stops": [[13.5, 0.4],[20, 3]]
@@ -399,17 +409,12 @@
   "source-layer": "water",
   "layout": {},
   "paint": {
-    "fill-color": "hsl(215, 84%, 69%)",
+    "fill-color": "hsla(240, 69%, 51%, 0.3)",
     "fill-translate": {
       "base": 1.2,
-      "stops": [[
-          7,
-          [0, 0]],[
-          16,
-          [
-            -1,
-            -1
-          ]]
+      "stops": [
+        [7, [0, 0]],
+        [16, [-1, -1]]
       ]
     },
     "fill-translate-anchor": "viewport",
@@ -420,7 +425,7 @@
   "id": "water",
   "ref": "water-shadow",
   "paint": {
-    "fill-color": "hsl(196, 80%, 70%)"
+    "fill-color": "hsl(224, 100%, 79%)"
   }
 },
 {
