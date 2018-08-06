@@ -70,7 +70,7 @@ exports.down = function(db, next) {
   db.runSql(`
     ALTER TABLE trails DROP COLUMN station1;
     ALTER TABLE boundaries DROP COLUMN station1;
-  `, next)
+  `)
 };
 
 exports._meta = {
