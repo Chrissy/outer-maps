@@ -1,15 +1,15 @@
-'use strict';
+"use strict";
 
-const utils = require('../db/migrationUtils');
+const utils = require("../db/migrationUtils");
 
 var dbm;
 var type;
 var seed;
 
 /**
-  * We receive the dbmigrate dependency from dbmigrate initially.
-  * This enables us to not have to rely on NODE_PATH.
-  */
+ * We receive the dbmigrate dependency from dbmigrate initially.
+ * This enables us to not have to rely on NODE_PATH.
+ */
 exports.setup = function(options, seedLink) {
   dbm = options.dbmigrate;
   type = dbm.dataType;
@@ -18,13 +18,14 @@ exports.setup = function(options, seedLink) {
 
 exports.up = function(db, next) {
   utils.uploadShapeFile({
-    tableName: 'utah_trails',
-    directoryName: 'utah_state',
-    filename: 'Trails',
-    srid: '26912'
+    tableName: "utah_trails",
+    directoryName: "utah_state",
+    filename: "Trails",
+    srid: "26912"
   });
 
-  db.runSql(`
+  db.runSql(
+    `
     ALTER TABLE utah_trails ADD type text;
     UPDATE utah_trails SET
       type = CASE
@@ -38,17 +39,27 @@ exports.up = function(db, next) {
       END;
       ALTER TABLE utah_trails RENAME COLUMN primarynam TO name;
 
-      ${utils.packandExplodeTrails('utah_trails')}
-      ${utils.patchDisconnectedTrails('utah_trails')}
-      ${utils.mergeIntoTrailsTable({mergingTableName: 'utah_trails', sourceUrl: 'https://gis.utah.gov/data/recreation/trails/'})}
-  `, (err) => {if (err) return console.log(err); next();}
+      ${utils.packandExplodeTrails("utah_trails")}
+      ${utils.patchDisconnectedTrails("utah_trails")}
+      ${utils.mergeIntoTrailsTable({
+    mergingTableName: "utah_trails",
+    sourceUrl: "https://gis.utah.gov/data/recreation/trails/"
+  })}
+  `,
+    err => {
+      if (err) return console.log(err);
+      next();
+    }
   );
 };
 
 exports.down = function(db, next) {
-  db.runSql("DELETE FROM trails WHERE source = 'https://gis.utah.gov/data/recreation/trails/'", next);
+  db.runSql(
+    "DELETE FROM trails WHERE source = 'https://gis.utah.gov/data/recreation/trails/'",
+    next
+  );
 };
 
 exports._meta = {
-  "version": 1
+  version: 1
 };
