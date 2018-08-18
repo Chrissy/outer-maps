@@ -40,14 +40,9 @@ exports.up = function(db, next) {
 
       ${utils.packandExplodeTrails('utah_trails')}
       ${utils.patchDisconnectedTrails('utah_trails')}
-      ${utils.mergeIntoTrailsTable({
-        mergingTableName: 'utah_trails',
-        sourceUrl: 'https://gis.utah.gov/data/recreation/trails/'
-      })}
-  `, (err) => {
-    if (err) console.log(err);
-    next();
-  });
+      ${utils.mergeIntoTrailsTable({mergingTableName: 'utah_trails', sourceUrl: 'https://gis.utah.gov/data/recreation/trails/'})}
+  `, (err) => {if (err) return console.log(err); next();}
+  );
 };
 
 exports.down = function(db, next) {

@@ -40,10 +40,27 @@ exports.insertElevationRasters = function(
 
 exports.deleteDuplicateTrails = function({ from, using }) {
   const query = `
-    WITH t1 AS (select geog::geometry as geom FROM trails WHERE source = '${using}'),
-    t2 AS (select geog::geometry as geom, id FROM trails WHERE source = '${from}')
-    DELETE FROM trails WHERE id IN
-    (SELECT t2.id AS id FROM t1, t2 WHERE ST_Intersects(t1.geom, t2.geom) AND ST_NumGeometries(ST_Intersection(t1.geom, t2.geom)) > 5);
+    WITH t1 AS (
+      SELECT
+        geog::geometry as geom
+      FROM trails
+      WHERE source = '${using}'
+      GROUP BY geom),
+    t2 AS (
+      SELECT
+        geog::geometry as geom,
+        id
+      FROM trails
+      WHERE source = '${from}'
+      GROUP BY geom, id)
+    DELETE FROM trails WHERE id IN (
+      SELECT
+        t2.id AS id
+      FROM t1, t2
+      WHERE
+        ST_Intersects(t1.geom, t2.geom)
+        AND ST_NumGeometries(ST_Intersection(t1.geom, t2.geom)) > 5
+      GROUP BY t2.id);
   `;
 
   console.log(
@@ -56,8 +73,12 @@ exports.deleteDuplicateTrails = function({ from, using }) {
 exports.packTrails = function(baseTableName) {
   const query = `
     CREATE TABLE merge_line_attempt(name, geog, type) AS
-    SELECT name, ST_LineMerge(ST_Union(geog::geometry)) as geog, type
-    FROM ${baseTableName} group by name, type;
+    SELECT
+      name,
+      ST_LineMerge(ST_Union(geog::geometry)) as geog,
+      type
+    FROM ${baseTableName}
+    GROUP BY name, geog, type;
 
     DROP TABLE ${baseTableName};
     ALTER TABLE merge_line_attempt RENAME TO ${baseTableName};
@@ -81,7 +102,8 @@ exports.explodeTrails = function(baseTableName) {
       FROM (
         SELECT *, ST_Dump(ST_LineMerge(geog::geometry)) AS geom_dump FROM ${baseTableName}
       ) AS dumped
-    ) AS simple;
+    ) AS simple
+    GROUP BY simple.name, simple.simple_geom, simple.type;
 
     DROP TABLE ${baseTableName};
     ALTER TABLE explode_attempt RENAME TO ${baseTableName};
@@ -101,17 +123,39 @@ exports.patchDisconnectedTrails = function(baseTableName) {
   const query = `
     ALTER TABLE ${baseTableName} ADD COLUMN id SERIAL PRIMARY KEY;
 
-    WITH pool AS
-      (SELECT id, name, geog, type FROM ${baseTableName}),
-    values AS
-      (SELECT distinct ON (geom) p1.name AS name, p1.type AS type, p1.geog AS geog1, p2.geog AS geog2, p1.id AS id1, p2.id AS id2,
+    WITH pool AS (
+      SELECT
+        id,
+        name,
+        geog,
+        type
+      FROM ${baseTableName}
+      GROUP BY id, name, geog, type),
+    values AS (
+      SELECT
+        distinct ON (geom) p1.name AS name,
+        p1.type AS type,
+        p1.geog AS geog1,
+        p2.geog AS geog2,
+        p1.id AS id1,
+        p2.id AS id2,
         ST_ShortestLine(
           ST_Collect(ST_StartPoint(p1.geog::geometry), ST_EndPoint(p1.geog::geometry)),
           ST_Collect(ST_StartPoint(p2.geog::geometry), ST_EndPoint(p2.geog::geometry))
         ) AS geom
-      from pool p1, pool p2 WHERE p1.name = p2.name AND p1.type = p2.type AND p1.id != p2.id)
+        FROM pool p1, pool p2
+        WHERE p1.name = p2.name
+          AND p1.type = p2.type
+          AND p1.id != p2.id
+        GROUP BY p1.name, p1.type, p1.geog, p2.geog, p1.id, p2.id, geom)
     INSERT INTO ${baseTableName}(name, geog, type)
-    SELECT name, geom, type from values where ST_Length(geom) < 0.002;
+    SELECT
+      name,
+      geom,
+      type
+    FROM values
+    WHERE ST_Length(geom) < 0.002
+    GROUP BY name, geom, type;
     `;
 
   console.log("connecting broken trails...");
@@ -128,7 +172,13 @@ exports.mergeIntoTrailsTable = function({ mergingTableName, sourceUrl } = {}) {
     CREATE TABLE merge_table AS SELECT * FROM trails;
 
     INSERT INTO merge_table(name, geog, type, source)
-    SELECT name, geog, type, '${sourceUrl}' from ${mergingTableName};
+    SELECT
+      name,
+      geog,
+      type,
+      '${sourceUrl}' as sourceUrl
+    FROM ${mergingTableName}
+    GROUP BY name, geog, type, sourceUrl;
 
     DROP TABLE trails;
     DROP TABLE ${mergingTableName};
@@ -155,7 +205,13 @@ exports.mergeIntoBoundariesTable = function({
     CREATE TABLE ${baseTableName}__new AS SELECT * FROM ${baseTableName};
 
     INSERT INTO ${baseTableName}__new(name, region, geog, source)
-    SELECT ${name}, ${region}, ${geog}, '${sourceUrl}' FROM ${mergingTableName};
+    SELECT
+      ${name} as name,
+      ${region} as region,
+      ${geog} as geog,
+      '${sourceUrl}' as sourceUrl
+    FROM ${mergingTableName}
+    GROUP BY name, region, geog, sourceUrl;
 
     DROP TABLE ${baseTableName};
 
