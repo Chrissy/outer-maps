@@ -24,7 +24,9 @@ exports.up = function(db, next) {
       source VARCHAR(200),
       type VARCHAR(100),
       geog geography(GEOMETRY,4326)
-    )`, next);
+    )`, (err) => {
+      if (err) return console.log(err);
+      next();});
 };
 
 exports.down = function(db, next) {

@@ -96,13 +96,18 @@ exports.explodeTrails = function(baseTableName) {
       simple.type
     FROM (
       SELECT
-        dumped.*,
+        dumped.name,
+        dumped.type,
         (dumped.geom_dump).geom as simple_geom,
         (dumped.geom_dump).path as path
       FROM (
-        SELECT *, ST_Dump(ST_LineMerge(geog::geometry)) AS geom_dump FROM ${baseTableName}
-      ) AS dumped
-    ) AS simple
+        SELECT
+          name,
+          type,
+          ST_Dump(ST_LineMerge(geog::geometry)) AS geom_dump
+        FROM ${baseTableName}
+        GROUP BY name, type, geom_dump) AS dumped
+      GROUP BY dumped.name, dumped.type, simple_geom, path) AS simple
     GROUP BY simple.name, simple.simple_geom, simple.type;
 
     DROP TABLE ${baseTableName};
