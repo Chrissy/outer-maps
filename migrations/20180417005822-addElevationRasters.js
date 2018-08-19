@@ -21,7 +21,7 @@ exports.up = function(db, next) {
     directoryName: 'elevation_rasters',
     srid: '4326',
     tableName: 'elevation'});
-  db.runSql(next);
+  db.runSql("SELECT current_user", next);
 };
 
 exports.down = function(db, next) {
