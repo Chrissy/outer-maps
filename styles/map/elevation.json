@@ -40,7 +40,7 @@
     "visibility": "visible"
   },
   "paint": {
-    "fill-color": "hsl(0, 0%, 100%)",
+    "fill-color": "hsla(0, 0%, 100%, 50%)",
     "fill-opacity": {
       "stops": [[6, 0.19], [12, 0.3]]
     },

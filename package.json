@@ -70,7 +70,7 @@
     "jsonfile": "^3.0.0",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
-    "mapbox-gl": "^0.46.0",
+    "mapbox-gl": "^0.47.0",
     "moment": "^2.22.1",
     "node-fetch": "^1.7.3",
     "optional": "^0.1.4",
