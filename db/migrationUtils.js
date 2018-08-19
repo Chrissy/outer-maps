@@ -91,24 +91,17 @@ exports.explodeTrails = function(baseTableName) {
   const query = `
     CREATE TABLE explode_attempt(name, geog, type) AS
     SELECT
-      simple.name,
-      simple.simple_geom,
-      simple.type
+      dumped.name as name,
+      (dumped.geom_dump).geom as simple_geom,
+      dumped.type as type
     FROM (
       SELECT
-        dumped.name,
-        dumped.type,
-        (dumped.geom_dump).geom as simple_geom,
-        (dumped.geom_dump).path as path
-      FROM (
-        SELECT
-          name,
-          type,
-          ST_Dump(ST_LineMerge(geog::geometry)) AS geom_dump
+        name,
+        type,
+        ST_Dump(ST_LineMerge(geog::geometry)) AS geom_dump
         FROM ${baseTableName}
         GROUP BY name, type, geom_dump) AS dumped
-      GROUP BY dumped.name, dumped.type, simple_geom, path) AS simple
-    GROUP BY simple.name, simple.simple_geom, simple.type;
+    GROUP BY name, simple_geom, type;
 
     DROP TABLE ${baseTableName};
     ALTER TABLE explode_attempt RENAME TO ${baseTableName};
