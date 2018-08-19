@@ -14,7 +14,7 @@
   "paint": {
     "fill-color": {
       "base": 1.04,
-      "stops": [[4, "hsla(119, 50%, 78%, 0.6)"],[8, "hsla(119, 50%, 76%, 0.5)"],[10, "hsla(119, 50%, 74%, 0.2)"]]
+      "stops": [[6, "hsla(119, 70%, 70%, 0.8)"],[8, "hsla(119, 50%, 76%, 0.5)"],[10, "hsla(119, 50%, 78%, 0)"]]
     }
   }
 },
@@ -32,7 +32,7 @@
     "fill-color": "hsl(54, 45%, 85%)",
     "fill-opacity": {
       "base": 1.5,
-      "stops": [[2, 0.2],[12, 0.6]]
+      "stops": [[6, 0.2],[10, 0.6]]
     },
     "fill-antialias": false
   }
@@ -51,7 +51,7 @@
     "fill-color": "hsl(72, 59%, 90%)",
     "fill-opacity": {
       "base": 1.5,
-      "stops": [[2, 0.2],[12, 0.6]]
+      "stops": [[6, 0.2],[10, 0.6]]
     },
     "fill-antialias": false
   }
@@ -70,7 +70,7 @@
     "fill-color": "hsl(89, 45%, 85%)",
     "fill-opacity": {
       "base": 1.5,
-      "stops": [[2, 0.2],[12, 0.6]]
+      "stops": [[6, 0.2],[10, 0.6]]
     },
     "fill-antialias": false
   }
@@ -88,7 +88,7 @@
   "paint": {
     "fill-color": "hsl(114, 45%, 80%)",
     "fill-opacity": {
-      "stops": [[2, 0.2],[12, 0.6]]
+      "stops": [[6, 0.2],[10, 0.6]]
     },
     "fill-antialias": false
   }
