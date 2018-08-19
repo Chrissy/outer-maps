@@ -5,9 +5,12 @@
     -112.94482284499875,
     37.23927485044308
   ],
-  "zoom": 11.636893140472495,
+  "zoom": 13.64205157956079,
   "bearing": 0,
   "pitch": 0,
+  "light": {
+    "intensity": 0.47
+  },
   "local": {
     "composite": {
       "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7",

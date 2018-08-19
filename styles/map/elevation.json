@@ -1,72 +1,4 @@
 {"layers": [{
-  "id": "contour-line",
-  "type": "line",
-  "metadata": {
-    "mapbox:group": "1444933837268.9458"
-  },
-  "source": "composite",
-  "source-layer": "contour",
-  "minzoom": 7,
-  "filter": [
-    "!in",
-    "index",
-    10,
-    5
-  ],
-  "layout": {
-    "visibility": "visible"
-  },
-  "paint": {
-    "line-opacity": {
-      "base": 1,
-      "stops": [[8, 0.15], [11, 0.25],[12, 0.34]]
-    },
-    "line-color": "hsl(100, 100%, 20%)",
-    "line-width": {
-      "base": 1,
-      "stops": [[13, 0.5],[14, 0.5]]
-    },
-    "line-offset": {
-      "base": 1,
-      "stops": [[13, 1],[16, 1.6]]
-    }
-  }
-},
-{
-  "id": "contour-line-index",
-  "type": "line",
-  "metadata": {
-    "mapbox:group": "1444933837268.9458"
-  },
-  "source": "composite",
-  "source-layer": "contour",
-  "minzoom": 7,
-  "filter": [
-    "in",
-    "index",
-    10,
-    5
-  ],
-  "layout": {
-    "visibility": "visible"
-  },
-  "paint": {
-    "line-opacity": {
-      "base": 1,
-      "stops": [[11, 0.35],[12, 0.25]]
-    },
-    "line-color": "hsl(100, 100%, 20%)",
-    "line-width": {
-      "base": 1,
-      "stops": [[13, 0.6],[16, 1.2]]
-    },
-    "line-offset": {
-      "base": 1,
-      "stops": [[13, 0.6],[16, 1.2]]
-    }
-  }
-},
-{
   "id": "hillshade_highlight_bright",
   "type": "fill",
   "metadata": {
@@ -86,7 +18,7 @@
   "paint": {
     "fill-color": "hsl(0, 0%, 100%)",
     "fill-opacity": {
-      "stops": [[7, 0.04], [15, 0.1],[18, 0.2]]
+      "stops": [[7, 0.2], [12, 0.25]]
     },
     "fill-antialias": false
   }
@@ -110,7 +42,7 @@
   "paint": {
     "fill-color": "hsl(0, 0%, 100%)",
     "fill-opacity": {
-      "stops": [[7, 0.04], [15, 0.1],[18, 0.2]]
+      "stops": [[6, 0.19], [12, 0.3]]
     },
     "fill-antialias": false
   }
@@ -133,9 +65,9 @@
     "visibility": "visible"
   },
   "paint": {
-    "fill-color": "hsl(56, 59%, 22%)",
+    "fill-color": "hsl(48, 19%, 15%)",
     "fill-opacity": {
-      "stops": [[7, 0.04], [15, 0.02],[17, 0.04]]
+      "stops": [[6, 0.01], [12, 0.03]]
     },
     "fill-antialias": false
   }
@@ -157,9 +89,9 @@
     "visibility": "visible"
   },
   "paint": {
-    "fill-color": "hsl(56, 59%, 22%)",
+    "fill-color": "hsl(48, 19%, 15%)",
     "fill-opacity": {
-      "stops": [[7, 0.02], [15, 0.04],[17, 0.08]]
+      "stops": [[6, 0.02], [12, 0.03]]
     },
     "fill-antialias": false
   }
@@ -181,9 +113,9 @@
     "visibility": "visible"
   },
   "paint": {
-    "fill-color": "hsl(56, 59%, 22%)",
+    "fill-color": "hsl(48, 19%, 15%)",
     "fill-opacity": {
-      "stops": [[7, 0.01], [15, 0.02],[17, 0.04]]
+      "stops": [[6, 0.02], [12, 0.04]]
     },
     "fill-antialias": false
   }
@@ -206,9 +138,9 @@
     "visibility": "visible"
   },
   "paint": {
-    "fill-color": "hsl(56, 59%, 22%)",
+    "fill-color": "hsl(48, 19%, 15%)",
     "fill-opacity": {
-      "stops": [[7, 0.01], [15, 0.02],[17, 0.04]]
+      "stops": [[6, 0.02], [12, 0.05]]
     },
     "fill-antialias": false
   }
@@ -232,4 +164,70 @@
     "line-width": 10,
     "line-pattern": "cliff"
   }
-}]}
+},
+{
+  "id": "contour-line-index",
+  "type": "line",
+  "metadata": {
+    "mapbox:group": "1444933837268.9458"
+  },
+  "source": "composite",
+  "source-layer": "contour",
+  "minzoom": 7,
+  "filter": [
+    "in",
+    "index",
+    10,
+    5
+  ],
+  "layout": {
+    "visibility": "visible"
+  },
+  "paint": {
+    "line-opacity": {
+      "base": 1,
+      "stops": [[9, 0.35], [11, 0.5], [12, 0.7]]
+    },
+    "line-color": "hsl(46, 78%, 39%)",
+    "line-width": {
+      "base": 1,
+      "stops": [[13, 0.75],[16, 1.2]]
+    },
+    "line-offset": {
+      "base": 1,
+      "stops": [[13, 0.6],[16, 1.2]]
+    }
+  }
+},
+{
+  "id": "contour-line",
+  "type": "line",
+  "metadata": {
+    "mapbox:group": "1444933837268.9458"
+  },
+  "source": "composite",
+  "source-layer": "contour",
+  "minzoom": 7.2,
+  "filter": [
+    "!in",
+    "index",
+    10,
+    5
+  ],
+  "layout": {
+    "visibility": "visible"
+  },
+  "paint": {
+    "line-opacity": {
+      "base": 1,
+      "stops": [[11, 0.5],[12, 0.7]]
+    },
+    "line-color": "hsl(46, 50%, 52%)",
+    "line-width": 0.5,
+    "line-offset": {
+      "base": 1,
+      "stops": [[13, 1],[16, 1.6]]
+    }
+  }
+}
+]}

@@ -3,10 +3,7 @@
   "type": "background",
   "layout": {},
   "paint": {
-    "background-color": {
-      "base": 1,
-      "stops": [[11, "hsl(66, 24%, 90%)"],[13, "hsl(66, 24%, 95%)"]]
-    }
+    "background-color": "hsl(66, 24%, 90%)"
   }
 },
 {
@@ -15,9 +12,10 @@
   "source": "$source",
   "source-layer": "national-parks",
   "paint": {
+    "fill-opacity": 0,
     "fill-color": {
       "base": 1.04,
-      "stops": [[0, "hsla(119, 57%, 74%, 1)"],[8, "hsla(119, 56%, 80%, 0.8)"],[14, "hsla(119, 46%, 85%, 0)"]]
+      "stops": [[0, "hsla(119, 57%, 74%, 1)"],[6, "hsla(119, 57%, 74%, 0.8)"],[10, "hsla(119, 57%, 74%, 0)"]]
     }
   }
 },
@@ -107,9 +105,9 @@
   "filter": ["==", "class", "snow"],
   "layout": {},
   "paint": {
-    "fill-color": "hsl(40, 8%, 98%)",
+    "fill-color": "hsl(40, 8%, 95%)",
     "fill-opacity": {
-      "stops": [[6, 0.3],[10, 0.8]]
+      "stops": [[6, 0.53],[14, 0.75]]
     },
     "fill-antialias": false
   }
@@ -122,9 +120,9 @@
   "filter": ["==", "class", "glacier"],
   "layout": {},
   "paint": {
-    "fill-color": "hsl(18, 5%, 98%)",
+    "fill-color": "hsl(38, 5%, 90%)",
     "fill-opacity": {
-      "stops": [[9, 0.3],[10, 0.8]]
+      "stops": [[9, 0.5],[10, 0.8]]
     }
   }
 },
