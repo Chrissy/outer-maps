@@ -20,8 +20,8 @@ exports.up = function(db, next) {
   utils.insertElevationRasters({
     directoryName: 'elevation_rasters',
     srid: '4326',
-    tableName: 'elevation'
-  }, next);
+    tableName: 'elevation'});
+  db.runSql(next);
 };
 
 exports.down = function(db, next) {

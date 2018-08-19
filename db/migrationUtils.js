@@ -2,7 +2,7 @@ const execSync = require("child_process").execSync;
 const path = require("path").normalize;
 
 const databaseName = process.env.DEV_DATABASE || process.env.DATABASE_NAME;
-const user = process.env.DEV_USER || process.env.DATABASE_USER || "";
+const user = process.env.DEV_USERNAME || process.env.DATABASE_USER || "";
 
 if (!databaseName) console.log("warning: no database name");
 
@@ -31,9 +31,11 @@ exports.insertElevationRasters = function(
   const pathStr = path(process.env.LIB + "/" + directoryName);
 
   execSync(
-    `raster2pgsql -s ${srid} -t "auto" -C *.tif public.${tableName} | psql -d ${databaseName} ${user}`,
+    `raster2pgsql -s ${srid} -t "auto" *.tif public.${tableName} | psql -d ${databaseName} ${user}`,
     { cwd: pathStr }
   );
+
+  console.log("test123...");
 
   if (cb) cb();
 };
