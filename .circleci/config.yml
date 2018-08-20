@@ -38,7 +38,7 @@ jobs:
 
       # run map style builder
 
-      - run: gulp mapify
+      - run: yarn run mapify
 
       # build js bundle
 
