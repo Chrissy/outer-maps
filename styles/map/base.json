@@ -5,13 +5,21 @@
     -112.94482284499875,
     37.23927485044308
   ],
-  "zoom": 11.636893140472495,
+  "zoom": 13.64205157956079,
   "bearing": 0,
   "pitch": 0,
+  "light": {
+    "intensity": 0.47
+  },
   "local": {
     "composite": {
       "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7",
       "type": "vector"
+    },
+    "mapbox://mapbox.terrain-rgb": {
+        "url": "mapbox://mapbox.terrain-rgb",
+        "type": "raster-dem",
+        "tileSize": 256
     },
     "local": {
       "tiles": ["http://localhost:5000/tiles/{z}/{x}/{y}.pbf"],
@@ -37,6 +45,11 @@
       "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7,fivefourths.local",
       "type": "vector"
     },
+    "mapbox://mapbox.terrain-rgb": {
+        "url": "mapbox://mapbox.terrain-rgb",
+        "type": "raster-dem",
+        "tileSize": 256
+    },
     "handles": {
       "data": {
         "type": "FeatureCollection",
@@ -58,7 +71,10 @@
     "landcover",
     "elevation",
     "roads",
+    "bridges",
+    "tunnels",
     "trails",
+    "labels",
     "park-labels"
   ],
   "created": "2017-04-12T19:41:53.385Z",
