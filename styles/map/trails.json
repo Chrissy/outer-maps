@@ -53,7 +53,7 @@
     },
     "line-width": {
       "base": 1,
-      "stops": [[8, 1], [16, 1.5]]
+      "stops": [[6, 1], [16, 1.5]]
     },
     "line-dasharray": {
       "base": 1,
@@ -222,7 +222,7 @@
     "symbol-spacing": 500
   },
   "paint": {
-    "text-color": "rgba(0,33,4,1)",
+    "text-color": "rgba(0,0,0,1)",
     "text-halo-color": "hsla(0, 0%, 100%, 100%)",
     "text-halo-width": 1
   },
