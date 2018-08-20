@@ -71,6 +71,8 @@
     "landcover",
     "elevation",
     "roads",
+    "bridges",
+    "tunnels",
     "trails",
     "labels",
     "park-labels"

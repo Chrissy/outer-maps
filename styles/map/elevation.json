@@ -12,10 +12,10 @@
       "stops": [[2, 0.15], [10, 0.5]]
     },
     "hillshade-shadow-color": {
-      "stops": [[6, "hsla(0, 0%, 0%, 0.15)"],[14, "hsla(0, 0%, 0%, 0.33)"]]
+      "stops": [[6, "hsla(0, 0%, 0%, 0.15)"],[16, "hsla(0, 0%, 0%, 0.33)"]]
     },
     "hillshade-accent-color": {
-      "stops": [[6, "hsla(0, 0%, 0%, 0.15)"],[14, "hsla(0, 0%, 0%, 0.33)"]]
+      "stops": [[6, "hsla(0, 0%, 0%, 0.15)"],[16, "hsla(0, 0%, 0%, 0.33)"]]
     },
     "hillshade-highlight-color": "hsla(0, 0%, 100%, 0.33)"
   }
