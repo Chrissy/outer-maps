@@ -589,7 +589,7 @@
       "stops": [[10, 11],[18, 14]]
     },
     "icon-image": "{maki}-15",
-    "text-font": ["DIN Offc Pro Italic","Arial Unicode MS Regular"],
+    "text-font": ["DIN Offc Pro Regular","Arial Unicode MS Regular"],
     "text-offset": [0, 0.65],
     "text-anchor": "top",
     "text-field": "{name_en}",
@@ -617,10 +617,10 @@
     "text-line-height": 1.1,
     "text-size": {
       "base": 1,
-      "stops": [[10, 11],[18, 14]]
+      "stops": [[10, 9],[18, 12]]
     },
     "icon-image": "{maki}-15",
-    "text-font": ["DIN Offc Pro Italic","Arial Unicode MS Regular"],
+    "text-font": ["DIN Offc Pro Medium","Arial Unicode MS Regular"],
     "text-offset": [0, 0.65],
     "text-anchor": "top",
     "text-field": "{name_en}, {elevation_m}m",
@@ -864,6 +864,7 @@
       "zoo"
     ]],
   "layout": {
+    "visibility": "none",
     "text-line-height": 1.1,
     "text-size": {
       "base": 1,
@@ -994,7 +995,7 @@
     "text-line-height": 1.2,
     "text-size": {
       "base": 1,
-      "stops": [[10, 11],[18, 16]]
+      "stops": [[7, 10],[15, 16]]
     },
     "text-max-angle": 38,
     "symbol-spacing": 250,
@@ -1017,6 +1018,7 @@
   "type": "symbol",
   "source": "composite",
   "source-layer": "place_label",
+  "minzoom": 10,
   "maxzoom": 18,
   "filter": ["all",
     ["all",["<=", "localrank", 10],["==", "type", "residential"]],["in", "$type", "LineString", "Point", "Polygon"]
@@ -1025,7 +1027,7 @@
     "text-line-height": 1.2,
     "text-size": {
       "base": 1,
-      "stops": [[10, 11],[18, 14]]
+      "stops": [[7, 10],[15, 16]]
     },
     "text-max-angle": 38,
     "symbol-spacing": 250,
@@ -1049,7 +1051,7 @@
   "source": "composite",
   "source-layer": "place_label",
   "minzoom": 10,
-  "maxzoom": 16,
+  "maxzoom": 18,
   "filter": ["==", "type", "neighbourhood"],
   "layout": {
     "text-field": "{name_en}",
@@ -1060,7 +1062,7 @@
     "text-padding": 3,
     "text-size": {
       "base": 1,
-      "stops": [[12, 11],[16, 16]]
+      "stops": [[7, 10],[15, 16]]
     }
   },
   "paint": {
@@ -1076,7 +1078,7 @@
   "source": "composite",
   "source-layer": "place_label",
   "minzoom": 10,
-  "maxzoom": 16,
+  "maxzoom": 18,
   "filter": ["==", "type", "suburb"],
   "layout": {
     "text-field": "{name_en}",
@@ -1087,7 +1089,7 @@
     "text-padding": 3,
     "text-size": {
       "base": 1,
-      "stops": [[11, 11],[15, 18]]
+      "stops": [[7, 10],[15, 16]]
     }
   },
   "paint": {
@@ -1103,14 +1105,14 @@
   "source": "composite",
   "source-layer": "place_label",
   "minzoom": 10,
-  "maxzoom": 16,
+  "maxzoom": 18,
   "filter": ["==", "type", "hamlet"],
   "layout": {
     "text-field": "{name_en}",
     "text-font": ["DIN Offc Pro Regular", "Arial Unicode MS Regular"],
     "text-size": {
       "base": 1,
-      "stops": [[12, 11.5],[15, 16]]
+      "stops": [[7, 10],[15, 16]]
     }
   },
   "paint": {
@@ -1124,7 +1126,7 @@
   "type": "symbol",
   "source": "composite",
   "source-layer": "place_label",
-  "minzoom": 8,
+  "minzoom": 10,
   "maxzoom": 15,
   "filter": ["==", "type", "village"],
   "layout": {
@@ -1133,7 +1135,7 @@
     "text-max-width": 7,
     "text-size": {
       "base": 1,
-      "stops": [[10, 11.5],[16, 18]]
+      "stops": [[7, 10],[15, 16]]
     }
   },
   "paint": {
@@ -1147,7 +1149,7 @@
   "type": "symbol",
   "source": "composite",
   "source-layer": "place_label",
-  "minzoom": 6,
+  "minzoom": 8,
   "maxzoom": 15,
   "filter": ["==", "type", "town"],
   "layout": {
@@ -1168,7 +1170,7 @@
     "text-max-width": 7,
     "text-size": {
       "base": 1,
-      "stops": [[7, 11.5],[15, 20]]
+      "stops": [[7, 10],[15, 16]]
     }
   },
   "paint": {
@@ -1186,13 +1188,14 @@
   "type": "symbol",
   "source": "composite",
   "source-layer": "place_label",
+  "minzoom": 8,
   "maxzoom": 16,
   "filter": ["==", "type", "island"],
   "layout": {
     "text-line-height": 1.2,
     "text-size": {
       "base": 1,
-      "stops": [[10, 11],[18, 16]]
+      "stops": [[5, 12],[12, 16]]
     },
     "text-max-angle": 38,
     "symbol-spacing": 250,
@@ -1218,12 +1221,13 @@
   },
   "source": "composite",
   "source-layer": "place_label",
+  "minzoom": 6,
   "maxzoom": 14,
   "filter": ["all",["!in","scalerank",0,1,2,3,4,5],["==", "type", "city"]],
   "layout": {
     "text-size": {
       "base": 1,
-      "stops": [[6, 12],[14, 22]]
+      "stops": [[5, 12],[12, 16]]
     },
     "icon-image": "dot-9",
     "text-font": {
@@ -1259,6 +1263,7 @@
   },
   "source": "composite",
   "source-layer": "place_label",
+  "minzoom": 6,
   "maxzoom": 14,
   "filter": [
     "all",
@@ -1296,7 +1301,7 @@
     },
     "text-size": {
       "base": 0.9,
-      "stops": [[5, 12],[12, 22]]
+      "stops": [[5, 12],[12, 16]]
     }
   },
   "paint": {
@@ -1318,6 +1323,7 @@
   },
   "source": "composite",
   "source-layer": "place_label",
+  "minzoom": 6,
   "maxzoom": 14,
   "filter": [
     "all",
@@ -1356,7 +1362,7 @@
     "text-max-width": 7,
     "text-size": {
       "base": 0.9,
-      "stops": [[5, 12],[12, 22]]
+      "stops": [[5, 12],[12, 16]]
     }
   },
   "paint": {
@@ -1415,7 +1421,7 @@
     "text-max-width": 7,
     "text-size": {
       "base": 0.9,
-      "stops": [[4, 12],[10, 22]]
+      "stops": [[4, 16],[10, 24]]
     }
   },
   "paint": {
@@ -1474,7 +1480,7 @@
     "text-max-width": 7,
     "text-size": {
       "base": 0.9,
-      "stops": [[4, 12],[10, 22]]
+      "stops": [[4, 16],[10, 24]]
     }
   },
   "paint": {
