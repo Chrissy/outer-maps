@@ -17,7 +17,7 @@
     }
   },
   "paint": {
-    "text-color": "hsl(100, 60%, 28%)",
+    "text-color": "hsl(48, 78%, 31%)",
     "text-halo-width": 1,
     "text-halo-blur": 0,
     "text-halo-color": "hsla(0, 0%, 100%, 0.5)"

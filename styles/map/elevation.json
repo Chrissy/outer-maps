@@ -1,4 +1,26 @@
-{"layers": [{
+{"layers": [
+{
+  "id": "mapbox-terrain-rgb",
+  "type": "hillshade",
+  "metadata": {},
+  "source": "mapbox://mapbox.terrain-rgb",
+  "layout": {
+    "visibility": "visible"
+  },
+  "paint": {
+    "hillshade-exaggeration": {
+      "stops": [[2, 0.15], [10, 0.5]]
+    },
+    "hillshade-shadow-color": {
+      "stops": [[6, "hsla(0, 0%, 0%, 0.15)"],[14, "hsla(0, 0%, 0%, 0.33)"]]
+    },
+    "hillshade-accent-color": {
+      "stops": [[6, "hsla(0, 0%, 0%, 0.15)"],[14, "hsla(0, 0%, 0%, 0.33)"]]
+    },
+    "hillshade-highlight-color": "hsla(0, 0%, 100%, 0.33)"
+  }
+},
+{
   "id": "hillshade_highlight_bright",
   "type": "fill",
   "metadata": {
@@ -13,7 +35,7 @@
     94
   ],
   "layout": {
-    "visibility": "visible"
+    "visibility": "none"
   },
   "paint": {
     "fill-color": "hsl(0, 0%, 100%)",
@@ -37,7 +59,7 @@
     90
   ],
   "layout": {
-    "visibility": "visible"
+    "visibility": "none"
   },
   "paint": {
     "fill-color": "hsla(0, 0%, 100%, 50%)",
@@ -62,7 +84,7 @@
     89
   ],
   "layout": {
-    "visibility": "visible"
+    "visibility": "none"
   },
   "paint": {
     "fill-color": "hsl(48, 19%, 15%)",
@@ -86,7 +108,7 @@
     78
   ],
   "layout": {
-    "visibility": "visible"
+    "visibility": "none"
   },
   "paint": {
     "fill-color": "hsl(48, 19%, 15%)",
@@ -110,7 +132,7 @@
     67
   ],
   "layout": {
-    "visibility": "visible"
+    "visibility": "none"
   },
   "paint": {
     "fill-color": "hsl(48, 19%, 15%)",
@@ -135,7 +157,7 @@
     56
   ],
   "layout": {
-    "visibility": "visible"
+    "visibility": "none"
   },
   "paint": {
     "fill-color": "hsl(48, 19%, 15%)",
