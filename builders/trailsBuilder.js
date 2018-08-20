@@ -67,6 +67,38 @@ const queries = [
     `
   },
   {
+    name: "trail-endpoints",
+    minZoom: 9,
+    maxZoom: 10,
+    query: `
+      WITH filtered_trails as (
+        SELECT geog::geometry as geom from trails
+        WHERE ST_Length(geog) > 3000 AND type = 'hike' OR type = 'horse' OR type = 'bike' OR
+        type = 'motorcycle' OR type = 'atv' AND name != ''
+      ), startpoints AS (
+        SELECT st_startpoint(geom) as geom FROM filtered_trails
+      ), endpoints AS (
+        SELECT st_endpoint(geom) as geom FROM filtered_trails
+      ) SELECT * FROM startpoints UNION ALL SELECT * FROM endpoints;
+    `
+  },
+  {
+    name: "trail-endpoints",
+    minZoom: 11,
+    maxZoom: 14,
+    query: `
+      WITH filtered_trails as (
+        SELECT geog::geometry as geom from trails
+        WHERE type = 'hike' OR type = 'horse' OR type = 'bike' OR
+        type = 'motorcycle' OR type = 'atv' AND name != ''
+      ), startpoints AS (
+        SELECT st_startpoint(geom) as geom FROM filtered_trails
+      ), endpoints AS (
+        SELECT st_endpoint(geom) as geom FROM filtered_trails
+      ) SELECT * FROM startpoints UNION ALL SELECT * FROM endpoints;
+    `
+  },
+  {
     name: "park-boundary-labels",
     minZoom: 1,
     maxZoom: 12,
