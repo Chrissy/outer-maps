@@ -405,7 +405,8 @@
     "text-rotation-alignment": "viewport",
     "text-field": "{ref}",
     "text-letter-spacing": 0.05,
-    "icon-padding": 2
+    "icon-padding": 70,
+    "icon-allow-overlap": false
   },
   "paint": {
     "text-color": "hsl(230, 21%, 37%)",
