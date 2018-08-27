@@ -17,15 +17,6 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db, next) {
-  db.runSql(`
-    CREATE TABLE boundaries(
-      id SERIAL PRIMARY KEY,
-      name VARCHAR(200),
-      state VARCHAR(64),
-      type VARCHAR(200),
-      source varchar(200),
-      geog geography(GEOMETRY,4326)
-  )`, next);
 
   utils.uploadShapeFile({
     tableName: 'federal_lands',
@@ -34,19 +25,40 @@ exports.up = function(db, next) {
     srid: "4269"
   });
 
-  console.log("merging...")
+  console.log("merging...");
 
   db.runSql(`
-    CREATE TABLE boundaries__new AS SELECT * FROM boundaries;
+    CREATE TABLE boundaries(
+      name VARCHAR(200),
+      state VARCHAR(64),
+      type VARCHAR(200),
+      source varchar(200),
+      geog geography(GEOMETRY,4326)
+    );
 
-    INSERT INTO boundaries__new(name, state, type, geog, source)
-    SELECT name1, state, feature1, geog, '${source}' FROM federal_lands WHERE ${landTypes};
+    CREATE TABLE boundaries__new(
+      name VARCHAR(200),
+      state VARCHAR(64),
+      type VARCHAR(200),
+      source varchar(200),
+      geog geography(GEOMETRY,4326)
+    );
+
+    INSERT INTO boundaries__new(name, state, type, source, geog)
+    SELECT
+      name1,
+      state,
+      feature1,
+      '${source}' as source,
+      geog
+    FROM federal_lands
+    WHERE ${landTypes}
+    GROUP BY name1, state, feature1, source, geog;
 
     DROP TABLE boundaries;
 
     ALTER TABLE boundaries__new RENAME TO boundaries;
 
-    ALTER TABLE boundaries DROP COLUMN id;
     ALTER TABLE boundaries ADD COLUMN id SERIAL PRIMARY KEY;
 
     DROP TABLE federal_lands;

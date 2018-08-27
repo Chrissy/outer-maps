@@ -15,7 +15,7 @@ exports.uploadShapeFile = function(
   const pathStr = path(process.env.LIB + "/" + directoryName);
 
   execSync(
-    `shp2pgsql -G -c -s ${srid}:4326 ${filename}.shp public.${tableName} | psql -d ${databaseName} ${user}`,
+    `shp2pgsql -G -c -s ${srid}:4326 ${filename}.shp public.${tableName} | psql -U ${user} -d ${databaseName}`,
     { cwd: pathStr }
   );
 
@@ -31,7 +31,7 @@ exports.insertElevationRasters = function(
   const pathStr = path(process.env.LIB + "/" + directoryName);
 
   execSync(
-    `raster2pgsql -s ${srid} -t "auto" *.tif public.${tableName} | psql -d ${databaseName} ${user}`,
+    `raster2pgsql -s ${srid} -t "auto" *.tif public.${tableName} | psql -U ${user} -d ${databaseName}`,
     { cwd: pathStr }
   );
 
