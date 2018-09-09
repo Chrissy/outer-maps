@@ -75,11 +75,14 @@ const queries = [
         SELECT geog::geometry as geom from trails
         WHERE ST_Length(geog) > 3000 AND type = 'hike' OR type = 'horse' OR type = 'bike' OR
         type = 'motorcycle' OR type = 'atv' AND name != ''
+        GROUP BY geom
       ), startpoints AS (
         SELECT st_startpoint(geom) as geom FROM filtered_trails
+        GROUP BY geom
       ), endpoints AS (
         SELECT st_endpoint(geom) as geom FROM filtered_trails
-      ) SELECT * FROM startpoints UNION ALL SELECT * FROM endpoints;
+      ) SELECT geom FROM startpoints UNION ALL SELECT geom FROM endpoints
+      GROUP BY geom;
     `
   },
   {
@@ -91,11 +94,15 @@ const queries = [
         SELECT geog::geometry as geom from trails
         WHERE type = 'hike' OR type = 'horse' OR type = 'bike' OR
         type = 'motorcycle' OR type = 'atv' AND name != ''
+        GROUP BY geom
       ), startpoints AS (
         SELECT st_startpoint(geom) as geom FROM filtered_trails
+        GROUP BY geom
       ), endpoints AS (
         SELECT st_endpoint(geom) as geom FROM filtered_trails
-      ) SELECT * FROM startpoints UNION ALL SELECT * FROM endpoints;
+        GROUP BY geom
+      ) SELECT geom FROM startpoints UNION ALL SELECT geom FROM endpoints
+        GROUP BY geom;
     `
   },
   {
