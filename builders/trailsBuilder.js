@@ -16,8 +16,9 @@ const queries = [
     query: `
       SELECT name, id, type, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.000005) as geom
       FROM trails
-      WHERE ST_Length(geog) > 5000 AND type = 'hike' OR type = 'horse' OR type = 'bike' OR
-      type = 'motorcycle' OR type = 'atv' AND name != ''
+      WHERE ST_Length(geog) > 5000
+      AND type IN ('hike', 'horse', 'bike', 'motorcycle', 'atv')
+      AND name != ''
     `
   },
   {
@@ -28,8 +29,9 @@ const queries = [
       SELECT name, id, type, station1, ST_Length(geog) as distance, ST_SimplifyVW(geog::geometry, 0.000003) as geom,
       ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds
       FROM trails
-      WHERE ST_Length(geog) > 3000 AND type = 'hike' OR type = 'horse' OR type = 'bike' OR
-      type = 'motorcycle' OR type = 'atv' AND name != ''
+      WHERE ST_Length(geog) > 3000
+      AND type IN ('hike', 'horse', 'bike', 'motorcycle', 'atv')
+      AND name != ''
     `
   },
   {
@@ -40,8 +42,8 @@ const queries = [
       SELECT name, id, type, station1, ST_Length(geog) as distance, geog::geometry as geom,
       ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds
       FROM trails
-      WHERE type = 'hike' OR type = 'horse' OR type = 'bike' OR
-      type = 'motorcycle' OR type = 'atv' AND name != ''
+      WHERE type IN ('hike', 'horse', 'bike', 'motorcycle', 'atv')
+      AND name != ''
     `
   },
   {
@@ -52,7 +54,9 @@ const queries = [
     query: `
       SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.000004) as geom
       FROM trails
-      WHERE ST_Length(geog) > 3000 AND (type = 'hike' OR type = 'horse' OR type = 'bike') AND name != ''
+      WHERE ST_Length(geog) > 3000
+      AND type IN ('hike', 'horse', 'bike')
+      AND name != ''
     `
   },
   {
@@ -63,7 +67,8 @@ const queries = [
     query: `
       SELECT name, id, type, ST_SimplifyVW(geog::geometry, 0.0000005) as geom
       FROM trails
-      WHERE (type = 'hike' OR type = 'horse' OR type = 'bike') AND name != ''
+      WHERE type IN ('hike', 'horse', 'bike')
+      AND name != ''
     `
   },
   {
@@ -73,8 +78,9 @@ const queries = [
     query: `
       WITH filtered_trails as (
         SELECT geog::geometry as geom from trails
-        WHERE ST_Length(geog) > 3000 AND type = 'hike' OR type = 'horse' OR type = 'bike' OR
-        type = 'motorcycle' OR type = 'atv' AND name != ''
+        WHERE ST_Length(geog) > 3000
+        AND type IN ('hike', 'horse', 'bike', 'motorcycle', 'atv')
+        AND name != ''
         GROUP BY geom
       ), startpoints AS (
         SELECT st_startpoint(geom) as geom FROM filtered_trails
@@ -92,8 +98,8 @@ const queries = [
     query: `
       WITH filtered_trails as (
         SELECT geog::geometry as geom from trails
-        WHERE type = 'hike' OR type = 'horse' OR type = 'bike' OR
-        type = 'motorcycle' OR type = 'atv' AND name != ''
+        WHERE type IN ('hike', 'horse', 'bike', 'motorcycle', 'atv')
+        AND name != ''
         GROUP BY geom
       ), startpoints AS (
         SELECT st_startpoint(geom) as geom FROM filtered_trails
