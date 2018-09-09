@@ -75,6 +75,10 @@ const queries = [
     name: "trail-endpoints",
     minZoom: 9,
     maxZoom: 10,
+    /*
+      TODO: we should assign a unique identifier
+      to these eventually and use a join
+    */
     query: `
       WITH filtered_trails as (
         SELECT geog::geometry as geom from trails
