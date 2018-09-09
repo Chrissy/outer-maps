@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="8px" height="8px" viewBox="0 0 104 114" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
-    <title>Artboard</title>
-    <desc>Created with Sketch.</desc>
-    <defs></defs>
-    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <path d="M97.9087616,57 L52,6.67693443 L6.09123843,57 L52,107.323066 L97.9087616,57 Z" id="Combined-Shape" stroke="#FFFFFF" stroke-width="9" fill="#FF9500"></path>
-    </g>
+<svg viewBox="0 0 104 114" xmlns="http://www.w3.org/2000/svg">
+  <title>Diamond</title>
+  <path
+    d="M97.909 57L52 6.677 6.091 57 52 107.323 97.909 57z"
+    stroke="#FFF"
+    stroke-width="9"
+    fill="#FF9500"
+    fill-rule="evenodd"
+  />
 </svg>
