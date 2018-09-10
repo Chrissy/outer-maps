@@ -172,6 +172,20 @@
   "filter": ["in", "type", "hike", "horse", "bike", "atv", "motorcycle", "trail"]
 },
 {
+  "id": "endpoints",
+  "source": "$source",
+  "source-layer": "trail-endpoints",
+  "type": "symbol",
+  "minzoom": 10,
+  "layout": {
+    "icon-image": "diamond",
+    "icon-size": {
+      "stops":[[10, 0.75], [16, 1.5]]
+    },
+    "icon-allow-overlap": false
+  }
+},
+{
   "id": "trails-selected-outline",
   "source": "trails-selected",
   "type": "line",
