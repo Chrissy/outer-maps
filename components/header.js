@@ -1,16 +1,38 @@
 import React from "react";
-import cx from "classnames";
-import styles from "../styles/header.css";
-import center from "../styles/center.css";
 import Wordmark from "../svg/wordmark.svg";
+import styled from "react-emotion";
+import { flexCenter } from "../styles/flex";
 
 const Header = () => {
   return (
-    <div className={cx(styles.body, center.flex)}>
-      <img className={styles.mark} src="/mark.png" />
-      <Wordmark className={styles.wordmark} />
-    </div>
+    <Body>
+      <Mark src="/mark.png" />
+      <StyledWordmark />
+    </Body>
   );
 };
+
+const Body = styled("div")`
+  ${flexCenter};
+  background: ${p => p.theme.gray2};
+`;
+
+const Mark = styled("img")`
+  width: ${p => p.theme.ss(8)};
+  height: ${p => p.theme.ss(8)};
+  border-radius: 50%;
+  border: 1px solid white;
+  margin-right: ${p => p.theme.ss(2)};
+`;
+
+const StyledWordmark = styled(Wordmark)`
+  width: 100px;
+  height: auto;
+  line-height: 0;
+
+  path {
+    fill: ${p => p.theme.brandColor};
+  }
+`;
 
 export default Header;
