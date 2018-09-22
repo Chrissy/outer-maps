@@ -4,14 +4,31 @@
   "source": "$source",
   "source-layer": "park-boundary-labels",
   "layout": {
-    "icon-image": "park-11",
-    "icon-size": 0.8,
+    "icon-image": [
+      "case",
+      ["==", ["get","type"], "National Forest FS"],
+      "national-forest",
+      ["==", ["get","type"], "National Park NPS"],
+      "national-park",
+      ["any",
+        ["==", ["get","type"], "Wilderness NPS"],
+        ["==", ["get","type"], "Wilderness FS"]
+      ],
+      "wilderness",
+      "park-11"
+    ],
+    "icon-size": [
+      "case",
+      ["==", ["get","type"], "National Park NPS"],
+      1.2,
+      0.9
+    ],
     "text-line-height": 1.1,
     "text-size": {
       "base": 1,
       "stops": [[9, 10],[10, 11],[18, 14]]
     },
-    "text-offset": [0, 0.5],
+    "text-offset": [0, 0.85],
     "text-allow-overlap": false,
     "icon-allow-overlap": false,
     "text-anchor": "top",
@@ -32,5 +49,20 @@
     "text-halo-blur": 0.5
   },
   "interactive": true,
-  "filter": [">", "area", 500000000]
-}]}
+  "filter": [
+    "any",
+    [">", "area", 500000000],
+    [
+      "all", [
+        "==",
+        "type",
+        "National Park NPS"
+      ], [
+        ">",
+        "area",
+        50000000
+      ]
+    ]
+  ]
+}
+]}
