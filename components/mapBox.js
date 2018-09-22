@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import { fromJS, is } from "immutable";
 import MapboxGL from "mapbox-gl";
 import { accessToken } from "../data/mapboxStaticData";
-import styles from "../styles/mapbox.css";
 import mapboxStyles from "../public/dist/mapbox-styles.json";
 import debounce from "lodash.debounce";
+import styled from "react-emotion";
 const WATCH_EVENTS = [
   "mousedown",
   "mouseup",
@@ -107,7 +107,7 @@ export default class MapBox extends React.PureComponent {
   }
 
   render() {
-    return <div className={styles.body} id="mapbox-gl-element" />;
+    return <Body id="mapbox-gl-element" />;
   }
 }
 
@@ -124,3 +124,8 @@ MapBox.propTypes = {
   pointer: PropTypes.bool,
   watchLayers: PropTypes.array
 };
+
+const Body = styled("div")`
+  width: 100%;
+  height: 100%;
+`;

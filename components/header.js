@@ -5,14 +5,14 @@ import { flexCenter } from "../styles/flex";
 
 const Header = () => {
   return (
-    <Body>
+    <Container>
       <Mark src="/mark.png" />
       <StyledWordmark />
-    </Body>
+    </Container>
   );
 };
 
-const Body = styled("div")`
+const Container = styled("div")`
   ${flexCenter};
   background: ${p => p.theme.gray2};
 `;
