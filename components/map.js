@@ -207,7 +207,7 @@ export default class Map extends React.Component {
 
   render() {
     return (
-      <Container ref={this.map} id="the-map">
+      <Container innerRef={this.map} id="the-map">
         <MapBox
           sources={this.sources()}
           featureStates={this.featureStates()}

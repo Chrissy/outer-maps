@@ -7,11 +7,11 @@ export default size => {
   case 3:
     return "0.875em";
   case 4:
-    return "1em";
+    return "0.9em";
   case 5:
-    return "1.125em";
+    return "1em";
   case 6:
-    return "1.25em";
+    return "1.125em";
   case 7:
     return "1.35em";
   case 8:

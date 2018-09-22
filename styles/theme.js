@@ -22,6 +22,7 @@ export default {
   red: "#D0011B",
   ss: spacingScale,
   ts: typeScale,
+  headlineFont: "\"Hoefler Text A\", \"Hoefler Text B\"",
   bodyFont:
-    "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\""
+    "\"Gotham Narrow A\", \"Gotham Narrow B\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\""
 };
