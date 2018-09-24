@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const LoadingSpinner = ({ speed }) => {
+const LoadingSpinner = ({ speed, ...props }) => {
   return (
-    <svg viewBox="0 0 64 64">
+    <svg viewBox="0 0 64 64" {...props}>
       <g>
         <defs>
           <linearGradient

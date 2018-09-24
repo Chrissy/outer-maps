@@ -1,12 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styles from "../styles/terrain.css";
-import cx from "classnames";
+import styled from "react-emotion";
 import LoadingSpinner from "./loadingSpinner";
 import FlatMercatorViewport from "../node_modules/viewport-mercator-project/dist/flat-mercator-viewport";
 import pin from "../data/pin";
 
-export default class Terrain extends React.Component {
+class Terrain extends React.Component {
   constructor(props) {
     super(props);
     this.canvas = React.createRef();
@@ -82,25 +81,16 @@ export default class Terrain extends React.Component {
 
   render() {
     return (
-      <div className={cx(styles.terrain)}>
-        <img
-          src={this.props.satelliteImageUrl}
-          className={cx(styles.image, { [styles.visible]: this.isVisible() })}
-        />
-        <canvas
-          ref={this.canvas}
+      <Container>
+        <Img src={this.props.satelliteImageUrl} visible={this.isVisible()} />
+        <Canvas
+          innerRef={this.canvas}
+          visible={this.isVisible()}
           width="1026"
           height="1026"
-          className={cx(styles.canvas, { [styles.visible]: this.isVisible() })}
         />
-        <div
-          className={cx(styles.loadingSpinner, {
-            [styles.visible]: !this.isVisible()
-          })}
-        >
-          <LoadingSpinner speed="1s" />
-        </div>
-      </div>
+        <StyledLoadingSpinner speed="1s" visible={!this.isVisible()} />
+      </Container>
     );
   }
 }
@@ -111,3 +101,51 @@ Terrain.propTypes = {
   zoom: PropTypes.number,
   center: PropTypes.array
 };
+
+const Container = styled("div")`
+  width: 100%;
+  max-height: 380px;
+  height: 42vw;
+  background-color: ${p => p.theme.gray7};
+  position: relative;
+  grid-area: terrain;
+  overflow: hidden;
+
+  @media (max-width: 600px) {
+    height: 150px;
+  }
+`;
+
+const base = `
+  transform: translateY(-50%) translateX(-50%);
+  left: 50%;
+  top: 50%;
+  position: absolute;
+  opacity: 0;
+  transition: .2s opacity;
+`;
+
+const StyledLoadingSpinner = styled(({ className, speed }) => (
+  <LoadingSpinner className={className} speed={speed} />
+))`
+  ${base};
+  width: ${p => p.theme.ss(2)};
+  height: ${p => p.theme.ss(2)};
+  opacity: ${p => (p.visible ? 1 : 0)};
+`;
+
+const Img = styled("img")`
+  ${base};
+  width: 100%;
+  height: auto;
+  opacity: ${p => (p.visible ? 1 : 0)};
+`;
+
+const Canvas = styled("canvas")`
+  ${base};
+  width: 100%;
+  height: auto;
+  opacity: ${p => (p.visible ? 1 : 0)};
+`;
+
+export default Terrain;
