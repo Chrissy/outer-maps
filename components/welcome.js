@@ -65,7 +65,7 @@ const Content = styled("div")`
   width: 50vw;
   min-width: 300px;
   max-width: 600px;
-  padding-bottom: ${p => p.theme.ss(9)};
+  padding-bottom: ${p => p.theme.ss(2)};
   padding: 5vw;
   font-family: ${p => p.theme.bodyFont};
   border: 5px solid #fff;
@@ -75,12 +75,12 @@ const Content = styled("div")`
 
 const Title = styled("div")`
   font-family: ${p => p.theme.headlineFont};
-  font-size: ${p => p.theme.ts(12)};
+  font-size: ${p => p.theme.ts(2)};
   font-weight: 800;
-  line-height: ${p => p.theme.ts(5)};
+  line-height: ${p => p.theme.ts(1)};
   border-bottom: 3px solid ${p => p.theme.accentColor};
-  padding-bottom: ${p => p.theme.ss(2)};
-  margin-top: ${p => p.theme.ts(5)};
+  padding-bottom: ${p => p.theme.ss(0.25)};
+  margin-top: ${p => p.theme.ss(1)};
 `;
 
 const Image = styled("img")`
@@ -94,8 +94,8 @@ const Image = styled("img")`
 `;
 
 const Text = styled("div")`
-  font-size: ${p => p.theme.ts(5)};
-  margin: ${p => p.theme.ss(5)} 0;
+  font-size: ${p => p.theme.ts(1)};
+  margin: ${p => p.theme.ss(1)} 0;
 `;
 
 const Link = styled("a")`
@@ -104,11 +104,11 @@ const Link = styled("a")`
 
 const StyledClose = styled(Close)`
   position: absolute;
-  top: ${p => p.theme.ts(5)};
-  right: ${p => p.theme.ts(5)};
+  top: ${p => p.theme.ts(1)};
+  right: ${p => p.theme.ts(1)};
   cursor: pointer;
-  width: ${p => p.theme.ts(8)};
-  height: ${p => p.theme.ts(8)};
+  width: ${p => p.theme.ts(1.5)};
+  height: ${p => p.theme.ts(1.5)};
 `;
 
 export default Welcome;

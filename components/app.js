@@ -12,7 +12,7 @@ import { store } from "../state/configureStore";
 
 const Body = styled("div")`
   display: grid;
-  grid-template-rows: ${p => p.theme.ss(10)} auto;
+  grid-template-rows: ${p => p.theme.ss(2.5)} auto;
   position: absolute;
   height: 100%;
   width: 100%;

@@ -1,34 +1,37 @@
 export default size => {
   switch (size) {
-  case 1:
+  case 0.125:
     return "0.125em";
-  case 2:
+  case 0.25:
     return "0.25em";
-  case 3:
+  case 0.5:
     return "0.5em";
-  case 4:
+  case 0.75:
     return "0.75em";
-  case 5:
+  case 1:
     return "1em";
-  case 6:
+  case 1.125:
     return "1.125em";
-  case 7:
+  case 1.25:
     return "1.25em";
-  case 8:
+  case 1.5:
     return "1.5em";
-  case 9:
+  case 2:
     return "2em";
-  case 10:
+  case 2.5:
     return "2.5em";
-  case 11:
+  case 3:
     return "3em";
-  case 12:
+  case 4:
     return "4em";
-  case 13:
+  case 5:
     return "5em";
-  case 14:
+  case 10:
     return "10em";
-  case 15:
+  case 20:
     return "20em";
+  default:
+    console.warn("non-standard spacing unit used. null returned");
+    return null;
   }
 };

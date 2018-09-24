@@ -68,7 +68,7 @@ const Container = styled("div")`
   box-sizing: border-box;
   transition: 0.3s all;
   opacity: ${p => (p.active || p.hidden ? 1 : 0)};
-  transform: translateX(${p => (p.active ? 0 : p.theme.ss(5))});
+  transform: translateX(${p => (p.active ? 0 : p.theme.ss(1))});
   z-index: ${p => (p.active ? 1 : -1)};
   overflow: scroll;
   top: 0;
@@ -80,23 +80,23 @@ const Container = styled("div")`
     max-width: 100%;
     min-width: 100%;
     top: auto;
-    transform: translateY(${p => p.theme.ss(5)});
+    transform: translateY(${p => p.theme.ss(1)});
   }
 `;
 
 const Content = styled("div")`
-  font-size: ${p => p.theme.ts(6)};
-  line-height: ${p => p.theme.ts(8)};
+  font-size: ${p => p.theme.ts(1.125)};
+  line-height: ${p => p.theme.ts(1.5)};
   transition: 0.2s all;
 `;
 
 const Title = styled("div")`
   font-family: ${p => p.theme.headlineFont};
   color: ${p => p.theme.brandColor};
-  font-size: ${p => p.theme.ts(7)};
+  font-size: ${p => p.theme.ts(1.35)};
   font-weight: 800;
-  padding-bottom: ${p => p.theme.ss(3)};
-  padding: ${p => p.theme.ss(3)};
+  padding-bottom: ${p => p.theme.ss(0.5)};
+  padding: ${p => p.theme.ss(0.5)};
 `;
 
 const StyledTerrain = styled(Terrain)`

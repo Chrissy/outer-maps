@@ -76,13 +76,13 @@ const ImportantWeatherUnit = styled("div")`
   grid-template-rows: auto 0.6em;
   justify-items: center;
   align-items: center;
-  padding: ${p => p.theme.ss(3)};
-  padding-bottom: ${p => p.theme.ss(5)};
+  padding: ${p => p.theme.ss(0.5)};
+  padding-bottom: ${p => p.theme.ss(1)};
   color: ${p => p.theme.gray6};
   background: ${p => p.darkBg && p.theme.gray3};
 
   @media (max-width: 900px) {
-    font-size: ${p => p.theme.ts(3)};
+    font-size: ${p => p.theme.ts(0.875)};
   }
 `;
 
@@ -93,10 +93,10 @@ const getColor = p => {
 };
 
 const Icon = styled(({ node, ...props }) => <node {...props} />)`
-  width: ${p => (p.low ? p.theme.ss(10) : p.theme.ss(13))};
+  width: ${p => (p.low ? p.theme.ss(2.5) : p.theme.ss(5))};
   height: auto;
-  margin-top: ${p => p.theme.ss(3)};
-  margin-right: ${p => p.theme.ss(2)};
+  margin-top: ${p => p.theme.ss(0.5)};
+  margin-right: ${p => p.theme.ss(0.25)};
 
   path {
     fill: ${p => getColor(p)};
@@ -104,7 +104,7 @@ const Icon = styled(({ node, ...props }) => <node {...props} />)`
 `;
 
 const Data = styled("div")`
-  font-size: ${p => p.theme.ts(13)};
+  font-size: ${p => p.theme.ts(2.5)};
   color: ${p => getColor(p)};
   font-weight: 500;
 `;

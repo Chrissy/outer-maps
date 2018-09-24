@@ -56,7 +56,7 @@ const getColor = difficulty => {
 const Container = styled("div")`
   width: 130px;
   height: 130px;
-  font-size: ${p => p.theme.ts(2)};
+  font-size: ${p => p.theme.ts(0.75)};
   background: ${p => p.theme.gray6};
   position: relative;
   border-radius: 100%;
@@ -94,7 +94,7 @@ const InnerCircle = styled("div")`
 `;
 
 const Data = styled("div")`
-  margin-top: -${p => p.theme.ss(3)};
+  margin-top: -${p => p.theme.ss(0.5)};
   height: 50%;
   text-align: center;
   display: grid;
@@ -107,7 +107,7 @@ const StyledLabel = styled(Label)`
 `;
 
 const Score = styled("div")`
-  font-size: ${p => p.theme.ts(15)};
+  font-size: ${p => p.theme.ts(3.5)};
   color: ${p => getColor(p.difficulty)};
   line-height: 0;
   align-self: center;
@@ -119,7 +119,7 @@ const Difficulty = styled("div")`
   align-self: flex-end;
   font-weight: 500;
   text-transform: uppercase;
-  font-size: ${p => p.theme.ts(3)};
+  font-size: ${p => p.theme.ts(0.875)};
 `;
 
 export default DifficultyChart;

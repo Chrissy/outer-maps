@@ -6,7 +6,6 @@ import HorizontalBarGraph from "./horizontalBarGraph";
 import BoundaryTotals from "./boundaryTotals";
 import TrailsChartElement from "./trailsChartElement";
 import Label from "./label";
-import spacing from "../styles/spacing.css";
 import ImportantWeather from "./importantWeather";
 
 const BoundarySidebar = ({
@@ -113,17 +112,17 @@ const Container = styled("div")`
   display: grid;
   grid-template-rows: max-content;
   grid-template-columns: 1fr;
-  grid-gap: ${p => p.theme.ss(8)};
-  padding: ${p => p.theme.ss(5)};
+  grid-gap: ${p => p.theme.ss(1.5)};
+  padding: ${p => p.theme.ss(1)};
 `;
 
 const BoundaryLabel = styled(Label)`
-  margin-bottom: ${p => p.theme.ss(3)};
+  margin-bottom: ${p => p.theme.ss(0.5)};
 `;
 
-const WeatherContainer = styled('div')`
-  padding: 0 ${p => p.theme.ss(5)};
-  margin: ${p => p.theme.ss(5)} 0;
+const WeatherContainer = styled("div")`
+  padding: 0 ${p => p.theme.ss(1)};
+  margin: ${p => p.theme.ss(1)} 0;
 `;
 
 export default BoundarySidebar;

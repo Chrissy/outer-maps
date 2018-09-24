@@ -18,11 +18,11 @@ const Container = styled("div")`
 `;
 
 const Mark = styled("img")`
-  width: ${p => p.theme.ss(8)};
-  height: ${p => p.theme.ss(8)};
+  width: ${p => p.theme.ss(1.5)};
+  height: ${p => p.theme.ss(1.5)};
   border-radius: 50%;
   border: 1px solid white;
-  margin-right: ${p => p.theme.ss(2)};
+  margin-right: ${p => p.theme.ss(0.25)};
 `;
 
 const StyledWordmark = styled(Wordmark)`

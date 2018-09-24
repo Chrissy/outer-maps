@@ -109,7 +109,7 @@ LineGraph.propTypes = {
 };
 
 const Container = styled("div")`
-  margin-top: ${p => p.theme.ss(5)};
+  margin-top: ${p => p.theme.ss(1)};
 `;
 
 const StyledSvg = styled("svg")`

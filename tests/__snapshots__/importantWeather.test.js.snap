@@ -41,7 +41,7 @@ Array [
 
 .emotion-4 {
   display: grid;
-  grid-template-rows: auto .6em;
+  grid-template-rows: auto 0.6em;
   justify-items: center;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -77,7 +77,7 @@ Array [
 
 .emotion-9 {
   display: grid;
-  grid-template-rows: auto .6em;
+  grid-template-rows: auto 0.6em;
   justify-items: center;
   -webkit-align-items: center;
   -webkit-box-align: center;
