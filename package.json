@@ -102,6 +102,7 @@
     "dotenv": "^6.0.0",
     "emotion": "^9.2.10",
     "eslint": "^4.19.1",
+    "eslint-plugin-jest": "^21.22.1",
     "eslint-plugin-react": "^7.9.1",
     "fixy": "^1.1.0",
     "glob": "^7.1.1",
