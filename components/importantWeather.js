@@ -1,9 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import cx from "classnames";
-import styles from "../styles/importantWeather.css";
-import label from "../styles/label.css";
-import center from "../styles/center.css";
+import styled from "react-emotion";
+import Label from "./label";
+import { flexCenter } from "../styles/flex";
 import HighIcon from "../svg/weather-high.svg";
 import LowIcon from "../svg/weather-low.svg";
 import PrecipIcon from "../svg/weather-precip.svg";
@@ -18,52 +17,46 @@ const ImportantWeather = ({
   };
 
   const tempIsExtreme = temp => {
-    if (temp > 75) return styles.hot;
-    if (temp < 50) return styles.cold;
-    return styles.normal;
+    if (temp > 75) return "hot";
+    if (temp < 50) return "cold";
+    return null;
   };
 
   return (
-    <div>
-      <div className={label.label}>Average weather this week</div>
-      <div className={styles.importantWeather}>
-        <div
-          className={cx(
-            styles.importantWeatherUnit,
-            styles.high,
-            tempIsExtreme(maxTemperature)
-          )}
-        >
-          <div className={center.flex}>
-            <HighIcon className={styles.icon} />
-            <div className={styles.data}>{parseInt(maxTemperature)}°</div>
+    <React.Fragment>
+      <StyledLabel>Average weather this week</StyledLabel>
+      <Container>
+        <ImportantWeatherUnit>
+          <div className={flexCenter}>
+            <Icon node={HighIcon} extreme={tempIsExtreme(maxTemperature)} />
+            <Data extreme={tempIsExtreme(maxTemperature)}>
+              {parseInt(maxTemperature)}°
+            </Data>
           </div>
-          <div className={styles.label}>High Temperature</div>
-        </div>
-        <div
-          className={cx(
-            styles.importantWeatherUnit,
-            styles.low,
-            tempIsExtreme(minTemperature)
-          )}
-        >
-          <div className={center.flex}>
-            <LowIcon className={styles.icon} />
-            <div className={styles.data}>{parseInt(minTemperature)}°</div>
+          <StyledLabel>High Temperature</StyledLabel>
+        </ImportantWeatherUnit>
+        <ImportantWeatherUnit darkBg={true}>
+          <div className={flexCenter}>
+            <Icon
+              node={LowIcon}
+              low={true}
+              extreme={tempIsExtreme(minTemperature)}
+            />
+            <Data extreme={tempIsExtreme(minTemperature)}>
+              {parseInt(minTemperature)}°
+            </Data>
           </div>
-          <div className={styles.label}>Low Temperature</div>
-        </div>
-        <div className={cx(styles.importantWeatherUnit, styles.precip)}>
-          <div className={center.flex}>
-            <PrecipIcon className={styles.icon} />
-            <div className={styles.data}>
-              {percentText(chanceOfPercipitation)}
-            </div>
+          <StyledLabel>Low Temperature</StyledLabel>
+        </ImportantWeatherUnit>
+        <ImportantWeatherUnit>
+          <div className={flexCenter}>
+            <Icon node={PrecipIcon} />
+            <Data>{percentText(chanceOfPercipitation)}</Data>
           </div>
-          <div className={styles.label}>Chance percipitation</div>
-        </div>
-      </div>
-    </div>
+          <StyledLabel>Chance percipitation</StyledLabel>
+        </ImportantWeatherUnit>
+      </Container>
+    </React.Fragment>
   );
 };
 
@@ -72,5 +65,52 @@ ImportantWeather.propTypes = {
   minTemperature: PropTypes.number,
   chanceOfPercipitation: PropTypes.number
 };
+
+const Container = styled("div")`
+  display: grid;
+  grid-template-columns: 33.3% 33.3% 33.3%;
+`;
+
+const ImportantWeatherUnit = styled("div")`
+  display: grid;
+  grid-template-rows: auto 0.6em;
+  justify-items: center;
+  align-items: center;
+  padding: ${p => p.theme.ss(3)};
+  padding-bottom: ${p => p.theme.ss(5)};
+  color: ${p => p.theme.gray6};
+  background: ${p => p.darkBg && p.theme.gray3};
+
+  @media (max-width: 900px) {
+    font-size: ${p => p.theme.ts(3)};
+  }
+`;
+
+const getColor = p => {
+  if (p.hot) return p.theme.accentColor;
+  if (p.cold) return p.theme.purple;
+  return p.theme.gray6;
+};
+
+const Icon = styled(({ node, ...props }) => <node {...props} />)`
+  width: ${p => (p.low ? p.theme.ss(10) : p.theme.ss(13))};
+  height: auto;
+  margin-top: ${p => p.theme.ss(3)};
+  margin-right: ${p => p.theme.ss(2)};
+
+  path {
+    fill: ${p => getColor(p)};
+  }
+`;
+
+const Data = styled("div")`
+  font-size: ${p => p.theme.ts(13)};
+  color: ${p => getColor(p)};
+  font-weight: 500;
+`;
+
+const StyledLabel = styled(Label)`
+  text-align: center;
+`;
 
 export default ImportantWeather;

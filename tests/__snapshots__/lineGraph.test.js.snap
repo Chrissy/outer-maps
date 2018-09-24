@@ -1,16 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders 1`] = `
+.emotion-2 {
+  margin-top: 1em;
+}
+
+.emotion-0 {
+  font-size: 0.9em;
+  color: #838383;
+}
+
+.emotion-1 {
+  width: 100%;
+  height: auto;
+}
+
 <div
-  className="marginTop"
+  className="emotion-2"
 >
   <div
-    className="label"
+    className="emotion-0"
   >
     Altitude Change
   </div>
   <svg
-    className="lineGraph"
+    className="emotion-1"
     overflow="hidden"
     viewBox="0 0 275 100"
   >

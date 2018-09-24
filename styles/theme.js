@@ -1,7 +1,7 @@
 import spacingScale from "./spacingScale";
 import typeScale from "./typeScale";
 
-export default {
+const theme = {
   brandColor: "#344632",
   accentColor: "#FF6000",
   accentColorTintLighter: "#FFAE86",
@@ -26,3 +26,12 @@ export default {
   bodyFont:
     "\"Gotham Narrow A\", \"Gotham Narrow B\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\""
 };
+
+theme.difficulties = {
+  veryEasy: theme.blue,
+  easy: theme.purple,
+  moderate: theme.orange,
+  extreme: theme.red
+};
+
+export default theme;

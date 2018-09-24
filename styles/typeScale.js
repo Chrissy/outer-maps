@@ -29,6 +29,6 @@ export default size => {
   case 14:
     return "3em";
   case 15:
-    return "4em";
+    return "3.5em";
   }
 };

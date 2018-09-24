@@ -13,6 +13,7 @@
     "migrate-down": "nf run db-migrate down",
     "size": "webpack --config webpack.production.config.js --json | webpack-bundle-size-analyzer",
     "test": "nf run jest",
+    "snapshots": "nf run jest --updateSnapshot",
     "benchmarks": "nf run node tests/benchmarkTests.js",
     "mapify": "gulp mapify",
     "heroku-postbuild": "gulp mapify && ./node_modules/.bin/webpack --config webpack.production.config.js -p && node builders/uploadBundle.js"
@@ -22,7 +23,8 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|less)$": "identity-obj-proxy"
     },
-    "testURL": "http://localhost/"
+    "testURL": "http://localhost/",
+    "setupTestFrameworkScriptFile": "./tests/setupTestFrameworkScriptFile.js"
   },
   "lint-staged": {
     "*.{js,jsx}": [
@@ -98,12 +100,14 @@
     "@mapbox/tilelive": "^5.12.6",
     "benchmark": "^2.1.4",
     "dotenv": "^6.0.0",
+    "emotion": "^9.2.10",
     "eslint": "^4.19.1",
     "eslint-plugin-react": "^7.9.1",
     "fixy": "^1.1.0",
     "glob": "^7.1.1",
     "husky": "^0.14.3",
     "jest": "^23.1.0",
+    "jest-emotion": "^9.2.7",
     "lint-staged": "^7.2.0",
     "nodemon": "^1.17.5",
     "prettier": "1.13.5",

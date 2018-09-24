@@ -1,80 +1,182 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders 1`] = `
-<div>
-  <div
-    className="label"
+Array [
+  .emotion-0 {
+  font-size: 0.9em;
+  color: #838383;
+  text-align: center;
+}
+
+<div
+    className="emotion-0"
   >
     Average weather this week
-  </div>
-  <div
-    className="importantWeather"
+  </div>,
+  .emotion-2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.emotion-3 {
+  font-size: 0.9em;
+  color: #838383;
+  text-align: center;
+}
+
+.emotion-15 {
+  display: grid;
+  grid-template-columns: 33.3% 33.3% 33.3%;
+}
+
+.emotion-4 {
+  display: grid;
+  grid-template-rows: auto .6em;
+  justify-items: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0.5em;
+  padding-bottom: 1em;
+  color: #838383;
+}
+
+@media (max-width:900px) {
+  .emotion-4 {
+    font-size: 0.875em;
+  }
+}
+
+.emotion-0 {
+  width: 5em;
+  height: auto;
+  margin-top: 0.5em;
+  margin-right: 0.25em;
+}
+
+.emotion-0 path {
+  fill: #838383;
+}
+
+.emotion-1 {
+  font-size: 2.5em;
+  color: #838383;
+  font-weight: 500;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-template-rows: auto .6em;
+  justify-items: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0.5em;
+  padding-bottom: 1em;
+  color: #838383;
+  background: #E9E9E9;
+}
+
+@media (max-width:900px) {
+  .emotion-9 {
+    font-size: 0.875em;
+  }
+}
+
+.emotion-5 {
+  width: 2.5em;
+  height: auto;
+  margin-top: 0.5em;
+  margin-right: 0.25em;
+}
+
+.emotion-5 path {
+  fill: #838383;
+}
+
+<div
+    className="emotion-15"
   >
     <div
-      className="importantWeatherUnit high hot"
+      className="emotion-4"
     >
       <div
-        className="flex"
+        className="emotion-2"
       >
-        <test-file-stub
-          className="icon"
+        <node
+          className="emotion-0"
+          extreme="hot"
         />
         <div
-          className="data"
+          className="emotion-1"
         >
           100
           °
         </div>
       </div>
       <div
-        className="label"
+        className="emotion-3"
       >
         High Temperature
       </div>
     </div>
     <div
-      className="importantWeatherUnit low cold"
+      className="emotion-9"
     >
       <div
-        className="flex"
+        className="emotion-2"
       >
-        <test-file-stub
-          className="icon"
+        <node
+          className="emotion-5"
+          extreme="cold"
+          low={true}
         />
         <div
-          className="data"
+          className="emotion-1"
         >
           0
           °
         </div>
       </div>
       <div
-        className="label"
+        className="emotion-3"
       >
         Low Temperature
       </div>
     </div>
     <div
-      className="importantWeatherUnit precip"
+      className="emotion-4"
     >
       <div
-        className="flex"
+        className="emotion-2"
       >
-        <test-file-stub
-          className="icon"
+        <node
+          className="emotion-0"
         />
         <div
-          className="data"
+          className="emotion-1"
         >
           1%
         </div>
       </div>
       <div
-        className="label"
+        className="emotion-3"
       >
         Chance percipitation
       </div>
     </div>
-  </div>
-</div>
+  </div>,
+]
 `;

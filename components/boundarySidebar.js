@@ -1,12 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import cx from "classnames";
+import styled from "react-emotion";
 import TrailTypes from "./trailTypes";
 import HorizontalBarGraph from "./horizontalBarGraph";
 import BoundaryTotals from "./boundaryTotals";
 import TrailsChartElement from "./trailsChartElement";
-import styles from "../styles/boundarySidebar.css";
-import label from "../styles/label.css";
+import Label from "./label";
 import spacing from "../styles/spacing.css";
 import ImportantWeather from "./importantWeather";
 
@@ -35,10 +34,8 @@ const BoundarySidebar = ({
   const trailTypesBreakdown = () => {
     if (hasElevationData) {
       return (
-        <div className={styles.trailTypesBreakdown}>
-          <div className={cx(label.label, spacing.marginBottomHalf)}>
-            Trail Breakdown
-          </div>
+        <div>
+          <BoundaryLabel>Trail Breakdown</BoundaryLabel>
           <TrailTypes {...trailTypes} />
         </div>
       );
@@ -48,10 +45,8 @@ const BoundarySidebar = ({
   const trailsChart = () => {
     if (hasElevationData && trails.length) {
       return (
-        <div className={styles.trailsChart}>
-          <div className={cx(label.label, spacing.marginBottomHalf)}>
-            Long Trails
-          </div>
+        <div>
+          <BoundaryLabel>Long Trails</BoundaryLabel>
           {trails.map(t => (
             <TrailsChartElement
               key={t.id}
@@ -68,10 +63,8 @@ const BoundarySidebar = ({
   const trailLengthsBreakdown = () => {
     if (hasElevationData && trailLengths.length) {
       return (
-        <div className={styles.trailLengthsBreakdown}>
-          <div className={cx(label.label, spacing.marginBottomHalf)}>
-            Mileage Breakdown
-          </div>
+        <div>
+          <BoundaryLabel>Mileage Breakdown</BoundaryLabel>
           <HorizontalBarGraph
             keys={trailLengths.map(p => p[0])}
             values={trailLengths.map(p => p[1])}
@@ -84,28 +77,22 @@ const BoundarySidebar = ({
   const importantWeather = () => {
     if (hasWeatherData)
       return (
-        <div
-          className={cx(
-            spacing.horizontalPadding,
-            spacing.marginTop,
-            spacing.marginBottom
-          )}
-        >
+        <WeatherContainer>
           <ImportantWeather {...weatherData} />
-        </div>
+        </WeatherContainer>
       );
   };
 
   return (
-    <div className={styles.boundarySidebar}>
+    <React.Fragment>
       {boundaryTotals()}
-      <div className={styles.boundarySidebarGridLayout}>
+      <Container>
         {trailTypesBreakdown()}
         {trailsChart()}
         {trailLengthsBreakdown()}
-      </div>
+      </Container>
       {importantWeather()}
-    </div>
+    </React.Fragment>
   );
 };
 
@@ -121,5 +108,22 @@ BoundarySidebar.propTypes = {
   hasWeatherData: PropTypes.bool,
   weatherData: PropTypes.object
 };
+
+const Container = styled("div")`
+  display: grid;
+  grid-template-rows: max-content;
+  grid-template-columns: 1fr;
+  grid-gap: ${p => p.theme.ss(8)};
+  padding: ${p => p.theme.ss(5)};
+`;
+
+const BoundaryLabel = styled(Label)`
+  margin-bottom: ${p => p.theme.ss(3)};
+`;
+
+const WeatherContainer = styled('div')`
+  padding: 0 ${p => p.theme.ss(5)};
+  margin: ${p => p.theme.ss(5)} 0;
+`;
 
 export default BoundarySidebar;

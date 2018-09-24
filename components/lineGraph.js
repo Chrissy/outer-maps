@@ -1,9 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styles from "../styles/lineGraph.css";
+import styled from "react-emotion";
 import { metersToMiles } from "../modules/conversions";
-import label from "../styles/label.css";
-import spacing from "../styles/spacing.css";
+import Label from "./label";
 
 const width = 275;
 const height = 100;
@@ -90,13 +89,13 @@ const LineGraph = ({ elevations }) => {
   const viewBox = () => `0 0 ${width} ${height}`;
 
   return (
-    <div className={spacing.marginTop}>
-      <div className={label.label}>Altitude Change</div>
-      <svg viewBox={viewBox()} overflow="hidden" className={styles.lineGraph}>
+    <Container>
+      <Label>Altitude Change</Label>
+      <StyledSvg viewBox={viewBox()} overflow="hidden">
         <g>{mileMarkers()}</g>
         <polyline points={pointsToPathString()} fill="#344632" />
-      </svg>
-    </div>
+      </StyledSvg>
+    </Container>
   );
 };
 
@@ -108,5 +107,14 @@ LineGraph.propTypes = {
     })
   )
 };
+
+const Container = styled("div")`
+  margin-top: ${p => p.theme.ss(5)};
+`;
+
+const StyledSvg = styled("svg")`
+  width: 100%;
+  height: auto;
+`;
 
 export default LineGraph;
