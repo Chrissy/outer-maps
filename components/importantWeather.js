@@ -28,7 +28,7 @@ const ImportantWeather = ({
       <Container>
         <ImportantWeatherUnit>
           <div className={flexCenter}>
-            <Icon node={HighIcon} extreme={tempIsExtreme(maxTemperature)} />
+            <Icon Node={HighIcon} extreme={tempIsExtreme(maxTemperature)} />
             <Data extreme={tempIsExtreme(maxTemperature)}>
               {parseInt(maxTemperature)}°
             </Data>
@@ -38,8 +38,8 @@ const ImportantWeather = ({
         <ImportantWeatherUnit darkBg={true}>
           <div className={flexCenter}>
             <Icon
-              node={LowIcon}
-              low={true}
+              Node={LowIcon}
+              thin="true"
               extreme={tempIsExtreme(minTemperature)}
             />
             <Data extreme={tempIsExtreme(minTemperature)}>
@@ -50,7 +50,7 @@ const ImportantWeather = ({
         </ImportantWeatherUnit>
         <ImportantWeatherUnit>
           <div className={flexCenter}>
-            <Icon node={PrecipIcon} />
+            <Icon Node={PrecipIcon} />
             <Data>{percentText(chanceOfPercipitation)}</Data>
           </div>
           <StyledLabel>Chance percipitation</StyledLabel>
@@ -92,8 +92,8 @@ const getColor = p => {
   return p.theme.gray6;
 };
 
-const Icon = styled(({ node, ...props }) => <node {...props} />)`
-  width: ${p => (p.low ? p.theme.ss(2.5) : p.theme.ss(5))};
+const Icon = styled(({ Node, ...props }) => <Node {...props} />)`
+  width: ${p => (p.thin ? p.theme.ss(2.5) : p.theme.ss(3))};
   height: auto;
   margin-top: ${p => p.theme.ss(0.5)};
   margin-right: ${p => p.theme.ss(0.25)};

@@ -54,6 +54,7 @@ const getColor = difficulty => {
 };
 
 const Container = styled("div")`
+  ${flexCenter};
   width: 130px;
   height: 130px;
   font-size: ${p => p.theme.ts(0.75)};

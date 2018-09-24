@@ -59,7 +59,7 @@ Array [
 }
 
 .emotion-0 {
-  width: 5em;
+  width: 3em;
   height: auto;
   margin-top: 0.5em;
   margin-right: 0.25em;
@@ -115,7 +115,7 @@ Array [
       <div
         className="emotion-2"
       >
-        <node
+        <test-file-stub
           className="emotion-0"
           extreme="hot"
         />
@@ -138,10 +138,10 @@ Array [
       <div
         className="emotion-2"
       >
-        <node
+        <test-file-stub
           className="emotion-5"
           extreme="cold"
-          low={true}
+          thin="true"
         />
         <div
           className="emotion-1"
@@ -162,7 +162,7 @@ Array [
       <div
         className="emotion-2"
       >
-        <node
+        <test-file-stub
           className="emotion-0"
         />
         <div

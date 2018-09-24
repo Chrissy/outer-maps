@@ -1,14 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
+import styled from "react-emotion";
 import LineGraph from "./lineGraph";
+import Stat from "./stat";
 import DifficultyChart from "./difficultyChart";
 import Hiker from "../svg/hiker.svg";
 import Up from "../svg/up.svg";
 import { metersToFeet, metersToMiles } from "../modules/conversions";
-import styles from "../styles/elevationTotals.css";
-import stat from "../styles/stat.css";
-import cx from "classnames";
-import spacing from "../styles/spacing.css";
 
 const ElevationTotals = ({ elevations }) => {
   const elevationGain = () => {
@@ -35,38 +33,61 @@ const ElevationTotals = ({ elevations }) => {
   };
 
   return (
-    <div className={cx(spacing.marginBottomHalf, spacing.horizontalPadding)}>
-      <div className={styles.elevationTotals}>
-        <div className={styles.difficultyChart}>
-          <DifficultyChart score={score()} />
-        </div>
-        <div className={cx(stat.stat, stat.border)}>
-          <Hiker className={stat.icon} />
-          <div className={stat.total}>{miles()}</div>
-          <div className={stat.label}>Miles</div>
-        </div>
-        <div className={cx(stat.stat, stat.border)}>
-          <Up className={cx(stat.icon, stat.elevationGain)} />
-          <div className={stat.total}>
-            +{new Intl.NumberFormat().format(metersToFeet(elevationGain()))}
-          </div>
-          <div className={stat.label}>Elevation Gain</div>
-        </div>
-        <div className={stat.stat}>
-          <Up className={cx(stat.icon, stat.elevationLoss)} />
-          <div className={stat.total}>
-            -{new Intl.NumberFormat().format(metersToFeet(elevationLoss()))}
-          </div>
-          <div className={stat.label}>Elevation Loss</div>
-        </div>
-      </div>
+    <Container>
+      <Columns>
+        <StyledDifficultyChart score={score()} />
+        <Stat icon={Hiker} label="Miles" border={true} total={miles()} />
+        <Stat
+          icon={Up}
+          label="Elevation Gain"
+          border={true}
+          short={true}
+          total={`+${new Intl.NumberFormat().format(
+            metersToFeet(elevationGain())
+          )}`}
+        />
+        <Stat
+          icon={FlippedUp}
+          label="Elevation Loss"
+          short={true}
+          total={`-${new Intl.NumberFormat().format(
+            metersToFeet(elevationLoss())
+          )}`}
+        />
+      </Columns>
       <LineGraph elevations={elevations} />
-    </div>
+    </Container>
   );
 };
 
 ElevationTotals.propTypes = {
   elevations: PropTypes.array
 };
+
+const Container = styled("div")`
+  margin-bottom: ${p => p.theme.ss(0.5)};
+  padding: 0 ${p => p.theme.ss(1)};
+`;
+
+const Columns = styled("div")`
+  display: grid;
+  grid-template-columns: 120px 0.33fr 0.33fr 0.33fr;
+
+  @media (max-width: 360px) {
+    grid-template-columns: 90px 0.33fr 0.33fr 0.33fr;
+  }
+`;
+
+const StyledDifficultyChart = styled(DifficultyChart)`
+  margin-top: -2em;
+
+  @media (max-width: 360px) {
+    margin-left: -1em;
+  }
+`;
+
+const FlippedUp = styled(Up)`
+  transform: rotate(180deg);
+`;
 
 export default ElevationTotals;

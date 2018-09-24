@@ -1,7 +1,35 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders 1`] = `
+.emotion-24 {
+  margin-bottom: 0.5em;
+  padding: 0 1em;
+}
+
+.emotion-20 {
+  display: grid;
+  grid-template-columns: 120px 0.33fr 0.33fr 0.33fr;
+}
+
+@media (max-width:360px) {
+  .emotion-20 {
+    grid-template-columns: 90px 0.33fr 0.33fr 0.33fr;
+  }
+}
+
 .emotion-7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   width: 130px;
   height: 130px;
   font-size: 0.75em;
@@ -110,127 +138,176 @@ exports[`renders 1`] = `
   font-size: 0.875em;
 }
 
-.emotion-10 {
-  margin-top: 1em;
+.emotion-11 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding: 1em 0.5em 0.25em;
+  text-align: center;
+}
+
+@media (max-width:900px) {
+  .emotion-11 {
+    font-size: 0.75em;
+  }
 }
 
 .emotion-8 {
+  height: 1.1em;
+  width: auto;
+  fill: #344632;
+}
+
+.emotion-9 {
+  font-size: 1.5em;
+  font-weight: 800;
+  margin-bottom: 0.25em;
+}
+
+.emotion-10 {
+  font-size: 0.9em;
+  color: #838383;
+  font-size: 0.75em;
+}
+
+.emotion-12 {
+  height: 0.8em;
+  width: auto;
+  fill: #344632;
+}
+
+.emotion-16 {
+  -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
+  height: 0.8em;
+  width: auto;
+  fill: #344632;
+}
+
+.emotion-23 {
+  margin-top: 1em;
+}
+
+.emotion-21 {
   font-size: 0.9em;
   color: #838383;
 }
 
-.emotion-9 {
+.emotion-22 {
   width: 100%;
   height: auto;
 }
 
 <div
-  className="marginBottomHalf horizontalPadding"
+  className="emotion-24"
 >
   <div
-    className="elevationTotals"
+    className="emotion-20"
   >
     <div
-      className="difficultyChart"
+      className="emotion-7"
     >
       <div
-        className="emotion-7"
+        className="emotion-0"
+      />
+      <div
+        className="emotion-1"
+      />
+      <div
+        className="emotion-6"
       >
         <div
-          className="emotion-0"
-        />
-        <div
-          className="emotion-1"
-        />
-        <div
-          className="emotion-6"
+          className="emotion-5"
         >
           <div
-            className="emotion-5"
+            className="emotion-2"
           >
-            <div
-              className="emotion-2"
-            >
-              Difficulty
-            </div>
-            <div
-              className="emotion-3"
-            >
-              0
-            </div>
-            <div
-              className="emotion-4"
-            >
-              Very Easy
-            </div>
+            Difficulty
+          </div>
+          <div
+            className="emotion-3"
+          >
+            0
+          </div>
+          <div
+            className="emotion-4"
+          >
+            Very Easy
           </div>
         </div>
       </div>
     </div>
     <div
-      className="stat border"
+      className="emotion-11"
     >
       <test-file-stub
-        className="icon"
+        className="emotion-8"
       />
       <div
-        className="total"
+        className="emotion-9"
       >
         0
       </div>
       <div
-        className="label"
+        className="emotion-10"
       >
         Miles
       </div>
     </div>
     <div
-      className="stat border"
+      className="emotion-11"
     >
       <test-file-stub
-        className="icon elevationGain"
+        className="emotion-12"
       />
       <div
-        className="total"
+        className="emotion-9"
       >
-        +
-        13
+        +13
       </div>
       <div
-        className="label"
+        className="emotion-10"
       >
         Elevation Gain
       </div>
     </div>
     <div
-      className="stat"
+      className="emotion-11"
     >
       <test-file-stub
-        className="icon elevationLoss"
+        className="emotion-16"
       />
       <div
-        className="total"
+        className="emotion-9"
       >
-        -
-        0
+        -0
       </div>
       <div
-        className="label"
+        className="emotion-10"
       >
         Elevation Loss
       </div>
     </div>
   </div>
   <div
-    className="emotion-10"
+    className="emotion-23"
   >
     <div
-      className="emotion-8"
+      className="emotion-21"
     >
       Altitude Change
     </div>
     <svg
-      className="emotion-9"
+      className="emotion-22"
       overflow="hidden"
       viewBox="0 0 275 100"
     >
