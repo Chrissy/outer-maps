@@ -12,7 +12,7 @@ const Stat = ({ icon, total, label, short, tall, border }) => (
 );
 
 Stat.propTypes = {
-  icon: PropTypes.func,
+  icon: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   total: PropTypes.node,
   label: PropTypes.string,
   short: PropTypes.bool,
