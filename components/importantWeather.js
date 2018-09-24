@@ -26,7 +26,7 @@ const ImportantWeather = ({
     <React.Fragment>
       <StyledLabel>Average weather this week</StyledLabel>
       <Container>
-        <ImportantWeatherUnit>
+        <ImportantWeatherUnit darkBg={true}>
           <div className={flexCenter}>
             <Icon Node={HighIcon} extreme={tempIsExtreme(maxTemperature)} />
             <Data extreme={tempIsExtreme(maxTemperature)}>
@@ -35,7 +35,7 @@ const ImportantWeather = ({
           </div>
           <StyledLabel>High Temperature</StyledLabel>
         </ImportantWeatherUnit>
-        <ImportantWeatherUnit darkBg={true}>
+        <ImportantWeatherUnit>
           <div className={flexCenter}>
             <Icon
               Node={LowIcon}
@@ -48,7 +48,7 @@ const ImportantWeather = ({
           </div>
           <StyledLabel>Low Temperature</StyledLabel>
         </ImportantWeatherUnit>
-        <ImportantWeatherUnit>
+        <ImportantWeatherUnit darkBg={true}>
           <div className={flexCenter}>
             <Icon Node={PrecipIcon} />
             <Data>{percentText(chanceOfPercipitation)}</Data>

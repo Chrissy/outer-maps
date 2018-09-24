@@ -110,7 +110,7 @@ exports[`renders 1`] = `
 }
 
 .emotion-2 {
-  font-size: 0.9em;
+  font-size: 0.875em;
   color: #838383;
   line-height: 0;
   -webkit-align-self: flex-start;
@@ -152,6 +152,9 @@ exports[`renders 1`] = `
   justify-content: space-between;
   padding: 1em 0.5em 0.25em;
   text-align: center;
+  color: #344632;
+  border-left: 1px solid #D8D8D8;
+  border-right: 1px solid #D8D8D8;
 }
 
 @media (max-width:900px) {
@@ -173,7 +176,7 @@ exports[`renders 1`] = `
 }
 
 .emotion-10 {
-  font-size: 0.9em;
+  font-size: 0.875em;
   color: #838383;
   font-size: 0.75em;
 }
@@ -182,6 +185,29 @@ exports[`renders 1`] = `
   height: 0.8em;
   width: auto;
   fill: #344632;
+}
+
+.emotion-19 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding: 1em 0.5em 0.25em;
+  text-align: center;
+  color: #344632;
+}
+
+@media (max-width:900px) {
+  .emotion-19 {
+    font-size: 0.75em;
+  }
 }
 
 .emotion-16 {
@@ -198,7 +224,7 @@ exports[`renders 1`] = `
 }
 
 .emotion-21 {
-  font-size: 0.9em;
+  font-size: 0.875em;
   color: #838383;
 }
 
@@ -281,7 +307,7 @@ exports[`renders 1`] = `
       </div>
     </div>
     <div
-      className="emotion-11"
+      className="emotion-19"
     >
       <test-file-stub
         className="emotion-16"

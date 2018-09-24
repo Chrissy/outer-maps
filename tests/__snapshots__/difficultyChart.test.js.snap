@@ -94,7 +94,7 @@ exports[`renders 1`] = `
 }
 
 .emotion-2 {
-  font-size: 0.9em;
+  font-size: 0.875em;
   color: #838383;
   line-height: 0;
   -webkit-align-self: flex-start;
