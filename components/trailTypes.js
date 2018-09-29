@@ -56,7 +56,6 @@ const Container = styled("div")`
 `;
 
 const CombinedPercentBar = styled("div")`
-  width: ${p => p.percent || 100}%;
   height: ${p => p.theme.ss(0.75)};
   display: flex;
   margin-bottom: ${p => p.theme.ss(1)};
@@ -77,6 +76,7 @@ const getColor = (p, i) => {
 
 const PercentBar = styled("div")`
   height: 100%;
+  width: ${p => p.percent || "100%"};
   background-color: ${p => getColor(p, p.index)};
 `;
 
@@ -86,7 +86,7 @@ const Type = styled("div")`
   color: ${p => getColor(p, p.index)};
 `;
 
-const Icon = styled(({ Node }) => <Node />)`
+const Icon = styled(({ Node, className }) => <Node className={className} />)`
   height: auto;
   width: 1.8em;
   height: 1.8em;

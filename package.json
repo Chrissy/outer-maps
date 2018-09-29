@@ -97,6 +97,7 @@
   "devDependencies": {
     "@mapbox/mbtiles": "^0.10.0",
     "@mapbox/tilelive": "^5.12.6",
+    "babel-plugin-emotion": "^9.2.10",
     "benchmark": "^2.1.4",
     "dotenv": "^6.0.0",
     "emotion": "^9.2.10",

@@ -1,23 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders 1`] = `
-.emotion-24 {
+.emotion-49 {
   margin-bottom: 0.5em;
   padding: 0 1em;
 }
 
-.emotion-20 {
+.emotion-41 {
   display: grid;
   grid-template-columns: 120px 0.33fr 0.33fr 0.33fr;
 }
 
 @media (max-width:360px) {
-  .emotion-20 {
+  .emotion-41 {
     grid-template-columns: 90px 0.33fr 0.33fr 0.33fr;
   }
 }
 
-.emotion-7 {
+.emotion-14 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -40,7 +40,7 @@ exports[`renders 1`] = `
 }
 
 @media (max-width:900px) {
-  .emotion-7 {
+  .emotion-14 {
     width: 125px;
     height: 125px;
     font-size: 0.7em;
@@ -63,7 +63,7 @@ exports[`renders 1`] = `
   border-radius: 100%;
 }
 
-.emotion-1 {
+.emotion-2 {
   position: absolute;
   top: 0;
   left: 0;
@@ -82,7 +82,7 @@ exports[`renders 1`] = `
   border-radius: 100%;
 }
 
-.emotion-6 {
+.emotion-12 {
   width: calc(100% - calc(6px * 2));
   height: calc(100% - calc(6px * 2));
   background: #F7F7F7;
@@ -101,7 +101,7 @@ exports[`renders 1`] = `
   justify-content: center;
 }
 
-.emotion-5 {
+.emotion-10 {
   margin-top: -0.5em;
   height: 50%;
   text-align: center;
@@ -109,7 +109,7 @@ exports[`renders 1`] = `
   grid-template-rows: 1em 1fr 1.25em;
 }
 
-.emotion-2 {
+.emotion-4 {
   font-size: 0.875em;
   color: #838383;
   line-height: 0;
@@ -118,7 +118,7 @@ exports[`renders 1`] = `
   align-self: flex-start;
 }
 
-.emotion-3 {
+.emotion-6 {
   font-size: 3.5em;
   color: #3232FF;
   line-height: 0;
@@ -128,7 +128,7 @@ exports[`renders 1`] = `
   font-weight: 700;
 }
 
-.emotion-4 {
+.emotion-8 {
   color: #3232FF;
   -webkit-align-self: flex-end;
   -ms-flex-item-align: end;
@@ -138,7 +138,7 @@ exports[`renders 1`] = `
   font-size: 0.875em;
 }
 
-.emotion-11 {
+.emotion-22 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -158,36 +158,36 @@ exports[`renders 1`] = `
 }
 
 @media (max-width:900px) {
-  .emotion-11 {
+  .emotion-22 {
     font-size: 0.75em;
   }
 }
 
-.emotion-8 {
+.emotion-16 {
   height: 1.1em;
   width: auto;
   fill: #344632;
 }
 
-.emotion-9 {
+.emotion-18 {
   font-size: 1.5em;
   font-weight: 800;
   margin-bottom: 0.25em;
 }
 
-.emotion-10 {
+.emotion-20 {
   font-size: 0.875em;
   color: #838383;
   font-size: 0.75em;
 }
 
-.emotion-12 {
+.emotion-24 {
   height: 0.8em;
   width: auto;
   fill: #344632;
 }
 
-.emotion-19 {
+.emotion-39 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -205,12 +205,12 @@ exports[`renders 1`] = `
 }
 
 @media (max-width:900px) {
-  .emotion-19 {
+  .emotion-39 {
     font-size: 0.75em;
   }
 }
 
-.emotion-16 {
+.emotion-33 {
   -webkit-transform: rotate(180deg);
   -ms-transform: rotate(180deg);
   transform: rotate(180deg);
@@ -219,53 +219,53 @@ exports[`renders 1`] = `
   fill: #344632;
 }
 
-.emotion-23 {
+.emotion-47 {
   margin-top: 1em;
 }
 
-.emotion-21 {
+.emotion-43 {
   font-size: 0.875em;
   color: #838383;
 }
 
-.emotion-22 {
+.emotion-45 {
   width: 100%;
   height: auto;
 }
 
 <div
-  className="emotion-24"
+  className="emotion-49 emotion-50"
 >
   <div
-    className="emotion-20"
+    className="emotion-41 emotion-42"
   >
     <div
-      className="emotion-7"
+      className="emotion-14 emotion-15"
     >
       <div
-        className="emotion-0"
+        className="emotion-0 emotion-1"
       />
       <div
-        className="emotion-1"
+        className="emotion-2 emotion-1"
       />
       <div
-        className="emotion-6"
+        className="emotion-12 emotion-13"
       >
         <div
-          className="emotion-5"
+          className="emotion-10 emotion-11"
         >
           <div
-            className="emotion-2"
+            className="emotion-4 emotion-5"
           >
             Difficulty
           </div>
           <div
-            className="emotion-3"
+            className="emotion-6 emotion-7"
           >
             0
           </div>
           <div
-            className="emotion-4"
+            className="emotion-8 emotion-9"
           >
             Very Easy
           </div>
@@ -273,67 +273,67 @@ exports[`renders 1`] = `
       </div>
     </div>
     <div
-      className="emotion-11"
+      className="emotion-22 emotion-23"
     >
       <test-file-stub
-        className="emotion-8"
+        className="emotion-16 emotion-17"
       />
       <div
-        className="emotion-9"
+        className="emotion-18 emotion-19"
       >
         0
       </div>
       <div
-        className="emotion-10"
+        className="emotion-20 emotion-21"
       >
         Miles
       </div>
     </div>
     <div
-      className="emotion-11"
+      className="emotion-22 emotion-23"
     >
       <test-file-stub
-        className="emotion-12"
+        className="emotion-24 emotion-17"
       />
       <div
-        className="emotion-9"
+        className="emotion-18 emotion-19"
       >
         +13
       </div>
       <div
-        className="emotion-10"
+        className="emotion-20 emotion-21"
       >
         Elevation Gain
       </div>
     </div>
     <div
-      className="emotion-19"
+      className="emotion-39 emotion-23"
     >
       <test-file-stub
-        className="emotion-16"
+        className="emotion-17 emotion-33 emotion-34"
       />
       <div
-        className="emotion-9"
+        className="emotion-18 emotion-19"
       >
         -0
       </div>
       <div
-        className="emotion-10"
+        className="emotion-20 emotion-21"
       >
         Elevation Loss
       </div>
     </div>
   </div>
   <div
-    className="emotion-23"
+    className="emotion-47 emotion-48"
   >
     <div
-      className="emotion-21"
+      className="emotion-43 emotion-44"
     >
       Altitude Change
     </div>
     <svg
-      className="emotion-22"
+      className="emotion-45 emotion-46"
       overflow="hidden"
       viewBox="0 0 275 100"
     >

@@ -87,12 +87,12 @@ const ImportantWeatherUnit = styled("div")`
 `;
 
 const getColor = p => {
-  if (p.hot) return p.theme.accentColor;
-  if (p.cold) return p.theme.purple;
+  if (p.extreme == "hot") return p.theme.accentColor;
+  if (p.extreme == "cold") return p.theme.purple;
   return p.theme.gray6;
 };
 
-const Icon = styled(({ Node, ...props }) => <Node {...props} />)`
+const Icon = styled(({ Node, className }) => <Node className={className} />)`
   width: ${p => (p.thin ? p.theme.ss(2.5) : p.theme.ss(3))};
   height: auto;
   margin-top: ${p => p.theme.ss(0.5)};
@@ -104,13 +104,19 @@ const Icon = styled(({ Node, ...props }) => <Node {...props} />)`
 `;
 
 const Data = styled("div")`
-  font-size: ${p => p.theme.ts(2.5)};
+  font-size: ${p => p.theme.ts(2)};
   color: ${p => getColor(p)};
   font-weight: 500;
 `;
 
 const StyledLabel = styled(Label)`
   text-align: center;
+  font-size: ${p => p.theme.ts(0.75)};
+  margin-top: ${p => p.theme.ss(0.5)};
+
+  @media (max-width: 900px) {
+    font-size: ${p => p.theme.ts(0.5)};
+  }
 `;
 
 export default ImportantWeather;

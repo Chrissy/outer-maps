@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders 1`] = `
-.emotion-15 {
+.emotion-30 {
   margin: 0.5em 0 3em 0;
   padding: 0 1em;
 }
 
-.emotion-4 {
+.emotion-8 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -29,11 +29,11 @@ exports[`renders 1`] = `
   padding: 0.5em 0.75em;
 }
 
-.emotion-4:nth-of-type(3n + 2) {
+.emotion-8:nth-of-type(3n + 2) {
   background-color: #CA4300;
 }
 
-.emotion-4:nth-of-type(3n + 3) {
+.emotion-8:nth-of-type(3n + 3) {
   background-color: #9B3300;
 }
 
@@ -41,87 +41,87 @@ exports[`renders 1`] = `
   padding: 0.5em 0.75em;
 }
 
-.emotion-1 {
+.emotion-2 {
   border-right: 1px solid #FF8244;
   padding: 0.5em 0.75em;
 }
 
-.emotion-2 {
+.emotion-4 {
   width: 2.5em;
   height: 0.75em;
   padding: 0 0.5em 0 0.25em;
   display: block;
 }
 
-.emotion-2 path {
+.emotion-4 path {
   stroke: #fff;
 }
 
 <div
-  className="emotion-15"
+  className="emotion-30 emotion-31"
 >
   <li
-    className="emotion-4"
+    className="emotion-8 emotion-9"
   >
     <div
-      className="emotion-0"
+      className="emotion-0 emotion-1"
     >
       fun trail
     </div>
     <div
-      className="emotion-0"
+      className="emotion-0 emotion-1"
     >
       <div
-        className="emotion-1"
+        className="emotion-2 emotion-3"
       >
         0m
       </div>
       <test-file-stub
-        className="emotion-2"
+        className="emotion-4 emotion-5"
         onClick={[Function]}
       />
     </div>
   </li>
   <li
-    className="emotion-4"
+    className="emotion-8 emotion-9"
   >
     <div
-      className="emotion-0"
+      className="emotion-0 emotion-1"
     >
       not fun trail
     </div>
     <div
-      className="emotion-0"
+      className="emotion-0 emotion-1"
     >
       <div
-        className="emotion-1"
+        className="emotion-2 emotion-3"
       >
         
       </div>
       <test-file-stub
-        className="emotion-2"
+        className="emotion-4 emotion-5"
         onClick={[Function]}
       />
     </div>
   </li>
   <li
-    className="emotion-4"
+    className="emotion-8 emotion-9"
   >
     <div
-      className="emotion-0"
+      className="emotion-0 emotion-1"
     >
       super fun trail
     </div>
     <div
-      className="emotion-0"
+      className="emotion-0 emotion-1"
     >
       <div
-        className="emotion-1"
+        className="emotion-2 emotion-3"
       >
         31.1m
       </div>
       <test-file-stub
-        className="emotion-2"
+        className="emotion-4 emotion-5"
         onClick={[Function]}
       />
     </div>

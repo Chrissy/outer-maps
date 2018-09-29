@@ -2,8 +2,7 @@
 
 exports[`renders 1`] = `
 Array [
-  .emotion-4 {
-  width: 100%;
+  .emotion-8 {
   height: 0.75em;
   display: -webkit-box;
   display: -webkit-flex;
@@ -14,48 +13,52 @@ Array [
 
 .emotion-0 {
   height: 100%;
+  width: 30%;
   background-color: #9B3300;
-}
-
-.emotion-1 {
-  height: 100%;
-  background-color: #CA4300;
 }
 
 .emotion-2 {
   height: 100%;
+  width: 40%;
+  background-color: #CA4300;
+}
+
+.emotion-4 {
+  height: 100%;
+  width: 30%;
   background-color: #FF6000;
 }
 
-.emotion-3 {
+.emotion-6 {
   height: 100%;
+  width: 0%;
   background-color: #FFAE86;
 }
 
 <div
-    className="emotion-4"
+    className="emotion-8 emotion-9"
   >
     <div
-      className="emotion-0"
+      className="emotion-0 emotion-1"
     />
     <div
-      className="emotion-1"
+      className="emotion-2 emotion-1"
     />
     <div
-      className="emotion-2"
+      className="emotion-4 emotion-1"
     />
     <div
-      className="emotion-3"
+      className="emotion-6 emotion-1"
     />
   </div>,
-  .emotion-4 {
+  .emotion-16 {
   display: grid;
   grid-template-columns: 0.5fr 0.5fr;
   grid-column-gap: 1em;
   grid-row-gap: 0.25em;
 }
 
-.emotion-0 {
+.emotion-2 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -64,7 +67,18 @@ Array [
   color: #9B3300;
 }
 
-.emotion-1 {
+.emotion-0 {
+  height: auto;
+  width: 1.8em;
+  height: 1.8em;
+  margin: 0 0.25em 1em 0.25em;
+}
+
+.emotion-0 path {
+  fill: #9B3300;
+}
+
+.emotion-6 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -73,7 +87,18 @@ Array [
   color: #CA4300;
 }
 
-.emotion-2 {
+.emotion-4 {
+  height: auto;
+  width: 1.8em;
+  height: 1.8em;
+  margin: 0 0.25em 1em 0.25em;
+}
+
+.emotion-4 path {
+  fill: #CA4300;
+}
+
+.emotion-10 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -82,7 +107,18 @@ Array [
   color: #FF6000;
 }
 
-.emotion-3 {
+.emotion-8 {
+  height: auto;
+  width: 1.8em;
+  height: 1.8em;
+  margin: 0 0.25em 1em 0.25em;
+}
+
+.emotion-8 path {
+  fill: #FF6000;
+}
+
+.emotion-14 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -91,34 +127,53 @@ Array [
   color: #FFAE86;
 }
 
+.emotion-12 {
+  height: auto;
+  width: 1.8em;
+  height: 1.8em;
+  margin: 0 0.25em 1em 0.25em;
+}
+
+.emotion-12 path {
+  fill: #FFAE86;
+}
+
 <div
-    className="emotion-4"
+    className="emotion-16 emotion-17"
   >
     <div
-      className="emotion-0"
+      className="emotion-2 emotion-3"
     >
-      <test-file-stub />
+      <test-file-stub
+        className="emotion-0 emotion-1"
+      />
       30%
        Hike
     </div>
     <div
-      className="emotion-1"
+      className="emotion-6 emotion-3"
     >
-      <test-file-stub />
+      <test-file-stub
+        className="emotion-4 emotion-1"
+      />
       40%
        Horse
     </div>
     <div
-      className="emotion-2"
+      className="emotion-10 emotion-3"
     >
-      <test-file-stub />
+      <test-file-stub
+        className="emotion-8 emotion-1"
+      />
       30%
        Bike
     </div>
     <div
-      className="emotion-3"
+      className="emotion-14 emotion-3"
     >
-      <test-file-stub />
+      <test-file-stub
+        className="emotion-12 emotion-1"
+      />
       0%
        OHV
     </div>

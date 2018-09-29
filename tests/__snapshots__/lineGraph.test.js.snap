@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders 1`] = `
-.emotion-2 {
+.emotion-4 {
   margin-top: 1em;
 }
 
@@ -10,21 +10,21 @@ exports[`renders 1`] = `
   color: #838383;
 }
 
-.emotion-1 {
+.emotion-2 {
   width: 100%;
   height: auto;
 }
 
 <div
-  className="emotion-2"
+  className="emotion-4 emotion-5"
 >
   <div
-    className="emotion-0"
+    className="emotion-0 emotion-1"
   >
     Altitude Change
   </div>
   <svg
-    className="emotion-1"
+    className="emotion-2 emotion-3"
     overflow="hidden"
     viewBox="0 0 275 100"
   >

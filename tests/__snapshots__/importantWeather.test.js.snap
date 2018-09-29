@@ -6,14 +6,22 @@ Array [
   font-size: 0.875em;
   color: #838383;
   text-align: center;
+  font-size: 0.75em;
+  margin-top: 0.5em;
+}
+
+@media (max-width:900px) {
+  .emotion-0 {
+    font-size: 0.5em;
+  }
 }
 
 <div
-    className="emotion-0"
+    className="emotion-0 emotion-1"
   >
     Average weather this week
   </div>,
-  .emotion-2 {
+  .emotion-4 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -28,18 +36,26 @@ Array [
   justify-content: center;
 }
 
-.emotion-3 {
+.emotion-5 {
   font-size: 0.875em;
   color: #838383;
   text-align: center;
+  font-size: 0.75em;
+  margin-top: 0.5em;
 }
 
-.emotion-15 {
+@media (max-width:900px) {
+  .emotion-5 {
+    font-size: 0.5em;
+  }
+}
+
+.emotion-27 {
   display: grid;
   grid-template-columns: 33.3% 33.3% 33.3%;
 }
 
-.emotion-4 {
+.emotion-7 {
   display: grid;
   grid-template-rows: auto 0.6em;
   justify-items: center;
@@ -54,7 +70,7 @@ Array [
 }
 
 @media (max-width:900px) {
-  .emotion-4 {
+  .emotion-7 {
     font-size: 0.875em;
   }
 }
@@ -67,16 +83,16 @@ Array [
 }
 
 .emotion-0 path {
-  fill: #838383;
+  fill: #FF6000;
 }
 
-.emotion-1 {
-  font-size: 2.5em;
-  color: #838383;
+.emotion-2 {
+  font-size: 2em;
+  color: #FF6000;
   font-weight: 500;
 }
 
-.emotion-9 {
+.emotion-16 {
   display: grid;
   grid-template-rows: auto 0.6em;
   justify-items: center;
@@ -90,89 +106,109 @@ Array [
 }
 
 @media (max-width:900px) {
-  .emotion-9 {
+  .emotion-16 {
     font-size: 0.875em;
   }
 }
 
-.emotion-5 {
+.emotion-9 {
   width: 2.5em;
   height: auto;
   margin-top: 0.5em;
   margin-right: 0.25em;
 }
 
-.emotion-5 path {
+.emotion-9 path {
+  fill: #5700EC;
+}
+
+.emotion-11 {
+  font-size: 2em;
+  color: #5700EC;
+  font-weight: 500;
+}
+
+.emotion-18 {
+  width: 3em;
+  height: auto;
+  margin-top: 0.5em;
+  margin-right: 0.25em;
+}
+
+.emotion-18 path {
   fill: #838383;
 }
 
+.emotion-20 {
+  font-size: 2em;
+  color: #838383;
+  font-weight: 500;
+}
+
 <div
-    className="emotion-15"
+    className="emotion-27 emotion-28"
   >
     <div
-      className="emotion-4"
+      className="emotion-7 emotion-8"
     >
       <div
-        className="emotion-2"
+        className="emotion-4"
       >
         <test-file-stub
-          className="emotion-0"
-          extreme="hot"
+          className="emotion-0 emotion-1"
         />
         <div
-          className="emotion-1"
+          className="emotion-2 emotion-3"
         >
           100
           °
         </div>
       </div>
       <div
-        className="emotion-3"
+        className="emotion-5 emotion-6"
       >
         High Temperature
       </div>
     </div>
     <div
-      className="emotion-9"
+      className="emotion-16 emotion-8"
     >
       <div
-        className="emotion-2"
+        className="emotion-4"
       >
         <test-file-stub
-          className="emotion-5"
-          extreme="cold"
-          thin="true"
+          className="emotion-9 emotion-1"
         />
         <div
-          className="emotion-1"
+          className="emotion-11 emotion-3"
         >
           0
           °
         </div>
       </div>
       <div
-        className="emotion-3"
+        className="emotion-5 emotion-6"
       >
         Low Temperature
       </div>
     </div>
     <div
-      className="emotion-4"
+      className="emotion-7 emotion-8"
     >
       <div
-        className="emotion-2"
+        className="emotion-4"
       >
         <test-file-stub
-          className="emotion-0"
+          className="emotion-18 emotion-1"
         />
         <div
-          className="emotion-1"
+          className="emotion-20 emotion-3"
         >
           1%
         </div>
       </div>
       <div
-        className="emotion-3"
+        className="emotion-5 emotion-6"
       >
         Chance percipitation
       </div>
