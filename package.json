@@ -54,7 +54,6 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-react": "^6.11.1",
-    "classnames": "^2.2.5",
     "css-loader": "^0.28.11",
     "dateformat": "^3.0.3",
     "db-migrate": "^0.11.1",

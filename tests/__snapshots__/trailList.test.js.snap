@@ -1,74 +1,130 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders 1`] = `
+.emotion-15 {
+  margin: 0.5em 0 3em 0;
+  padding: 0 1em;
+}
+
+.emotion-4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 100%;
+  border-radius: 0.5em;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  background-color: #FF6000;
+  box-sizing: border-box;
+  color: #fff;
+  font-size: 0.75em;
+  margin-bottom: 1em;
+  padding: 0.5em 0.75em;
+}
+
+.emotion-4:nth-of-type(3n + 2) {
+  background-color: #CA4300;
+}
+
+.emotion-4:nth-of-type(3n + 3) {
+  background-color: #9B3300;
+}
+
+.emotion-0 {
+  padding: 0.5em 0.75em;
+}
+
+.emotion-1 {
+  border-right: 1px solid #FF8244;
+  padding: 0.5em 0.75em;
+}
+
+.emotion-2 {
+  width: 2.5em;
+  height: 0.75em;
+  padding: 0 0.5em 0 0.25em;
+  display: block;
+}
+
+.emotion-2 path {
+  stroke: #fff;
+}
+
 <div
-  className="trailList marginBottomTriple marginTopHalf horizontalPadding"
+  className="emotion-15"
 >
-  <div
-    className="listElement marginBottomHalf"
+  <li
+    className="emotion-4"
   >
     <div
-      className="name"
+      className="emotion-0"
     >
       fun trail
     </div>
     <div
-      className="info"
+      className="emotion-0"
     >
       <div
-        className="dataElement"
+        className="emotion-1"
       >
         0m
       </div>
       <test-file-stub
-        className="close"
+        className="emotion-2"
         onClick={[Function]}
       />
     </div>
-  </div>
-  <div
-    className="listElement marginBottomHalf"
+  </li>
+  <li
+    className="emotion-4"
   >
     <div
-      className="name"
+      className="emotion-0"
     >
       not fun trail
     </div>
     <div
-      className="info"
+      className="emotion-0"
     >
       <div
-        className="dataElement"
+        className="emotion-1"
       >
         
       </div>
       <test-file-stub
-        className="close"
+        className="emotion-2"
         onClick={[Function]}
       />
     </div>
-  </div>
-  <div
-    className="listElement marginBottomHalf"
+  </li>
+  <li
+    className="emotion-4"
   >
     <div
-      className="name"
+      className="emotion-0"
     >
       super fun trail
     </div>
     <div
-      className="info"
+      className="emotion-0"
     >
       <div
-        className="dataElement"
+        className="emotion-1"
       >
         31.1m
       </div>
       <test-file-stub
-        className="close"
+        className="emotion-2"
         onClick={[Function]}
       />
     </div>
-  </div>
+  </li>
 </div>
 `;

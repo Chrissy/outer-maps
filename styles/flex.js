@@ -6,6 +6,11 @@ export const flexCenter = css`
   justify-content: center;
 `;
 
+export const flexHorizontalCenter = css`
+  display: flex;
+  align-items: center;
+`;
+
 export const flex = css`
   display: flex;
 `;
