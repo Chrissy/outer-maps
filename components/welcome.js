@@ -18,29 +18,31 @@ class Welcome extends React.Component {
 
   render() {
     return (
-      <Container closed={this.state.closed} onClick={e => this.close(e)}>
-        <Content>
-          <Image src="https://s3-us-west-2.amazonaws.com/chrissy-gunk/rocks.jpg" />
-          <Title>Welcome to the Trail Gunk demo!</Title>
-          <Text>
-            It isn&apos;t totally done yet, but look—one doesn&apos;t simply
-            build an interactive map of all your favorite parks overnight.
-            <br />
-            <br />
-            It will work on all the latest modern browers. Currently only data
-            for Washington, Utah, and Idaho are added. If you are interested in
-            contributing to or following the progress of Trail Gunk, head over
-            to the{" "}
-            <Link
-              href="https://github.com/Chrissy/trails-up"
-              onClick={e => e.stopPropagation()}
-            >
-              Github Repo
-            </Link>.
-          </Text>
-        </Content>
-        <StyledClose />
-      </Container>
+      !this.state.closed && (
+        <Container onClick={e => this.close(e)}>
+          <Content>
+            <Image src="https://s3-us-west-2.amazonaws.com/chrissy-gunk/rocks.jpg" />
+            <Title>Welcome to the Trail Gunk demo!</Title>
+            <Text>
+              It isn&apos;t totally done yet, but look—one doesn&apos;t simply
+              build an interactive map of all your favorite parks overnight.
+              <br />
+              <br />
+              It will work on all the latest modern browers. Currently only data
+              for Washington, Utah, and Idaho are added. If you are interested
+              in contributing to or following the progress of Trail Gunk, head
+              over to the{" "}
+              <Link
+                href="https://github.com/Chrissy/trails-up"
+                onClick={e => e.stopPropagation()}
+              >
+                Github Repo
+              </Link>.
+            </Text>
+          </Content>
+          <StyledClose />
+        </Container>
+      )
     );
   }
 }
@@ -57,7 +59,6 @@ const Container = styled("div")`
   -webkit-overflow-scrolling: touch;
   box-sizing: border-box;
   padding-top: 5em;
-  display: ${p => p.closed && "none"};
 `;
 
 const Content = styled("div")`
