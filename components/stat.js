@@ -50,7 +50,9 @@ const Total = styled("div")`
 `;
 
 const StyledLabel = styled(Label)`
-  font-size: ${p => p.theme.ss(0.75)};
+  font-size: ${p => p.theme.ts(0.66)};
+  line-height: 1.4;
+  color: inherit;
 `;
 
 export default Stat;

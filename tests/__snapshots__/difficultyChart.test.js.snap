@@ -60,9 +60,9 @@ exports[`renders 1`] = `
   -webkit-transform: rotate(225deg);
   -ms-transform: rotate(225deg);
   transform: rotate(225deg);
-  -webkit-transform: rotate(333);
-  -ms-transform: rotate(333);
-  transform: rotate(333);
+  -webkit-transform: rotate(333deg);
+  -ms-transform: rotate(333deg);
+  transform: rotate(333deg);
   border-radius: 100%;
 }
 
@@ -109,6 +109,7 @@ exports[`renders 1`] = `
   -ms-flex-item-align: center;
   align-self: center;
   font-weight: 700;
+  line-height: 0;
 }
 
 .emotion-8 {
@@ -118,6 +119,7 @@ exports[`renders 1`] = `
   font-weight: 500;
   text-transform: uppercase;
   font-size: 0.875em;
+  line-height: 0;
 }
 
 <div

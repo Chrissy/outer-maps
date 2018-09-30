@@ -1,23 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders 1`] = `
-.emotion-49 {
+.emotion-50 {
   margin-bottom: 0.5em;
   padding: 0 1em;
 }
 
-.emotion-41 {
+.emotion-42 {
   display: grid;
   grid-template-columns: 120px 0.33fr 0.33fr 0.33fr;
 }
 
 @media (max-width:360px) {
-  .emotion-41 {
+  .emotion-42 {
     grid-template-columns: 90px 0.33fr 0.33fr 0.33fr;
   }
 }
 
-.emotion-14 {
+.emotion-15 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -37,13 +37,20 @@ exports[`renders 1`] = `
   position: relative;
   border-radius: 100%;
   overflow: hidden;
+  margin-top: -2.5em;
 }
 
 @media (max-width:900px) {
-  .emotion-14 {
+  .emotion-15 {
     width: 125px;
     height: 125px;
     font-size: 0.7em;
+  }
+}
+
+@media (max-width:360px) {
+  .emotion-15 {
+    margin-left: -1em;
   }
 }
 
@@ -57,9 +64,9 @@ exports[`renders 1`] = `
   border-width: 6px;
   border-style: solid;
   border-color: transparent transparent #3232FF #3232FF;
-  -webkit-transform: rotate(225deg);
-  -ms-transform: rotate(225deg);
-  transform: rotate(225deg);
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
   border-radius: 100%;
 }
 
@@ -73,12 +80,12 @@ exports[`renders 1`] = `
   border-width: 6px;
   border-style: solid;
   border-color: transparent transparent #3232FF #3232FF;
-  -webkit-transform: rotate(225deg);
-  -ms-transform: rotate(225deg);
-  transform: rotate(225deg);
-  -webkit-transform: rotate(-135);
-  -ms-transform: rotate(-135);
-  transform: rotate(-135);
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  -webkit-transform: rotate(-135deg);
+  -ms-transform: rotate(-135deg);
+  transform: rotate(-135deg);
   border-radius: 100%;
 }
 
@@ -126,6 +133,7 @@ exports[`renders 1`] = `
   -ms-flex-item-align: center;
   align-self: center;
   font-weight: 700;
+  line-height: 0;
 }
 
 .emotion-8 {
@@ -136,9 +144,53 @@ exports[`renders 1`] = `
   font-weight: 500;
   text-transform: uppercase;
   font-size: 0.875em;
+  line-height: 0;
 }
 
-.emotion-22 {
+.emotion-23 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding: 1em 0.5em 0.25em;
+  text-align: center;
+  color: #344632;
+}
+
+@media (max-width:900px) {
+  .emotion-23 {
+    font-size: 0.75em;
+  }
+}
+
+.emotion-17 {
+  height: 1.1em;
+  width: auto;
+  fill: #344632;
+}
+
+.emotion-19 {
+  font-size: 1.5em;
+  font-weight: 800;
+  margin-bottom: 0.25em;
+}
+
+.emotion-21 {
+  font-size: 0.875em;
+  color: #838383;
+  font-size: 0.66em;
+  line-height: 1.4;
+  color: inherit;
+}
+
+.emotion-31 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -158,59 +210,18 @@ exports[`renders 1`] = `
 }
 
 @media (max-width:900px) {
-  .emotion-22 {
+  .emotion-31 {
     font-size: 0.75em;
   }
 }
 
-.emotion-16 {
-  height: 1.1em;
-  width: auto;
-  fill: #344632;
-}
-
-.emotion-18 {
-  font-size: 1.5em;
-  font-weight: 800;
-  margin-bottom: 0.25em;
-}
-
-.emotion-20 {
-  font-size: 0.875em;
-  color: #838383;
-  font-size: 0.75em;
-}
-
-.emotion-24 {
+.emotion-25 {
   height: 0.8em;
   width: auto;
   fill: #344632;
 }
 
-.emotion-39 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  padding: 1em 0.5em 0.25em;
-  text-align: center;
-  color: #344632;
-}
-
-@media (max-width:900px) {
-  .emotion-39 {
-    font-size: 0.75em;
-  }
-}
-
-.emotion-33 {
+.emotion-34 {
   -webkit-transform: rotate(180deg);
   -ms-transform: rotate(180deg);
   transform: rotate(180deg);
@@ -219,28 +230,28 @@ exports[`renders 1`] = `
   fill: #344632;
 }
 
-.emotion-47 {
+.emotion-48 {
   margin-top: 1em;
 }
 
-.emotion-43 {
+.emotion-44 {
   font-size: 0.875em;
   color: #838383;
 }
 
-.emotion-45 {
+.emotion-46 {
   width: 100%;
   height: auto;
 }
 
 <div
-  className="emotion-49 emotion-50"
+  className="emotion-50 emotion-51"
 >
   <div
-    className="emotion-41 emotion-42"
+    className="emotion-42 emotion-43"
   >
     <div
-      className="emotion-14 emotion-15"
+      className="emotion-14 emotion-15 emotion-16"
     >
       <div
         className="emotion-0 emotion-1"
@@ -273,67 +284,67 @@ exports[`renders 1`] = `
       </div>
     </div>
     <div
-      className="emotion-22 emotion-23"
+      className="emotion-23 emotion-24"
     >
       <test-file-stub
-        className="emotion-16 emotion-17"
+        className="emotion-17 emotion-18"
       />
       <div
-        className="emotion-18 emotion-19"
+        className="emotion-19 emotion-20"
       >
         0
       </div>
       <div
-        className="emotion-20 emotion-21"
+        className="emotion-21 emotion-22"
       >
         Miles
       </div>
     </div>
     <div
-      className="emotion-22 emotion-23"
+      className="emotion-31 emotion-24"
     >
       <test-file-stub
-        className="emotion-24 emotion-17"
+        className="emotion-25 emotion-18"
       />
       <div
-        className="emotion-18 emotion-19"
+        className="emotion-19 emotion-20"
       >
         +13
       </div>
       <div
-        className="emotion-20 emotion-21"
+        className="emotion-21 emotion-22"
       >
         Elevation Gain
       </div>
     </div>
     <div
-      className="emotion-39 emotion-23"
+      className="emotion-23 emotion-24"
     >
       <test-file-stub
-        className="emotion-17 emotion-33 emotion-34"
+        className="emotion-18 emotion-34 emotion-35"
       />
       <div
-        className="emotion-18 emotion-19"
+        className="emotion-19 emotion-20"
       >
         -0
       </div>
       <div
-        className="emotion-20 emotion-21"
+        className="emotion-21 emotion-22"
       >
         Elevation Loss
       </div>
     </div>
   </div>
   <div
-    className="emotion-47 emotion-48"
+    className="emotion-48 emotion-49"
   >
     <div
-      className="emotion-43 emotion-44"
+      className="emotion-44 emotion-45"
     >
       Altitude Change
     </div>
     <svg
-      className="emotion-45 emotion-46"
+      className="emotion-46 emotion-47"
       overflow="hidden"
       viewBox="0 0 275 100"
     >

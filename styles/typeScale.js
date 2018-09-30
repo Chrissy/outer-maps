@@ -2,6 +2,8 @@ export default size => {
   switch (size) {
   case 0.5:
     return "0.5em";
+  case 0.66:
+    return "0.66em";
   case 0.75:
     return "0.75em";
   case 0.875:

@@ -36,7 +36,7 @@ const ElevationTotals = ({ elevations }) => {
     <Container>
       <Columns>
         <StyledDifficultyChart score={score()} />
-        <Stat icon={Hiker} label="Miles" border={true} total={miles()} />
+        <Stat icon={Hiker} label="Miles" total={miles()} />
         <Stat
           icon={Up}
           label="Elevation Gain"
@@ -79,10 +79,10 @@ const Columns = styled("div")`
 `;
 
 const StyledDifficultyChart = styled(DifficultyChart)`
-  margin-top: -2em;
+  margin-top: -${p => p.theme.ss(2.5)};
 
   @media (max-width: 360px) {
-    margin-left: -1em;
+    margin-left: -${p => p.theme.ss(1)};
   }
 `;
 

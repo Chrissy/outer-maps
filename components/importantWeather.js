@@ -10,7 +10,8 @@ import PrecipIcon from "../svg/weather-precip.svg";
 const ImportantWeather = ({
   maxTemperature,
   minTemperature,
-  chanceOfPercipitation
+  chanceOfPercipitation,
+  className
 }) => {
   const percentText = integer => {
     return typeof integer == "number" ? parseInt(integer / 10) + "%" : "0%";
@@ -23,8 +24,8 @@ const ImportantWeather = ({
   };
 
   return (
-    <React.Fragment>
-      <StyledLabel>Average weather this week</StyledLabel>
+    <div className={className}>
+      <Label>Average weather this week</Label>
       <Container>
         <ImportantWeatherUnit darkBg={true}>
           <div className={flexCenter}>
@@ -56,14 +57,15 @@ const ImportantWeather = ({
           <StyledLabel>Chance percipitation</StyledLabel>
         </ImportantWeatherUnit>
       </Container>
-    </React.Fragment>
+    </div>
   );
 };
 
 ImportantWeather.propTypes = {
   maxTemperature: PropTypes.number,
   minTemperature: PropTypes.number,
-  chanceOfPercipitation: PropTypes.number
+  chanceOfPercipitation: PropTypes.number,
+  className: PropTypes.string
 };
 
 const Container = styled("div")`
@@ -111,7 +113,7 @@ const Data = styled("div")`
 
 const StyledLabel = styled(Label)`
   text-align: center;
-  font-size: ${p => p.theme.ts(0.75)};
+  font-size: ${p => p.theme.ts(0.66)};
   margin-top: ${p => p.theme.ss(0.5)};
 
   @media (max-width: 900px) {

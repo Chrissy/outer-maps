@@ -6,7 +6,7 @@ import camelCase from "lodash.camelCase";
 import { flexCenter } from "../styles/flex";
 import Label from "./label";
 
-const DifficultyChart = ({ score }) => {
+const DifficultyChart = ({ score, className }) => {
   const rotation = () => {
     return (score > 50 ? 225 : 45) + ((score - 50) / 100) * 360;
   };
@@ -23,7 +23,7 @@ const DifficultyChart = ({ score }) => {
   const difficultyCamelCase = camelCase(difficultyHumanName);
 
   return (
-    <Container>
+    <Container className={className}>
       <Circle difficulty={difficultyCamelCase} halfEmpty={score < 50} />
       <Circle
         difficulty={difficultyCamelCase}
@@ -44,7 +44,8 @@ const DifficultyChart = ({ score }) => {
 };
 
 DifficultyChart.propTypes = {
-  score: PropTypes.number
+  score: PropTypes.number,
+  className: PropTypes.string
 };
 
 const borderWidth = "6px";
@@ -81,8 +82,8 @@ const Circle = styled("div")`
   border-style: solid;
   border-color: transparent transparent ${p => getColor(p.difficulty)}
     ${p => getColor(p.difficulty)};
-  transform: rotate(${p => (p.theme.halfEmpty ? "45deg" : "225deg")});
-  transform: ${p => p.rotation && `rotate(${p.rotation})`};
+  transform: rotate(${p => (p.halfEmpty ? "45deg" : "225deg")});
+  transform: ${p => p.rotation && `rotate(${p.rotation}deg)`};
   border-radius: 100%;
 `;
 
@@ -113,6 +114,7 @@ const Score = styled("div")`
   line-height: 0;
   align-self: center;
   font-weight: 700;
+  line-height: 0;
 `;
 
 const Difficulty = styled("div")`
@@ -121,6 +123,7 @@ const Difficulty = styled("div")`
   font-weight: 500;
   text-transform: uppercase;
   font-size: ${p => p.theme.ts(0.875)};
+  line-height: 0;
 `;
 
 export default DifficultyChart;

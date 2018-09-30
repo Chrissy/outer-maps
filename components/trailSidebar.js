@@ -52,7 +52,7 @@ TrailSidebar.propTypes = {
 
 const StyledImportantWeather = styled(ImportantWeather)`
   padding: 0 ${p => p.theme.ss(1)};
-  margin: 0 ${p => p.theme.ss(1)};
+  margin: ${p => p.theme.ss(1)} 0;
 `;
 
 export default TrailSidebar;
