@@ -90,7 +90,7 @@ const LineGraph = ({ elevations }) => {
 
   return (
     <Container>
-      <Label>Altitude Change</Label>
+      <StyledLabel>Altitude Change</StyledLabel>
       <StyledSvg viewBox={viewBox()} overflow="hidden">
         <g>{mileMarkers()}</g>
         <polyline points={pointsToPathString()} fill="#344632" />
@@ -115,6 +115,10 @@ const Container = styled("div")`
 const StyledSvg = styled("svg")`
   width: 100%;
   height: auto;
+`;
+
+const StyledLabel = styled(Label)`
+  margin-bottom: ${p => p.theme.ss(0.5)};
 `;
 
 export default LineGraph;

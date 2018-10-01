@@ -24,7 +24,7 @@ const theme = {
   ts: typeScale,
   headlineFont: "\"Hoefler Text A\", \"Hoefler Text B\"",
   bodyFont:
-    "\"Gotham Narrow A\", \"Gotham Narrow B\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\""
+    "\"Din\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\""
 };
 
 theme.difficulties = {
