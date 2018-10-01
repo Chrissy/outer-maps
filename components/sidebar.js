@@ -91,7 +91,6 @@ const Content = styled("div")`
 `;
 
 const Title = styled("div")`
-  font-family: ${p => p.theme.headlineFont};
   color: ${p => p.theme.brandColor};
   font-size: ${p => p.theme.ts(1.35)};
   font-weight: 800;

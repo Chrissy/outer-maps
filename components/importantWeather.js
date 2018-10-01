@@ -25,7 +25,7 @@ const ImportantWeather = ({
 
   return (
     <div className={className}>
-      <Label>Average weather this week</Label>
+      <TopLabel>Average weather this week</TopLabel>
       <Container>
         <ImportantWeatherUnit darkBg={true}>
           <div className={flexCenter}>
@@ -108,7 +108,11 @@ const Icon = styled(({ Node, className }) => <Node className={className} />)`
 const Data = styled("div")`
   font-size: ${p => p.theme.ts(2)};
   color: ${p => getColor(p)};
-  font-weight: 500;
+  font-weight: 600;
+`;
+
+const TopLabel = styled(Label)`
+  margin-bottom: ${p => p.theme.ss(0.5)};
 `;
 
 const StyledLabel = styled(Label)`

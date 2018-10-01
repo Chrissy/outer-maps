@@ -19,6 +19,7 @@ exports[`renders 1`] = `
 .emotion-0 {
   font-size: 0.875em;
   color: #838383;
+  margin-bottom: 0.5em;
 }
 
 .emotion-29 {
@@ -60,7 +61,7 @@ exports[`renders 1`] = `
 .emotion-4 {
   font-size: 2em;
   color: #FF6000;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .emotion-7 {
@@ -110,7 +111,7 @@ exports[`renders 1`] = `
 .emotion-13 {
   font-size: 2em;
   color: #5700EC;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .emotion-20 {
@@ -127,7 +128,7 @@ exports[`renders 1`] = `
 .emotion-22 {
   font-size: 2em;
   color: #838383;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 <div>

@@ -9,6 +9,7 @@ import Welcome from "./welcome";
 import styled from "react-emotion";
 import theme from "../styles/theme";
 import { store } from "../state/configureStore";
+import "../styles/fonts.css";
 
 const Body = styled("div")`
   display: grid;
