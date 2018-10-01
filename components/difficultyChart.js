@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import theme from "../styles/theme";
 import styled from "react-emotion";
-import camelCase from "lodash.camelCase";
+import camelCase from "lodash.camelcase";
 import { flexCenter } from "../styles/flex";
 import Label from "./label";
 
