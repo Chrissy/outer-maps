@@ -1,11 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import cx from "classnames";
+import styled from "react-emotion";
 import ElevationTotals from "./elevationTotals";
 import TrailListContainer from "./trailListContainer";
 import ImportantWeather from "./importantWeather";
 import connectPaths from "../modules/connectPaths";
-import spacing from "../styles/spacing.css";
 
 const TrailSidebar = ({ firstTrail, trails }) => {
   const cumulativeElevations = () => {
@@ -33,17 +32,7 @@ const TrailSidebar = ({ firstTrail, trails }) => {
 
   const importantWeather = () => {
     if (firstTrail.hasWeatherData)
-      return (
-        <div
-          className={cx(
-            spacing.horizontalPadding,
-            spacing.marginTop,
-            spacing.marginBottom
-          )}
-        >
-          <ImportantWeather {...firstTrail.weatherData} />
-        </div>
-      );
+      return <StyledImportantWeather {...firstTrail.weatherData} />;
   };
 
   return (
@@ -60,5 +49,10 @@ TrailSidebar.propTypes = {
   trails: PropTypes.array,
   handles: PropTypes.array
 };
+
+const StyledImportantWeather = styled(ImportantWeather)`
+  padding: 0 ${p => p.theme.ss(1)};
+  margin: ${p => p.theme.ss(1)} 0;
+`;
 
 export default TrailSidebar;

@@ -9,9 +9,9 @@ import {
   trailsToFeatureCollection
 } from "../modules/stateToGeoJson";
 import MapBox from "./mapBox";
-import styles from "../styles/map.css";
 import getOffsetCenter from "../modules/getOffsetCenter";
 import sliceElevationsWithHandles from "../modules/sliceElevationsWithHandles";
+import styled from "react-emotion";
 
 const WATCH_LAYERS = ["trails", "national-park-labels", "handles"];
 
@@ -207,7 +207,7 @@ export default class Map extends React.Component {
 
   render() {
     return (
-      <div ref={this.map} id="the-map" className={styles.body}>
+      <Container innerRef={this.map} id="the-map">
         <MapBox
           sources={this.sources()}
           featureStates={this.featureStates()}
@@ -219,7 +219,7 @@ export default class Map extends React.Component {
           mouseup={this.onMapMouseUp.bind(this)}
           mousedown={this.onMapMouseDown.bind(this)}
         />
-      </div>
+      </Container>
     );
   }
 }
@@ -234,3 +234,8 @@ Map.propTypes = {
   updateHandle: PropTypes.func,
   setHandleIndex: PropTypes.func
 };
+
+const Container = styled("div")`
+  width: 100%;
+  position: relative;
+`;

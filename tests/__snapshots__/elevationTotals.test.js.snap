@@ -1,118 +1,350 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders 1`] = `
+.emotion-50 {
+  margin-bottom: 0.5em;
+  padding: 0 1em;
+}
+
+.emotion-42 {
+  display: grid;
+  grid-template-columns: 120px 0.33fr 0.33fr 0.33fr;
+}
+
+@media (max-width:360px) {
+  .emotion-42 {
+    grid-template-columns: 90px 0.33fr 0.33fr 0.33fr;
+  }
+}
+
+.emotion-15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 130px;
+  height: 130px;
+  font-size: 0.75em;
+  background: #838383;
+  position: relative;
+  border-radius: 100%;
+  overflow: hidden;
+  margin-top: -2.5em;
+}
+
+@media (max-width:900px) {
+  .emotion-15 {
+    width: 125px;
+    height: 125px;
+    font-size: 0.7em;
+  }
+}
+
+@media (max-width:360px) {
+  .emotion-15 {
+    margin-left: -1em;
+  }
+}
+
+.emotion-0 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent #3232FF #3232FF;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  border-radius: 100%;
+}
+
+.emotion-2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent #3232FF #3232FF;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  -webkit-transform: rotate(-135deg);
+  -ms-transform: rotate(-135deg);
+  transform: rotate(-135deg);
+  border-radius: 100%;
+}
+
+.emotion-12 {
+  width: calc(100% - calc(6px * 2));
+  height: calc(100% - calc(6px * 2));
+  background: #F7F7F7;
+  border-radius: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.emotion-10 {
+  margin-top: -0.5em;
+  height: 50%;
+  text-align: center;
+  display: grid;
+  grid-template-rows: 1em 1fr 1.25em;
+}
+
+.emotion-4 {
+  font-size: 0.875em;
+  color: #838383;
+  line-height: 0;
+  -webkit-align-self: flex-start;
+  -ms-flex-item-align: start;
+  align-self: flex-start;
+}
+
+.emotion-6 {
+  font-size: 3.5em;
+  color: #3232FF;
+  line-height: 0;
+  -webkit-align-self: center;
+  -ms-flex-item-align: center;
+  align-self: center;
+  font-weight: 700;
+  line-height: 0;
+}
+
+.emotion-8 {
+  color: #3232FF;
+  -webkit-align-self: flex-end;
+  -ms-flex-item-align: end;
+  align-self: flex-end;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.875em;
+  line-height: 0;
+}
+
+.emotion-23 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding: 1em 0.5em 0.25em;
+  text-align: center;
+  color: #344632;
+}
+
+@media (max-width:900px) {
+  .emotion-23 {
+    font-size: 0.75em;
+  }
+}
+
+.emotion-17 {
+  height: 1.1em;
+  width: auto;
+  fill: #344632;
+}
+
+.emotion-19 {
+  font-size: 1.5em;
+  font-weight: 800;
+  margin-bottom: 0.25em;
+}
+
+.emotion-21 {
+  font-size: 0.875em;
+  color: #838383;
+  font-size: 0.66em;
+  line-height: 1.4;
+  color: inherit;
+}
+
+.emotion-31 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding: 1em 0.5em 0.25em;
+  text-align: center;
+  color: #344632;
+  border-left: 1px solid #D8D8D8;
+  border-right: 1px solid #D8D8D8;
+}
+
+@media (max-width:900px) {
+  .emotion-31 {
+    font-size: 0.75em;
+  }
+}
+
+.emotion-25 {
+  height: 0.8em;
+  width: auto;
+  fill: #344632;
+}
+
+.emotion-34 {
+  -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
+  height: 0.8em;
+  width: auto;
+  fill: #344632;
+}
+
+.emotion-48 {
+  margin-top: 1em;
+}
+
+.emotion-44 {
+  font-size: 0.875em;
+  color: #838383;
+}
+
+.emotion-46 {
+  width: 100%;
+  height: auto;
+}
+
 <div
-  className="marginBottomHalf horizontalPadding"
+  className="emotion-50 emotion-51"
 >
   <div
-    className="elevationTotals"
+    className="emotion-42 emotion-43"
   >
     <div
-      className="difficultyChart"
+      className="emotion-14 emotion-15 emotion-16"
     >
       <div
-        className="body flex veryeasy halfEmpty"
+        className="emotion-0 emotion-1"
+      />
+      <div
+        className="emotion-2 emotion-1"
+      />
+      <div
+        className="emotion-12 emotion-13"
       >
         <div
-          className="circle1"
-        />
-        <div
-          className="circle2"
-          style={
-            Object {
-              "transform": "rotate(-135deg)",
-            }
-          }
-        />
-        <div
-          className="innerCircle flex"
+          className="emotion-10 emotion-11"
         >
           <div
-            className="data"
+            className="emotion-4 emotion-5"
           >
-            <div
-              className="label label"
-            >
-              Difficulty
-            </div>
-            <div
-              className="score"
-            >
-              0
-            </div>
-            <div
-              className="difficulty"
-            >
-              Very Easy
-            </div>
+            Difficulty
+          </div>
+          <div
+            className="emotion-6 emotion-7"
+          >
+            0
+          </div>
+          <div
+            className="emotion-8 emotion-9"
+          >
+            Very Easy
           </div>
         </div>
       </div>
     </div>
     <div
-      className="stat border"
+      className="emotion-23 emotion-24"
     >
       <test-file-stub
-        className="icon"
+        className="emotion-17 emotion-18"
       />
       <div
-        className="total"
+        className="emotion-19 emotion-20"
       >
         0
       </div>
       <div
-        className="label"
+        className="emotion-21 emotion-22"
       >
         Miles
       </div>
     </div>
     <div
-      className="stat border"
+      className="emotion-31 emotion-24"
     >
       <test-file-stub
-        className="icon elevationGain"
+        className="emotion-25 emotion-18"
       />
       <div
-        className="total"
+        className="emotion-19 emotion-20"
       >
-        +
-        13
+        +13
       </div>
       <div
-        className="label"
+        className="emotion-21 emotion-22"
       >
         Elevation Gain
       </div>
     </div>
     <div
-      className="stat"
+      className="emotion-23 emotion-24"
     >
       <test-file-stub
-        className="icon elevationLoss"
+        className="emotion-18 emotion-34 emotion-35"
       />
       <div
-        className="total"
+        className="emotion-19 emotion-20"
       >
-        -
-        0
+        -0
       </div>
       <div
-        className="label"
+        className="emotion-21 emotion-22"
       >
         Elevation Loss
       </div>
     </div>
   </div>
   <div
-    className="marginTop"
+    className="emotion-48 emotion-49"
   >
     <div
-      className="label"
+      className="emotion-44 emotion-45"
     >
       Altitude Change
     </div>
     <svg
-      className="lineGraph"
+      className="emotion-46 emotion-47"
       overflow="hidden"
       viewBox="0 0 275 100"
     >

@@ -1,38 +1,154 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders 1`] = `
+.emotion-14 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 130px;
+  height: 130px;
+  font-size: 0.75em;
+  background: #838383;
+  position: relative;
+  border-radius: 100%;
+  overflow: hidden;
+}
+
+@media (max-width:900px) {
+  .emotion-14 {
+    width: 125px;
+    height: 125px;
+    font-size: 0.7em;
+  }
+}
+
+.emotion-0 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent;
+  -webkit-transform: rotate(225deg);
+  -ms-transform: rotate(225deg);
+  transform: rotate(225deg);
+  border-radius: 100%;
+}
+
+.emotion-2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent;
+  -webkit-transform: rotate(225deg);
+  -ms-transform: rotate(225deg);
+  transform: rotate(225deg);
+  -webkit-transform: rotate(333deg);
+  -ms-transform: rotate(333deg);
+  transform: rotate(333deg);
+  border-radius: 100%;
+}
+
+.emotion-12 {
+  width: calc(100% - calc(6px * 2));
+  height: calc(100% - calc(6px * 2));
+  background: #F7F7F7;
+  border-radius: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.emotion-10 {
+  margin-top: -0.5em;
+  height: 50%;
+  text-align: center;
+  display: grid;
+  grid-template-rows: 1em 1fr 1.25em;
+}
+
+.emotion-4 {
+  font-size: 0.875em;
+  color: #838383;
+  line-height: 0;
+  -webkit-align-self: flex-start;
+  -ms-flex-item-align: start;
+  align-self: flex-start;
+}
+
+.emotion-6 {
+  font-size: 3.5em;
+  line-height: 0;
+  -webkit-align-self: center;
+  -ms-flex-item-align: center;
+  align-self: center;
+  font-weight: 700;
+  line-height: 0;
+}
+
+.emotion-8 {
+  -webkit-align-self: flex-end;
+  -ms-flex-item-align: end;
+  align-self: flex-end;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.875em;
+  line-height: 0;
+}
+
 <div
-  className="body flex strenuous"
+  className="emotion-14 emotion-15"
 >
   <div
-    className="circle1"
+    className="emotion-0 emotion-1"
   />
   <div
-    className="circle2"
-    style={
-      Object {
-        "transform": "rotate(333deg)",
-      }
-    }
+    className="emotion-2 emotion-1"
   />
   <div
-    className="innerCircle flex"
+    className="emotion-12 emotion-13"
   >
     <div
-      className="data"
+      className="emotion-10 emotion-11"
     >
       <div
-        className="label label"
+        className="emotion-4 emotion-5"
       >
         Difficulty
       </div>
       <div
-        className="score"
+        className="emotion-6 emotion-7"
       >
         80
       </div>
       <div
-        className="difficulty"
+        className="emotion-8 emotion-9"
       >
         Strenuous
       </div>

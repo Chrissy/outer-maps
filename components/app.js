@@ -1,23 +1,39 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import { store } from "../state/configureStore";
+import { ThemeProvider } from "emotion-theming";
 import MapContainer from "./mapContainer";
 import SidebarContainer from "./sidebarContainer";
 import Header from "./header";
 import Welcome from "./welcome";
-import styles from "../styles/app.css";
+import styled from "react-emotion";
+import theme from "../styles/theme";
+import { store } from "../state/configureStore";
+
+const Body = styled("div")`
+  display: grid;
+  grid-template-rows: ${p => p.theme.ss(2.5)} auto;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  font-family: ${p => p.theme.bodyFont};
+`;
 
 ReactDOM.render(
   <Provider store={store}>
-    <div>
-      <div className={styles.body}>
-        <Header />
-        <MapContainer />
-        <SidebarContainer />
-        <Welcome />
+    <ThemeProvider theme={theme}>
+      <div>
+        <Body>
+          <Header />
+          <MapContainer />
+          <SidebarContainer />
+          <Welcome />
+        </Body>
       </div>
-    </div>
+    </ThemeProvider>
   </Provider>,
   document.getElementById("app")
 );

@@ -1,6 +1,8 @@
 import React from "react";
 import LineGraph from "../components/lineGraph.js";
 import renderer from "react-test-renderer";
+import theme from "../styles/theme";
+import { ThemeProvider } from "emotion-theming";
 
 const elevations = [
   {
@@ -18,6 +20,12 @@ const elevations = [
 ];
 
 it("renders", () => {
-  const tree = renderer.create(<LineGraph elevations={elevations} />).toJSON();
+  const tree = renderer
+    .create(
+      <ThemeProvider theme={theme}>
+        <LineGraph elevations={elevations} />
+      </ThemeProvider>
+    )
+    .toJSON();
   expect(tree).toMatchSnapshot();
 });

@@ -1,6 +1,8 @@
 import React from "react";
 import ElevationTotals from "../components/elevationTotals.js";
 import renderer from "react-test-renderer";
+import { ThemeProvider } from "emotion-theming";
+import theme from "../styles/theme";
 
 const elevations = [
   {
@@ -34,7 +36,11 @@ const elevations = [
 
 it("renders", () => {
   const tree = renderer
-    .create(<ElevationTotals elevations={elevations} />)
+    .create(
+      <ThemeProvider theme={theme}>
+        <ElevationTotals elevations={elevations} />
+      </ThemeProvider>
+    )
     .toJSON();
   expect(tree).toMatchSnapshot();
 });

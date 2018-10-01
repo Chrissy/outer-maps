@@ -1,17 +1,43 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders 1`] = `
+.emotion-4 {
+  display: grid;
+  grid-template-columns: 1fr 3em;
+  font-size: 0.8em;
+  line-height: 1.1em;
+  cursor: pointer;
+}
+
+.emotion-4:nth-of-type(even) {
+  background-color: #E9E9E9;
+}
+
+.emotion-0 {
+  padding: 0.5em;
+  color: #494949;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.emotion-2 {
+  padding: 0.5em;
+  color: #A7A7A7;
+  border-left: 1px solid #fff;
+  text-align: center;
+}
+
 <div
-  className="trailsChartElement"
+  className="emotion-4 emotion-5"
 >
   <div
-    className="name"
-    id={1001}
+    className="emotion-0 emotion-1"
   >
     Fun Trail
   </div>
   <div
-    className="distance"
+    className="emotion-2 emotion-3"
   >
     0
   </div>

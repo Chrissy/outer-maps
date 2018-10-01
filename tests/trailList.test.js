@@ -1,6 +1,8 @@
 import React from "react";
 import TrailList from "../components/trailList.js";
 import renderer from "react-test-renderer";
+import theme from "../styles/theme";
+import { ThemeProvider } from "emotion-theming";
 
 // the data piped into this is really complicated and probably a smell.
 
@@ -48,7 +50,11 @@ const trails = [
 
 it("renders", () => {
   const tree = renderer
-    .create(<TrailList unselectTrail={() => {}} trails={trails} />)
+    .create(
+      <ThemeProvider theme={theme}>
+        <TrailList unselectTrail={() => {}} trails={trails} />
+      </ThemeProvider>
+    )
     .toJSON();
   expect(tree).toMatchSnapshot();
 });
