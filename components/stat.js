@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import styled from "react-emotion";
 import Label from "./label";
 
-const Stat = ({ icon, total, label, short, tall, border }) => (
-  <Container border={border}>
+const Stat = ({ icon, total, label, short, tall, className }) => (
+  <Container className={className}>
     <Icon Node={icon} short={short} tall={tall} />
     <Total>{total}</Total>
     <StyledLabel>{label}</StyledLabel>
@@ -17,7 +17,7 @@ Stat.propTypes = {
   label: PropTypes.string,
   short: PropTypes.bool,
   tall: PropTypes.bool,
-  border: PropTypes.bool
+  className: PropTypes.string
 };
 
 const Container = styled("div")`
@@ -27,9 +27,6 @@ const Container = styled("div")`
   padding: ${p => p.theme.ss(1)} ${p => p.theme.ss(0.5)}
     ${p => p.theme.ss(0.25)};
   text-align: center;
-  color: ${p => p.theme.brandColor};
-  border-left: ${p => p.border && `1px solid ${p.theme.gray4}`};
-  border-right: ${p => p.border && `1px solid ${p.theme.gray4}`};
 
   @media (max-width: 900px) {
     font-size: ${p => p.theme.ts(0.75)};
@@ -40,13 +37,11 @@ const Icon = styled(({ Node, className }) => <Node className={className} />)`
   height: ${p => (p.short ? "0.8em" : "1.1em")};
   height: ${p => p.tall && "1.3em"};
   width: auto;
-  fill: ${p => p.theme.brandColor};
 `;
 
 const Total = styled("div")`
   font-size: ${p => p.theme.ts(1.5)};
-  font-weight: 800;
-  margin-bottom: ${p => p.theme.ss(0.25)};
+  font-weight: 700;
 `;
 
 const StyledLabel = styled(Label)`

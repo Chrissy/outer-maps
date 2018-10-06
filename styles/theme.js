@@ -2,10 +2,10 @@ import spacingScale from "./spacingScale";
 import typeScale from "./typeScale";
 
 const theme = {
-  brandColor: "#344632",
-  accentColor: "#FF6000",
-  accentColorTintLighter: "#FFAE86",
-  accentColorTintLight: "#FF8244",
+  brandColor: "#5800EC",
+  accentColor: "#FF5500",
+  accentColorTintLighter: "#FCBE67",
+  accentColorTintLight: "#FF9500",
   accentColorTintDark: "#CA4300",
   accentColorTintDarker: "#9B3300",
   gray1: "#F7F7F7",
@@ -17,7 +17,7 @@ const theme = {
   gray7: "#494949",
   gray8: "#292929",
   blue: "#3232FF",
-  purple: "#5700EC",
+  purple: "#5800EC",
   orange: "#FF9500",
   red: "#D0011B",
   ss: spacingScale,

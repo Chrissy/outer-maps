@@ -108,7 +108,6 @@ const Container = styled("div")`
   height: 42vw;
   background-color: ${p => p.theme.gray7};
   position: relative;
-  grid-area: terrain;
   overflow: hidden;
 
   @media (max-width: 600px) {

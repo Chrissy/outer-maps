@@ -68,7 +68,7 @@ const getColor = (p, i) => {
   case 2:
     return p.theme.accentColor;
   case 3:
-    return p.theme.accentColorTintLighter;
+    return p.theme.accentColorTintLight;
   default:
     return p.theme.accentColorTintDarker;
   }

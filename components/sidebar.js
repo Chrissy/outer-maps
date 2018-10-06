@@ -18,33 +18,28 @@ const Sidebar = ({ trails, boundary, handles, ...props }) => {
           firstTrail={slicedTrails()[0]}
           trails={slicedTrails()}
           handles={handles}
+          terrain={getTerrain()}
         />
       );
-    if (boundary && boundary.selected) return <BoundarySidebar {...boundary} />;
+    if (boundary && boundary.selected)
+      return <BoundarySidebar terrain={getTerrain()} {...boundary} />;
   };
+
+  const getTerrain = () => (
+    <StyledTerrain
+      satelliteImageUrl={(trails[0] || boundary || {}).satelliteImageUrl}
+      points={(slicedTrails()[0] || {}).points}
+      zoom={(trails[0] || boundary || {}).satelliteZoom}
+      center={(trails[0] || boundary || {}).satelliteCenter}
+    />
+  );
 
   const hasContent = () =>
     (boundary && boundary.selected) || (trails && trails.some(t => t.selected));
 
-  const name = () => {
-    if (trails.length)
-      return trails.length > 1 ? `${trails.length} Trails` : trails[0].name;
-    if (boundary) return boundary.name;
-  };
-
   return (
     <Container active={hasContent()} {...props}>
-      <Content>
-        <Title>{name()}</Title>
-        <StyledTerrain
-          visible={trails.length > 1}
-          satelliteImageUrl={(trails[0] || boundary || {}).satelliteImageUrl}
-          points={(slicedTrails()[0] || {}).points}
-          zoom={(trails[0] || boundary || {}).satelliteZoom}
-          center={(trails[0] || boundary || {}).satelliteCenter}
-        />
-        {trailOrBoundary()}
-      </Content>
+      <Content>{trailOrBoundary()}</Content>
     </Container>
   );
 };
@@ -89,14 +84,6 @@ const Content = styled("div")`
   line-height: ${p => p.theme.ts(1.5)};
   transition: 0.2s all;
   position: relative;
-`;
-
-const Title = styled("div")`
-  color: ${p => p.theme.brandColor};
-  font-size: ${p => p.theme.ts(1.35)};
-  font-weight: 800;
-  padding-bottom: ${p => p.theme.ss(0.5)};
-  padding: ${p => p.theme.ss(0.5)};
 `;
 
 const StyledTerrain = styled(Terrain)`

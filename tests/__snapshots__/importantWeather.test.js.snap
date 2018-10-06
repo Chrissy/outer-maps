@@ -55,12 +55,12 @@ exports[`renders 1`] = `
 }
 
 .emotion-2 path {
-  fill: #FF6000;
+  fill: #FF5500;
 }
 
 .emotion-4 {
   font-size: 2em;
-  color: #FF6000;
+  color: #FF5500;
   font-weight: 600;
 }
 
@@ -105,12 +105,12 @@ exports[`renders 1`] = `
 }
 
 .emotion-11 path {
-  fill: #5700EC;
+  fill: #5800EC;
 }
 
 .emotion-13 {
   font-size: 2em;
-  color: #5700EC;
+  color: #5800EC;
   font-weight: 600;
 }
 

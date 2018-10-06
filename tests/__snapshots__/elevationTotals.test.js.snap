@@ -161,7 +161,6 @@ exports[`renders 1`] = `
   justify-content: space-between;
   padding: 1em 0.5em 0.25em;
   text-align: center;
-  color: #344632;
 }
 
 @media (max-width:900px) {
@@ -173,13 +172,11 @@ exports[`renders 1`] = `
 .emotion-17 {
   height: 1.1em;
   width: auto;
-  fill: #344632;
 }
 
 .emotion-19 {
   font-size: 1.5em;
-  font-weight: 800;
-  margin-bottom: 0.25em;
+  font-weight: 700;
 }
 
 .emotion-21 {
@@ -190,35 +187,9 @@ exports[`renders 1`] = `
   color: inherit;
 }
 
-.emotion-31 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  padding: 1em 0.5em 0.25em;
-  text-align: center;
-  color: #344632;
-  border-left: 1px solid #D8D8D8;
-  border-right: 1px solid #D8D8D8;
-}
-
-@media (max-width:900px) {
-  .emotion-31 {
-    font-size: 0.75em;
-  }
-}
-
 .emotion-25 {
   height: 0.8em;
   width: auto;
-  fill: #344632;
 }
 
 .emotion-34 {
@@ -227,7 +198,6 @@ exports[`renders 1`] = `
   transform: rotate(180deg);
   height: 0.8em;
   width: auto;
-  fill: #344632;
 }
 
 .emotion-48 {
@@ -302,7 +272,7 @@ exports[`renders 1`] = `
       </div>
     </div>
     <div
-      className="emotion-31 emotion-24"
+      className="emotion-23 emotion-24"
     >
       <test-file-stub
         className="emotion-25 emotion-18"

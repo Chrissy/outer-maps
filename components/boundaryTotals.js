@@ -11,7 +11,7 @@ import Squares from "../svg/squares.svg";
 const BoundaryTotals = ({ area, trailsCount, highPoint }) => {
   return (
     <Container>
-      <Stat
+      <StyledStat
         icon={Squares}
         label="Miles²"
         total={numberShortener({
@@ -19,14 +19,14 @@ const BoundaryTotals = ({ area, trailsCount, highPoint }) => {
           oneDecimal: true
         })}
       />
-      <Stat
+      <StyledStat
         icon={Path}
         label="Trails"
         border={true}
         tall={true}
         total={numberShortener({ number: trailsCount })}
       />
-      <Stat
+      <StyledStat
         icon={Mountain}
         label="High Point"
         total={numberShortener({ number: parseInt(metersToFeet(highPoint)) })}
@@ -45,10 +45,18 @@ const Container = styled("div")`
   display: grid;
   grid-template-columns: 0.33fr 0.33fr 0.33fr;
   grid-area: totals;
+`;
 
-  @media (min-width: 900px) {
-    height: 7em;
-  }
+const StyledStat = styled(Stat)`
+  color: #fff;
+  border-color: ${p => p.theme.gray7};
+  border-width: ${p => (p.border ? "0 1px" : 0)};
+  padding: 0;
+  margin: ${p => p.theme.ss(0.5)} 0;
+  border-style: solid;
+  height: 4.5em;
+  font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
 `;
 
 export default BoundaryTotals;

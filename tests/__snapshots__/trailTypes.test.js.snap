@@ -26,13 +26,13 @@ Array [
 .emotion-4 {
   height: 100%;
   width: 30%;
-  background-color: #FF6000;
+  background-color: #FF5500;
 }
 
 .emotion-6 {
   height: 100%;
   width: 0%;
-  background-color: #FFAE86;
+  background-color: #FF9500;
 }
 
 <div
@@ -104,7 +104,7 @@ Array [
   display: -ms-flexbox;
   display: flex;
   font-size: 0.75em;
-  color: #FF6000;
+  color: #FF5500;
 }
 
 .emotion-8 {
@@ -115,7 +115,7 @@ Array [
 }
 
 .emotion-8 path {
-  fill: #FF6000;
+  fill: #FF5500;
 }
 
 .emotion-14 {
@@ -124,7 +124,7 @@ Array [
   display: -ms-flexbox;
   display: flex;
   font-size: 0.75em;
-  color: #FFAE86;
+  color: #FF9500;
 }
 
 .emotion-12 {
@@ -135,7 +135,7 @@ Array [
 }
 
 .emotion-12 path {
-  fill: #FFAE86;
+  fill: #FF9500;
 }
 
 <div

@@ -21,7 +21,7 @@ exports[`renders 1`] = `
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  background-color: #FF6000;
+  background-color: #FF5500;
   box-sizing: border-box;
   color: #fff;
   font-size: 0.75em;
@@ -42,7 +42,7 @@ exports[`renders 1`] = `
 }
 
 .emotion-2 {
-  border-right: 1px solid #FF8244;
+  border-right: 1px solid #FF9500;
   padding: 0.5em 0.75em;
 }
 
