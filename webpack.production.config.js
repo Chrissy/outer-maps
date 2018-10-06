@@ -22,6 +22,10 @@ module.exports = {
         }
       },
       {
+        test: /new\/.*\.svg$/,
+        loaders: ["svg-sprite-loader"]
+      },
+      {
         test: /\.css$/,
         loader:
           "style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]"
