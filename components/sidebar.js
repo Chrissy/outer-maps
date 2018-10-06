@@ -69,7 +69,7 @@ const Container = styled("div")`
   transition: 0.3s all;
   opacity: ${p => (p.active || p.hidden ? 1 : 0)};
   transform: translateX(${p => (p.active ? 0 : p.theme.ss(1))});
-  z-index: ${p => (p.active ? 1 : -1)};
+  z-index: ${p => (p.active ? 2 : -1)};
   overflow: scroll;
   top: 0;
 
@@ -88,6 +88,7 @@ const Content = styled("div")`
   font-size: ${p => p.theme.ts(1.125)};
   line-height: ${p => p.theme.ts(1.5)};
   transition: 0.2s all;
+  position: relative;
 `;
 
 const Title = styled("div")`
