@@ -34,4 +34,11 @@ theme.difficulties = {
   extreme: theme.red
 };
 
+theme.trailColors = [
+  theme.accentColor,
+  theme.accentColorTintDark,
+  theme.accentColorTintDarker,
+  theme.accentColorTintLight
+];
+
 export default theme;

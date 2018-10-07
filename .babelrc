@@ -5,6 +5,7 @@
       "emotion",
       {
         "autoLabel": true,
+        "labelFormat": "[filename][local]",
       }
     ]
   ],

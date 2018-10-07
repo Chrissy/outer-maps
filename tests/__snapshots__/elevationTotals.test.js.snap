@@ -147,7 +147,7 @@ exports[`renders 1`] = `
   line-height: 0;
 }
 
-.emotion-23 {
+.emotion-22 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -159,27 +159,35 @@ exports[`renders 1`] = `
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  padding: 1em 0.5em 0.25em;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
   text-align: center;
+  border-color: #D8D8D8;
+  border-width: 0;
+  margin: 0.75em 0;
+  border-style: solid;
+  height: 4em;
 }
 
 @media (max-width:900px) {
-  .emotion-23 {
+  .emotion-22 {
     font-size: 0.75em;
   }
 }
 
 .emotion-17 {
-  height: 1.1em;
-  width: auto;
+  font-size: 1.5em;
+  font-weight: 700;
+  dislay: flex;
+  -webkit-align-items: top;
+  -webkit-box-align: top;
+  -ms-flex-align: top;
+  align-items: top;
 }
 
 .emotion-19 {
-  font-size: 1.5em;
-  font-weight: 700;
-}
-
-.emotion-21 {
   font-size: 0.875em;
   color: #838383;
   font-size: 0.66em;
@@ -187,17 +195,38 @@ exports[`renders 1`] = `
   color: inherit;
 }
 
-.emotion-25 {
-  height: 0.8em;
-  width: auto;
+.emotion-31 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  text-align: center;
+  border-color: #D8D8D8;
+  border-width: 0 1px;
+  margin: 0.75em 0;
+  border-style: solid;
+  height: 4em;
 }
 
-.emotion-34 {
-  -webkit-transform: rotate(180deg);
-  -ms-transform: rotate(180deg);
-  transform: rotate(180deg);
-  height: 0.8em;
-  width: auto;
+@media (max-width:900px) {
+  .emotion-31 {
+    font-size: 0.75em;
+  }
+}
+
+.emotion-24 {
+  font-size: 0.33em;
 }
 
 .emotion-48 {
@@ -255,52 +284,53 @@ exports[`renders 1`] = `
       </div>
     </div>
     <div
-      className="emotion-23 emotion-24"
+      className="emotion-21 emotion-22 emotion-23"
     >
-      <test-file-stub
-        className="emotion-17 emotion-18"
-      />
       <div
-        className="emotion-19 emotion-20"
+        className="emotion-17 emotion-18"
       >
         0
       </div>
       <div
-        className="emotion-21 emotion-22"
+        className="emotion-19 emotion-20"
       >
         Miles
       </div>
     </div>
     <div
-      className="emotion-23 emotion-24"
+      className="emotion-21 emotion-31 emotion-23"
     >
-      <test-file-stub
-        className="emotion-25 emotion-18"
-      />
       <div
-        className="emotion-19 emotion-20"
+        className="emotion-17 emotion-18"
       >
         +13
+        <sup
+          className="emotion-24 emotion-25"
+        >
+          ft
+        </sup>
       </div>
       <div
-        className="emotion-21 emotion-22"
+        className="emotion-19 emotion-20"
       >
         Elevation Gain
       </div>
     </div>
     <div
-      className="emotion-23 emotion-24"
+      className="emotion-21 emotion-22 emotion-23"
     >
-      <test-file-stub
-        className="emotion-18 emotion-34 emotion-35"
-      />
       <div
-        className="emotion-19 emotion-20"
+        className="emotion-17 emotion-18"
       >
         -0
+        <sup
+          className="emotion-24 emotion-25"
+        >
+          ft
+        </sup>
       </div>
       <div
-        className="emotion-21 emotion-22"
+        className="emotion-19 emotion-20"
       >
         Elevation Loss
       </div>

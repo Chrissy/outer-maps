@@ -4,8 +4,8 @@ import styled from "react-emotion";
 import LineGraph from "./lineGraph";
 import Stat from "./stat";
 import DifficultyChart from "./difficultyChart";
-import Hiker from "../svg/hiker.svg";
-import Up from "../svg/up.svg";
+import Svg from "./svg";
+import numberShortener from "../modules/numberShortener";
 import { metersToFeet, metersToMiles } from "../modules/conversions";
 
 const ElevationTotals = ({ elevations }) => {
@@ -36,23 +36,31 @@ const ElevationTotals = ({ elevations }) => {
     <Container>
       <Columns>
         <StyledDifficultyChart score={score()} />
-        <Stat icon={Hiker} label="Miles" total={miles()} />
-        <Stat
-          icon={Up}
+        <StyledStat
+          icon={<MeasureIcon src="distance" />}
+          label="Miles"
+          total={numberShortener({
+            number: miles()
+          })}
+        />
+        <StyledStat
+          icon={<Icon src="elevation" />}
           label="Elevation Gain"
           border={true}
-          short={true}
-          total={`+${new Intl.NumberFormat().format(
-            metersToFeet(elevationGain())
-          )}`}
+          unit="ft"
+          total={`+${numberShortener({
+            number: metersToFeet(elevationGain()),
+            oneDecimal: true
+          })}`}
         />
-        <Stat
-          icon={FlippedUp}
+        <StyledStat
+          icon={<Icon src="arrow" />}
           label="Elevation Loss"
-          short={true}
-          total={`-${new Intl.NumberFormat().format(
-            metersToFeet(elevationLoss())
-          )}`}
+          unit="ft"
+          total={`-${numberShortener({
+            number: metersToFeet(elevationLoss()),
+            oneDecimal: true
+          })}`}
         />
       </Columns>
       <LineGraph elevations={elevations} />
@@ -86,8 +94,23 @@ const StyledDifficultyChart = styled(DifficultyChart)`
   }
 `;
 
-const FlippedUp = styled(Up)`
-  transform: rotate(180deg);
+const StyledStat = styled(Stat)`
+  border-color: ${p => p.theme.gray4};
+  border-width: ${p => (p.border ? "0 1px" : 0)};
+  margin: ${p => p.theme.ss(0.75)} 0;
+  border-style: solid;
+  height: 4em;
+`;
+
+const Icon = styled(Svg)`
+  height: 0.9em;
+  width: 0.9em;
+`;
+
+const MeasureIcon = styled(Icon)`
+  height: 0.7em;
+  width: 0.7em;
+  transform: rotate(-90deg) scaleY(-1);
 `;
 
 export default ElevationTotals;
