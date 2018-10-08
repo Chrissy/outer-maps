@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders 1`] = `
-.emotion-48 {
+.emotion-55 {
   margin-bottom: 0.5em;
 }
 
@@ -34,18 +34,18 @@ exports[`renders 1`] = `
   height: 140%;
   position: relative;
   z-index: 1;
-  -webkit-transform: translate(-10%,-7.5%);
-  -ms-transform: translate(-10%,-7.5%);
-  transform: translate(-10%,-7.5%);
+  -webkit-transform: translate(-7%,2%);
+  -ms-transform: translate(-7%,2%);
+  transform: translate(-7%,2%);
 }
 
 @media (max-width:750px) {
   .emotion-11 {
     width: 124%;
     height: 124%;
-    -webkit-transform: translate(-5%,-6%);
-    -ms-transform: translate(-5%,-6%);
-    transform: translate(-5%,-6%);
+    -webkit-transform: translate(-5%,-2%);
+    -ms-transform: translate(-5%,-2%);
+    transform: translate(-5%,-2%);
   }
 }
 
@@ -151,27 +151,173 @@ exports[`renders 1`] = `
   height: 4em;
 }
 
-.emotion-46 {
-  margin-top: 1em;
-}
-
-.emotion-40 {
-  font-size: 0.875em;
-  color: #838383;
-  margin-bottom: 0.5em;
-}
-
-.emotion-44 {
+.emotion-53 {
+  margin-top: 0.25em;
+  position: relative;
   width: 100%;
-  height: auto;
+  line-height: 0;
+  padding: 0 1em;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .emotion-42 {
+  width: 100%;
+}
+
+.emotion-40 {
   fill: #FF5500;
 }
 
+.emotion-50 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(100% - 2em);
+  height: 100%;
+  margin: 0 1em;
+}
+
+.emotion-44 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  background-color: #5800EC;
+  padding: 0 1.25em;
+  font-size: 0.5em;
+  font-weight: 700;
+  position: absolute;
+  left: 0%;
+  top: 80%;
+  -webkit-transform: translate(-30%,0);
+  -ms-transform: translate(-30%,0);
+  transform: translate(-30%,0);
+  border-radius: 1.5em;
+  min-width: 25px;
+  color: #fff;
+  height: 1.75em;
+  border: 2px solid #fff;
+}
+
+.emotion-44:after {
+  display: block;
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #5800EC;
+  position: absolute;
+  left: 30%;
+  top: 100%;
+  -webkit-transform: translate(-50%,-10%);
+  -ms-transform: translate(-50%,-10%);
+  transform: translate(-50%,-10%);
+}
+
+.emotion-46 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  background-color: #5800EC;
+  padding: 0 1.25em;
+  font-size: 0.5em;
+  font-weight: 700;
+  position: absolute;
+  left: 67.21143890597577%;
+  top: 42.5%;
+  -webkit-transform: translate(-50%,0);
+  -ms-transform: translate(-50%,0);
+  transform: translate(-50%,0);
+  border-radius: 1.5em;
+  min-width: 25px;
+  color: #fff;
+  height: 1.75em;
+  border: 2px solid #fff;
+}
+
+.emotion-46:after {
+  display: block;
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #5800EC;
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  -webkit-transform: translate(-50%,-10%);
+  -ms-transform: translate(-50%,-10%);
+  transform: translate(-50%,-10%);
+}
+
+.emotion-48 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  background-color: #5800EC;
+  padding: 0 1.25em;
+  font-size: 0.5em;
+  font-weight: 700;
+  position: absolute;
+  left: 100%;
+  top: 5%;
+  -webkit-transform: translate(-70%,0);
+  -ms-transform: translate(-70%,0);
+  transform: translate(-70%,0);
+  border-radius: 1.5em;
+  min-width: 25px;
+  color: #fff;
+  height: 1.75em;
+  border: 2px solid #fff;
+}
+
+.emotion-48:after {
+  display: block;
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #5800EC;
+  position: absolute;
+  left: 70%;
+  top: 100%;
+  -webkit-transform: translate(-50%,-10%);
+  -ms-transform: translate(-50%,-10%);
+  transform: translate(-50%,-10%);
+}
+
 <div
-  className="emotion-48 emotion-49"
+  className="emotion-55 emotion-56"
 >
   <div
     className="emotion-38 emotion-39"
@@ -273,24 +419,43 @@ exports[`renders 1`] = `
     </div>
   </div>
   <div
-    className="emotion-46 emotion-47"
+    className="emotion-52 emotion-53 emotion-54"
   >
-    <div
-      className="emotion-40 emotion-41"
-    >
-      Altitude Change
-    </div>
     <svg
-      className="emotion-44 emotion-45"
-      overflow="hidden"
-      viewBox="0 0 275 100"
+      className="emotion-42 emotion-43"
+      viewBox="0 0 275 110"
     >
       <g />
       <polyline
-        className="emotion-42 emotion-43"
-        points="0,100 0,100 184.83145699143336,60 275,20 275,100"
+        className="emotion-40 emotion-41"
+        points="0,110 0,107.5 184.83145699143336,66.25 275,25 275,110"
       />
     </svg>
+    <div
+      className="emotion-50 emotion-51"
+    >
+      <div
+        className="emotion-44 emotion-45"
+        x={0}
+        y={75}
+      >
+        985
+      </div>
+      <div
+        className="emotion-46 emotion-45"
+        x={67.21143890597577}
+        y={37.5}
+      >
+        987
+      </div>
+      <div
+        className="emotion-48 emotion-45"
+        x={100}
+        y={0}
+      >
+        989
+      </div>
+    </div>
   </div>
 </div>
 `;

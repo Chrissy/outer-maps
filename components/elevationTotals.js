@@ -65,7 +65,7 @@ const ElevationTotals = ({ elevations }) => {
           })}
         />
       </Columns>
-      <LineGraph elevations={elevations} />
+      <StyledLineGraph elevations={elevations} />
     </Container>
   );
 };
@@ -93,17 +93,21 @@ const Columns = styled("div")`
   }
 `;
 
+const StyledLineGraph = styled(LineGraph)`
+  width: 100%;
+`;
+
 const StyledDifficultyChart = styled(DifficultyChart)`
   width: 140%;
   height: 140%;
   position: relative;
   z-index: 1;
-  transform: translate(-10%, -7.5%);
+  transform: translate(-7%, 2%);
 
   @media (max-width: 750px) {
     width: 124%;
     height: 124%;
-    transform: translate(-5%, -6%);
+    transform: translate(-5%, -2%);
   }
 `;
 

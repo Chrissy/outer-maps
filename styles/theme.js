@@ -9,7 +9,7 @@ const theme = {
   accentColorTintDark: "#CA4300",
   accentColorTintDarker: "#9B3300",
   gray1: "#F7F7F7",
-  gray2: "#F3F3F3",
+  gray2: "#F5F5F5",
   gray3: "#E9E9E9",
   gray4: "#D8D8D8",
   gray5: "#A7A7A7",
