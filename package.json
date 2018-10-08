@@ -89,6 +89,7 @@
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
     "style-loader": "^0.18.2",
+    "svg-partial-circle": "^1.0.0",
     "svg-to-jsx-loader": "^2.0.1",
     "underscore": "^1.9.0",
     "viewport-mercator-project": "^4.1.1",

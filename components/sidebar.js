@@ -69,7 +69,7 @@ const Container = styled("div")`
   top: 0;
 
   @media (max-width: 600px) {
-    height: 75vh;
+    height: 85vh;
     bottom: 0;
     width: 100%;
     max-width: 100%;

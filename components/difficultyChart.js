@@ -1,14 +1,26 @@
 import React from "react";
 import PropTypes from "prop-types";
+import partialCircle from "svg-partial-circle";
 import theme from "../styles/theme";
 import styled from "react-emotion";
 import camelCase from "lodash.camelcase";
-import { flexCenter } from "../styles/flex";
-import Label from "./label";
+
+const RADIUS = 50;
+const STROKE_WIDTH = 5;
 
 const DifficultyChart = ({ score, className }) => {
-  const rotation = () => {
-    return (score > 50 ? 225 : 45) + ((score - 50) / 100) * 360;
+  const totalWidth = RADIUS + STROKE_WIDTH / 2;
+
+  const pathString = percent => {
+    return partialCircle(
+      totalWidth,
+      totalWidth,
+      RADIUS,
+      0,
+      Math.min(Math.max(percent, 1), 99.99) * 0.062831853071796
+    )
+      .map(command => command.join(" "))
+      .join(" ");
   };
 
   const difficulty = () => {
@@ -23,23 +35,50 @@ const DifficultyChart = ({ score, className }) => {
   const difficultyCamelCase = camelCase(difficultyHumanName);
 
   return (
-    <Container className={className}>
-      <Circle difficulty={difficultyCamelCase} halfEmpty={score < 50} />
+    <StyledSvg
+      className={className}
+      viewBox={`0 0 ${totalWidth * 2} ${totalWidth * 2}`}
+    >
       <Circle
+        cx={totalWidth}
+        cy={totalWidth}
+        r={RADIUS}
+        score={score}
         difficulty={difficultyCamelCase}
-        rotation={rotation()}
-        halfEmpty={score < 50}
       />
-      <InnerCircle>
-        <Data>
-          <StyledLabel>Difficulty</StyledLabel>
-          <Score difficulty={difficultyCamelCase}>{score}</Score>
-          <Difficulty difficulty={difficultyCamelCase}>
-            {difficultyHumanName}
-          </Difficulty>
-        </Data>
-      </InnerCircle>
-    </Container>
+      <CircleFill
+        d={pathString(score)}
+        difficulty={difficultyCamelCase}
+        score={score}
+        transform={`rotate(-90 ${totalWidth} ${totalWidth})`}
+      />
+      <StyledLabel
+        x="50%"
+        y="25%"
+        alignmentBaseline="middle"
+        textAnchor="middle"
+      >
+        Difficulty
+      </StyledLabel>
+      <Score
+        x="50%"
+        y="52%"
+        alignmentBaseline="middle"
+        textAnchor="middle"
+        difficulty={difficultyCamelCase}
+      >
+        {score}
+      </Score>
+      <Difficulty
+        difficulty={difficultyCamelCase}
+        x="50%"
+        y="74%"
+        alignmentBaseline="middle"
+        textAnchor="middle"
+      >
+        {difficultyHumanName}
+      </Difficulty>
+    </StyledSvg>
   );
 };
 
@@ -48,81 +87,44 @@ DifficultyChart.propTypes = {
   className: PropTypes.string
 };
 
-const borderWidth = "6px";
-
 const getColor = difficulty => {
   return difficulty ? theme.difficulties[difficulty] : theme.accentColor;
 };
 
-const Container = styled("div")`
-  ${flexCenter};
-  width: 130px;
-  height: 130px;
-  font-size: ${p => p.theme.ts(0.75)};
-  background: ${p => p.theme.gray6};
-  position: relative;
-  border-radius: 100%;
-  overflow: hidden;
-
-  @media (max-width: 900px) {
-    width: 125px;
-    height: 125px;
-    font-size: 0.7em;
-  }
+const Circle = styled("circle")`
+  stroke: ${p => p.theme.gray4};
+  stroke: ${p => (p.score < 50 ? getColor(p.difficulty) : p.theme.gray4)};
+  stroke-width: ${STROKE_WIDTH};
+  fill: #fff;
 `;
 
-const Circle = styled("div")`
-  position: absolute;
-  top: 0;
-  left: 0;
+const CircleFill = styled("path")`
+  stroke: ${p => (p.score < 50 ? p.theme.gray4 : getColor(p.difficulty))};
+  stroke-width: ${STROKE_WIDTH};
+  fill: none;
+`;
+
+const StyledSvg = styled("svg")`
   width: 100%;
   height: 100%;
-  box-sizing: border-box;
-  border-width: ${borderWidth};
-  border-style: solid;
-  border-color: transparent transparent ${p => getColor(p.difficulty)}
-    ${p => getColor(p.difficulty)};
-  transform: rotate(${p => (p.halfEmpty ? "45deg" : "225deg")});
-  transform: ${p => p.rotation && `rotate(${p.rotation}deg)`};
-  border-radius: 100%;
 `;
 
-const InnerCircle = styled("div")`
-  width: calc(100% - calc(${borderWidth} * 2));
-  height: calc(100% - calc(${borderWidth} * 2));
-  background: ${p => p.theme.gray1};
-  border-radius: 100%;
-  ${flexCenter};
+const StyledLabel = styled("text")`
+  font-size: 7pt;
+  fill: ${p => p.theme.gray6};
 `;
 
-const Data = styled("div")`
-  margin-top: -${p => p.theme.ss(0.5)};
-  height: 50%;
-  text-align: center;
-  display: grid;
-  grid-template-rows: 1em 1fr 1.25em;
-`;
-
-const StyledLabel = styled(Label)`
-  line-height: 0;
-  align-self: flex-start;
-`;
-
-const Score = styled("div")`
-  font-size: ${p => p.theme.ts(3.5)};
-  color: ${p => getColor(p.difficulty)};
-  line-height: 0;
-  align-self: center;
+const Score = styled("text")`
+  font-size: 32pt;
+  fill: ${p => getColor(p.difficulty)};
   font-weight: 700;
   line-height: 0;
 `;
 
-const Difficulty = styled("div")`
-  color: ${p => getColor(p.difficulty)};
-  align-self: flex-end;
-  font-weight: 500;
-  text-transform: uppercase;
-  font-size: ${p => p.theme.ts(0.875)};
+const Difficulty = styled("text")`
+  fill: ${p => getColor(p.difficulty)};
+  font-weight: 600;
+  font-size: 10pt;
   line-height: 0;
 `;
 

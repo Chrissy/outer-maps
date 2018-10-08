@@ -37,16 +37,8 @@ const ElevationTotals = ({ elevations }) => {
       <Columns>
         <StyledDifficultyChart score={score()} />
         <StyledStat
-          icon={<MeasureIcon src="distance" />}
-          label="Miles"
-          total={numberShortener({
-            number: miles()
-          })}
-        />
-        <StyledStat
           icon={<Icon src="elevation" />}
           label="Elevation Gain"
-          border={true}
           unit="ft"
           total={`+${numberShortener({
             number: metersToFeet(elevationGain()),
@@ -57,10 +49,20 @@ const ElevationTotals = ({ elevations }) => {
           icon={<Icon src="arrow" />}
           label="Elevation Loss"
           unit="ft"
+          border={true}
+          borderBottomOnSmall={true}
           total={`-${numberShortener({
             number: metersToFeet(elevationLoss()),
             oneDecimal: true
           })}`}
+        />
+        <StyledStat
+          icon={<MeasureIcon src="distance" />}
+          label="Miles"
+          borderBottomOnSmall={true}
+          total={numberShortener({
+            number: miles()
+          })}
         />
       </Columns>
       <LineGraph elevations={elevations} />
@@ -74,30 +76,38 @@ ElevationTotals.propTypes = {
 
 const Container = styled("div")`
   margin-bottom: ${p => p.theme.ss(0.5)};
-  padding: 0 ${p => p.theme.ss(1)};
 `;
 
 const Columns = styled("div")`
   display: grid;
-  grid-template-columns: 120px 0.33fr 0.33fr 0.33fr;
+  grid-template-columns: 30% 0.35fr 0.35fr 0.29fr;
+  align-items: center;
 
-  @media (max-width: 360px) {
-    grid-template-columns: 90px 0.33fr 0.33fr 0.33fr;
+  @media (max-width: 950px) {
+    grid-template-columns: 0.35fr 0.35fr 0.29fr;
   }
 `;
 
-const StyledDifficultyChart = styled(DifficultyChart)`
-  margin-top: -${p => p.theme.ss(2.5)};
+/* I'm just hiding this on mobile for now, but this is obviously
+a big missed oportunity and I should come up with a mobile-specific
+design soon */
 
-  @media (max-width: 360px) {
-    margin-left: -${p => p.theme.ss(1)};
+const StyledDifficultyChart = styled(DifficultyChart)`
+  width: 140%;
+  height: 140%;
+  position: relative;
+  z-index: 1;
+  transform: translate(-10%, -7.5%);
+
+  @media (max-width: 950px) {
+    display: none;
   }
 `;
 
 const StyledStat = styled(Stat)`
   border-color: ${p => p.theme.gray4};
   border-width: ${p => (p.border ? "0 1px" : 0)};
-  margin: ${p => p.theme.ss(0.75)} 0;
+  margin: ${p => p.theme.ss(1)} 0 ${p => p.theme.ss(0.75)};
   border-style: solid;
   height: 4em;
 `;

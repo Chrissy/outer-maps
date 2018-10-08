@@ -28,10 +28,6 @@ const Container = styled("div")`
   justify-content: space-between;
   align-items: center;
   text-align: center;
-
-  @media (max-width: 900px) {
-    font-size: ${p => p.theme.ts(0.75)};
-  }
 `;
 
 const Total = styled("div")`

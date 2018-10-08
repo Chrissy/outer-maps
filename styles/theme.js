@@ -31,6 +31,7 @@ theme.difficulties = {
   veryEasy: theme.blue,
   easy: theme.purple,
   moderate: theme.orange,
+  strenuous: theme.accentColor,
   extreme: theme.red
 };
 
