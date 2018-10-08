@@ -84,13 +84,14 @@ const Columns = styled("div")`
   align-items: center;
 
   @media (max-width: 950px) {
-    grid-template-columns: 0.35fr 0.35fr 0.29fr;
+    grid-template-columns: 0.29fr 0.26fr 0.26fr 0.19fr;
+    font-size: 0.875em;
+  }
+
+  @media (max-width: 350px) {
+    font-size: 0.75em;
   }
 `;
-
-/* I'm just hiding this on mobile for now, but this is obviously
-a big missed oportunity and I should come up with a mobile-specific
-design soon */
 
 const StyledDifficultyChart = styled(DifficultyChart)`
   width: 140%;
@@ -100,7 +101,9 @@ const StyledDifficultyChart = styled(DifficultyChart)`
   transform: translate(-10%, -7.5%);
 
   @media (max-width: 950px) {
-    display: none;
+    width: 124%;
+    height: 124%;
+    transform: translate(-5%, -6%);
   }
 `;
 

@@ -16,7 +16,14 @@ exports[`renders 1`] = `
 
 @media (max-width:950px) {
   .emotion-38 {
-    grid-template-columns: 0.35fr 0.35fr 0.29fr;
+    grid-template-columns: 0.29fr 0.26fr 0.26fr 0.19fr;
+    font-size: 0.875em;
+  }
+}
+
+@media (max-width:350px) {
+  .emotion-38 {
+    font-size: 0.75em;
   }
 }
 
@@ -34,7 +41,11 @@ exports[`renders 1`] = `
 
 @media (max-width:950px) {
   .emotion-11 {
-    display: none;
+    width: 124%;
+    height: 124%;
+    -webkit-transform: translate(-5%,-6%);
+    -ms-transform: translate(-5%,-6%);
+    transform: translate(-5%,-6%);
   }
 }
 
