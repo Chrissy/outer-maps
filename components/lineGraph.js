@@ -10,9 +10,9 @@ const height = 100;
 const TextMarker = ({ stepWidth, step, every }) => {
   if (step % every !== 0) return;
   return (
-    <text x={stepWidth * step + 2} y={7} fill="#D5D5D5" fontSize="7px">
+    <Marker x={stepWidth * step + 2} y={7}>
       {step + 1}
-    </text>
+    </Marker>
   );
 };
 
@@ -61,13 +61,13 @@ const LineGraph = ({ elevations }) => {
     const distances = getDistances();
     const fullDistance = distances[distances.length - 1];
     const relativePoints = es.map((elevation, i) => [
-      (maxElevation - elevation) / elevationWindow,
+      ((maxElevation - elevation) / elevationWindow) * 0.8,
       distances[i] / fullDistance
     ]);
 
     return (
       relativePoints.reduce(
-        (a, p) => a + `${p[1] * width},${p[0] * height} `,
+        (a, p) => a + `${p[1] * width},${p[0] * height + 20} `,
         `0,${height} `
       ) + `${width},${height}`
     );
@@ -93,7 +93,7 @@ const LineGraph = ({ elevations }) => {
       <StyledLabel>Altitude Change</StyledLabel>
       <StyledSvg viewBox={viewBox()} overflow="hidden">
         <g>{mileMarkers()}</g>
-        <polyline points={pointsToPathString()} fill="#344632" />
+        <Polyline points={pointsToPathString()} />
       </StyledSvg>
     </Container>
   );
@@ -110,6 +110,15 @@ LineGraph.propTypes = {
 
 const Container = styled("div")`
   margin-top: ${p => p.theme.ss(1)};
+`;
+
+const Polyline = styled("polyline")`
+  fill: ${p => p.theme.accentColor};
+`;
+
+const Marker = styled("text")`
+  font-size: 7px;
+  fill: ${p => p.theme.gray5};
 `;
 
 const StyledSvg = styled("svg")`

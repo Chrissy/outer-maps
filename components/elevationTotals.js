@@ -100,7 +100,7 @@ const StyledDifficultyChart = styled(DifficultyChart)`
   z-index: 1;
   transform: translate(-10%, -7.5%);
 
-  @media (max-width: 950px) {
+  @media (max-width: 750px) {
     width: 124%;
     height: 124%;
     transform: translate(-5%, -6%);

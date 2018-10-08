@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders 1`] = `
-.emotion-46 {
+.emotion-48 {
   margin-bottom: 0.5em;
 }
 
@@ -39,7 +39,7 @@ exports[`renders 1`] = `
   transform: translate(-10%,-7.5%);
 }
 
-@media (max-width:950px) {
+@media (max-width:750px) {
   .emotion-11 {
     width: 124%;
     height: 124%;
@@ -151,7 +151,7 @@ exports[`renders 1`] = `
   height: 4em;
 }
 
-.emotion-44 {
+.emotion-46 {
   margin-top: 1em;
 }
 
@@ -161,13 +161,17 @@ exports[`renders 1`] = `
   margin-bottom: 0.5em;
 }
 
-.emotion-42 {
+.emotion-44 {
   width: 100%;
   height: auto;
 }
 
+.emotion-42 {
+  fill: #FF5500;
+}
+
 <div
-  className="emotion-46 emotion-47"
+  className="emotion-48 emotion-49"
 >
   <div
     className="emotion-38 emotion-39"
@@ -269,7 +273,7 @@ exports[`renders 1`] = `
     </div>
   </div>
   <div
-    className="emotion-44 emotion-45"
+    className="emotion-46 emotion-47"
   >
     <div
       className="emotion-40 emotion-41"
@@ -277,14 +281,14 @@ exports[`renders 1`] = `
       Altitude Change
     </div>
     <svg
-      className="emotion-42 emotion-43"
+      className="emotion-44 emotion-45"
       overflow="hidden"
       viewBox="0 0 275 100"
     >
       <g />
       <polyline
-        fill="#344632"
-        points="0,100 0,100 184.83145699143336,50 275,0 275,100"
+        className="emotion-42 emotion-43"
+        points="0,100 0,100 184.83145699143336,60 275,20 275,100"
       />
     </svg>
   </div>

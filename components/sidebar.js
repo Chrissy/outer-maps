@@ -55,7 +55,7 @@ const Container = styled("div")`
   position: absolute;
   height: 100%;
   width: 43vw;
-  min-width: 320px;
+  min-width: 400px;
   max-width: 500px;
   background: ${p => p.theme.gray1};
   color: ${p => p.theme.gray7};
