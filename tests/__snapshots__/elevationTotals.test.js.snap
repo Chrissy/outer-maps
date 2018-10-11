@@ -167,6 +167,7 @@ exports[`renders 1`] = `
 
 .emotion-40 {
   fill: #FF5500;
+  mix-blend-mode: multiply;
 }
 
 .emotion-50 {
@@ -197,10 +198,10 @@ exports[`renders 1`] = `
   font-weight: 700;
   position: absolute;
   left: 0%;
-  top: 80%;
-  -webkit-transform: translate(-30%,0);
-  -ms-transform: translate(-30%,0);
-  transform: translate(-30%,0);
+  top: 75%;
+  -webkit-transform: translate(-30%,35%);
+  -ms-transform: translate(-30%,35%);
+  transform: translate(-30%,35%);
   border-radius: 1.5em;
   min-width: 25px;
   color: #fff;
@@ -243,10 +244,10 @@ exports[`renders 1`] = `
   font-weight: 700;
   position: absolute;
   left: 67.21143890597577%;
-  top: 42.5%;
-  -webkit-transform: translate(-50%,0);
-  -ms-transform: translate(-50%,0);
-  transform: translate(-50%,0);
+  top: 37.5%;
+  -webkit-transform: translate(-50%,35%);
+  -ms-transform: translate(-50%,35%);
+  transform: translate(-50%,35%);
   border-radius: 1.5em;
   min-width: 25px;
   color: #fff;
@@ -289,10 +290,10 @@ exports[`renders 1`] = `
   font-weight: 700;
   position: absolute;
   left: 100%;
-  top: 5%;
-  -webkit-transform: translate(-70%,0);
-  -ms-transform: translate(-70%,0);
-  transform: translate(-70%,0);
+  top: 0%;
+  -webkit-transform: translate(-70%,35%);
+  -ms-transform: translate(-70%,35%);
+  transform: translate(-70%,35%);
   border-radius: 1.5em;
   min-width: 25px;
   color: #fff;

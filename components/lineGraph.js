@@ -120,7 +120,7 @@ const LineGraph = ({ elevations, className }) => {
       if (p[1] < 0.2) return false;
       if (
         idealPointsUnfiltered[i + 1] &&
-        Math.abs(idealPointsUnfiltered[i + 1][1] - p[1]) < 0.3
+        Math.abs(idealPointsUnfiltered[i + 1][1] - p[1]) < 0.2
       )
         return false;
       if (idealPointsUnfiltered[i + 1])
@@ -193,8 +193,8 @@ const ElevationMarker = styled("div")`
   font-weight: 700;
   position: absolute;
   left: ${p => p.x}%;
-  top: ${p => p.y + 5}%;
-  transform: translate(${p => getTransform(p.x)}, 0);
+  top: ${p => p.y}%;
+  transform: translate(${p => getTransform(p.x)}, 35%);
   border-radius: 1.5em;
   min-width: 25px;
   color: #fff;
@@ -227,6 +227,7 @@ const AltitudeOverlay = styled("div")`
 
 const Polyline = styled("polyline")`
   fill: ${p => p.theme.accentColor};
+  mix-blend-mode: multiply;
 `;
 
 const Marker = styled("text")`

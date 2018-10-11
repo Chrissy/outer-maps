@@ -5,16 +5,21 @@ import ElevationTotals from "./elevationTotals";
 import TrailListContainer from "./trailListContainer";
 import ImportantWeather from "./importantWeather";
 import connectPaths from "../modules/connectPaths";
+import _ from "underscore";
 
 const TrailSidebar = ({ firstTrail, trails, terrain }) => {
   const cumulativeElevations = () => {
-    return trails
-      .filter(t => t.hasElevationData)
-      .reduce((accumulator, trail) => {
+    return _.flatten(
+      trails.filter(t => t.hasElevationData).reduce((accumulator, trail, i) => {
         const points = trail.points;
-        if (accumulator.length == 0) return points;
-        return connectPaths(accumulator, points);
-      }, []);
+        return i == 0
+          ? [points]
+          : [
+            ...accumulator.slice(0, -1),
+            ...connectPaths(trails[i - 1].points, points)
+          ];
+      }, [])
+    );
   };
 
   const elevationTotals = () => {
