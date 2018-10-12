@@ -167,7 +167,8 @@ exports[`renders 1`] = `
 
 .emotion-40 {
   fill: #FF5500;
-  mix-blend-mode: multiply;
+  stroke: #FF5500;
+  stroke-width: 1px;
 }
 
 .emotion-50 {

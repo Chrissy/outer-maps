@@ -69,16 +69,18 @@ const LineGraph = ({ elevations, className }) => {
       // so we multiply the y value by a number like 0.823
       const squish = (100 - offset) * 0.01;
 
-      return [y * squish, x, elevation];
+      return [y * squish, x, elevation, elevations[i].id];
     });
   };
 
   const pointsToPathString = relativePoints => {
+    const lastPoint = relativePoints[relativePoints.length - 1];
+    const firstPoint = relativePoints[0];
     return (
       relativePoints.reduce(
         (a, p) => a + `${p[1] * width},${p[0] * height + offset} `,
-        `0,${height} `
-      ) + `${width},${height}`
+        `${firstPoint[1] * width},${height} `
+      ) + `${lastPoint[1] * width},${height}`
     );
   };
 
@@ -142,12 +144,20 @@ const LineGraph = ({ elevations, className }) => {
   const viewBox = () => `0 0 ${width} ${height}`;
   const relativePoints = getRelativePoints();
   const altitudeMarkers = getAltitudeMarkers(relativePoints);
+  const groupedPoints = new Map();
+  relativePoints.forEach(point => {
+    const prevPoints = groupedPoints.get(point[3]);
+    groupedPoints.set(point[3], prevPoints ? [...prevPoints, point] : [point]);
+  });
+  const relativePointsArr = [...groupedPoints.values()];
 
   return (
     <Container className={className}>
       <StyledSvg viewBox={viewBox()}>
         <g>{mileMarkers()}</g>
-        <Polyline points={pointsToPathString(relativePoints)} />
+        {relativePointsArr.map((line, i) => (
+          <Polyline key={i} points={pointsToPathString(line)} index={i} />
+        ))}
       </StyledSvg>
       <AltitudeOverlay>{altitudeMarkers}</AltitudeOverlay>
     </Container>
@@ -158,7 +168,8 @@ LineGraph.propTypes = {
   elevations: PropTypes.arrayOf(
     PropTypes.shape({
       distanceFromPreviousPoint: PropTypes.number,
-      elevation: PropTypes.number
+      elevation: PropTypes.number,
+      id: PropTypes.number
     })
   ),
   className: PropTypes.string
@@ -226,8 +237,9 @@ const AltitudeOverlay = styled("div")`
 `;
 
 const Polyline = styled("polyline")`
-  fill: ${p => p.theme.accentColor};
-  mix-blend-mode: multiply;
+  fill: ${p => p.theme.trailColors[p.index % 4]};
+  stroke: ${p => p.theme.trailColors[p.index % 4]};
+  stroke-width: 1px;
 `;
 
 const Marker = styled("text")`
