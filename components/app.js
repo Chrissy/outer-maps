@@ -5,7 +5,6 @@ import { ThemeProvider } from "emotion-theming";
 import MapContainer from "./mapContainer";
 import SidebarContainer from "./sidebarContainer";
 import Header from "./header";
-import Welcome from "./welcome";
 import styled from "react-emotion";
 import theme from "../styles/theme";
 import { store } from "../state/configureStore";
@@ -31,7 +30,6 @@ ReactDOM.render(
           <Header />
           <MapContainer />
           <SidebarContainer />
-          <Welcome />
         </Body>
       </div>
     </ThemeProvider>
