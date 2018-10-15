@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders 1`] = `
-.emotion-6 {
+.emotion-4 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -22,12 +22,12 @@ exports[`renders 1`] = `
   margin-bottom: 0.5em;
 }
 
-.emotion-29 {
+.emotion-23 {
   display: grid;
   grid-template-columns: 33.3% 33.3% 33.3%;
 }
 
-.emotion-9 {
+.emotion-7 {
   display: grid;
   grid-template-rows: auto 0.6em;
   justify-items: center;
@@ -42,29 +42,18 @@ exports[`renders 1`] = `
 }
 
 @media (max-width:900px) {
-  .emotion-9 {
+  .emotion-7 {
     font-size: 0.875em;
   }
 }
 
 .emotion-2 {
-  width: 3em;
-  height: auto;
-  margin-top: 0.5em;
-  margin-right: 0.25em;
-}
-
-.emotion-2 path {
-  fill: #FF5500;
-}
-
-.emotion-4 {
   font-size: 2em;
   color: #FF5500;
   font-weight: 600;
 }
 
-.emotion-7 {
+.emotion-5 {
   font-size: 0.875em;
   color: #838383;
   text-align: center;
@@ -73,12 +62,12 @@ exports[`renders 1`] = `
 }
 
 @media (max-width:900px) {
-  .emotion-7 {
+  .emotion-5 {
     font-size: 0.5em;
   }
 }
 
-.emotion-18 {
+.emotion-14 {
   display: grid;
   grid-template-rows: auto 0.6em;
   justify-items: center;
@@ -92,40 +81,18 @@ exports[`renders 1`] = `
 }
 
 @media (max-width:900px) {
-  .emotion-18 {
+  .emotion-14 {
     font-size: 0.875em;
   }
 }
 
-.emotion-11 {
-  width: 2.5em;
-  height: auto;
-  margin-top: 0.5em;
-  margin-right: 0.25em;
-}
-
-.emotion-11 path {
-  fill: #5800EC;
-}
-
-.emotion-13 {
+.emotion-9 {
   font-size: 2em;
   color: #5800EC;
   font-weight: 600;
 }
 
-.emotion-20 {
-  width: 3em;
-  height: auto;
-  margin-top: 0.5em;
-  margin-right: 0.25em;
-}
-
-.emotion-20 path {
-  fill: #838383;
-}
-
-.emotion-22 {
+.emotion-16 {
   font-size: 2em;
   color: #838383;
   font-weight: 600;
@@ -138,69 +105,60 @@ exports[`renders 1`] = `
     Average weather this week
   </div>
   <div
-    className="emotion-29 emotion-30"
+    className="emotion-23 emotion-24"
   >
     <div
-      className="emotion-9 emotion-10"
+      className="emotion-7 emotion-8"
     >
       <div
-        className="emotion-6"
+        className="emotion-4"
       >
-        <test-file-stub
-          className="emotion-2 emotion-3"
-        />
         <div
-          className="emotion-4 emotion-5"
+          className="emotion-2 emotion-3"
         >
           100
           °
         </div>
       </div>
       <div
-        className="emotion-7 emotion-8"
+        className="emotion-5 emotion-6"
       >
         High Temperature
       </div>
     </div>
     <div
-      className="emotion-18 emotion-10"
+      className="emotion-14 emotion-8"
     >
       <div
-        className="emotion-6"
+        className="emotion-4"
       >
-        <test-file-stub
-          className="emotion-11 emotion-3"
-        />
         <div
-          className="emotion-13 emotion-5"
+          className="emotion-9 emotion-3"
         >
           0
           °
         </div>
       </div>
       <div
-        className="emotion-7 emotion-8"
+        className="emotion-5 emotion-6"
       >
         Low Temperature
       </div>
     </div>
     <div
-      className="emotion-9 emotion-10"
+      className="emotion-7 emotion-8"
     >
       <div
-        className="emotion-6"
+        className="emotion-4"
       >
-        <test-file-stub
-          className="emotion-20 emotion-3"
-        />
         <div
-          className="emotion-22 emotion-5"
+          className="emotion-16 emotion-3"
         >
           1%
         </div>
       </div>
       <div
-        className="emotion-7 emotion-8"
+        className="emotion-5 emotion-6"
       >
         Chance percipitation
       </div>
