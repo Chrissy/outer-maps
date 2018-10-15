@@ -63,14 +63,14 @@ const CombinedPercentBar = styled("div")`
 
 const getColor = (p, i) => {
   switch (i % 4) {
+  case 0:
+    return p.theme.brandColor;
   case 1:
-    return p.theme.accentColorTintDark;
+    return p.theme.blue;
   case 2:
-    return p.theme.accentColor;
-  case 3:
     return p.theme.accentColorTintLight;
-  default:
-    return p.theme.accentColorTintDarker;
+  case 3:
+    return p.theme.accentColor;
   }
 };
 
