@@ -3,7 +3,7 @@ import React from "react";
 import styled from "react-emotion";
 
 const Svg = ({ src, size, width, height, ...props }) => {
-  const file = require(`../svg/new/${src}.svg`).default;
+  const file = require(`../svg/${src}.svg`).default;
   if (!file) return null;
   const { id, viewBox } = file;
 
