@@ -214,16 +214,6 @@
   "interactive": true
 },
 {
-  "id": "handles-outline",
-  "source": "handles",
-  "type": "circle",
-  "paint": {
-    "circle-radius": 6,
-    "circle-color": "#FFF"
-  },
-  "interactive": true
-},
-{
   "id": "trail-labels",
   "source": "$source",
   "source-layer": "trail-labels",
@@ -262,20 +252,13 @@
   "filter": ["all", ["in", "type", "hike", "horse"], ["!=", "name", ""]]
 },
 {
-  "id": "handles-center",
-  "source": "handles",
-  "type": "circle",
-  "paint": {
-    "circle-radius": 4,
-    "circle-color": "#FF9100"
-  }
-},
-{
   "id": "handles",
   "source": "handles",
-  "type": "circle",
-  "paint": {
-    "circle-radius": 8,
-    "circle-color": "rgba(0,0,0,0)"
+  "type": "symbol",
+  "layout": {
+    "icon-image": "handle",
+    "icon-size": 0.75,
+    "icon-allow-overlap": true,
+    "icon-rotate": ["number", ["get", "rotation"]]
   }
 }]}

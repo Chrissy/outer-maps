@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import pointOnLine from "@turf/point-on-line";
 import nearest from "@turf/nearest";
+import bearing from "@turf/bearing";
 import { point, featureCollection } from "@turf/helpers";
 import {
   pointToPoint,
@@ -43,10 +44,12 @@ export default class Map extends React.Component {
     const { draggingPoint } = this;
 
     if (!feature && !draggingPoint) {
-      target.dragPan.enable();
-      return this.setState({
-        previewElement: null
-      });
+      if (this.state.previewElement) {
+        target.dragPan.enable();
+        return this.setState({
+          previewElement: null
+        });
+      }
     } else {
       if (draggingPoint || feature.layer.id == "handles") {
         this.handleDrag({ target, lngLat });
@@ -170,6 +173,23 @@ export default class Map extends React.Component {
     target.dragPan.enable();
   }
 
+  applyRotation(points) {
+    let rotatedPoints = [];
+    points.filter(p1 => p1.properties.handleId == 0).forEach(p1 => {
+      const p2 = points.filter(p2 => p2.properties.handleId == 1).find(p2 => {
+        return p2.properties.trailId == p1.properties.trailId;
+      });
+
+      const rotation = bearing(p1, p2);
+      p1.properties.rotation = rotation;
+      p2.properties.rotation = rotation;
+
+      rotatedPoints = [p1, p2, ...rotatedPoints];
+    });
+
+    return rotatedPoints;
+  }
+
   sources() {
     return [
       {
@@ -182,7 +202,9 @@ export default class Map extends React.Component {
       },
       {
         id: "handles",
-        data: featureCollection(this.props.handles.map(p => pointToPoint(p)))
+        data: featureCollection(
+          this.applyRotation(this.props.handles.map(p => pointToPoint(p)))
+        )
       }
     ];
   }
