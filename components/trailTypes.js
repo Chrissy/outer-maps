@@ -1,10 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "react-emotion";
-import Hike from "../svg/transportation-hike.svg";
-import Bike from "../svg/transportation-bike.svg";
-import Ohv from "../svg/transportation-ohv.svg";
-import Horse from "../svg/transportation-horse.svg";
+import Svg from "./svg";
 
 const TrailTypes = ({ hike, bike, ohv, horse }) => {
   const total = () => hike + bike + ohv + horse;
@@ -21,19 +18,19 @@ const TrailTypes = ({ hike, bike, ohv, horse }) => {
       </CombinedPercentBar>
       <Container>
         <Type index={0}>
-          <Icon Node={Hike} index={0} />
+          <StyledSvg src="transportation-hike" index={0} />
           {percent(hike)} Hike
         </Type>
         <Type index={1}>
-          <Icon Node={Horse} index={1} />
+          <StyledSvg src="transportation-horse" index={0} />
           {percent(horse)} Horse
         </Type>
         <Type index={2}>
-          <Icon Node={Bike} index={2} />
+          <StyledSvg src="transportation-bike" index={0} />
           {percent(bike)} Bike
         </Type>
         <Type index={3}>
-          <Icon Node={Ohv} index={3} />
+          <StyledSvg src="transportation-ohv" index={0} />
           {percent(ohv)} OHV
         </Type>
       </Container>
@@ -86,15 +83,11 @@ const Type = styled("div")`
   color: ${p => getColor(p, p.index)};
 `;
 
-const Icon = styled(({ Node, className }) => <Node className={className} />)`
+const StyledSvg = styled(Svg)`
   height: auto;
   width: 1.8em;
   height: 1.8em;
   margin: 0 ${p => p.theme.ss(0.25)} 1em ${p => p.theme.ss(0.25)};
-
-  path {
-    fill: ${p => getColor(p, p.index)};
-  }
 `;
 
 export default TrailTypes;
