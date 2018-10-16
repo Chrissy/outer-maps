@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "react-emotion";
-import { metersToMiles } from "../modules/conversions";
+import { metersToMiles, metersToFeet } from "../modules/conversions";
 import { flexCenter } from "../styles/flex";
 
 const width = 275;
@@ -125,8 +125,6 @@ const LineGraph = ({ elevations, className }) => {
         Math.abs(idealPointsUnfiltered[i + 1][1] - p[1]) < 0.2
       )
         return false;
-      if (idealPointsUnfiltered[i + 1])
-        console.log(Math.abs(idealPointsUnfiltered[i + 1][1] - p[1]));
       return true;
     });
   };
@@ -136,7 +134,7 @@ const LineGraph = ({ elevations, className }) => {
 
     return points.map(p => (
       <ElevationMarker y={p[0] * 100} x={p[1] * 100} key={p[1]}>
-        {p[2].toLocaleString()}
+        {metersToFeet(p[2]).toLocaleString()}
       </ElevationMarker>
     ));
   };

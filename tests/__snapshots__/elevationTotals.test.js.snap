@@ -441,21 +441,21 @@ exports[`renders 1`] = `
         x={0}
         y={75}
       >
-        985
+        3,231
       </div>
       <div
         className="emotion-46 emotion-45"
         x={67.21143890597577}
         y={37.5}
       >
-        987
+        3,238
       </div>
       <div
         className="emotion-48 emotion-45"
         x={100}
         y={0}
       >
-        989
+        3,244
       </div>
     </div>
   </div>
