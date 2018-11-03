@@ -9,6 +9,9 @@ class Terrain extends React.Component {
   constructor(props) {
     super(props);
     this.canvas = React.createRef();
+    this.state = {
+      imageLoaded: false
+    };
   }
 
   projectPoints({ points, zoom, center }) {
@@ -63,35 +66,41 @@ class Terrain extends React.Component {
     image.src = pin;
   }
 
-  isVisible() {
-    return this.props.satelliteImageUrl;
-  }
-
   componentDidUpdate() {
-    if (this.props.satelliteImageUrl) {
-      const canvas = this.canvas.current;
-      const ctx = canvas.getContext("2d");
-      const { zoom, center } = this.props;
+    const canvas = this.canvas.current;
+    const ctx = canvas.getContext("2d");
+    const { zoom, center } = this.props;
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    if (this.props.points && this.props.points.length) {
       this.props.points.map(points => {
         this.drawPath(this.projectPoints({ points, zoom, center }), ctx);
       });
     }
   }
 
+  handleImageLoaded() {
+    this.setState({ imageLoaded: true });
+  }
+
   render() {
     return (
       <Container>
-        <Img src={this.props.satelliteImageUrl} visible={this.isVisible()} />
+        <Img
+          src={`/api/terrain/${this.props.center.join("/")}/${
+            this.props.zoom
+          }.jpg`}
+          onLoad={this.handleImageLoaded.bind(this)}
+          visible={this.state.imageLoaded}
+        />
         <Canvas
           innerRef={this.canvas}
-          visible={this.isVisible()}
+          visible={this.state.imageLoaded}
           width="1026"
           height="1026"
         />
-        <StyledLoadingSpinner speed="1s" visible={!this.isVisible()} />
+        <StyledLoadingSpinner speed="1s" visible={!this.state.imageLoaded} />
       </Container>
     );
   }
@@ -99,7 +108,8 @@ class Terrain extends React.Component {
 
 Terrain.propTypes = {
   points: PropTypes.array,
-  satelliteImageUrl: PropTypes.string,
+  shape: PropTypes.bool,
+  paths: PropTypes.bool,
   zoom: PropTypes.number,
   center: PropTypes.array
 };

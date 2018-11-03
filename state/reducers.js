@@ -60,17 +60,6 @@ const trail = (state = {}, action) => {
   case "SET_TRAIL_ELEVATION_DATA_REQUESTED":
     if (action.id !== state.id) return state;
     return { ...state, elevationDataRequested: true };
-  case "SET_TRAIL_SATELLITE_IMAGE":
-    if (action.id !== state.id) return state;
-    return {
-      ...state,
-      satelliteImageUrl: action.url,
-      satelliteZoom: action.zoom,
-      satelliteCenter: action.center
-    };
-  case "SET_TRAIL_SATELLITE_IMAGE_REQUESTED":
-    if (action.id !== state.id) return state;
-    return { ...state, satelliteImageRequested: true };
   case "SET_TRAIL_WEATHER_DATA":
     if (action.id !== state.id) return state;
     return {
@@ -122,8 +111,6 @@ const trails = (state = [], action) => {
   case "SET_TRAIL_ELEVATION_DATA_REQUESTED":
   case "SET_TRAIL_WEATHER_DATA":
   case "SET_TRAIL_WEATHER_DATA_REQUESTED":
-  case "SET_TRAIL_SATELLITE_IMAGE":
-  case "SET_TRAIL_SATELLITE_IMAGE_REQUESTED":
   case "SET_TRAIL_ADDITIONAL_WEATHER_DATA":
     return state.map(t => trail(t, action));
   default:
@@ -144,8 +131,6 @@ const boundaries = (state = [], action) => {
   case "SET_BOUNDARY_WEATHER_DATA":
   case "SET_BOUNDARY_WEATHER_DATA_REQUESTED":
   case "SET_BOUNDARY_ADDITIONAL_WEATHER_DATA":
-  case "SET_BOUNDARY_SATELLITE_IMAGE":
-  case "SET_BOUNDARY_SATELLITE_IMAGE_REQUESTED":
   case "SELECT_BOUNDARY":
     return state.map(b => boundary(b, action));
   case "CLEAR_BOUNDARY_SELECTED":
@@ -186,12 +171,6 @@ const boundary = (state = {}, action) => {
       highPoint: action.highPoint,
       hasElevationData: true
     };
-  case "SET_BOUNDARY_SATELLITE_IMAGE":
-    if (action.id !== state.id) return state;
-    return { ...state, satelliteImageUrl: action.url };
-  case "SET_BOUNDARY_SATELLITE_IMAGE_REQUESTED":
-    if (action.id !== state.id) return state;
-    return { ...state, satelliteImageRequested: true };
   case "SET_BOUNDARY_WEATHER_DATA_REQUESTED":
     if (action.id !== state.id) return state;
     return { ...state, weatherDataRequested: true };

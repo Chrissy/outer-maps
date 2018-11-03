@@ -1,9 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "react-emotion";
+import GeoViewport from "@mapbox/geo-viewport";
+import bbox from "@turf/bbox";
 import TrailSidebar from "./trailSidebar";
 import BoundarySidebar from "./boundarySidebar";
 import Terrain from "./terrain";
+import { pointsToFeatureCollection } from "../modules/stateToGeoJson";
 import sliceElevationsWithHandles from "../modules/sliceElevationsWithHandles";
 
 const Sidebar = ({ trails, boundary, handles, ...props }) => {
@@ -25,14 +28,26 @@ const Sidebar = ({ trails, boundary, handles, ...props }) => {
       return <BoundarySidebar terrain={getTerrain()} {...boundary} />;
   };
 
-  const getTerrain = () => (
-    <StyledTerrain
-      satelliteImageUrl={(trails[0] || boundary || {}).satelliteImageUrl}
-      points={slicedTrails().map(p => p.points || [])}
-      zoom={(trails[0] || boundary || {}).satelliteZoom}
-      center={(trails[0] || boundary || {}).satelliteCenter}
-    />
-  );
+  const getTerrain = () => {
+    if (trails && trails.length) {
+      const pointsArr = slicedTrails().map(p => p.points || []);
+      const points = pointsArr.reduce((a, r) => [...a, ...r], []);
+      if (!points.length) return null;
+      const { center, zoom } = GeoViewport.viewport(
+        bbox(pointsToFeatureCollection(points)),
+        [1024, 800]
+      );
+      return (
+        <StyledTerrain points={pointsArr} paths zoom={zoom} center={center} />
+      );
+    } else if (boundary && boundary.selected) {
+      const { center, zoom } = GeoViewport.viewport(boundary.bounds, [
+        1024,
+        1024
+      ]);
+      return <StyledTerrain shape zoom={zoom} center={center} />;
+    }
+  };
 
   const hasContent = () =>
     (boundary && boundary.selected) || (trails && trails.some(t => t.selected));
