@@ -28,7 +28,7 @@ const Sidebar = ({ trails, boundary, handles, ...props }) => {
   const getTerrain = () => (
     <StyledTerrain
       satelliteImageUrl={(trails[0] || boundary || {}).satelliteImageUrl}
-      points={(slicedTrails()[0] || {}).points}
+      points={slicedTrails().map(p => p.points || [])}
       zoom={(trails[0] || boundary || {}).satelliteZoom}
       center={(trails[0] || boundary || {}).satelliteCenter}
     />

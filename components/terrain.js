@@ -22,20 +22,15 @@ class Terrain extends React.Component {
       height: 1024
     });
 
-    return this.props.points.map(p => {
+    return points.map(p => {
       return { ...p, coordinates: projecter.project(p.coordinates) };
     });
   }
 
-  drawPath(points) {
-    const canvas = this.canvas.current;
-    const ctx = canvas.getContext("2d");
-
-    ctx.beginPath();
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+  drawPath(points, ctx) {
     if (!points.length) return;
 
+    ctx.beginPath();
     ctx.moveTo(...points[0].coordinates);
     points.slice(1).forEach(p => ctx.lineTo(...p.coordinates));
     ctx.lineJoin = "round";
@@ -74,8 +69,15 @@ class Terrain extends React.Component {
 
   componentDidUpdate() {
     if (this.props.satelliteImageUrl) {
-      this.projectedPoints = this.projectPoints(this.props);
-      this.drawPath(this.projectedPoints);
+      const canvas = this.canvas.current;
+      const ctx = canvas.getContext("2d");
+      const { zoom, center } = this.props;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      this.props.points.map(points => {
+        this.drawPath(this.projectPoints({ points, zoom, center }), ctx);
+      });
     }
   }
 
