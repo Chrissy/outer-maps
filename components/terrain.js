@@ -73,18 +73,28 @@ class Terrain extends React.Component {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    if (this.props.points && this.props.points.length) {
+    if (this.props.points && this.props.points.length && this.imageIsLoaded()) {
       this.props.points.map(points => {
         this.drawPath(this.projectPoints({ points, zoom, center }), ctx);
       });
     }
   }
 
+  imageUrl() {
+    return `/api/terrain/${this.props.center.join("/")}/${this.props.zoom}.jpg`;
+  }
+
   handleImageLoaded() {
-    this.setState({ imageLoaded: true });
+    this.setState({ loadedImage: this.imageUrl() });
+  }
+
+  imageIsLoaded() {
+    return this.state.loadedImage == this.imageUrl();
   }
 
   render() {
+    const imageIsLoaded = this.imageIsLoaded();
+
     return (
       <Container>
         <Img
@@ -92,15 +102,15 @@ class Terrain extends React.Component {
             this.props.zoom
           }.jpg`}
           onLoad={this.handleImageLoaded.bind(this)}
-          visible={this.state.imageLoaded}
+          visible={imageIsLoaded}
         />
         <Canvas
           innerRef={this.canvas}
-          visible={this.state.imageLoaded}
+          visible={imageIsLoaded}
           width="1026"
           height="1026"
         />
-        <StyledLoadingSpinner speed="1s" visible={!this.state.imageLoaded} />
+        <StyledLoadingSpinner speed="1s" visible={!imageIsLoaded} />
       </Container>
     );
   }
