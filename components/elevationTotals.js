@@ -4,8 +4,8 @@ import styled from "react-emotion";
 import LineGraph from "./lineGraph";
 import Stat from "./stat";
 import DifficultyChart from "./difficultyChart";
-import Hiker from "../svg/hiker.svg";
-import Up from "../svg/up.svg";
+import Svg from "./svg";
+import numberShortener from "../modules/numberShortener";
 import { metersToFeet, metersToMiles } from "../modules/conversions";
 
 const ElevationTotals = ({ elevations }) => {
@@ -36,26 +36,36 @@ const ElevationTotals = ({ elevations }) => {
     <Container>
       <Columns>
         <StyledDifficultyChart score={score()} />
-        <Stat icon={Hiker} label="Miles" total={miles()} />
-        <Stat
-          icon={Up}
+        <StyledStat
+          icon={<Icon src="elevation" />}
           label="Elevation Gain"
-          border={true}
-          short={true}
-          total={`+${new Intl.NumberFormat().format(
-            metersToFeet(elevationGain())
-          )}`}
+          unit="ft"
+          total={`+${numberShortener({
+            number: metersToFeet(elevationGain()),
+            oneDecimal: true
+          })}`}
         />
-        <Stat
-          icon={FlippedUp}
+        <StyledStat
+          icon={<Icon src="arrow" />}
           label="Elevation Loss"
-          short={true}
-          total={`-${new Intl.NumberFormat().format(
-            metersToFeet(elevationLoss())
-          )}`}
+          unit="ft"
+          border={true}
+          borderBottomOnSmall={true}
+          total={`-${numberShortener({
+            number: metersToFeet(elevationLoss()),
+            oneDecimal: true
+          })}`}
+        />
+        <StyledStat
+          icon={<MeasureIcon src="distance" />}
+          label="Miles"
+          borderBottomOnSmall={true}
+          total={numberShortener({
+            number: miles()
+          })}
         />
       </Columns>
-      <LineGraph elevations={elevations} />
+      <StyledLineGraph elevations={elevations} />
     </Container>
   );
 };
@@ -66,28 +76,58 @@ ElevationTotals.propTypes = {
 
 const Container = styled("div")`
   margin-bottom: ${p => p.theme.ss(0.5)};
-  padding: 0 ${p => p.theme.ss(1)};
 `;
 
 const Columns = styled("div")`
   display: grid;
-  grid-template-columns: 120px 0.33fr 0.33fr 0.33fr;
+  grid-template-columns: 30% 0.35fr 0.35fr 0.29fr;
+  align-items: center;
 
-  @media (max-width: 360px) {
-    grid-template-columns: 90px 0.33fr 0.33fr 0.33fr;
+  @media (max-width: 950px) {
+    grid-template-columns: 0.29fr 0.26fr 0.26fr 0.19fr;
+    font-size: 0.875em;
   }
+
+  @media (max-width: 350px) {
+    font-size: 0.75em;
+  }
+`;
+
+const StyledLineGraph = styled(LineGraph)`
+  width: 100%;
 `;
 
 const StyledDifficultyChart = styled(DifficultyChart)`
-  margin-top: -${p => p.theme.ss(2.5)};
+  width: 140%;
+  height: 140%;
+  position: relative;
+  z-index: 1;
+  transform: translate(-7%, 2%);
 
-  @media (max-width: 360px) {
-    margin-left: -${p => p.theme.ss(1)};
+  @media (max-width: 750px) {
+    width: 124%;
+    height: 124%;
+    transform: translate(-5%, -2%);
   }
 `;
 
-const FlippedUp = styled(Up)`
-  transform: rotate(180deg);
+const StyledStat = styled(Stat)`
+  border-color: ${p => p.theme.gray4};
+  border-width: ${p => (p.border ? "0 1px" : 0)};
+  margin: ${p => p.theme.ss(1)} 0 ${p => p.theme.ss(0.75)};
+  border-style: solid;
+  height: 4em;
+`;
+
+const Icon = styled(Svg)`
+  height: 0.9em;
+  width: 0.9em;
+`;
+
+const MeasureIcon = styled(Icon)`
+  height: 0.7em;
+  width: 0.7em;
+  transform: rotate(-90deg) scaleY(-1);
 `;
 
 export default ElevationTotals;

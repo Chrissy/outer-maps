@@ -1,35 +1,22 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "react-emotion";
-import { metersToMiles } from "../modules/conversions";
-import Close from "../svg/close.svg";
-import { flexHorizontalCenter } from "../styles/flex";
+import Svg from "./svg";
+import { flexCenter, flexHorizontalCenter } from "../styles/flex";
 
 const TrailList = ({ trails, unselectTrail }) => {
-  const trailDistance = ({ points, hasElevationData }) => {
-    if (!hasElevationData) return "";
+  const listElement = (trail, i) => {
     return (
-      metersToMiles(
-        points.reduce((a, e) => {
-          return a + e.distanceFromPreviousPoint;
-        }, 0)
-      ) + "m"
-    );
-  };
-
-  const listElement = trail => {
-    return (
-      <ListElement key={trail.id}>
-        <SpacedElement>{trail.name}</SpacedElement>
-        <SpacedElement>
-          <DataElement>{trailDistance(trail)}</DataElement>
-          <StyledClose onClick={() => unselectTrail(trail.id)} />
-        </SpacedElement>
+      <ListElement key={trail.id} i={i}>
+        <Name>{trail.name}</Name>
+        <CloseContainer onClick={() => unselectTrail(trail.id)}>
+          <StyledClose src="exit" />
+        </CloseContainer>
       </ListElement>
     );
   };
 
-  return <Container>{trails.map(t => listElement(t))}</Container>;
+  return <Container>{trails.map((t, i) => listElement(t, i))}</Container>;
 };
 
 TrailList.propTypes = {
@@ -49,48 +36,43 @@ TrailList.propTypes = {
 };
 
 const Container = styled("div")`
-  margin: ${p => p.theme.ss(0.5)} 0 ${p => p.theme.ss(3)} 0;
-  padding: 0 ${p => p.theme.ss(1)};
+  margin-top: ${p => p.theme.ss(0.5)};
+  padding: 0 ${p => p.theme.ss(0.5)};
+  ${flexHorizontalCenter};
+  flex-wrap: wrap;
 `;
 
 const ListElement = styled("li")`
-  ${flexHorizontalCenter} width: 100%;
+  ${flexHorizontalCenter};
   border-radius: 0.5em;
-  justify-content: space-between;
-  background-color: ${p => p.theme.accentColor};
+  background-color: ${p =>
+    p.theme.trailColors[p.i % p.theme.trailColors.length]};
   box-sizing: border-box;
   color: #fff;
-  font-size: 0.75em;
-  margin-bottom: ${p => p.theme.ss(1)};
-  padding: ${p => p.theme.ss(0.5)} ${p => p.theme.ss(0.75)};
-
-  &:nth-of-type(3n + 2) {
-    background-color: ${p => p.theme.accentColorTintDark};
-  }
-
-  &:nth-of-type(3n + 3) {
-    background-color: ${p => p.theme.accentColorTintDarker};
-  }
+  font-size: ${p => p.theme.ts(0.75)};
+  font-weight: 600;
+  padding-left: ${p => p.theme.ss(0.75)};
+  margin-right: ${p => p.theme.ss(0.75)};
+  margin-bottom: ${p => p.theme.ss(0.5)};
+  height: 2em;
 `;
 
-const SpacedElement = styled("div")`
-  padding: ${p => p.theme.ss(0.5)} ${p => p.theme.ss(0.75)};
+const Name = styled("div")`
+  margin-bottom: 0.1em;
 `;
 
-const DataElement = styled("div")`
-  border-right: 1px solid ${p => p.theme.accentColorTintLight};
-  padding: ${p => p.theme.ss(0.5)} ${p => p.theme.ss(0.75)};
+const CloseContainer = styled("div")`
+  width: 1.5em;
+  padding-right: ${p => p.theme.ss(0.5)};
+  height: 100%;
+  ${flexCenter};
+  cursor: pointer;
 `;
 
-const StyledClose = styled(Close)`
-  width: 2.5em;
-  height: 0.75em;
-  padding: 0 ${p => p.theme.ss(0.5)} 0 ${p => p.theme.ss(0.25)};
-  display: block;
-
-  path {
-    stroke: #fff;
-  }
+const StyledClose = styled(Svg)`
+  width: 0.66em;
+  height: 0.66em;
+  color: ${p => p.theme.accentColorTintLighter};
 `;
 
 export default TrailList;

@@ -9,6 +9,9 @@ class Terrain extends React.Component {
   constructor(props) {
     super(props);
     this.canvas = React.createRef();
+    this.state = {
+      loadedImage: false
+    };
   }
 
   projectPoints({ points, zoom, center }) {
@@ -22,20 +25,15 @@ class Terrain extends React.Component {
       height: 1024
     });
 
-    return this.props.points.map(p => {
+    return points.map(p => {
       return { ...p, coordinates: projecter.project(p.coordinates) };
     });
   }
 
-  drawPath(points) {
-    const canvas = this.canvas.current;
-    const ctx = canvas.getContext("2d");
-
-    ctx.beginPath();
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+  drawPath(points, ctx) {
     if (!points.length) return;
 
+    ctx.beginPath();
     ctx.moveTo(...points[0].coordinates);
     points.slice(1).forEach(p => ctx.lineTo(...p.coordinates));
     ctx.lineJoin = "round";
@@ -68,28 +66,51 @@ class Terrain extends React.Component {
     image.src = pin;
   }
 
-  isVisible() {
-    return this.props.satelliteImageUrl;
-  }
-
   componentDidUpdate() {
-    if (this.props.satelliteImageUrl) {
-      this.projectedPoints = this.projectPoints(this.props);
-      this.drawPath(this.projectedPoints);
+    const canvas = this.canvas.current;
+    const ctx = canvas.getContext("2d");
+    const { zoom, center } = this.props;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (this.props.points && this.props.points.length && this.imageIsLoaded()) {
+      this.props.points.map(points => {
+        this.drawPath(this.projectPoints({ points, zoom, center }), ctx);
+      });
     }
   }
 
+  imageUrl() {
+    return `/api/terrain/${this.props.center.join("/")}/${this.props.zoom}.jpg`;
+  }
+
+  handleImageLoaded() {
+    this.setState({ loadedImage: this.imageUrl() });
+  }
+
+  imageIsLoaded() {
+    return this.state.loadedImage == this.imageUrl();
+  }
+
   render() {
+    const imageIsLoaded = this.imageIsLoaded();
+
     return (
       <Container>
-        <Img src={this.props.satelliteImageUrl} visible={this.isVisible()} />
+        <Img
+          src={`/api/terrain/${this.props.center.join("/")}/${
+            this.props.zoom
+          }.jpg`}
+          onLoad={this.handleImageLoaded.bind(this)}
+          visible={imageIsLoaded}
+        />
         <Canvas
           innerRef={this.canvas}
-          visible={this.isVisible()}
+          visible={imageIsLoaded}
           width="1026"
           height="1026"
         />
-        <StyledLoadingSpinner speed="1s" visible={!this.isVisible()} />
+        <StyledLoadingSpinner speed="1s" visible={!imageIsLoaded} />
       </Container>
     );
   }
@@ -97,7 +118,8 @@ class Terrain extends React.Component {
 
 Terrain.propTypes = {
   points: PropTypes.array,
-  satelliteImageUrl: PropTypes.string,
+  shape: PropTypes.bool,
+  paths: PropTypes.bool,
   zoom: PropTypes.number,
   center: PropTypes.array
 };
@@ -108,11 +130,10 @@ const Container = styled("div")`
   height: 42vw;
   background-color: ${p => p.theme.gray7};
   position: relative;
-  grid-area: terrain;
   overflow: hidden;
 
   @media (max-width: 600px) {
-    height: 150px;
+    height: 250px;
   }
 `;
 

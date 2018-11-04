@@ -2,10 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "react-emotion";
 import Label from "./label";
+import Svg from "./svg";
 import { flexCenter } from "../styles/flex";
-import HighIcon from "../svg/weather-high.svg";
-import LowIcon from "../svg/weather-low.svg";
-import PrecipIcon from "../svg/weather-precip.svg";
 
 const ImportantWeather = ({
   maxTemperature,
@@ -29,7 +27,10 @@ const ImportantWeather = ({
       <Container>
         <ImportantWeatherUnit darkBg={true}>
           <div className={flexCenter}>
-            <Icon Node={HighIcon} extreme={tempIsExtreme(maxTemperature)} />
+            <StyledSvg
+              src="weather-high"
+              extreme={tempIsExtreme(maxTemperature)}
+            />
             <Data extreme={tempIsExtreme(maxTemperature)}>
               {parseInt(maxTemperature)}°
             </Data>
@@ -38,9 +39,8 @@ const ImportantWeather = ({
         </ImportantWeatherUnit>
         <ImportantWeatherUnit>
           <div className={flexCenter}>
-            <Icon
-              Node={LowIcon}
-              thin="true"
+            <StyledSvg
+              src="weather-low"
               extreme={tempIsExtreme(minTemperature)}
             />
             <Data extreme={tempIsExtreme(minTemperature)}>
@@ -51,7 +51,7 @@ const ImportantWeather = ({
         </ImportantWeatherUnit>
         <ImportantWeatherUnit darkBg={true}>
           <div className={flexCenter}>
-            <Icon Node={PrecipIcon} />
+            <StyledSvg small={true} src="weather-rain" />
             <Data>{percentText(chanceOfPercipitation)}</Data>
           </div>
           <StyledLabel>Chance percipitation</StyledLabel>
@@ -94,15 +94,12 @@ const getColor = p => {
   return p.theme.gray6;
 };
 
-const Icon = styled(({ Node, className }) => <Node className={className} />)`
-  width: ${p => (p.thin ? p.theme.ss(2.5) : p.theme.ss(3))};
+const StyledSvg = styled(Svg)`
+  width: ${p => (p.small ? p.theme.ss(2) : p.theme.ss(2.5))};
   height: auto;
   margin-top: ${p => p.theme.ss(0.5)};
   margin-right: ${p => p.theme.ss(0.25)};
-
-  path {
-    fill: ${p => getColor(p)};
-  }
+  color: ${p => getColor(p)};
 `;
 
 const Data = styled("div")`

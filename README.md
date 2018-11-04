@@ -1,14 +1,14 @@
-![](https://s3-us-west-2.amazonaws.com/chrissy-portfolio-images/gunk_2.png)
+![](https://imgur.com/a/miA1dqi)
 
-# Trail Gunk
-Beautiful outdoor maps for backpackers &amp; trailrunners; built on National Park Service data.
+# Outer Maps
+Free interactive outdoor maps for backpackers &amp; trailrunners; built on National Park Service data.
 
 # Installation (OSX)
 
-* Install Homebrew, XCode & Developer Tools 
+* Install Homebrew, XCode & Developer Tools
 * `brew install node npm postgres postgis tippecanoe`
 * `createdb mountains`
-* `psql -d mountains -c 'create extension postgis'` 
+* `psql -d mountains -c 'create extension postgis'`
 * `npm install -g gulp db-migrate`
 * `npm install`
 * `npm run migrate` (this is gonna take a while)

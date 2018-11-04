@@ -16,7 +16,7 @@ const Header = () => {
 
 const Container = styled("div")`
   ${flexCenter};
-  background: ${p => p.theme.gray2};
+  background: ${p => p.theme.gray1};
   position: relative;
   z-index: 2;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 10px 5px;
@@ -45,7 +45,7 @@ const CircleContainer = styled("div")`
 `;
 
 const StyledCircle = styled(Svg)`
-  color: ${p => p.theme.gray2};
+  color: ${p => p.theme.gray1};
   width: 100%;
   height: 50px;
   top: -45px;

@@ -6,7 +6,7 @@ import TrailListContainer from "./trailListContainer";
 import ImportantWeather from "./importantWeather";
 import connectPaths from "../modules/connectPaths";
 
-const TrailSidebar = ({ firstTrail, trails }) => {
+const TrailSidebar = ({ firstTrail, trails, terrain }) => {
   const cumulativeElevations = () => {
     return trails
       .filter(t => t.hasElevationData)
@@ -15,14 +15,6 @@ const TrailSidebar = ({ firstTrail, trails }) => {
         if (accumulator.length == 0) return points;
         return connectPaths(accumulator, points);
       }, []);
-  };
-
-  const trailList = () => {
-    return (
-      <div style={{ display: trails.length > 1 ? "block" : "none" }}>
-        <TrailListContainer trails={trails} />
-      </div>
-    );
   };
 
   const elevationTotals = () => {
@@ -37,7 +29,8 @@ const TrailSidebar = ({ firstTrail, trails }) => {
 
   return (
     <div>
-      {trailList()}
+      <TrailListContainer trails={trails} />
+      {terrain}
       {elevationTotals()}
       {importantWeather()}
     </div>
@@ -47,7 +40,8 @@ const TrailSidebar = ({ firstTrail, trails }) => {
 TrailSidebar.propTypes = {
   firstTrail: PropTypes.object,
   trails: PropTypes.array,
-  handles: PropTypes.array
+  handles: PropTypes.array,
+  terrain: PropTypes.element
 };
 
 const StyledImportantWeather = styled(ImportantWeather)`

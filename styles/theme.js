@@ -2,14 +2,14 @@ import spacingScale from "./spacingScale";
 import typeScale from "./typeScale";
 
 const theme = {
-  brandColor: "#344632",
-  accentColor: "#FF6000",
-  accentColorTintLighter: "#FFAE86",
-  accentColorTintLight: "#FF8244",
+  brandColor: "#5800EC",
+  accentColor: "#FF5500",
+  accentColorTintLighter: "#FCBE67",
+  accentColorTintLight: "#FF9500",
   accentColorTintDark: "#CA4300",
   accentColorTintDarker: "#9B3300",
   gray1: "#F7F7F7",
-  gray2: "#F3F3F3",
+  gray2: "#F5F5F5",
   gray3: "#E9E9E9",
   gray4: "#D8D8D8",
   gray5: "#A7A7A7",
@@ -17,7 +17,7 @@ const theme = {
   gray7: "#494949",
   gray8: "#292929",
   blue: "#3232FF",
-  purple: "#5700EC",
+  purple: "#5800EC",
   orange: "#FF9500",
   red: "#D0011B",
   ss: spacingScale,
@@ -31,7 +31,15 @@ theme.difficulties = {
   veryEasy: theme.blue,
   easy: theme.purple,
   moderate: theme.orange,
+  strenuous: theme.accentColor,
   extreme: theme.red
 };
+
+theme.trailColors = [
+  theme.accentColor,
+  theme.accentColorTintDark,
+  theme.accentColorTintDarker,
+  theme.accentColorTintLight
+];
 
 export default theme;

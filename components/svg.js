@@ -2,8 +2,10 @@ import PropTypes from "prop-types";
 import React from "react";
 import styled from "react-emotion";
 
-const InlineSvg = ({ src, size, width, height, ...props }) => {
-  const { id, viewBox } = require(`../svg/new/${src}.svg`).default;
+const Svg = ({ src, size, width, height, ...props }) => {
+  const file = require(`../svg/${src}.svg`).default;
+  if (!file) return null;
+  const { id, viewBox } = file;
 
   return (
     <StyledSvg
@@ -17,7 +19,7 @@ const InlineSvg = ({ src, size, width, height, ...props }) => {
   );
 };
 
-InlineSvg.propTypes = {
+Svg.propTypes = {
   src: PropTypes.string.isRequired,
   size: PropTypes.string,
   width: PropTypes.string,
@@ -28,4 +30,4 @@ const StyledSvg = styled("svg")`
   vertical-align: middle;
 `;
 
-export default InlineSvg;
+export default Svg;

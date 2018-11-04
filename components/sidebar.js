@@ -1,9 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "react-emotion";
+import GeoViewport from "@mapbox/geo-viewport";
+import bbox from "@turf/bbox";
 import TrailSidebar from "./trailSidebar";
 import BoundarySidebar from "./boundarySidebar";
 import Terrain from "./terrain";
+import { pointsToFeatureCollection } from "../modules/stateToGeoJson";
 import sliceElevationsWithHandles from "../modules/sliceElevationsWithHandles";
 
 const Sidebar = ({ trails, boundary, handles, ...props }) => {
@@ -18,33 +21,40 @@ const Sidebar = ({ trails, boundary, handles, ...props }) => {
           firstTrail={slicedTrails()[0]}
           trails={slicedTrails()}
           handles={handles}
+          terrain={getTerrain()}
         />
       );
-    if (boundary && boundary.selected) return <BoundarySidebar {...boundary} />;
+    if (boundary && boundary.selected)
+      return <BoundarySidebar terrain={getTerrain()} {...boundary} />;
+  };
+
+  const getTerrain = () => {
+    if (trails && trails.length) {
+      const pointsArr = slicedTrails().map(p => p.points || []);
+      const points = pointsArr.reduce((a, r) => [...a, ...r], []);
+      if (!points.length) return null;
+      const { center, zoom } = GeoViewport.viewport(
+        bbox(pointsToFeatureCollection(points)),
+        [1024, 800]
+      );
+      return (
+        <StyledTerrain points={pointsArr} paths zoom={zoom} center={center} />
+      );
+    } else if (boundary && boundary.selected) {
+      const { center, zoom } = GeoViewport.viewport(boundary.bounds, [
+        1024,
+        1024
+      ]);
+      return <StyledTerrain shape zoom={zoom} center={center} />;
+    }
   };
 
   const hasContent = () =>
     (boundary && boundary.selected) || (trails && trails.some(t => t.selected));
 
-  const name = () => {
-    if (trails.length)
-      return trails.length > 1 ? `${trails.length} Trails` : trails[0].name;
-    if (boundary) return boundary.name;
-  };
-
   return (
     <Container active={hasContent()} {...props}>
-      <Content>
-        <Title>{name()}</Title>
-        <StyledTerrain
-          visible={trails.length > 1}
-          satelliteImageUrl={(trails[0] || boundary || {}).satelliteImageUrl}
-          points={(slicedTrails()[0] || {}).points}
-          zoom={(trails[0] || boundary || {}).satelliteZoom}
-          center={(trails[0] || boundary || {}).satelliteCenter}
-        />
-        {trailOrBoundary()}
-      </Content>
+      <Content>{trailOrBoundary()}</Content>
     </Container>
   );
 };
@@ -60,9 +70,9 @@ const Container = styled("div")`
   position: absolute;
   height: 100%;
   width: 43vw;
-  min-width: 320px;
+  min-width: 400px;
   max-width: 500px;
-  background: ${p => p.theme.gray1};
+  background: ${p => p.theme.gray2};
   color: ${p => p.theme.gray7};
   border-right: 1px solid ${p => p.theme.gray4};
   box-sizing: border-box;
@@ -74,7 +84,7 @@ const Container = styled("div")`
   top: 0;
 
   @media (max-width: 600px) {
-    height: 75vh;
+    height: 85vh;
     bottom: 0;
     width: 100%;
     max-width: 100%;
@@ -89,14 +99,6 @@ const Content = styled("div")`
   line-height: ${p => p.theme.ts(1.5)};
   transition: 0.2s all;
   position: relative;
-`;
-
-const Title = styled("div")`
-  color: ${p => p.theme.brandColor};
-  font-size: ${p => p.theme.ts(1.35)};
-  font-weight: 800;
-  padding-bottom: ${p => p.theme.ss(0.5)};
-  padding: ${p => p.theme.ss(0.5)};
 `;
 
 const StyledTerrain = styled(Terrain)`
