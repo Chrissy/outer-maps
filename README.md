@@ -1,4 +1,4 @@
-![](https://imgur.com/a/miA1dqi)
+![](https://imgur.com/a/lDBlump)
 
 # Outer Maps
 Free interactive outdoor maps for backpackers &amp; trailrunners; built on National Park Service data.
