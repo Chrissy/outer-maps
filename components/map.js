@@ -13,6 +13,7 @@ import MapBox from "./mapBox";
 import getOffsetCenter from "../modules/getOffsetCenter";
 import sliceElevationsWithHandles from "../modules/sliceElevationsWithHandles";
 import styled from "react-emotion";
+import theme from "../styles/theme";
 
 const WATCH_LAYERS = ["trails", "national-park-labels", "handles"];
 
@@ -195,15 +196,21 @@ export default class Map extends React.Component {
       {
         id: "trails-selected",
         data: trailsToFeatureCollection(
-          this.selectedTrails().map(t =>
-            sliceElevationsWithHandles(t, this.props.handles)
-          )
+          this.selectedTrails().map((t, i) => {
+            t.fill = theme.trailColors[i % 4];
+            return sliceElevationsWithHandles(t, this.props.handles);
+          })
         )
       },
       {
         id: "handles",
         data: featureCollection(
-          this.applyRotation(this.props.handles.map(p => pointToPoint(p)))
+          this.applyRotation(
+            this.props.handles.map((p, i) => {
+              const group = Math.ceil((i + 1) / 2);
+              return pointToPoint({ ...p, index: group % 4 });
+            })
+          )
         )
       }
     ];

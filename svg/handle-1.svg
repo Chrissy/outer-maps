@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 107 107" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>handle-1</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="handle-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M53.5,106 C24.504113,106 1,82.4940121 1,53.5 C1,24.5059879 24.504113,1 53.5,1 C82.495887,1 106,24.5059879 106,53.5 C106,82.4940121 82.495887,106 53.5,106 Z" id="Oval" fill="#FFFFFF" fill-rule="nonzero" transform="translate(53.500000, 53.500000) rotate(56.000000) translate(-53.500000, -53.500000) "></path>
+        <path d="M53,91 C73.9868205,91 91,73.9868205 91,53 C91,32.0131795 73.9868205,15 53,15 C32.0131795,15 15,32.0131795 15,53 C15,73.9868205 32.0131795,91 53,91 Z" id="Path" fill="#FF5500"></path>
+        <path d="M54.5,35 L81,68 C64.0858634,61.2076757 55.307305,57.7572056 54.6643247,57.6485899 C54.0213444,57.5399742 45.1332362,60.9904442 28,68 L54.5,35 Z" id="Triangle-2" fill="#FFFFFF"></path>
+    </g>
+</svg>

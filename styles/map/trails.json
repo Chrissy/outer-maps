@@ -208,7 +208,7 @@
     "line-join": "bevel"
   },
   "paint": {
-    "line-color": "#FF9100",
+    "line-color": ["string", ["get", "fill"]],
     "line-width": 2
   },
   "interactive": true
@@ -256,7 +256,7 @@
   "source": "handles",
   "type": "symbol",
   "layout": {
-    "icon-image": "handle",
+    "icon-image": "handle-{index}",
     "icon-size": 0.75,
     "icon-allow-overlap": true,
     "icon-rotate": ["number", ["get", "rotation"]]

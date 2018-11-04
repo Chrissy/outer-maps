@@ -11,7 +11,8 @@ export const pointsToFeatureCollection = points => {
 };
 
 export const trailToLine = toConvert => {
-  return lineString(toConvert.points.map(p => p.coordinates));
+  const asFeature = lineString(toConvert.points.map(p => p.coordinates));
+  return { ...asFeature, properties: toConvert };
 };
 
 export const trailsToFeatureCollection = trails => {

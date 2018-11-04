@@ -10,7 +10,7 @@ class Terrain extends React.Component {
     super(props);
     this.canvas = React.createRef();
     this.state = {
-      imageLoaded: false
+      loadedImage: false
     };
   }
 
