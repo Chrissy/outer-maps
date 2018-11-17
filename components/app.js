@@ -36,3 +36,5 @@ ReactDOM.render(
   </Provider>,
   document.getElementById("app")
 );
+
+//# sourceMappingURL=bundle.js.map
