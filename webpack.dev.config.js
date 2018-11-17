@@ -1,4 +1,3 @@
-const path = require("path");
 const production = require("./webpack.production.config.js");
 
 module.exports = Object.assign({}, production, {
@@ -7,6 +6,7 @@ module.exports = Object.assign({}, production, {
   output: {
     path: "/",
     publicPath: "http://localhost:3000/dist/",
-    filename: "bundle.js"
+    filename: "bundle.js",
+    sourceMapFilename: "bundle.js.map"
   }
 });

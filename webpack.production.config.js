@@ -3,9 +3,11 @@ const path = require("path").normalize;
 module.exports = {
   entry: "./components/app.js",
   mode: "production",
+  devtool: "source-map",
   output: {
     path: path(__dirname + "/public/dist"),
-    filename: "bundle.js"
+    filename: "bundle.js",
+    sourceMapFilename: "bundle.js.map"
   },
   module: {
     noParse: /(mapbox-gl)\.js$/,
