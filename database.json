@@ -5,6 +5,5 @@
     "database": {"ENV": "DEV_DATABASE"},
     "user": {"ENV": "DEV_USERNAME"},
     "password": {"ENV": "DEV_PASSWORD"}
-  },
-  "prod": "postgresql://localhost:5432/mountains"
+  }
 }

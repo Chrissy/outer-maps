@@ -22,7 +22,7 @@ const tryCachedFile = ({ path, extension }) =>
           if (!response.failure) {
             return resolve(response);
           } else {
-            reject("Rejected by both the cache and the api");
+            reject("Rejected by both the cache and the api.");
           }
         });
       }
