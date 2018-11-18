@@ -3,8 +3,12 @@ const dbgeo = require("dbgeo");
 
 if (process.env.NODE_ENV == "production") pg.defaults.ssl = true;
 
+const productionOpts = (process.env.NODE_ENV == "production") ? {
+  connectionString: process.env.DATABASE_URL
+} : {};
+
 exports.pool = () => {
-  return new pg.Pool();
+  return new pg.Pool(productionOpts);
 };
 
 exports.query = (query, pool, cb) => {
