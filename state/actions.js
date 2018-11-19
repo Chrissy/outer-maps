@@ -12,7 +12,16 @@ const selectTrail = ({ properties, geometry, activeSegment }) => {
     if (cachedTrail) {
       /* todo: this should unselect the segment but not remove it */
       if (activeSegment) return;
-      /* add a fresh segment if the selected path isn't an active segment */
+      /*
+      if no segments are selected, but the trail is cached, then
+      simply set the cached trail as selected
+      */
+      if (!cachedTrail.selected)
+        return dispatch({ type: "SELECT_TRAIL", ...cachedTrail });
+      /*
+      if the clicked segment is not selected, but the cached trail
+      indicates that a segement has been selected, then dup the trail
+      */
       dispatch({ type: "DUPLICATE_TRAIL", ...cachedTrail, uniqueId });
     } else {
       const bounds = bbox(JSON.parse(properties.bounds));
@@ -56,10 +65,10 @@ const selectBoundary = ({ properties, geometry }) => {
   };
 };
 
-const unselectTrail = id => {
+const unselectTrail = uniqueId => {
   return dispatch => {
-    dispatch({ type: "REMOVE_TRAIL_HANDLES", id });
-    return dispatch({ type: "UNSELECT_TRAIL", id });
+    dispatch({ type: "REMOVE_TRAIL_HANDLES", uniqueId });
+    return dispatch({ type: "UNSELECT_TRAIL", uniqueId });
   };
 };
 

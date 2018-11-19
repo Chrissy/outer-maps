@@ -9,7 +9,7 @@ const TrailList = ({ trails, unselectTrail }) => {
     return (
       <ListElement key={trail.uniqueId} i={i}>
         <Name>{trail.name}</Name>
-        <CloseContainer onClick={() => unselectTrail(trail.id)}>
+        <CloseContainer onClick={() => unselectTrail(trail.uniqueId)}>
           <StyledClose src="exit" />
         </CloseContainer>
       </ListElement>

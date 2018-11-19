@@ -44,9 +44,17 @@ const trail = (state = {}, action) => {
       ...action
     };
   case "UNSELECT_TRAIL":
-    if (state.id === action.id && state.selected) {
+    if (state.uniqueId === action.uniqueId && state.selected) {
+      /*
+        if this is the clicked trail, then we should remove
+        it's selected status and index
+      */
       return { ...state, selected: false, selectedId: null };
     } else if (state.selected && state.selectedId > action.selectedId) {
+      /*
+        if it is any other selected trail whose index is greater
+        than the removed item's index, we should bump it down
+      */
       return { ...state, selectedId: state.selectedId - 1 };
     }
     return state;
@@ -251,7 +259,7 @@ const handles = (state = [], action) => {
   case "SELECT_BOUNDARY":
     return [];
   case "UNSELECT_TRAIL":
-    return state.filter(h => h.trailId !== action.id);
+    return state.filter(h => h.uniqueId !== action.uniqueId);
   case "UPDATE_HANDLE":
   case "SET_HANDLE_INDEX":
     return state.map(h => handle(h, action));

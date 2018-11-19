@@ -4,7 +4,7 @@ import { unselectTrail } from "../state/actions";
 
 const mapDispatchToProps = dispatch => {
   return {
-    unselectTrail: id => dispatch(unselectTrail(id))
+    unselectTrail: uniqueId => dispatch(unselectTrail(uniqueId))
   };
 };
 
