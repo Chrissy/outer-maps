@@ -15,7 +15,12 @@ import sliceElevationsWithHandles from "../modules/sliceElevationsWithHandles";
 import styled from "react-emotion";
 import theme from "../styles/theme";
 
-const WATCH_LAYERS = ["trails", "national-park-labels", "handles"];
+const WATCH_LAYERS = [
+  "trails-selected",
+  "trails",
+  "national-park-labels",
+  "handles"
+];
 
 export default class Map extends React.Component {
   constructor(props) {
@@ -59,12 +64,12 @@ export default class Map extends React.Component {
         feature.layer.id == "national-park-labels"
       ) {
         target.dragPan.enable();
-        this.handleFeature(feature);
+        this.handleFeatureHover(feature);
       }
     }
   }
 
-  handleFeature({ properties, layer }) {
+  handleFeatureHover({ properties, layer }) {
     const { previewElement } = this.state;
     if (
       previewElement &&
@@ -109,10 +114,11 @@ export default class Map extends React.Component {
 
     const type = feature.layer.id;
 
-    if (type == "trails") {
+    if (type == "trails" || type == "trails-selected") {
       props.onTrailClick({
         properties: feature.properties,
-        geometry: feature.geometry
+        geometry: feature.geometry,
+        activeSegment: type == "trails-selected"
       });
     } else if (
       type == "national-park-labels" ||
@@ -178,7 +184,7 @@ export default class Map extends React.Component {
     let rotatedPoints = [];
     points.filter(p1 => p1.properties.handleId == 0).forEach(p1 => {
       const p2 = points.filter(p2 => p2.properties.handleId == 1).find(p2 => {
-        return p2.properties.trailId == p1.properties.trailId;
+        return p2.properties.uniqueId == p1.properties.uniqueId;
       });
 
       const rotation = bearing(p1, p2);

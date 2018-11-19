@@ -172,6 +172,16 @@
   "filter": ["in", "type", "hike", "horse", "bike", "atv", "motorcycle", "trail"]
 },
 {
+  "id": "trails-selected",
+  "source": "trails-selected",
+  "type": "line",
+  "paint": {
+    "line-color": "transparent",
+    "line-width": 8
+  },
+  "interactive": true
+},
+{
   "id": "endpoints",
   "source": "$source",
   "source-layer": "trail-endpoints",
@@ -196,11 +206,10 @@
   "paint": {
     "line-color": "#FFF",
     "line-width": 4
-  },
-  "interactive": true
+  }
 },
 {
-  "id": "trails-selected",
+  "id": "trails-selected-core-line",
   "source": "trails-selected",
   "type": "line",
   "line": {
@@ -210,8 +219,7 @@
   "paint": {
     "line-color": ["string", ["get", "fill"]],
     "line-width": 2
-  },
-  "interactive": true
+  }
 },
 {
   "id": "trail-labels",

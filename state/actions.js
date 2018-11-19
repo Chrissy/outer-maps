@@ -3,30 +3,32 @@ import GeoViewport from "@mapbox/geo-viewport";
 import { getWeather } from "../services/getNOAAWeather";
 import fetchWithCache from "../services/fetchWithCache";
 
-const selectTrail = ({ properties, geometry }) => {
+const selectTrail = ({ properties, geometry, activeSegment }) => {
   return (dispatch, getState) => {
     const storedTrails = getState().trails;
     const cachedTrail = storedTrails.find(t => t.id == properties.id);
     const uniqueId = storedTrails.length + 1;
-    const bounds = bbox(JSON.parse(properties.bounds));
-    const { center } = GeoViewport.viewport(bounds, [1024, 800]);
 
-    if (!cachedTrail)
+    if (cachedTrail) {
+      /* todo: this should unselect the segment but not remove it */
+      if (activeSegment) return;
+      /* add a fresh segment if the selected path isn't an active segment */
+      dispatch({ type: "DUPLICATE_TRAIL", ...cachedTrail, uniqueId });
+    } else {
+      const bounds = bbox(JSON.parse(properties.bounds));
+      const { center } = GeoViewport.viewport(bounds, [1024, 800]);
+
       dispatch({
-        type: "ADD_TRAIL",
+        ...properties,
         center,
         bounds,
-        properties,
         geometry,
-        uniqueId
+        uniqueId,
+        type: "ADD_TRAIL"
       });
-    if (!cachedTrail || !cachedTrail.elevationDataRequested)
-      dispatch(
-        getElevationData({ id: properties.id, reducer: "trail", uniqueId })
-      );
-    if (!cachedTrail || !cachedTrail.weatherDataRequested)
+      dispatch(getElevationData({ ...properties, reducer: "trail", uniqueId }));
       dispatch(getWeatherData({ ...properties, center, reducer: "trail" }));
-    if (cachedTrail) return dispatch({ type: "SELECT_TRAIL", ...cachedTrail });
+    }
   };
 };
 

@@ -4,25 +4,25 @@ import { lineString } from "@turf/helpers";
 
 const trail = (state = {}, action) => {
   switch (action.type) {
-  /*
-    add trail also selects the trail. it fires
-    the first time a trail is selected
-  */
   case "ADD_TRAIL":
     return {
-      ...state,
       hasBaseData: true,
-      id: action.properties.id,
+      id: action.id,
       /*
         Trails can be added many times, and therefore need
         a front-end specific unique identifier
       */
       uniqueId: action.uniqueId,
-      name: action.properties.name,
-      distance: action.properties.distance,
-      stationId: action.properties.station1,
+      name: action.name,
+      distance: action.distance,
+      stationId: action.station1,
       center: action.center,
       bounds: action.bounds,
+      /*
+        add trail also selects the trail. it fires
+        the first time a trail is selected or when a
+        second segment is added from the same trail
+      */
       selected: true
     };
   case "SELECT_TRAIL":
@@ -38,6 +38,10 @@ const trail = (state = {}, action) => {
         this can be changed by the user.
       */
       selectedId: action.selectedTrailCount
+    };
+  case "DUPLICATE_TRAIL":
+    return {
+      ...action
     };
   case "UNSELECT_TRAIL":
     if (state.id === action.id && state.selected) {
@@ -104,6 +108,7 @@ const trail = (state = {}, action) => {
 const trails = (state = [], action) => {
   switch (action.type) {
   case "ADD_TRAIL":
+  case "DUPLICATE_TRAIL":
     return [...state, trail(undefined, action)];
   case "SELECT_TRAIL":
     return state.map(t =>
@@ -222,6 +227,7 @@ const handles = (state = [], action) => {
   switch (action.type) {
   case "SELECT_TRAIL":
   case "SET_TRAIL_ELEVATION_DATA":
+  case "DUPLICATE_TRAIL":
     return [
       ...state,
       handle(null, {

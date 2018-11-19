@@ -7,7 +7,7 @@ import { flexCenter, flexHorizontalCenter } from "../styles/flex";
 const TrailList = ({ trails, unselectTrail }) => {
   const listElement = (trail, i) => {
     return (
-      <ListElement key={trail.id} i={i}>
+      <ListElement key={trail.uniqueId} i={i}>
         <Name>{trail.name}</Name>
         <CloseContainer onClick={() => unselectTrail(trail.id)}>
           <StyledClose src="exit" />
