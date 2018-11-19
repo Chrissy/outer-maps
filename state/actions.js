@@ -5,15 +5,24 @@ import fetchWithCache from "../services/fetchWithCache";
 
 const selectTrail = ({ properties, geometry }) => {
   return (dispatch, getState) => {
-    const cachedTrail = getState().trails.find(t => t.id == properties.id);
+    const storedTrails = getState().trails;
+    const cachedTrail = storedTrails.find(t => t.id == properties.id);
+    const uniqueId = storedTrails.length + 1;
     const bounds = bbox(JSON.parse(properties.bounds));
-    const { center, zoom } = GeoViewport.viewport(bounds, [1024, 800]);
+    const { center } = GeoViewport.viewport(bounds, [1024, 800]);
 
     if (!cachedTrail)
-      dispatch({ type: "ADD_TRAIL", center, bounds, properties, geometry });
+      dispatch({
+        type: "ADD_TRAIL",
+        center,
+        bounds,
+        properties,
+        geometry,
+        uniqueId
+      });
     if (!cachedTrail || !cachedTrail.elevationDataRequested)
       dispatch(
-        getElevationData({ id: properties.id, center, zoom, reducer: "trail" })
+        getElevationData({ id: properties.id, reducer: "trail", uniqueId })
       );
     if (!cachedTrail || !cachedTrail.weatherDataRequested)
       dispatch(getWeatherData({ ...properties, center, reducer: "trail" }));
@@ -56,7 +65,7 @@ const clearSelected = () => {
   return dispatch => dispatch({ type: "CLEAR_SELECTED" });
 };
 
-const getElevationData = ({ id, reducer }) => {
+const getElevationData = ({ id, reducer, uniqueId }) => {
   return dispatch => {
     dispatch({
       type: `SET_${reducer.toUpperCase()}_ELEVATION_DATA_REQUESTED`,
@@ -69,7 +78,8 @@ const getElevationData = ({ id, reducer }) => {
         dispatch({
           type: `SET_${reducer.toUpperCase()}_ELEVATION_DATA`,
           ...response,
-          id
+          id,
+          uniqueId
         });
       });
   };

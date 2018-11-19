@@ -4,11 +4,20 @@ import { lineString } from "@turf/helpers";
 
 const trail = (state = {}, action) => {
   switch (action.type) {
+  /*
+    add trail also selects the trail. it fires
+    the first time a trail is selected
+  */
   case "ADD_TRAIL":
     return {
       ...state,
       hasBaseData: true,
       id: action.properties.id,
+      /*
+        Trails can be added many times, and therefore need
+        a front-end specific unique identifier
+      */
+      uniqueId: action.uniqueId,
       name: action.properties.name,
       distance: action.properties.distance,
       stationId: action.properties.station1,
@@ -17,14 +26,19 @@ const trail = (state = {}, action) => {
       selected: true
     };
   case "SELECT_TRAIL":
-    if (state.id === action.id && !state.selected) {
-      return {
-        ...state,
-        selected: true,
-        selectedId: action.selectedTrailCount
-      };
-    }
-    return state;
+    /*
+      selects a trail that has already been added
+    */
+    if (state.uniqueId !== action.uniqueId) return state;
+    return {
+      ...state,
+      selected: true,
+      /*
+        selectedId is the trail's index in a multi-trail route.
+        this can be changed by the user.
+      */
+      selectedId: action.selectedTrailCount
+    };
   case "UNSELECT_TRAIL":
     if (state.id === action.id && state.selected) {
       return { ...state, selected: false, selectedId: null };
@@ -90,7 +104,6 @@ const trail = (state = {}, action) => {
 const trails = (state = [], action) => {
   switch (action.type) {
   case "ADD_TRAIL":
-    if (state.some(t => t.id == action.properties.id)) return state;
     return [...state, trail(undefined, action)];
   case "SELECT_TRAIL":
     return state.map(t =>
@@ -246,10 +259,11 @@ const handle = (state = {}, action) => {
   case "ADD_HANDLE":
     return {
       coordinates: action.point,
-      id: action.id + "-" + action.handleId,
+      id: action.uniqueId + "-" + action.handleId,
       handleId: action.handleId,
       index: action.index,
-      trailId: action.id
+      trailId: action.id,
+      uniqueId: action.uniqueId
     };
   case "UPDATE_HANDLE":
     if (action.id !== state.id) return state;
