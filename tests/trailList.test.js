@@ -10,7 +10,7 @@ const trails = [
   {
     name: "fun trail",
     hasElevationData: true,
-    id: 100,
+    uniqueId: 100,
     points: [
       {
         distanceFromPreviousPoint: 5
@@ -23,7 +23,7 @@ const trails = [
   {
     name: "not fun trail",
     hasElevationData: false,
-    id: 101,
+    uniqueId: 101,
     points: [
       {
         distanceFromPreviousPoint: 50
@@ -36,7 +36,7 @@ const trails = [
   {
     name: "super fun trail",
     hasElevationData: true,
-    id: 102,
+    uniqueId: 102,
     points: [
       {
         distanceFromPreviousPoint: 50000
