@@ -9,6 +9,8 @@ const selectTrail = ({ properties, geometry, activeSegment }) => {
     const cachedTrail = storedTrails.find(t => t.id == properties.id);
     const uniqueId = storedTrails.length + 1;
 
+    dispatch({ type: "CLEAR_TRAIL_ACTIVE" });
+
     if (cachedTrail) {
       /* todo: this should unselect the segment but not remove it */
       if (activeSegment) return;

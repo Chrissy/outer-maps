@@ -38,6 +38,10 @@ export default class Map extends React.Component {
     return this.props.trails.filter(t => t.selected && t.hasElevationData);
   }
 
+  activeTrail() {
+    return this.props.trails.find(t => t.selected && t.active);
+  }
+
   selectedBoundary() {
     return this.props.boundaries.find(boundary => boundary.selected);
   }
@@ -105,7 +109,7 @@ export default class Map extends React.Component {
     draggingPoint.currentPointOnLine = snapToPoint;
   }
 
-  onMapClick({ features }) {
+  onMapClick({ features, lngLat }) {
     const feature = features[0] || null;
     const { draggingPoint, props } = this;
 
@@ -116,6 +120,7 @@ export default class Map extends React.Component {
     const type = feature.layer.id;
 
     if (type == "trails" || type == "trails-selected") {
+      this.setState({ activeTrailLngLat: lngLat });
       props.onTrailClick({
         properties: feature.properties,
         geometry: feature.geometry,
@@ -244,8 +249,17 @@ export default class Map extends React.Component {
   tooltip() {
     return this.state.previewElement
       ? {
-        content: <div>😎</div>,
-        lngLat: this.state.previewElement.lngLat
+        content: <div>;)</div>,
+        lngLat: this.state.lngLat
+      }
+      : null;
+  }
+
+  activeTooltip() {
+    return this.activeTrail()
+      ? {
+        content: <div>{this.activeTrail().name}</div>,
+        lngLat: this.state.activeTrailLngLat
       }
       : null;
   }
@@ -256,7 +270,7 @@ export default class Map extends React.Component {
         <MapBox
           sources={this.sources()}
           featureStates={this.featureStates()}
-          popup={this.tooltip()}
+          popup={this.activeTooltip()}
           flyTo={this.state.flyTo}
           pointer={!!this.state.previewElement}
           watchLayers={WATCH_LAYERS}

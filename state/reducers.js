@@ -23,16 +23,23 @@ const trail = (state = {}, action) => {
         the first time a trail is selected or when a
         second segment is added from the same trail
       */
-      selected: true
+      selected: true,
+      active: true
     };
   case "SELECT_TRAIL":
     /*
       selects a trail that has already been added
     */
-    if (state.uniqueId !== action.uniqueId) return state;
+    if (state.uniqueId !== action.uniqueId)
+      return {
+        ...state,
+        active: false
+      };
+
     return {
       ...state,
       selected: true,
+      active: true,
       /*
         selectedId is the trail's index in a multi-trail route.
         this can be changed by the user.
@@ -49,7 +56,7 @@ const trail = (state = {}, action) => {
         if this is the clicked trail, then we should remove
         it's selected status and index
       */
-      return { ...state, selected: false, selectedId: null };
+      return { ...state, selected: false, active: false, selectedId: null };
     } else if (state.selected && state.selectedId > action.selectedId) {
       /*
         if it is any other selected trail whose index is greater
@@ -59,7 +66,15 @@ const trail = (state = {}, action) => {
     }
     return state;
   case "CLEAR_TRAIL_SELECTED":
-    return { ...state, selected: false, selectedId: null, handles: null };
+    return {
+      ...state,
+      selected: false,
+      active: false,
+      selectedId: null,
+      handles: null
+    };
+  case "CLEAR_TRAIL_ACTIVE":
+    return { ...state, active: false };
   case "SET_TRAIL_ELEVATION_DATA":
     if (action.id !== state.id) return state;
     return {
@@ -138,6 +153,7 @@ const trails = (state = [], action) => {
   case "SET_TRAIL_WEATHER_DATA":
   case "SET_TRAIL_WEATHER_DATA_REQUESTED":
   case "SET_TRAIL_ADDITIONAL_WEATHER_DATA":
+  case "CLEAR_TRAIL_ACTIVE":
     return state.map(t => trail(t, action));
   default:
     return state;
