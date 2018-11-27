@@ -28,7 +28,7 @@ export default class MapBox extends React.Component {
     super(props);
 
     this.state = {
-      popup: null
+      popups: []
     };
   }
 
@@ -53,19 +53,24 @@ export default class MapBox extends React.Component {
     });
   }
 
-  addPopup({ content, lngLat }) {
-    const popupContainer = document.createElement("div");
-    ReactDOM.render(content, popupContainer);
-    const popup = new MapboxGL.Popup({ className: "my-class" })
-      .setLngLat(lngLat)
-      .setDOMContent(popupContainer)
-      .addTo(this.mapboxed);
-    this.setState({ popup: { popup, popupContainer } });
+  addPopups(popups) {
+    const popElements = popups.map(({ content, lngLat }) => {
+      const popupContainer = document.createElement("div");
+      ReactDOM.render(content, popupContainer);
+      const popup = new MapboxGL.Popup({ className: "my-class" })
+        .setLngLat(lngLat)
+        .setDOMContent(popupContainer)
+        .addTo(this.mapboxed);
+      return { popup, popupContainer };
+    });
+    this.setState({ popups: popElements });
   }
 
-  removePopup({ popup, popupContainer }) {
-    popup.remove();
-    ReactDOM.unmountComponentAtNode(popupContainer);
+  removePopups(popups) {
+    popups.forEach(({ popup, popupContainer }) => {
+      popup.remove();
+      ReactDOM.unmountComponentAtNode(popupContainer);
+    });
   }
 
   componentDidMount() {
@@ -101,9 +106,9 @@ export default class MapBox extends React.Component {
       this.mapboxed.flyTo(this.props.flyTo);
     }
 
-    if (!is(fromJS(prevProps.popup), fromJS(this.props.popup))) {
-      if (this.state.popup) this.removePopup(this.state.popup);
-      if (this.props.popup) this.addPopup(this.props.popup);
+    if (!is(fromJS(prevProps.popups), fromJS(this.props.popups))) {
+      if (this.state.popups.length) this.removePopups(this.state.popups);
+      if (this.props.popups.length) this.addPopups(this.props.popups);
     }
 
     this.mapboxed.getCanvas().style.cursor = this.props.pointer
@@ -149,7 +154,7 @@ MapBox.propTypes = {
       sourceLayer: PropTypes.string
     })
   ),
-  popup: PropTypes.arrayOf(
+  popups: PropTypes.arrayOf(
     PropTypes.shape({
       content: PropTypes.element,
       lngLat: PropTypes.object //this is the mapbox standard lgnLat object type

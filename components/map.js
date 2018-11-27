@@ -74,18 +74,12 @@ export default class Map extends React.Component {
   }
 
   handleFeatureHover({ properties, layer }, lngLat) {
-    const { previewElement } = this.state;
-    if (
-      previewElement &&
-      previewElement.id == properties.id &&
-      previewElement.sourceLayer == layer["source-layer"]
-    )
-      return;
     this.setState({
       previewElement: {
         id: properties.id,
         sourceLayer: layer["source-layer"],
         source: layer.source,
+        ...properties,
         lngLat
       }
     });
@@ -248,20 +242,24 @@ export default class Map extends React.Component {
 
   tooltip() {
     return this.state.previewElement
-      ? {
-        content: <div>;)</div>,
-        lngLat: this.state.lngLat
-      }
-      : null;
+      ? [
+        {
+          content: <div>{this.state.previewElement.name}</div>,
+          lngLat: this.state.previewElement.lngLat
+        }
+      ]
+      : [];
   }
 
   activeTooltip() {
     return this.activeTrail()
-      ? {
-        content: <div>{this.activeTrail().name}</div>,
-        lngLat: this.state.activeTrailLngLat
-      }
-      : null;
+      ? [
+        {
+          content: <div>{this.activeTrail().name}</div>,
+          lngLat: this.state.activeTrailLngLat
+        }
+      ]
+      : [];
   }
 
   render() {
@@ -270,7 +268,7 @@ export default class Map extends React.Component {
         <MapBox
           sources={this.sources()}
           featureStates={this.featureStates()}
-          popup={this.activeTooltip()}
+          popups={[...this.tooltip(), ...this.activeTooltip()]}
           flyTo={this.state.flyTo}
           pointer={!!this.state.previewElement}
           watchLayers={WATCH_LAYERS}
