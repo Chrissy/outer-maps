@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import { fromJS, is } from "immutable";
 import MapboxGL from "mapbox-gl";
@@ -22,7 +23,15 @@ const WATCH_EVENTS = [
   "touchcancel"
 ];
 
-export default class MapBox extends React.PureComponent {
+export default class MapBox extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      popup: null
+    };
+  }
+
   updateSources(newSources = []) {
     newSources.forEach(
       function(source) {
@@ -42,6 +51,21 @@ export default class MapBox extends React.PureComponent {
     featureStates.forEach(feature => {
       this.mapboxed.setFeatureState(feature, feature.state);
     });
+  }
+
+  addPopup({ content, lngLat }) {
+    const popupContainer = document.createElement("div");
+    ReactDOM.render(content, popupContainer);
+    const popup = new MapboxGL.Popup({ className: "my-class" })
+      .setLngLat(lngLat)
+      .setDOMContent(popupContainer)
+      .addTo(this.mapboxed);
+    this.setState({ popup: { popup, popupContainer } });
+  }
+
+  removePopup({ popup, popupContainer }) {
+    popup.remove();
+    ReactDOM.unmountComponentAtNode(popupContainer);
   }
 
   componentDidMount() {
@@ -75,6 +99,11 @@ export default class MapBox extends React.PureComponent {
 
     if (this.props.flyTo && prevProps.flyTo !== this.props.flyTo) {
       this.mapboxed.flyTo(this.props.flyTo);
+    }
+
+    if (!is(fromJS(prevProps.popup), fromJS(this.props.popup))) {
+      if (this.state.popup) this.removePopup(this.state.popup);
+      if (this.props.popup) this.addPopup(this.props.popup);
     }
 
     this.mapboxed.getCanvas().style.cursor = this.props.pointer
@@ -118,6 +147,12 @@ MapBox.propTypes = {
       id: PropTypes.number,
       source: PropTypes.string,
       sourceLayer: PropTypes.string
+    })
+  ),
+  popup: PropTypes.arrayOf(
+    PropTypes.shape({
+      content: PropTypes.element,
+      lngLat: PropTypes.object //this is the mapbox standard lgnLat object type
     })
   ),
   flyTo: PropTypes.object,

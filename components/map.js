@@ -64,12 +64,12 @@ export default class Map extends React.Component {
         feature.layer.id == "national-park-labels"
       ) {
         target.dragPan.enable();
-        this.handleFeatureHover(feature);
+        this.handleFeatureHover(feature, lngLat);
       }
     }
   }
 
-  handleFeatureHover({ properties, layer }) {
+  handleFeatureHover({ properties, layer }, lngLat) {
     const { previewElement } = this.state;
     if (
       previewElement &&
@@ -81,7 +81,8 @@ export default class Map extends React.Component {
       previewElement: {
         id: properties.id,
         sourceLayer: layer["source-layer"],
-        source: layer.source
+        source: layer.source,
+        lngLat
       }
     });
   }
@@ -240,12 +241,22 @@ export default class Map extends React.Component {
     return featureStates;
   }
 
+  tooltip() {
+    return this.state.previewElement
+      ? {
+        content: <div>😎</div>,
+        lngLat: this.state.previewElement.lngLat
+      }
+      : null;
+  }
+
   render() {
     return (
       <Container innerRef={this.map} id="the-map">
         <MapBox
           sources={this.sources()}
           featureStates={this.featureStates()}
+          popup={this.tooltip()}
           flyTo={this.state.flyTo}
           pointer={!!this.state.previewElement}
           watchLayers={WATCH_LAYERS}
