@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Tooltip from "react-simple-tooltip";
 import pointOnLine from "@turf/point-on-line";
 import nearest from "@turf/nearest";
 import bearing from "@turf/bearing";
@@ -50,7 +51,7 @@ export default class Map extends React.Component {
     return !!(this.selectedBoundary() || this.selectedTrails().length);
   }
 
-  onMapMouseMove({ target, features: [feature], lngLat }) {
+  onMapMouseMove({ target, features: [feature], point, lngLat }) {
     const { draggingPoint } = this;
 
     if (!feature && !draggingPoint) {
@@ -68,12 +69,12 @@ export default class Map extends React.Component {
         feature.layer.id == "national-park-labels"
       ) {
         target.dragPan.enable();
-        this.handleFeatureHover(feature, lngLat);
+        this.handleFeatureHover(feature, point);
       }
     }
   }
 
-  handleFeatureHover({ properties, layer }, lngLat) {
+  handleFeatureHover({ properties, layer }, point) {
     if (
       this.state.previewElement &&
       this.state.previewElement.id == properties.id &&
@@ -86,8 +87,8 @@ export default class Map extends React.Component {
         id: properties.id,
         sourceLayer: layer["source-layer"],
         source: layer.source,
-        ...properties,
-        lngLat
+        point,
+        ...properties
       }
     });
   }
@@ -270,12 +271,13 @@ export default class Map extends React.Component {
   }
 
   render() {
+    const { previewElement } = this.state;
+
     return (
       <Container innerRef={this.map} id="the-map">
         <MapBox
           sources={this.sources()}
           featureStates={this.featureStates()}
-          popups={[...this.tooltip(), ...this.activeTooltip()]}
           flyTo={this.state.flyTo}
           pointer={!!this.state.previewElement}
           watchLayers={WATCH_LAYERS}
@@ -284,6 +286,16 @@ export default class Map extends React.Component {
           mouseup={this.onMapMouseUp.bind(this)}
           mousedown={this.onMapMouseDown.bind(this)}
         />
+        {this.state.previewElement && (
+          <Tooltip
+            content="😎"
+            style={{
+              position: "absolute",
+              top: previewElement.point.y + "px",
+              left: previewElement.point.x + "px"
+            }}
+          />
+        )}
       </Container>
     );
   }

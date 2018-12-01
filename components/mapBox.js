@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import { fromJS, is } from "immutable";
 import MapboxGL from "mapbox-gl";
@@ -24,14 +23,6 @@ const WATCH_EVENTS = [
 ];
 
 export default class MapBox extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      popups: []
-    };
-  }
-
   updateSources(newSources = []) {
     newSources.forEach(
       function(source) {
@@ -50,26 +41,6 @@ export default class MapBox extends React.Component {
 
     featureStates.forEach(feature => {
       this.mapboxed.setFeatureState(feature, feature.state);
-    });
-  }
-
-  addPopups(popups) {
-    const popElements = popups.map(({ content, lngLat }) => {
-      const popupContainer = document.createElement("div");
-      ReactDOM.render(content, popupContainer);
-      const popup = new MapboxGL.Popup({ className: "my-class" })
-        .setLngLat(lngLat)
-        .setDOMContent(popupContainer)
-        .addTo(this.mapboxed);
-      return { popup, popupContainer };
-    });
-    this.setState({ popups: popElements });
-  }
-
-  removePopups(popups) {
-    popups.forEach(({ popup, popupContainer }) => {
-      popup.remove();
-      ReactDOM.unmountComponentAtNode(popupContainer);
     });
   }
 
@@ -106,14 +77,21 @@ export default class MapBox extends React.Component {
       this.mapboxed.flyTo(this.props.flyTo);
     }
 
-    if (!is(fromJS(prevProps.popups), fromJS(this.props.popups))) {
-      if (this.state.popups.length) this.removePopups(this.state.popups);
-      if (this.props.popups.length) this.addPopups(this.props.popups);
-    }
-
     this.mapboxed.getCanvas().style.cursor = this.props.pointer
       ? "pointer"
       : "";
+  }
+
+  createEventParams(event) {
+    const features = event.point
+      ? this.mapboxed.queryRenderedFeatures(event.point, {
+        layers: this.props.watchLayers
+      })
+      : null;
+
+    return Object.assign({}, event, {
+      features
+    });
   }
 
   mapEvents() {
@@ -123,16 +101,7 @@ export default class MapBox extends React.Component {
       this.mapboxed.on(
         eventName,
         debounce(
-          event => {
-            const eventMod = Object.assign({}, event, {
-              features: event.point
-                ? this.mapboxed.queryRenderedFeatures(event.point, {
-                  layers: this.props.watchLayers
-                })
-                : null
-            });
-            this.props[eventName](eventMod);
-          },
+          event => this.props[eventName](this.createEventParams(event)),
           2,
           { leading: true }
         )
@@ -152,12 +121,6 @@ MapBox.propTypes = {
       id: PropTypes.number,
       source: PropTypes.string,
       sourceLayer: PropTypes.string
-    })
-  ),
-  popups: PropTypes.arrayOf(
-    PropTypes.shape({
-      content: PropTypes.element,
-      lngLat: PropTypes.object //this is the mapbox standard lgnLat object type
     })
   ),
   flyTo: PropTypes.object,
