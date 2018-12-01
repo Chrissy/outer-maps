@@ -74,6 +74,13 @@ export default class Map extends React.Component {
   }
 
   handleFeatureHover({ properties, layer }, lngLat) {
+    if (
+      this.state.previewElement &&
+      this.state.previewElement.id == properties.id &&
+      this.state.previewElement.sourceLayer == layer["source-layer"]
+    )
+      return;
+
     this.setState({
       previewElement: {
         id: properties.id,
