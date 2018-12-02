@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Tooltip from "react-simple-tooltip";
+import { Manager, Popper } from "react-popper";
 import pointOnLine from "@turf/point-on-line";
 import nearest from "@turf/nearest";
 import bearing from "@turf/bearing";
@@ -11,6 +11,7 @@ import {
   trailsToFeatureCollection
 } from "../modules/stateToGeoJson";
 import MapBox from "./mapBox";
+import Svg from "./svg";
 import getOffsetCenter from "../modules/getOffsetCenter";
 import sliceElevationsWithHandles from "../modules/sliceElevationsWithHandles";
 import styled from "react-emotion";
@@ -270,32 +271,62 @@ export default class Map extends React.Component {
       : [];
   }
 
-  render() {
-    const { previewElement } = this.state;
+  referenceElement() {
+    const { point } = this.state.previewElement;
 
+    class VirtualReference {
+      getBoundingClientRect() {
+        return {
+          top: point.y,
+          left: point.x,
+          bottom: point.y,
+          right: point.x,
+          width: 0,
+          height: 0
+        };
+      }
+
+      get clientWidth() {
+        return this.getBoundingClientRect().width;
+      }
+      get clientHeight() {
+        return this.getBoundingClientRect().height;
+      }
+    }
+
+    return new VirtualReference();
+  }
+
+  render() {
     return (
       <Container innerRef={this.map} id="the-map">
-        <MapBox
-          sources={this.sources()}
-          featureStates={this.featureStates()}
-          flyTo={this.state.flyTo}
-          pointer={!!this.state.previewElement}
-          watchLayers={WATCH_LAYERS}
-          click={this.onMapClick.bind(this)}
-          mousemove={this.onMapMouseMove.bind(this)}
-          mouseup={this.onMapMouseUp.bind(this)}
-          mousedown={this.onMapMouseDown.bind(this)}
-        />
-        {this.state.previewElement && (
-          <Tooltip
-            content="😎"
-            style={{
-              position: "absolute",
-              top: previewElement.point.y + "px",
-              left: previewElement.point.x + "px"
-            }}
+        <Manager>
+          <MapBox
+            sources={this.sources()}
+            featureStates={this.featureStates()}
+            flyTo={this.state.flyTo}
+            pointer={!!this.state.previewElement}
+            watchLayers={WATCH_LAYERS}
+            click={this.onMapClick.bind(this)}
+            mousemove={this.onMapMouseMove.bind(this)}
+            mouseup={this.onMapMouseUp.bind(this)}
+            mousedown={this.onMapMouseDown.bind(this)}
           />
-        )}
+          {this.state.previewElement && (
+            <Popper referenceElement={this.referenceElement()} placement="auto">
+              {({ ref, style, placement }) => (
+                <Tooltip
+                  innerRef={ref}
+                  style={style}
+                  data-placement={placement}
+                >
+                  <Contents>Popper Tooltip</Contents>
+                  <Tip src="tip" placement={placement} />
+                </Tooltip>
+              )}
+            </Popper>
+          )}
+        </Manager>
       </Container>
     );
   }
@@ -315,4 +346,85 @@ Map.propTypes = {
 const Container = styled("div")`
   width: 100%;
   position: relative;
+`;
+
+const Contents = styled("div")`
+  padding: 0.5em;
+  color: #fff;
+  font-size: 0.875em;
+`;
+
+const Tooltip = styled("div")`
+  border-radius: 0.5em;
+  background: ${p => p.theme.orange};
+  border: 2px solid #fff;
+`;
+
+const getXTransform = ({ placement }) => {
+  switch (placement) {
+  case "left":
+    // a bit of a magic number, it has to do with the aspect ratio and the rotation transform
+    return -30;
+  case "right":
+    //same here
+    return -70;
+  default:
+    return -50;
+  }
+};
+
+const getYTransform = ({ placement }) => {
+  switch (placement) {
+  case "top":
+    return 0;
+  case "bottom":
+    return -100;
+  default:
+    return -50;
+  }
+};
+
+const getLeft = ({ placement }) => {
+  switch (placement) {
+  case "left":
+    return 100;
+  case "right":
+    return 0;
+  default:
+    return 50;
+  }
+};
+
+const getTop = ({ placement }) => {
+  switch (placement) {
+  case "top":
+    return 100;
+  case "bottom":
+    return 0;
+  default:
+    return 50;
+  }
+};
+
+const getRotation = ({ placement }) => {
+  switch (placement) {
+  case "bottom":
+    return 180;
+  case "left":
+    return 270;
+  case "right":
+    return 90;
+  default:
+    return 0;
+  }
+};
+
+const Tip = styled(Svg)`
+  position: absolute;
+  height: 8px;
+  color: ${p => p.theme.orange};
+  left: ${getLeft}%;
+  top: ${getTop}%;
+  transform: translate(${getXTransform}%, ${getYTransform}%)
+    rotate(${getRotation}deg);
 `;
