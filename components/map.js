@@ -5,7 +5,10 @@ import { LngLat } from "mapbox-gl";
 import pointOnLine from "@turf/point-on-line";
 import nearest from "@turf/nearest";
 import bearing from "@turf/bearing";
-import { point, featureCollection } from "@turf/helpers";
+import along from "@turf/along";
+import length from "@turf/length";
+import flatten from "lodash.flatten";
+import { point, featureCollection, lineString } from "@turf/helpers";
 import {
   pointToPoint,
   pointsToFeatureCollection,
@@ -84,8 +87,20 @@ export default class Map extends React.Component {
     )
       return;
 
-    const geometryCenter = new LngLat(...geometry.coordinates);
-    const coordinates = target.project(geometryCenter);
+    const geometryCenter =
+      geometry.type == "LineString" || geometry.type == "MultiLineString"
+        ? along(
+          lineString(
+            geometry.type == "MultiLineString"
+              ? flatten(geometry.coordinates)
+              : geometry.coordinates
+          ),
+          length(geometry) / 2
+        ).geometry
+        : geometry;
+    const coordinates = target.project(
+      new LngLat(...geometryCenter.coordinates)
+    );
 
     this.setState({
       previewElement: {
