@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Manager, Popper } from "react-popper";
+import { LngLat } from "mapbox-gl";
 import pointOnLine from "@turf/point-on-line";
 import nearest from "@turf/nearest";
 import bearing from "@turf/bearing";
@@ -52,7 +53,7 @@ export default class Map extends React.Component {
     return !!(this.selectedBoundary() || this.selectedTrails().length);
   }
 
-  onMapMouseMove({ target, features: [feature], point, lngLat }) {
+  onMapMouseMove({ target, features: [feature], lngLat }) {
     const { draggingPoint } = this;
 
     if (!feature && !draggingPoint) {
@@ -70,12 +71,12 @@ export default class Map extends React.Component {
         feature.layer.id == "national-park-labels"
       ) {
         target.dragPan.enable();
-        this.handleFeatureHover(feature, point);
+        this.handleFeatureHover(feature, target);
       }
     }
   }
 
-  handleFeatureHover({ properties, layer }, point) {
+  handleFeatureHover({ properties, layer, geometry }, target) {
     if (
       this.state.previewElement &&
       this.state.previewElement.id == properties.id &&
@@ -83,12 +84,15 @@ export default class Map extends React.Component {
     )
       return;
 
+    const geometryCenter = new LngLat(...geometry.coordinates);
+    const coordinates = target.project(geometryCenter);
+
     this.setState({
       previewElement: {
         id: properties.id,
         sourceLayer: layer["source-layer"],
         source: layer.source,
-        point,
+        coordinates,
         ...properties
       }
     });
@@ -272,15 +276,17 @@ export default class Map extends React.Component {
   }
 
   referenceElement() {
-    const { point } = this.state.previewElement;
+    const {
+      coordinates: { x, y }
+    } = this.state.previewElement;
 
     class VirtualReference {
       getBoundingClientRect() {
         return {
-          top: point.y,
-          left: point.x,
-          bottom: point.y,
-          right: point.x,
+          top: y,
+          left: x,
+          bottom: y,
+          right: x,
           width: 0,
           height: 0
         };
@@ -315,14 +321,12 @@ export default class Map extends React.Component {
           {this.state.previewElement && (
             <Popper referenceElement={this.referenceElement()} placement="auto">
               {({ ref, style, placement }) => (
-                <Tooltip
-                  innerRef={ref}
-                  style={style}
-                  data-placement={placement}
-                >
-                  <Contents>Popper Tooltip</Contents>
-                  <Tip src="tip" placement={placement} />
-                </Tooltip>
+                <div ref={ref} style={style} data-placement={placement}>
+                  <Tooltip placement={placement}>
+                    <Contents>Popper Tooltip</Contents>
+                    <Tip src="tip" placement={placement} />
+                  </Tooltip>
+                </div>
               )}
             </Popper>
           )}
@@ -354,10 +358,33 @@ const Contents = styled("div")`
   font-size: 0.875em;
 `;
 
+const getOffsetX = ({ placement }) => {
+  switch (placement) {
+  case "left":
+    return -20;
+  case "right":
+    return 20;
+  default:
+    return 0;
+  }
+};
+
+const getOffsetY = ({ placement }) => {
+  switch (placement) {
+  case "top":
+    return -20;
+  case "bottom":
+    return 40;
+  default:
+    return 0;
+  }
+};
+
 const Tooltip = styled("div")`
   border-radius: 0.5em;
   background: ${p => p.theme.orange};
   border: 2px solid #fff;
+  transform: translate(${getOffsetX}px, ${getOffsetY}px);
 `;
 
 const getXTransform = ({ placement }) => {
