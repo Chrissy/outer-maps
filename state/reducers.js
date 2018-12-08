@@ -73,6 +73,8 @@ const trail = (state = {}, action) => {
       selectedId: null,
       handles: null
     };
+  case "SET_TRAIL_ACTIVE":
+    return { ...state, active: state.id == action.id };
   case "CLEAR_TRAIL_ACTIVE":
     return { ...state, active: false };
   case "SET_TRAIL_ELEVATION_DATA":
@@ -153,6 +155,7 @@ const trails = (state = [], action) => {
   case "SET_TRAIL_WEATHER_DATA":
   case "SET_TRAIL_WEATHER_DATA_REQUESTED":
   case "SET_TRAIL_ADDITIONAL_WEATHER_DATA":
+  case "SET_TRAIL_ACTIVE":
   case "CLEAR_TRAIL_ACTIVE":
     return state.map(t => trail(t, action));
   default:

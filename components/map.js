@@ -232,6 +232,7 @@ export default class Map extends React.Component {
         data: trailsToFeatureCollection(
           this.selectedTrails().map((t, i) => {
             t.fill = theme.trailColors[i % 4];
+            t.active = t.selected && t.active;
             return sliceElevationsWithHandles(t, this.props.handles);
           })
         )
@@ -265,29 +266,8 @@ export default class Map extends React.Component {
         id: this.selectedBoundary().id,
         state: { preview: true }
       });
+
     return featureStates;
-  }
-
-  tooltip() {
-    return this.state.previewElement
-      ? [
-        {
-          content: <div>{this.state.previewElement.name}</div>,
-          lngLat: this.state.previewElement.lngLat
-        }
-      ]
-      : [];
-  }
-
-  activeTooltip() {
-    return this.activeTrail()
-      ? [
-        {
-          content: <div>{this.activeTrail().name}</div>,
-          lngLat: this.state.activeTrailLngLat
-        }
-      ]
-      : [];
   }
 
   referenceElement() {

@@ -205,7 +205,12 @@
   },
   "paint": {
     "line-color": "#FFF",
-    "line-width": 4
+    "line-width": [
+      "case",
+      ["boolean", ["get", "active"], false],
+      6,
+      4
+    ]
   }
 },
 {
@@ -218,7 +223,12 @@
   },
   "paint": {
     "line-color": ["string", ["get", "fill"]],
-    "line-width": 2
+    "line-width": [
+      "case",
+      ["boolean", ["get", "active"], false],
+      3,
+      2
+    ]
   }
 },
 {

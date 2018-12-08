@@ -12,8 +12,12 @@ const selectTrail = ({ properties, geometry, activeSegment }) => {
     dispatch({ type: "CLEAR_TRAIL_ACTIVE" });
 
     if (cachedTrail) {
-      /* todo: this should unselect the segment but not remove it */
-      if (activeSegment) return;
+      /*
+        if the segment is already selected, then we set it to a focus
+        state for flipping, cutting, etc.
+      */
+      if (activeSegment)
+        return dispatch({ type: "SET_TRAIL_ACTIVE", id: properties.id });
       /*
       if no segments are selected, but the trail is cached, then
       simply set the cached trail as selected
