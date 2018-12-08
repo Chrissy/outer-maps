@@ -98,6 +98,7 @@ export default class Map extends React.Component {
           length(geometry) / 2
         ).geometry
         : geometry;
+
     const coordinates = target.project(
       new LngLat(...geometryCenter.coordinates)
     );
@@ -124,10 +125,12 @@ export default class Map extends React.Component {
       draggingPoint.trail.geometry,
       point([lngLat.lng, lngLat.lat])
     );
+
     props.updateHandle(
       draggingPoint.properties.id,
       snapToPoint.geometry.coordinates
     );
+
     draggingPoint.currentPointOnLine = snapToPoint;
   }
 
@@ -326,6 +329,9 @@ export default class Map extends React.Component {
             </Popper>
           )}
         </Manager>
+        {this.activeTrail() && (
+          <ActiveTrailControls>{this.activeTrail().name}</ActiveTrailControls>
+        )}
       </Container>
     );
   }
@@ -345,6 +351,18 @@ Map.propTypes = {
 const Container = styled("div")`
   width: 100%;
   position: relative;
+`;
+
+const ActiveTrailControls = styled("div")`
+  padding: ${p => p.theme.ss(1)};
+  position: absolute;
+  top: ${p => p.theme.ss(1)};
+  right: ${p => p.theme.ss(1)};
+  background: rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  color: #fff;
+  font-weight: bold;
 `;
 
 const Contents = styled("div")`
