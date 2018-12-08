@@ -338,7 +338,7 @@ export default class Map extends React.Component {
               {({ ref, style, placement }) => (
                 <div ref={ref} style={style} data-placement={placement}>
                   <Tooltip placement={placement}>
-                    <Contents>Popper Tooltip</Contents>
+                    <Contents>{this.state.previewElement.name}</Contents>
                     <Tip src="tip" placement={placement} />
                   </Tooltip>
                 </div>
@@ -399,6 +399,7 @@ const Tooltip = styled("div")`
   border-radius: 0.5em;
   background: ${p => p.theme.orange};
   border: 2px solid #fff;
+  pointer-events: none;
   transform: translate(${getOffsetX}px, ${getOffsetY}px);
 `;
 
