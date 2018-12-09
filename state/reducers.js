@@ -103,6 +103,12 @@ const trail = (state = {}, action) => {
   case "SET_TRAIL_ELEVATION_DATA_REQUESTED":
     if (action.id !== state.id) return state;
     return { ...state, elevationDataRequested: true };
+  case "REVERSE_TRAIL":
+    if (action.uniqueId !== state.uniqueId) return state;
+    return {
+      ...state,
+      points: state.points.reverse()
+    };
   case "SET_TRAIL_WEATHER_DATA":
     if (action.id !== state.id) return state;
     return {
@@ -157,6 +163,7 @@ const trails = (state = [], action) => {
   case "SET_TRAIL_ADDITIONAL_WEATHER_DATA":
   case "SET_TRAIL_ACTIVE":
   case "CLEAR_TRAIL_ACTIVE":
+  case "REVERSE_TRAIL":
     return state.map(t => trail(t, action));
   default:
     return state;
@@ -281,6 +288,7 @@ const handles = (state = [], action) => {
     return state.filter(h => h.uniqueId !== action.uniqueId);
   case "UPDATE_HANDLE":
   case "SET_HANDLE_INDEX":
+  case "REVERSE_TRAIL":
     return state.map(h => handle(h, action));
   default:
     return state;
@@ -309,6 +317,12 @@ const handle = (state = {}, action) => {
     return {
       ...state,
       index: action.index
+    };
+  case "REVERSE_TRAIL":
+    if (action.uniqueId !== state.uniqueId) return state;
+    return {
+      ...state,
+      handleId: state.handleId == 0 ? 1 : 0
     };
   default:
     return state;

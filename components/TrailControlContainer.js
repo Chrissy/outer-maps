@@ -9,10 +9,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onCutClick: () => dispatch({ type: "START_TRAIL_CUT" }),
-    onFlipClick: () => dispatch({ type: "FLIP_ACTIVE_TRAIL" }),
-    onBothWaysClick: () => dispatch({ type: "SET_BOTH_WAYS_ON_ACTIVE_TRAIL" }),
-    onRemoveClick: id => dispatch({ type: "REMOVE_TRAIL", id })
+    onCutClick: uniqueId => dispatch({ type: "START_TRAIL_CUT", uniqueId }),
+    onReverseClick: uniqueId => dispatch({ type: "REVERSE_TRAIL", uniqueId }),
+    onBothWaysClick: uniqueId =>
+      dispatch({ type: "SET_BOTH_WAYS_ON_ACTIVE_TRAIL", uniqueId }),
+    onRemoveClick: uniqueId => dispatch({ type: "REMOVE_TRAIL", uniqueId })
   };
 };
 
