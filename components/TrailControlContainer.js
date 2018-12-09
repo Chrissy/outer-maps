@@ -13,7 +13,7 @@ const mapDispatchToProps = dispatch => {
     onReverseClick: uniqueId => dispatch({ type: "REVERSE_TRAIL", uniqueId }),
     onBothWaysClick: uniqueId =>
       dispatch({ type: "SET_BOTH_WAYS_ON_ACTIVE_TRAIL", uniqueId }),
-    onRemoveClick: uniqueId => dispatch({ type: "REMOVE_TRAIL", uniqueId })
+    onRemoveClick: uniqueId => dispatch({ type: "UNSELECT_TRAIL", uniqueId })
   };
 };
 
