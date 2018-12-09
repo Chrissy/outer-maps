@@ -15,6 +15,7 @@ import {
   trailsToFeatureCollection
 } from "../modules/stateToGeoJson";
 import MapBox from "./mapBox";
+import TrailControl from "./trailControlContainer";
 import Svg from "./svg";
 import getOffsetCenter from "../modules/getOffsetCenter";
 import sliceElevationsWithHandles from "../modules/sliceElevationsWithHandles";
@@ -42,10 +43,6 @@ export default class Map extends React.Component {
 
   selectedTrails() {
     return this.props.trails.filter(t => t.selected && t.hasElevationData);
-  }
-
-  activeTrail() {
-    return this.props.trails.find(t => t.selected && t.active);
   }
 
   selectedBoundary() {
@@ -328,10 +325,8 @@ export default class Map extends React.Component {
               )}
             </Popper>
           )}
+          <TrailControl />
         </Manager>
-        {this.activeTrail() && (
-          <ActiveTrailControls>{this.activeTrail().name}</ActiveTrailControls>
-        )}
       </Container>
     );
   }
@@ -351,18 +346,6 @@ Map.propTypes = {
 const Container = styled("div")`
   width: 100%;
   position: relative;
-`;
-
-const ActiveTrailControls = styled("div")`
-  padding: ${p => p.theme.ss(1)};
-  position: absolute;
-  top: ${p => p.theme.ss(1)};
-  right: ${p => p.theme.ss(1)};
-  background: rgba(0, 0, 0, 0.8);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  z-index: 1;
-  color: #fff;
-  font-weight: bold;
 `;
 
 const Contents = styled("div")`
