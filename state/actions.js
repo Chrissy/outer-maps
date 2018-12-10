@@ -17,18 +17,21 @@ const selectTrail = ({ properties, geometry, activeSegment }) => {
         state for flipping, cutting, etc.
       */
       if (activeSegment)
-        return dispatch({ type: "SET_TRAIL_ACTIVE", id: properties.id });
+        return dispatch({
+          type: "SET_TRAIL_ACTIVE",
+          uniqueId: properties.uniqueId
+        });
       /*
       if no segments are selected, but the trail is cached, then
       simply set the cached trail as selected
       */
       if (!cachedTrail.selected)
-        return dispatch({ type: "SELECT_TRAIL", ...cachedTrail });
+        return dispatch({ type: "SELECT_TRAIL", ...cachedTrail, uniqueId });
       /*
       if the clicked segment is not selected, but the cached trail
       indicates that a segement has been selected, then dup the trail
       */
-      dispatch({ type: "DUPLICATE_TRAIL", ...cachedTrail, uniqueId });
+      return dispatch({ type: "DUPLICATE_TRAIL", ...cachedTrail, uniqueId });
     } else {
       const bounds = bbox(JSON.parse(properties.bounds));
       const { center } = GeoViewport.viewport(bounds, [1024, 800]);
@@ -129,4 +132,23 @@ const getWeatherData = ({ id, center, station1, reducer }) => {
   };
 };
 
-export { selectTrail, selectBoundary, unselectTrail, clearSelected };
+const setBothWays = id => {
+  /* this is annoyingly similar to selectTrail but somewhat simpler */
+  return (dispatch, getState) => {
+    const storedTrails = getState().trails;
+    const cachedTrail = storedTrails.find(t => t.id == id);
+    const uniqueId = storedTrails.length + 1;
+
+    dispatch({ type: "DUPLICATE_TRAIL", ...cachedTrail, uniqueId });
+    dispatch({ type: "REVERSE_TRAIL", uniqueId });
+    return dispatch({ type: "SET_TRAIL_ACTIVE", uniqueId });
+  };
+};
+
+export {
+  selectTrail,
+  selectBoundary,
+  unselectTrail,
+  clearSelected,
+  setBothWays
+};

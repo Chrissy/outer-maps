@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 import TrailControl from "./trailControl";
+import { setBothWays } from "../state/actions";
 
 const mapStateToProps = state => {
   const activeTrail = state.trails.find(t => t.selected && t.active);
@@ -11,8 +12,7 @@ const mapDispatchToProps = dispatch => {
   return {
     onCutClick: uniqueId => dispatch({ type: "START_TRAIL_CUT", uniqueId }),
     onReverseClick: uniqueId => dispatch({ type: "REVERSE_TRAIL", uniqueId }),
-    onBothWaysClick: uniqueId =>
-      dispatch({ type: "SET_BOTH_WAYS_ON_ACTIVE_TRAIL", uniqueId }),
+    onBothWaysClick: trail => dispatch(setBothWays(trail.id)),
     onRemoveClick: uniqueId => dispatch({ type: "UNSELECT_TRAIL", uniqueId })
   };
 };

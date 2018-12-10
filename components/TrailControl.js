@@ -21,7 +21,7 @@ const TrailControl = ({
       <TrailControlButton onClick={() => onReverseClick(uniqueId)}>
         <Reverse src="flip" /> Reverse
       </TrailControlButton>
-      <TrailControlButton onClick={() => onBothWaysClick(uniqueId)}>
+      <TrailControlButton onClick={() => onBothWaysClick(activeTrail)}>
         <Icon src="2x" /> Both Ways
       </TrailControlButton>
       <TrailControlButton onClick={() => onRemoveClick(uniqueId)}>

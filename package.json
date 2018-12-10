@@ -45,6 +45,7 @@
     "@turf/helpers": "^4.0.1",
     "@turf/length": "^6.0.2",
     "@turf/line-distance": "^4.6.0",
+    "@turf/line-intersect": "^6.0.2",
     "@turf/line-slice": "^4.0.2",
     "@turf/nearest": "^4.0.1",
     "@turf/point-on-line": "^4.0.2",

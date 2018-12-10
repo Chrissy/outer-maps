@@ -200,8 +200,7 @@
   "source": "trails-selected",
   "type": "line",
   "line": {
-    "line-cap": "round",
-    "line-join": "bevel"
+    "line-cap": "round"
   },
   "paint": {
     "line-color": "#FFF",
@@ -210,7 +209,8 @@
       ["boolean", ["get", "active"], false],
       6,
       4
-    ]
+    ],
+    "line-offset": ["get", "offset"]
   }
 },
 {
@@ -218,8 +218,7 @@
   "source": "trails-selected",
   "type": "line",
   "line": {
-    "line-cap": "round",
-    "line-join": "bevel"
+    "line-cap": "round"
   },
   "paint": {
     "line-color": ["string", ["get", "fill"]],
@@ -228,7 +227,8 @@
       ["boolean", ["get", "active"], false],
       3,
       2
-    ]
+    ],
+    "line-offset": ["get", "offset"]
   }
 },
 {
@@ -277,6 +277,7 @@
     "icon-image": "handle-{index}",
     "icon-size": 0.75,
     "icon-allow-overlap": true,
-    "icon-rotate": ["number", ["get", "rotation"]]
+    "icon-rotate": ["number", ["get", "rotation"]],
+    "icon-offset": ["get", "offset"]
   }
 }]}

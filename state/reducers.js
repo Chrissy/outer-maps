@@ -74,7 +74,7 @@ const trail = (state = {}, action) => {
       handles: null
     };
   case "SET_TRAIL_ACTIVE":
-    return { ...state, active: state.id == action.id };
+    return { ...state, active: state.uniqueId == action.uniqueId };
   case "CLEAR_TRAIL_ACTIVE":
     return { ...state, active: false };
   case "SET_TRAIL_ELEVATION_DATA":
@@ -137,6 +137,7 @@ const trail = (state = {}, action) => {
 };
 
 const trails = (state = [], action) => {
+  console.log(state);
   switch (action.type) {
   case "ADD_TRAIL":
   case "DUPLICATE_TRAIL":
@@ -269,12 +270,14 @@ const handles = (state = [], action) => {
         type: "ADD_HANDLE",
         point: action.points[0].coordinates,
         handleId: 0,
+        totalPoints: action.points.length,
         index: 0
       }),
       handle(null, {
         ...action,
         type: "ADD_HANDLE",
         point: action.points[action.points.length - 1].coordinates,
+        totalPoints: action.points.length,
         handleId: 1,
         index: action.points.length
       })
@@ -303,6 +306,7 @@ const handle = (state = {}, action) => {
       id: action.uniqueId + "-" + action.handleId,
       handleId: action.handleId,
       index: action.index,
+      totalPoints: action.totalPoints,
       trailId: action.id,
       uniqueId: action.uniqueId
     };
@@ -322,7 +326,9 @@ const handle = (state = {}, action) => {
     if (action.uniqueId !== state.uniqueId) return state;
     return {
       ...state,
-      handleId: state.handleId == 0 ? 1 : 0
+      handleId: state.handleId == 0 ? 1 : 0,
+      index: state.totalPoints - state.index,
+      id: action.uniqueId + "-" + state.handleId == 0 ? 1 : 0
     };
   default:
     return state;

@@ -7,6 +7,8 @@ import nearest from "@turf/nearest";
 import bearing from "@turf/bearing";
 import along from "@turf/along";
 import length from "@turf/length";
+import lineIntersect from "@turf/line-intersect";
+import distance from "@turf/distance";
 import flatten from "lodash.flatten";
 import { point, featureCollection, lineString } from "@turf/helpers";
 import {
@@ -225,26 +227,79 @@ export default class Map extends React.Component {
     return rotatedPoints;
   }
 
+  applyHandleOffsets(handles) {
+    return handles.map(handle => {
+      const overlappingHandles = handles.filter(h2 => {
+        return (
+          distance(h2.geometry.coordinates, handle.geometry.coordinates) < 1
+        );
+      });
+
+      if (overlappingHandles.length <= 1) {
+        handle.properties.offset = [0, 0];
+        return handle;
+      }
+
+      const index = overlappingHandles.findIndex(
+        t2 => handle.properties.id == t2.properties.id
+      );
+      const offset = index % 2 == 0 ? [-5, 0] : [5, 0];
+      handle.properties.offset = offset || [0, 0];
+      return handle;
+    });
+  }
+
+  getOffset(trails, i) {
+    /*
+      get an offset integer if segments overlap
+    */
+    const t1 = trails[i];
+
+    const overlappingSegments = trails.filter(t2 => {
+      return t1.id == t2.id && lineIntersect(t1.geometry, t2.geometry);
+    });
+
+    if (overlappingSegments.length <= 1) return 0;
+
+    const index = overlappingSegments.findIndex(
+      t2 => t1.uniqueId == t2.uniqueId
+    );
+    return index % 2 == 0 ? -2 : 2;
+  }
+
+  applyStyleAttributes(trails) {
+    return trails.map((trail, i) => {
+      trail.offset = this.getOffset(trails, i);
+      trail.fill = theme.trailColors[i % 4];
+      trail.active = trail.selected && trail.active;
+      return trail;
+    });
+  }
+
+  sliceTrails(trails) {
+    return trails.map(trail => {
+      return sliceElevationsWithHandles(trail, this.props.handles);
+    });
+  }
+
   sources() {
     return [
       {
         id: "trails-selected",
         data: trailsToFeatureCollection(
-          this.selectedTrails().map((t, i) => {
-            t.fill = theme.trailColors[i % 4];
-            t.active = t.selected && t.active;
-            return sliceElevationsWithHandles(t, this.props.handles);
-          })
+          this.applyStyleAttributes(this.sliceTrails(this.selectedTrails()))
         )
       },
       {
         id: "handles",
         data: featureCollection(
           this.applyRotation(
-            this.props.handles.map((p, i) => {
-              const group = Math.ceil((i + 1) / 2);
-              return pointToPoint({ ...p, index: group % 4 });
-            })
+            this.applyHandleOffsets(
+              this.props.handles.map((p, i) => {
+                const group = Math.ceil((i + 1) / 2);
+                return pointToPoint({ ...p, index: group % 4 });
+              })
+            )
           )
         )
       }
