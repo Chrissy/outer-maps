@@ -26,12 +26,21 @@ const selectTrail = ({ properties, geometry, activeSegment }) => {
       simply set the cached trail as selected
       */
       if (!cachedTrail.selected)
-        return dispatch({ type: "SELECT_TRAIL", ...cachedTrail, uniqueId });
+        return dispatch({
+          type: "SELECT_TRAIL",
+          ...cachedTrail,
+          id: properties.id
+        });
       /*
       if the clicked segment is not selected, but the cached trail
       indicates that a segement has been selected, then dup the trail
       */
-      return dispatch({ type: "DUPLICATE_TRAIL", ...cachedTrail, uniqueId });
+      return dispatch({
+        type: "DUPLICATE_TRAIL",
+        ...cachedTrail,
+        id: properties.id,
+        uniqueId
+      });
     } else {
       const bounds = bbox(JSON.parse(properties.bounds));
       const { center } = GeoViewport.viewport(bounds, [1024, 800]);

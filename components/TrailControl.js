@@ -5,7 +5,10 @@ import Svg from "./svg";
 
 const TrailControl = ({
   activeTrail,
+  activeHandle,
   onCutClick,
+  onCutCancel,
+  onCutFinish,
   onReverseClick,
   onBothWaysClick,
   onRemoveClick
@@ -15,29 +18,55 @@ const TrailControl = ({
 
   return (
     <TrailControlContainer>
-      <TrailControlButton noBorder onClick={() => onCutClick(uniqueId)}>
-        <Icon src="scissors" /> Slice
-      </TrailControlButton>
-      <TrailControlButton onClick={() => onReverseClick(uniqueId)}>
-        <Reverse src="flip" /> Reverse
-      </TrailControlButton>
-      <TrailControlButton onClick={() => onBothWaysClick(activeTrail)}>
-        <Icon src="2x" /> Both Ways
-      </TrailControlButton>
-      <TrailControlButton onClick={() => onRemoveClick(uniqueId)}>
-        <Trash src="trash" /> Remove
-      </TrailControlButton>
+      {activeHandle ? (
+        <React.Fragment>
+          <TrailControlElement helper noBorder first>
+            <Icon src="scissors" />
+            Slicing
+          </TrailControlElement>
+          <TrailControlButton onClick={() => onCutFinish(uniqueId)}>
+            Finish
+          </TrailControlButton>
+          <TrailControlButton last onClick={() => onCutCancel(uniqueId)}>
+            Cancel
+          </TrailControlButton>
+        </React.Fragment>
+      ) : (
+        <React.Fragment>
+          <TrailControlButton
+            first
+            noBorder
+            onClick={() => onCutClick(uniqueId)}
+          >
+            <Icon src="scissors" /> Slice
+          </TrailControlButton>
+          <TrailControlButton onClick={() => onReverseClick(uniqueId)}>
+            <Reverse src="flip" /> Reverse
+          </TrailControlButton>
+          <TrailControlButton onClick={() => onBothWaysClick(activeTrail)}>
+            <Icon src="2x" /> Both Ways
+          </TrailControlButton>
+          <TrailControlButton last onClick={() => onRemoveClick(uniqueId)}>
+            <Trash src="trash" /> Remove
+          </TrailControlButton>
+        </React.Fragment>
+      )}
     </TrailControlContainer>
   );
 };
 
 TrailControl.propTypes = {
   activeTrail: PropTypes.object,
+  activeHandle: PropTypes.object,
   onCutClick: PropTypes.func,
+  onCutCancel: PropTypes.func,
+  onCutFinish: PropTypes.func,
   onReverseClick: PropTypes.func,
   onBothWaysClick: PropTypes.func,
   onRemoveClick: PropTypes.func
 };
+
+const borderRadius = "30px";
 
 const TrailControlContainer = styled("div")`
   position: absolute;
@@ -53,12 +82,25 @@ const TrailControlContainer = styled("div")`
   border: 3px solid #fff;
 `;
 
-const TrailControlButton = styled("a")`
-  cursor: pointer;
+const TrailControlElement = styled("div")`
   padding: 0.33em 1em 0.5em 1em;
-  border-left: ${p => (p.noBorder ? 0 : "1px")} solid ${p => p.theme.gray5};
+  font-style: ${p => (p.helper ? "italic" : "normal")};
+  border-left: ${p => (p.noBorder ? 0 : "1px")} solid ${p => p.theme.gray7};
   display: flex;
+  background: ${p => (p.helper ? p.theme.gray7 : null)};
+  color: ${p => p.theme.gray1};
   align-items: center;
+  border-radius: ${p => (p.first ? borderRadius : 0)}
+    ${p => (p.last ? borderRadius : 0)} ${p => (p.last ? borderRadius : 0)}
+    ${p => (p.first ? borderRadius : 0)};
+`;
+
+const TrailControlButton = styled(TrailControlElement)`
+  cursor: pointer;
+  &:hover {
+    color: $fff;
+    background: ${p => p.theme.gray7};
+  }
 `;
 
 const Icon = styled(Svg)`

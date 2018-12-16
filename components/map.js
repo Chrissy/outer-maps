@@ -55,10 +55,23 @@ export default class Map extends React.Component {
     return !!(this.selectedBoundary() || this.selectedTrails().length);
   }
 
-  onMapMouseMove({ target, features: [feature], lngLat }) {
-    const { draggingPoint } = this;
+  activeHandle() {
+    if (this.draggingPoint) return this.draggingPoint;
+    const activelyCutting = this.props.handles.find(h => h.activelyCutting);
 
-    if (!feature && !draggingPoint) {
+    if (!activelyCutting) return null;
+
+    if (activelyCutting)
+      return {
+        ...activelyCutting,
+        trail: this.selectedTrails().find(t => t.id == activelyCutting.trailId),
+        geometry: point(activelyCutting.coordinates),
+        currentPointOnLine: activelyCutting.coordinates
+      };
+  }
+
+  onMapMouseMove({ target, features: [feature], lngLat }) {
+    if (!feature && !this.activeHandle()) {
       if (this.state.previewElement) {
         target.dragPan.enable();
         return this.setState({
@@ -66,7 +79,7 @@ export default class Map extends React.Component {
         });
       }
     } else {
-      if (draggingPoint || feature.layer.id == "handles") {
+      if (this.activeHandle() || feature.layer.id == "handles") {
         this.handleDrag({ target, lngLat });
       } else if (
         feature.layer.id == "trails" ||
@@ -114,30 +127,30 @@ export default class Map extends React.Component {
   }
 
   handleDrag({ target, lngLat }) {
-    const { draggingPoint, props } = this;
+    const { props } = this;
 
     target.dragPan.disable();
 
-    if (!draggingPoint) return;
+    if (!this.activeHandle()) return;
 
     let snapToPoint = pointOnLine(
-      draggingPoint.trail.geometry,
+      this.activeHandle().trail.geometry,
       point([lngLat.lng, lngLat.lat])
     );
 
     props.updateHandle(
-      draggingPoint.properties.id,
+      this.activeHandle().id,
       snapToPoint.geometry.coordinates
     );
 
-    draggingPoint.currentPointOnLine = snapToPoint;
+    if (this.draggingPoint) this.draggingPoint.currentPointOnLine = snapToPoint;
   }
 
   onMapClick({ features, lngLat }) {
     const feature = features[0] || null;
-    const { draggingPoint, props } = this;
+    const { props } = this;
 
-    if (draggingPoint) return;
+    if (this.draggingPoint) return;
     if (!feature && this.elementIsSelected()) return props.onNonFeatureClick();
     if (!feature) return;
 
@@ -181,6 +194,7 @@ export default class Map extends React.Component {
     if (!handle) return;
     this.draggingPoint = {
       ...handle,
+      id: handle.properties.id,
       trail: this.selectedTrails().find(t => t.id == handle.properties.trailId),
       geometry: handle.geometry,
       currentPointOnLine: handle.geometry.coordinates
@@ -188,22 +202,24 @@ export default class Map extends React.Component {
   }
 
   onMapMouseUp({ target }) {
-    if (!this.draggingPoint) return;
-    const {
-      draggingPoint,
-      draggingPoint: { currentPointOnLine, trail },
-      props
-    } = this;
+    const activeHandle = this.activeHandle();
+    if (!activeHandle) return;
+
+    const { currentPointOnLine, trail, properties } = activeHandle;
+
     const collection = pointsToFeatureCollection(trail.points);
     const snapToPoint = nearest(currentPointOnLine, collection);
 
-    props.updateHandle(
-      draggingPoint.properties.id,
+    this.props.updateHandle(
+      activeHandle.properties.id,
       snapToPoint.properties.coordinates
     );
-    props.setHandleIndex(
-      draggingPoint.properties.id,
-      snapToPoint.properties.index
+
+    this.props.setHandleIndex(
+      activeHandle.properties.id,
+      snapToPoint.properties.index,
+      properties.cuttingStep,
+      properties.uniqueId
     );
 
     this.draggingPoint = null;

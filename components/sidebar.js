@@ -14,12 +14,24 @@ const Sidebar = ({ trails, boundary, handles, ...props }) => {
     return trails.map(t => sliceElevationsWithHandles(t, handles));
   };
 
+  const reverseTrails = trails => {
+    return trails.map(
+      trail =>
+        trail.reversed
+          ? {
+            ...trail,
+            points: [...trail.points.reverse()]
+          }
+          : trail
+    );
+  };
+
   const trailOrBoundary = () => {
     if (trails && trails.length)
       return (
         <TrailSidebar
-          firstTrail={slicedTrails()[0]}
-          trails={slicedTrails()}
+          firstTrail={reverseTrails(slicedTrails())[0]}
+          trails={reverseTrails(slicedTrails())}
           handles={handles}
           terrain={getTerrain()}
         />

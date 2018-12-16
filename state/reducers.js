@@ -73,10 +73,6 @@ const trail = (state = {}, action) => {
       selectedId: null,
       handles: null
     };
-  case "SET_TRAIL_ACTIVE":
-    return { ...state, active: state.uniqueId == action.uniqueId };
-  case "CLEAR_TRAIL_ACTIVE":
-    return { ...state, active: false };
   case "SET_TRAIL_ELEVATION_DATA":
     if (action.id !== state.id) return state;
     return {
@@ -107,7 +103,7 @@ const trail = (state = {}, action) => {
     if (action.uniqueId !== state.uniqueId) return state;
     return {
       ...state,
-      points: state.points.reverse()
+      reversed: !state.reversed
     };
   case "SET_TRAIL_WEATHER_DATA":
     if (action.id !== state.id) return state;
@@ -137,7 +133,6 @@ const trail = (state = {}, action) => {
 };
 
 const trails = (state = [], action) => {
-  console.log(state);
   switch (action.type) {
   case "ADD_TRAIL":
   case "DUPLICATE_TRAIL":
@@ -292,6 +287,9 @@ const handles = (state = [], action) => {
   case "UPDATE_HANDLE":
   case "SET_HANDLE_INDEX":
   case "REVERSE_TRAIL":
+  case "PROGRESS_TRAIL_CUT":
+  case "FINISH_TRAIL_CUT":
+  case "CANCEL_TRAIL_CUT":
     return state.map(h => handle(h, action));
   default:
     return state;
@@ -310,6 +308,48 @@ const handle = (state = {}, action) => {
       trailId: action.id,
       uniqueId: action.uniqueId
     };
+  case "PROGRESS_TRAIL_CUT":
+    if (
+      state.handleId !== action.cuttingStep - 1 ||
+        action.uniqueId !== state.uniqueId
+    )
+      return state;
+    return {
+      ...state,
+      activelyCutting: true,
+      cuttingStep: action.cuttingStep >= 2 ? null : action.cuttingStep,
+      previousCoordinates: state.coordinates,
+      previousIndex: state.index
+    };
+  case "CANCEL_TRAIL_CUT":
+    if (action.uniqueId !== state.uniqueId) return state;
+    console.log(state, action);
+    return {
+      ...state,
+      activelyCutting: false,
+      cuttingStep: null,
+      coordinates:
+          state.previousCoordinates ||
+          state.originalCoordinates ||
+          state.coordinates,
+      index:
+          state.previousIndex == 0
+            ? state.previousIndex
+            : state.previousIndex || state.index,
+      previousCoordinates: null,
+      originalCoordinates: null,
+      previousIndex: null
+    };
+  case "FINISH_TRAIL_CUT":
+    if (action.uniqueId !== state.uniqueId) return state;
+    return {
+      ...state,
+      activelyCutting: false,
+      cuttingStep: null,
+      previousCoordinates: null,
+      previousIndex: null,
+      coordinates: state.previousCoordinates || state.coordinates
+    };
   case "UPDATE_HANDLE":
     if (action.id !== state.id) return state;
     return {
@@ -320,15 +360,16 @@ const handle = (state = {}, action) => {
     if (action.id !== state.id) return state;
     return {
       ...state,
-      index: action.index
+      index: action.index,
+      activelyCutting: false,
+      previousCoordinates: null,
+      originalCoordinates: state.previousCoordinates
     };
   case "REVERSE_TRAIL":
     if (action.uniqueId !== state.uniqueId) return state;
     return {
       ...state,
-      handleId: state.handleId == 0 ? 1 : 0,
-      index: state.totalPoints - state.index,
-      id: action.uniqueId + "-" + state.handleId == 0 ? 1 : 0
+      handleId: state.handleId == 0 ? 1 : 0
     };
   default:
     return state;

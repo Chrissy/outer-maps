@@ -13,6 +13,7 @@ const TrailSidebar = ({ firstTrail, trails, terrain }) => {
       .reduce((accumulator, trail) => {
         const points = trail.points;
         if (accumulator.length == 0) return points;
+        if (trail.reversed !== undefined) return [...accumulator, ...points];
         return connectPaths(accumulator, points);
       }, []);
   };
