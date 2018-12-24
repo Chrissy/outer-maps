@@ -1,10 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styled from "react-emotion";
+import styled, { keyframes } from "react-emotion";
 import Svg from "./svg";
+import numberShortener from "../modules/numberShortener";
+import { metersToMiles } from "../modules/conversions";
 
 const TrailControl = ({
   activeTrail,
+  previewElement,
   activeHandle,
   onCutClick,
   onCutCancel,
@@ -13,46 +16,73 @@ const TrailControl = ({
   onBothWaysClick,
   onRemoveClick
 }) => {
-  if (!activeTrail) return null;
-  const { uniqueId } = activeTrail;
+  if (previewElement) {
+    const { name, distance, area } = previewElement;
 
-  return (
-    <TrailControlContainer>
-      {activeHandle ? (
-        <React.Fragment>
-          <TrailControlElement helper noBorder first>
-            <Icon src="scissors" />
-            Slicing
+    return (
+      <TrailControlContainer>
+        <TrailControlElement first>{name}</TrailControlElement>
+        {distance && (
+          <TrailControlElement units>
+            {numberShortener({
+              number: metersToMiles(distance)
+            })}{" "}
+            miles
           </TrailControlElement>
-          <TrailControlButton onClick={() => onCutFinish(uniqueId)}>
-            Finish
-          </TrailControlButton>
-          <TrailControlButton last onClick={() => onCutCancel(uniqueId)}>
-            Cancel
-          </TrailControlButton>
-        </React.Fragment>
-      ) : (
-        <React.Fragment>
-          <TrailControlButton
-            first
-            noBorder
-            onClick={() => onCutClick(uniqueId)}
-          >
-            <Icon src="scissors" /> Slice
-          </TrailControlButton>
-          <TrailControlButton onClick={() => onReverseClick(uniqueId)}>
-            <Reverse src="flip" /> Reverse
-          </TrailControlButton>
-          <TrailControlButton onClick={() => onBothWaysClick(activeTrail)}>
-            <Icon src="2x" /> Both Ways
-          </TrailControlButton>
-          <TrailControlButton last onClick={() => onRemoveClick(uniqueId)}>
-            <Trash src="trash" /> Remove
-          </TrailControlButton>
-        </React.Fragment>
-      )}
-    </TrailControlContainer>
-  );
+        )}
+        {area && (
+          <TrailControlElement units>
+            {numberShortener({
+              number: metersToMiles(area)
+            })}{" "}
+            miles<sup>2</sup>
+          </TrailControlElement>
+        )}
+      </TrailControlContainer>
+    );
+  } else if (activeTrail) {
+    const { uniqueId } = activeTrail;
+
+    return (
+      <TrailControlContainer>
+        {activeHandle ? (
+          <React.Fragment>
+            <TrailControlElement helper noBorder first>
+              <Icon src="scissors" />
+              Slicing
+            </TrailControlElement>
+            <TrailControlButton onClick={() => onCutFinish(uniqueId)}>
+              Finish
+            </TrailControlButton>
+            <TrailControlButton last onClick={() => onCutCancel(uniqueId)}>
+              Cancel
+            </TrailControlButton>
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <TrailControlButton
+              first
+              noBorder
+              onClick={() => onCutClick(uniqueId)}
+            >
+              <Icon src="scissors" /> Slice
+            </TrailControlButton>
+            <TrailControlButton onClick={() => onReverseClick(uniqueId)}>
+              <Reverse src="flip" /> Reverse
+            </TrailControlButton>
+            <TrailControlButton onClick={() => onBothWaysClick(activeTrail)}>
+              <Icon src="2x" /> Both Ways
+            </TrailControlButton>
+            <TrailControlButton last onClick={() => onRemoveClick(uniqueId)}>
+              <Trash src="trash" /> Remove
+            </TrailControlButton>
+          </React.Fragment>
+        )}
+      </TrailControlContainer>
+    );
+  } else {
+    return null;
+  }
 };
 
 TrailControl.propTypes = {
@@ -68,7 +98,19 @@ TrailControl.propTypes = {
 
 const borderRadius = "30px";
 
+const slideUp = keyframes`
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(5%);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+`;
+
 const TrailControlContainer = styled("div")`
+  animation: 0.2s ${slideUp} cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: absolute;
   top: ${p => p.theme.ss(1)};
   right: ${p => p.theme.ss(4)};
@@ -89,7 +131,7 @@ const TrailControlElement = styled("div")`
   display: flex;
   background: ${p => (p.helper ? p.theme.gray7 : null)};
   color: ${p => p.theme.gray1};
-  align-items: center;
+  align-items: ${p => (p.units ? "flex-start" : "center")};
   border-radius: ${p => (p.first ? borderRadius : 0)}
     ${p => (p.last ? borderRadius : 0)} ${p => (p.last ? borderRadius : 0)}
     ${p => (p.first ? borderRadius : 0)};

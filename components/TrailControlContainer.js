@@ -2,11 +2,12 @@ import { connect } from "react-redux";
 import TrailControl from "./trailControl";
 import { setBothWays } from "../state/actions";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   const activeTrail = state.trails.find(t => t.selected && t.active);
   const activeHandle = state.handles.find(h => h.activelyCutting);
+  const previewElement = ownProps.previewElement;
 
-  return { activeTrail, activeHandle };
+  return { activeTrail, activeHandle, previewElement };
 };
 
 const mapDispatchToProps = dispatch => {

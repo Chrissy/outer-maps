@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Manager, Popper } from "react-popper";
 import { LngLat } from "mapbox-gl";
 import pointOnLine from "@turf/point-on-line";
 import nearest from "@turf/nearest";
@@ -18,7 +17,6 @@ import {
 } from "../modules/stateToGeoJson";
 import MapBox from "./mapBox";
 import TrailControl from "./trailControlContainer";
-import Svg from "./svg";
 import getOffsetCenter from "../modules/getOffsetCenter";
 import sliceElevationsWithHandles from "../modules/sliceElevationsWithHandles";
 import styled from "react-emotion";
@@ -341,63 +339,21 @@ export default class Map extends React.Component {
     return featureStates;
   }
 
-  referenceElement() {
-    const {
-      coordinates: { x, y }
-    } = this.state.previewElement;
-
-    class VirtualReference {
-      getBoundingClientRect() {
-        return {
-          top: y,
-          left: x,
-          bottom: y,
-          right: x,
-          width: 0,
-          height: 0
-        };
-      }
-
-      get clientWidth() {
-        return this.getBoundingClientRect().width;
-      }
-      get clientHeight() {
-        return this.getBoundingClientRect().height;
-      }
-    }
-
-    return new VirtualReference();
-  }
-
   render() {
     return (
       <Container innerRef={this.map} id="the-map">
-        <Manager>
-          <MapBox
-            sources={this.sources()}
-            featureStates={this.featureStates()}
-            flyTo={this.state.flyTo}
-            pointer={!!this.state.previewElement}
-            watchLayers={WATCH_LAYERS}
-            click={this.onMapClick.bind(this)}
-            mousemove={this.onMapMouseMove.bind(this)}
-            mouseup={this.onMapMouseUp.bind(this)}
-            mousedown={this.onMapMouseDown.bind(this)}
-          />
-          {this.state.previewElement && (
-            <Popper referenceElement={this.referenceElement()} placement="auto">
-              {({ ref, style, placement }) => (
-                <div ref={ref} style={style} data-placement={placement}>
-                  <Tooltip placement={placement}>
-                    <Contents>{this.state.previewElement.name}</Contents>
-                    <Tip src="tip" placement={placement} />
-                  </Tooltip>
-                </div>
-              )}
-            </Popper>
-          )}
-          <TrailControl />
-        </Manager>
+        <MapBox
+          sources={this.sources()}
+          featureStates={this.featureStates()}
+          flyTo={this.state.flyTo}
+          pointer={!!this.state.previewElement}
+          watchLayers={WATCH_LAYERS}
+          click={this.onMapClick.bind(this)}
+          mousemove={this.onMapMouseMove.bind(this)}
+          mouseup={this.onMapMouseUp.bind(this)}
+          mousedown={this.onMapMouseDown.bind(this)}
+        />
+        <TrailControl previewElement={this.state.previewElement} />
       </Container>
     );
   }
@@ -417,109 +373,4 @@ Map.propTypes = {
 const Container = styled("div")`
   width: 100%;
   position: relative;
-`;
-
-const Contents = styled("div")`
-  padding: 0.5em;
-  color: #fff;
-  font-size: 0.875em;
-`;
-
-const getOffsetX = ({ placement }) => {
-  switch (placement) {
-  case "left":
-    return -20;
-  case "right":
-    return 20;
-  default:
-    return 0;
-  }
-};
-
-const getOffsetY = ({ placement }) => {
-  switch (placement) {
-  case "top":
-    return -20;
-  case "bottom":
-    return 40;
-  default:
-    return 0;
-  }
-};
-
-const Tooltip = styled("div")`
-  border-radius: 0.5em;
-  background: ${p => p.theme.orange};
-  border: 2px solid #fff;
-  pointer-events: none;
-  transform: translate(${getOffsetX}px, ${getOffsetY}px);
-`;
-
-const getXTransform = ({ placement }) => {
-  switch (placement) {
-  case "left":
-    // a bit of a magic number, it has to do with the aspect ratio and the rotation transform
-    return -30;
-  case "right":
-    //same here
-    return -70;
-  default:
-    return -50;
-  }
-};
-
-const getYTransform = ({ placement }) => {
-  switch (placement) {
-  case "top":
-    return 0;
-  case "bottom":
-    return -100;
-  default:
-    return -50;
-  }
-};
-
-const getLeft = ({ placement }) => {
-  switch (placement) {
-  case "left":
-    return 100;
-  case "right":
-    return 0;
-  default:
-    return 50;
-  }
-};
-
-const getTop = ({ placement }) => {
-  switch (placement) {
-  case "top":
-    return 100;
-  case "bottom":
-    return 0;
-  default:
-    return 50;
-  }
-};
-
-const getRotation = ({ placement }) => {
-  switch (placement) {
-  case "bottom":
-    return 180;
-  case "left":
-    return 270;
-  case "right":
-    return 90;
-  default:
-    return 0;
-  }
-};
-
-const Tip = styled(Svg)`
-  position: absolute;
-  height: 8px;
-  color: ${p => p.theme.orange};
-  left: ${getLeft}%;
-  top: ${getTop}%;
-  transform: translate(${getXTransform}%, ${getYTransform}%)
-    rotate(${getRotation}deg);
 `;
