@@ -5,22 +5,25 @@ import Svg from "./svg";
 import numberShortener from "../modules/numberShortener";
 import { metersToMiles } from "../modules/conversions";
 
-const TrailControl = ({
-  activeTrail,
-  previewElement,
-  activeHandle,
-  onCutClick,
-  onCutCancel,
-  onCutFinish,
-  onReverseClick,
-  onBothWaysClick,
-  onRemoveClick
-}) => {
-  if (previewElement) {
+class TrailControl extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      previewTransitioningElement: null
+    };
+
+    this.container = React.createRef();
+  }
+
+  previewControl(previewElement) {
     const { name, distance, area } = previewElement;
 
     return (
-      <TrailControlContainer>
+      <TrailControlContainer
+        onAnimationEnd={() => this.onAnimationEnd()}
+        previewTransitioningElement={!!this.state.previewTransitioningElement}
+      >
         <TrailControlElement first>{name}</TrailControlElement>
         {distance && (
           <TrailControlElement units>
@@ -40,14 +43,31 @@ const TrailControl = ({
         )}
       </TrailControlContainer>
     );
-  } else if (activeTrail) {
-    const { uniqueId } = activeTrail;
+  }
+
+  activeControl() {
+    const {
+      activeTrail,
+      activeHandle,
+      onCutClick,
+      onCutCancel,
+      onCutFinish,
+      onReverseClick,
+      onBothWaysClick,
+      onRemoveClick
+    } = this.props;
+
+    const { uniqueId, name, selectedId } = activeTrail;
 
     return (
-      <TrailControlContainer>
+      <TrailControlContainer
+        onAnimationEnd={() => this.onAnimationEnd()}
+        previewTransitioningElement={!!this.state.previewTransitioningElement}
+        index={selectedId}
+      >
         {activeHandle ? (
           <React.Fragment>
-            <TrailControlElement helper noBorder first>
+            <TrailControlElement noBorder first>
               <Icon src="scissors" />
               Slicing
             </TrailControlElement>
@@ -60,34 +80,56 @@ const TrailControl = ({
           </React.Fragment>
         ) : (
           <React.Fragment>
-            <TrailControlButton
-              first
-              noBorder
-              onClick={() => onCutClick(uniqueId)}
-            >
-              <Icon src="scissors" /> Slice
+            <TrailControlElement noBorder first>
+              {name}
+            </TrailControlElement>
+            <TrailControlButton onClick={() => onCutClick(uniqueId)}>
+              <Icon src="scissors" />
             </TrailControlButton>
             <TrailControlButton onClick={() => onReverseClick(uniqueId)}>
-              <Reverse src="flip" /> Reverse
+              <Reverse src="flip" />
             </TrailControlButton>
             <TrailControlButton onClick={() => onBothWaysClick(activeTrail)}>
-              <Icon src="2x" /> Both Ways
+              <Icon src="2x" />
             </TrailControlButton>
             <TrailControlButton last onClick={() => onRemoveClick(uniqueId)}>
-              <Trash src="trash" /> Remove
+              <Trash src="trash" />
             </TrailControlButton>
           </React.Fragment>
         )}
       </TrailControlContainer>
     );
-  } else {
-    return null;
   }
-};
+
+  onAnimationEnd() {
+    this.setState({ previewTransitioningElement: null });
+  }
+
+  /* todo: make this "safe" */
+  UNSAFE_componentWillUpdate(futureProps) {
+    if (!futureProps.previewElement && this.props.previewElement) {
+      this.setState({ previewTransitioningElement: this.props.previewElement });
+    }
+  }
+
+  render() {
+    const { activeTrail } = this.props;
+    const previewElement =
+      this.props.previewElement || this.state.previewTransitioningElement;
+
+    return (
+      <React.Fragment>
+        {activeTrail && !previewElement && this.activeControl()}
+        {previewElement && this.previewControl(previewElement)}
+      </React.Fragment>
+    );
+  }
+}
 
 TrailControl.propTypes = {
   activeTrail: PropTypes.object,
   activeHandle: PropTypes.object,
+  previewElement: PropTypes.object,
   onCutClick: PropTypes.func,
   onCutCancel: PropTypes.func,
   onCutFinish: PropTypes.func,
@@ -111,10 +153,13 @@ const slideUp = keyframes`
 
 const TrailControlContainer = styled("div")`
   animation: 0.2s ${slideUp} cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation-direction: ${p =>
+    p.previewTransitioningElement ? "reverse" : "normal"};
   position: absolute;
   top: ${p => p.theme.ss(1)};
   right: ${p => p.theme.ss(4)};
-  background: rgba(0, 0, 0, 0.8);
+  background: ${p =>
+    p.index ? p.theme.trailColor(p.index - 1) : "rgba(0, 0, 0, 0.8)"};
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   z-index: 1;
   color: #fff;
@@ -127,7 +172,7 @@ const TrailControlContainer = styled("div")`
 const TrailControlElement = styled("div")`
   padding: 0.33em 1em 0.5em 1em;
   font-style: ${p => (p.helper ? "italic" : "normal")};
-  border-left: ${p => (p.noBorder ? 0 : "1px")} solid ${p => p.theme.gray7};
+  border-left: ${p => (p.noBorder ? 0 : "1px")} solid rgba(255, 255, 255, 0.2);
   display: flex;
   background: ${p => (p.helper ? p.theme.gray7 : null)};
   color: ${p => p.theme.gray1};

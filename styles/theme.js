@@ -42,4 +42,8 @@ theme.trailColors = [
   theme.accentColorTintLight
 ];
 
+theme.trailColor = index => {
+  return theme.trailColors[index % theme.trailColors.length];
+};
+
 export default theme;

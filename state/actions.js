@@ -18,6 +18,7 @@ const selectTrail = ({ properties, geometry, activeSegment }) => {
       */
       if (activeSegment)
         return dispatch({
+          ...cachedTrail,
           type: "SET_TRAIL_ACTIVE",
           uniqueId: properties.uniqueId
         });

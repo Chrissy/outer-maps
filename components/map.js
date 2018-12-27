@@ -155,7 +155,10 @@ export default class Map extends React.Component {
     const type = feature.layer.id;
 
     if (type == "trails" || type == "trails-selected") {
-      this.setState({ activeTrailLngLat: lngLat });
+      this.setState({
+        activeTrailLngLat: lngLat,
+        previewElement: null
+      });
       props.onTrailClick({
         properties: feature.properties,
         geometry: feature.geometry,

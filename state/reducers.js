@@ -24,13 +24,35 @@ const trail = (state = {}, action) => {
         second segment is added from the same trail
       */
       selected: true,
+      selectedId: action.selectedTrailCount,
       active: true
+    };
+  case "SET_TRAIL_ACTIVE":
+    /*
+      sets trail as active for editing and viewing
+    */
+
+    if (state.uniqueId !== action.uniqueId)
+      return {
+        ...state,
+        active: false
+      };
+
+    return {
+      ...state,
+      active: true
+    };
+  case "CLEAR_TRAIL_ACTIVE":
+    return {
+      ...state,
+      active: false
     };
   case "SELECT_TRAIL":
     /*
-      selects a trail that has already been added
+      selects a trail that has already been added but is not currently active
     */
-    if (state.uniqueId !== action.uniqueId)
+
+    if (state.id !== action.id)
       return {
         ...state,
         active: false
@@ -136,7 +158,13 @@ const trails = (state = [], action) => {
   switch (action.type) {
   case "ADD_TRAIL":
   case "DUPLICATE_TRAIL":
-    return [...state, trail(undefined, action)];
+    return [
+      ...state,
+      trail(undefined, {
+        ...action,
+        selectedTrailCount: state.filter(e => e.selected).length + 1
+      })
+    ];
   case "SELECT_TRAIL":
     return state.map(t =>
       trail(t, {
@@ -323,7 +351,6 @@ const handle = (state = {}, action) => {
     };
   case "CANCEL_TRAIL_CUT":
     if (action.uniqueId !== state.uniqueId) return state;
-    console.log(state, action);
     return {
       ...state,
       activelyCutting: false,
