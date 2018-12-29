@@ -52,7 +52,7 @@ const trail = (state = {}, action) => {
       selects a trail that has already been added but is not currently active
     */
 
-    if (state.id !== action.id)
+    if (state.uniqueId !== action.uniqueId)
       return {
         ...state,
         active: false
@@ -93,7 +93,8 @@ const trail = (state = {}, action) => {
       selected: false,
       active: false,
       selectedId: null,
-      handles: null
+      handles: null,
+      reversed: false
     };
   case "SET_TRAIL_ELEVATION_DATA":
     if (action.id !== state.id) return state;
