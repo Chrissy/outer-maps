@@ -1,10 +1,13 @@
 import { connect } from "react-redux";
 import TrailList from "./trailList";
-import { unselectTrail } from "../state/actions";
+import { unselectTrail, setTrailSelectedId } from "../state/actions";
 
 const mapDispatchToProps = dispatch => {
   return {
-    unselectTrail: uniqueId => dispatch(unselectTrail(uniqueId))
+    unselectTrail: uniqueId => dispatch(unselectTrail(uniqueId)),
+    setTrailSelectedId: (...params) => {
+      return dispatch(setTrailSelectedId(...params));
+    }
   };
 };
 

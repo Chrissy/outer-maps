@@ -24,7 +24,11 @@ const trail = (state = {}, action) => {
         second segment is added from the same trail
       */
       selected: true,
-      selectedId: action.selectedTrailCount,
+      /*
+        selectedId is the trail's index in a multi-trail route.
+        this can be changed by the user.
+      */
+      selectedId: action.selectedTrailCount - 1,
       active: true
     };
   case "SET_TRAIL_ACTIVE":
@@ -62,11 +66,17 @@ const trail = (state = {}, action) => {
       ...state,
       selected: true,
       active: true,
-      /*
-        selectedId is the trail's index in a multi-trail route.
-        this can be changed by the user.
-      */
-      selectedId: action.selectedTrailCount
+      selectedId: action.selectedTrailCount - 1
+    };
+  case "SET_TRAIL_SELECTED_ID":
+    return {
+      ...state,
+      selectedId:
+          action.sourceIndex == state.selectedId
+            ? action.destinationIndex
+            : state.selectedId >= action.destinationIndex
+              ? state.selectedId + 1
+              : state.selectedId - 1
     };
   case "DUPLICATE_TRAIL":
     return {
@@ -180,6 +190,7 @@ const trails = (state = [], action) => {
     return state.map(t =>
       trail(t, { ...action, type: "CLEAR_TRAIL_SELECTED" })
     );
+  case "SET_TRAIL_SELECTED_ID":
   case "UNSELECT_TRAIL":
   case "SET_TRAIL_ELEVATION_DATA":
   case "SET_TRAIL_ELEVATION_DATA_REQUESTED":

@@ -6,9 +6,9 @@ import Svg from "./svg";
 import theme from "../styles/theme";
 import { flexCenter, flexHorizontalCenter } from "../styles/flex";
 
-const TrailList = ({ trails, unselectTrail }) => {
-  const onDragEnd = result => {
-    console.log(result);
+const TrailList = ({ trails, unselectTrail, setTrailSelectedId }) => {
+  const onDragEnd = ({ source, destination }) => {
+    setTrailSelectedId(source.index, destination.index);
   };
 
   const listElement = (trail, i) => {
@@ -60,6 +60,7 @@ const TrailList = ({ trails, unselectTrail }) => {
 
 TrailList.propTypes = {
   unselectTrail: PropTypes.func,
+  setTrailSelectedId: PropTypes.func,
   trails: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
