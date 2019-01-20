@@ -1,10 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styled from "react-emotion";
+import styled, { css } from "react-emotion";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Svg from "./svg";
+import theme from "../styles/theme";
 import { flexCenter, flexHorizontalCenter } from "../styles/flex";
 
 const TrailList = ({ trails, unselectTrail }) => {
+  const onDragEnd = result => {
+    console.log(result);
+  };
+
   const listElement = (trail, i) => {
     return (
       <ListElement key={trail.uniqueId} i={i}>
@@ -16,7 +22,40 @@ const TrailList = ({ trails, unselectTrail }) => {
     );
   };
 
-  return <Container>{trails.map((t, i) => listElement(t, i))}</Container>;
+  return (
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="droppable" direction="horizontal">
+        {provided => (
+          <div
+            ref={provided.innerRef}
+            css={container}
+            {...provided.droppableProps}
+          >
+            {trails.map((item, index) => (
+              <Draggable
+                key={item.id}
+                style={{ display: "contents" }}
+                draggableId={item.id}
+                index={index}
+              >
+                {provided => (
+                  <div
+                    style={{ display: "contents" }}
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                  >
+                    {listElement(item, index)}
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>
+  );
 };
 
 TrailList.propTypes = {
@@ -35,9 +74,9 @@ TrailList.propTypes = {
   )
 };
 
-const Container = styled("div")`
-  margin-top: ${p => p.theme.ss(0.5)};
-  padding: 0 ${p => p.theme.ss(0.5)};
+const container = css`
+  margin-top: ${theme.ss(0.5)};
+  padding: 0 ${theme.ss(0.5)};
   ${flexHorizontalCenter};
   flex-wrap: wrap;
 `;
