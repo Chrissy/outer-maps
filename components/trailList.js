@@ -7,6 +7,8 @@ import theme from "../styles/theme";
 import { flexCenter, flexHorizontalCenter } from "../styles/flex";
 
 const TrailList = ({ trails, unselectTrail, setTrailSelectedId }) => {
+  console.log(trails.map(t => [t.selectedId, t.name]));
+
   const onDragEnd = ({ source, destination }) => {
     setTrailSelectedId(source.index, destination.index);
   };

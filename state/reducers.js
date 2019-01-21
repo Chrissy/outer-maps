@@ -69,14 +69,29 @@ const trail = (state = {}, action) => {
       selectedId: action.selectedTrailCount - 1
     };
   case "SET_TRAIL_SELECTED_ID":
+    if (state.selectedId !== 0 && !state.selectedId) return state;
+
+    /* if this is the element to be moved, do so */
+    if (state.selectedId == action.sourceIndex)
+      return {
+        ...state,
+        selectedId: action.destinationIndex
+      };
+
+      /* only change the indeces between the move */
+    if (
+      state.selectedId <
+          Math.min(action.sourceIndex, action.destinationIndex) ||
+        state.selectedId > Math.max(action.sourceIndex, action.destinationIndex)
+    )
+      return state;
+
+      /* determine the operator based on the direction of the move */
     return {
       ...state,
       selectedId:
-          action.sourceIndex == state.selectedId
-            ? action.destinationIndex
-            : state.selectedId >= action.destinationIndex
-              ? state.selectedId + 1
-              : state.selectedId - 1
+          state.selectedId +
+          (action.destinationIndex > action.sourceIndex ? -1 : 1)
     };
   case "DUPLICATE_TRAIL":
     return {
