@@ -11,9 +11,9 @@ const TrailList = ({ trails, unselectTrail, setTrailSelectedId }) => {
     setTrailSelectedId(source.index, destination.index);
   };
 
-  const listElement = (trail, i) => {
+  const listElement = trail => {
     return (
-      <ListElement key={trail.uniqueId} i={i}>
+      <ListElement key={trail.uniqueId} i={trail.uniqueId}>
         <Name>{trail.name}</Name>
         <CloseContainer onClick={() => unselectTrail(trail.uniqueId)}>
           <StyledClose src="exit" />
@@ -85,8 +85,7 @@ const container = css`
 const ListElement = styled("li")`
   ${flexHorizontalCenter};
   border-radius: 0.5em;
-  background-color: ${p =>
-    p.theme.trailColors[p.i % p.theme.trailColors.length]};
+  background-color: ${p => p.theme.trailColor(p.i - 1)};
   box-sizing: border-box;
   color: #fff;
   font-size: ${p => p.theme.ts(0.75)};

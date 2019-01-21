@@ -57,13 +57,13 @@ class TrailControl extends React.Component {
       onRemoveClick
     } = this.props;
 
-    const { uniqueId, name, selectedId } = activeTrail;
+    const { uniqueId, name } = activeTrail;
 
     return (
       <TrailControlContainer
         onAnimationEnd={() => this.onAnimationEnd()}
         previewTransitioningElement={!!this.state.previewTransitioningElement}
-        index={selectedId}
+        index={uniqueId}
       >
         {activeHandle ? (
           <React.Fragment>
