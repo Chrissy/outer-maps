@@ -1,15 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { LngLat } from "mapbox-gl";
 import pointOnLine from "@turf/point-on-line";
 import nearest from "@turf/nearest";
 import bearing from "@turf/bearing";
-import along from "@turf/along";
-import length from "@turf/length";
 import lineIntersect from "@turf/line-intersect";
 import distance from "@turf/distance";
-import flatten from "lodash.flatten";
-import { point, featureCollection, lineString } from "@turf/helpers";
+import { point, featureCollection } from "@turf/helpers";
 import {
   pointToPoint,
   pointsToFeatureCollection,
@@ -84,41 +80,26 @@ export default class Map extends React.Component {
         feature.layer.id == "national-park-labels"
       ) {
         target.dragPan.enable();
-        this.handleFeatureHover(feature, target);
+        this.handleFeatureHover(feature);
       }
     }
   }
 
-  handleFeatureHover({ properties, layer, geometry }, target) {
+  handleFeatureHover({ properties, layer }) {
+    const { previewElement } = this.state;
+
     if (
-      this.state.previewElement &&
-      this.state.previewElement.id == properties.id &&
-      this.state.previewElement.sourceLayer == layer["source-layer"]
+      previewElement &&
+      previewElement.id == properties.id &&
+      previewElement.sourceLayer == layer["source-layer"]
     )
       return;
-
-    const geometryCenter =
-      geometry.type == "LineString" || geometry.type == "MultiLineString"
-        ? along(
-          lineString(
-            geometry.type == "MultiLineString"
-              ? flatten(geometry.coordinates)
-              : geometry.coordinates
-          ),
-          length(geometry) / 2
-        ).geometry
-        : geometry;
-
-    const coordinates = target.project(
-      new LngLat(...geometryCenter.coordinates)
-    );
 
     this.setState({
       previewElement: {
         id: properties.id,
         sourceLayer: layer["source-layer"],
         source: layer.source,
-        coordinates,
         ...properties
       }
     });
