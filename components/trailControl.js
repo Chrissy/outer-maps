@@ -186,7 +186,7 @@ const TrailControlButton = styled(TrailControlElement)`
   cursor: pointer;
   &:hover {
     color: $fff;
-    background: ${p => p.theme.gray7};
+    background: rgba(255, 255, 255, 0.2);
   }
 `;
 
