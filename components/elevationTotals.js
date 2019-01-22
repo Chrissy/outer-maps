@@ -8,7 +8,7 @@ import Svg from "./svg";
 import numberShortener from "../modules/numberShortener";
 import { metersToFeet, metersToMiles } from "../modules/conversions";
 
-const ElevationTotals = ({ elevations }) => {
+const ElevationTotals = ({ elevations, colors }) => {
   const elevationGain = () => {
     return elevations.reduce((a, e) => a + e.elevationGain, 0);
   };
@@ -65,13 +65,14 @@ const ElevationTotals = ({ elevations }) => {
           })}
         />
       </Columns>
-      <StyledLineGraph elevations={elevations} />
+      <StyledLineGraph elevations={elevations} colors={colors} />
     </Container>
   );
 };
 
 ElevationTotals.propTypes = {
-  elevations: PropTypes.array
+  elevations: PropTypes.array,
+  colors: PropTypes.arrayOf(PropTypes.string)
 };
 
 const Container = styled("div")`

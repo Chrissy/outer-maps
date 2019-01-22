@@ -17,8 +17,17 @@ const mapDispatchToProps = dispatch => {
     onNonFeatureClick: () => dispatch(clearSelected()),
     updateHandle: (id, coordinates) =>
       dispatch({ type: "UPDATE_HANDLE", id, coordinates }),
-    setHandleIndex: (id, index) =>
-      dispatch({ type: "SET_HANDLE_INDEX", id, index })
+    setHandleIndex: (id, index, cuttingStep, uniqueId) => {
+      dispatch({ type: "SET_HANDLE_INDEX", id, index });
+      if (cuttingStep)
+        dispatch({
+          type: "PROGRESS_TRAIL_CUT",
+          id,
+          cuttingStep: cuttingStep + 1,
+          uniqueId
+        });
+    },
+    progressTrailCut: id => dispatch({ type: "PROGRESS_TRAIL_CUT", id })
   };
 };
 

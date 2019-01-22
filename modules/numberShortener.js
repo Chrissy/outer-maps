@@ -1,6 +1,6 @@
 const numberShortener = ({ number, oneDecimal = false }) => {
   const oneDecimalString = string => {
-    if (oneDecimal == false) return string;
+    if (oneDecimal == false) return parseInt(string).toString();
     const match = string.match(/([0-9]*)\.[1-9]/);
     return match ? match[0] : string;
   };

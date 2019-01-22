@@ -1,16 +1,16 @@
 import sliceElevationsWithHandles from "../modules/sliceElevationsWithHandles";
 
 const trail1 = {
-  id: 1,
+  uniqueId: 1,
   points: [1000, 1001, 1002, 1001, 1000]
 };
 
 const trail2 = {
-  id: 2,
+  uniqueId: 2,
   points: [1000, 1001, 1002]
 };
 
-const handles = [{ trailId: 1, index: 1 }, { trailId: 1, index: 3 }];
+const handles = [{ uniqueId: 1, index: 1 }, { uniqueId: 1, index: 3 }];
 
 test("slices an array of points", () => {
   const newArray = sliceElevationsWithHandles(trail1, handles);

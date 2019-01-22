@@ -22,7 +22,7 @@ const WATCH_EVENTS = [
   "touchcancel"
 ];
 
-export default class MapBox extends React.PureComponent {
+export default class MapBox extends React.Component {
   updateSources(newSources = []) {
     newSources.forEach(
       function(source) {
@@ -82,6 +82,18 @@ export default class MapBox extends React.PureComponent {
       : "";
   }
 
+  createEventParams(event) {
+    const features = event.point
+      ? this.mapboxed.queryRenderedFeatures(event.point, {
+        layers: this.props.watchLayers
+      })
+      : null;
+
+    return Object.assign({}, event, {
+      features
+    });
+  }
+
   mapEvents() {
     WATCH_EVENTS.forEach(eventName => {
       if (!this.props[eventName]) return;
@@ -89,16 +101,7 @@ export default class MapBox extends React.PureComponent {
       this.mapboxed.on(
         eventName,
         debounce(
-          event => {
-            const eventMod = Object.assign({}, event, {
-              features: event.point
-                ? this.mapboxed.queryRenderedFeatures(event.point, {
-                  layers: this.props.watchLayers
-                })
-                : null
-            });
-            this.props[eventName](eventMod);
-          },
+          event => this.props[eventName](this.createEventParams(event)),
           2,
           { leading: true }
         )

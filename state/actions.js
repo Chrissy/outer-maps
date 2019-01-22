@@ -3,21 +3,60 @@ import GeoViewport from "@mapbox/geo-viewport";
 import { getWeather } from "../services/getNOAAWeather";
 import fetchWithCache from "../services/fetchWithCache";
 
-const selectTrail = ({ properties, geometry }) => {
+const selectTrail = ({ properties, geometry, activeSegment }) => {
   return (dispatch, getState) => {
-    const cachedTrail = getState().trails.find(t => t.id == properties.id);
-    const bounds = bbox(JSON.parse(properties.bounds));
-    const { center, zoom } = GeoViewport.viewport(bounds, [1024, 800]);
+    const storedTrails = getState().trails;
+    const cachedTrail = storedTrails.find(t => t.id == properties.id);
+    const uniqueId = storedTrails.length + 1;
 
-    if (!cachedTrail)
-      dispatch({ type: "ADD_TRAIL", center, bounds, properties, geometry });
-    if (!cachedTrail || !cachedTrail.elevationDataRequested)
-      dispatch(
-        getElevationData({ id: properties.id, center, zoom, reducer: "trail" })
-      );
-    if (!cachedTrail || !cachedTrail.weatherDataRequested)
+    dispatch({ type: "CLEAR_TRAIL_ACTIVE" });
+
+    if (cachedTrail) {
+      /*
+        if the segment is already selected, then we set it to a focus
+        state for flipping, cutting, etc.
+      */
+      if (activeSegment)
+        return dispatch({
+          ...cachedTrail,
+          type: "SET_TRAIL_ACTIVE",
+          uniqueId: properties.uniqueId
+        });
+      /*
+      if no segments are selected, but the trail is cached, then
+      simply set the cached trail as selected
+      */
+      if (!cachedTrail.selected)
+        return dispatch({
+          type: "SELECT_TRAIL",
+          ...cachedTrail,
+          id: properties.id
+        });
+      /*
+      if the clicked segment is not selected, but the cached trail
+      indicates that a segement has been selected, then dup the trail
+      */
+      return dispatch({
+        type: "DUPLICATE_TRAIL",
+        ...cachedTrail,
+        id: properties.id,
+        uniqueId
+      });
+    } else {
+      const bounds = bbox(JSON.parse(properties.bounds));
+      const { center } = GeoViewport.viewport(bounds, [1024, 800]);
+
+      dispatch({
+        ...properties,
+        center,
+        bounds,
+        geometry,
+        uniqueId,
+        type: "ADD_TRAIL"
+      });
+      dispatch(getElevationData({ ...properties, reducer: "trail", uniqueId }));
       dispatch(getWeatherData({ ...properties, center, reducer: "trail" }));
-    if (cachedTrail) return dispatch({ type: "SELECT_TRAIL", ...cachedTrail });
+    }
   };
 };
 
@@ -45,10 +84,10 @@ const selectBoundary = ({ properties, geometry }) => {
   };
 };
 
-const unselectTrail = id => {
+const unselectTrail = uniqueId => {
   return dispatch => {
-    dispatch({ type: "REMOVE_TRAIL_HANDLES", id });
-    return dispatch({ type: "UNSELECT_TRAIL", id });
+    dispatch({ type: "REMOVE_TRAIL_HANDLES", uniqueId });
+    return dispatch({ type: "UNSELECT_TRAIL", uniqueId });
   };
 };
 
@@ -56,7 +95,7 @@ const clearSelected = () => {
   return dispatch => dispatch({ type: "CLEAR_SELECTED" });
 };
 
-const getElevationData = ({ id, reducer }) => {
+const getElevationData = ({ id, reducer, uniqueId }) => {
   return dispatch => {
     dispatch({
       type: `SET_${reducer.toUpperCase()}_ELEVATION_DATA_REQUESTED`,
@@ -69,7 +108,8 @@ const getElevationData = ({ id, reducer }) => {
         dispatch({
           type: `SET_${reducer.toUpperCase()}_ELEVATION_DATA`,
           ...response,
-          id
+          id,
+          uniqueId
         });
       });
   };
@@ -102,4 +142,34 @@ const getWeatherData = ({ id, center, station1, reducer }) => {
   };
 };
 
-export { selectTrail, selectBoundary, unselectTrail, clearSelected };
+const setBothWays = id => {
+  /* this is annoyingly similar to selectTrail but somewhat simpler */
+  return (dispatch, getState) => {
+    const storedTrails = getState().trails;
+    const cachedTrail = storedTrails.find(t => t.id == id);
+    const uniqueId = storedTrails.length + 1;
+
+    dispatch({ type: "DUPLICATE_TRAIL", ...cachedTrail, uniqueId });
+    dispatch({ type: "REVERSE_TRAIL", uniqueId });
+    return dispatch({ type: "SET_TRAIL_ACTIVE", uniqueId });
+  };
+};
+
+const setTrailSelectedId = (sourceIndex, destinationIndex) => {
+  return dispatch => {
+    return dispatch({
+      type: "SET_TRAIL_SELECTED_ID",
+      sourceIndex,
+      destinationIndex
+    });
+  };
+};
+
+export {
+  selectTrail,
+  selectBoundary,
+  unselectTrail,
+  clearSelected,
+  setBothWays,
+  setTrailSelectedId
+};

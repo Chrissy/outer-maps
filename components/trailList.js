@@ -1,26 +1,66 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styled from "react-emotion";
+import styled, { css } from "react-emotion";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Svg from "./svg";
+import theme from "../styles/theme";
 import { flexCenter, flexHorizontalCenter } from "../styles/flex";
 
-const TrailList = ({ trails, unselectTrail }) => {
-  const listElement = (trail, i) => {
+const TrailList = ({ trails, unselectTrail, setTrailSelectedId }) => {
+  const onDragEnd = ({ source, destination }) => {
+    setTrailSelectedId(source.index, destination.index);
+  };
+
+  const listElement = trail => {
     return (
-      <ListElement key={trail.id} i={i}>
+      <ListElement key={trail.uniqueId} i={trail.uniqueId}>
         <Name>{trail.name}</Name>
-        <CloseContainer onClick={() => unselectTrail(trail.id)}>
+        <CloseContainer onClick={() => unselectTrail(trail.uniqueId)}>
           <StyledClose src="exit" />
         </CloseContainer>
       </ListElement>
     );
   };
 
-  return <Container>{trails.map((t, i) => listElement(t, i))}</Container>;
+  return (
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="droppable" direction="horizontal">
+        {provided => (
+          <div
+            ref={provided.innerRef}
+            css={container}
+            {...provided.droppableProps}
+          >
+            {trails.map((item, index) => (
+              <Draggable
+                key={item.id}
+                style={{ display: "contents" }}
+                draggableId={item.id}
+                index={index}
+              >
+                {provided => (
+                  <div
+                    style={{ display: "contents" }}
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                  >
+                    {listElement(item, index)}
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>
+  );
 };
 
 TrailList.propTypes = {
   unselectTrail: PropTypes.func,
+  setTrailSelectedId: PropTypes.func,
   trails: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
@@ -35,9 +75,9 @@ TrailList.propTypes = {
   )
 };
 
-const Container = styled("div")`
-  margin-top: ${p => p.theme.ss(0.5)};
-  padding: 0 ${p => p.theme.ss(0.5)};
+const container = css`
+  margin-top: ${theme.ss(0.5)};
+  padding: 0 ${theme.ss(0.5)};
   ${flexHorizontalCenter};
   flex-wrap: wrap;
 `;
@@ -45,8 +85,7 @@ const Container = styled("div")`
 const ListElement = styled("li")`
   ${flexHorizontalCenter};
   border-radius: 0.5em;
-  background-color: ${p =>
-    p.theme.trailColors[p.i % p.theme.trailColors.length]};
+  background-color: ${p => p.theme.trailColor(p.i - 1)};
   box-sizing: border-box;
   color: #fff;
   font-size: ${p => p.theme.ts(0.75)};

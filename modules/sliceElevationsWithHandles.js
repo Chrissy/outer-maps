@@ -1,5 +1,5 @@
 export default (trail, handles) => {
-  const matchingHandles = handles.filter(h => h.trailId == trail.id);
+  const matchingHandles = handles.filter(h => h.uniqueId == trail.uniqueId);
   if (matchingHandles.length < 2) return trail;
 
   const indeces = matchingHandles.map(h => h.index).sort((a, b) => a - b);

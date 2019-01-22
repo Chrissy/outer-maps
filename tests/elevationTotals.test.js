@@ -38,7 +38,7 @@ it("renders", () => {
   const tree = renderer
     .create(
       <ThemeProvider theme={theme}>
-        <ElevationTotals elevations={elevations} />
+        <ElevationTotals elevations={elevations} colors={["#555"]} />
       </ThemeProvider>
     )
     .toJSON();

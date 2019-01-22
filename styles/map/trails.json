@@ -172,6 +172,16 @@
   "filter": ["in", "type", "hike", "horse", "bike", "atv", "motorcycle", "trail"]
 },
 {
+  "id": "trails-selected",
+  "source": "trails-selected",
+  "type": "line",
+  "paint": {
+    "line-color": "transparent",
+    "line-width": 8
+  },
+  "interactive": true
+},
+{
   "id": "endpoints",
   "source": "$source",
   "source-layer": "trail-endpoints",
@@ -190,28 +200,36 @@
   "source": "trails-selected",
   "type": "line",
   "line": {
-    "line-cap": "round",
-    "line-join": "bevel"
+    "line-cap": "round"
   },
   "paint": {
     "line-color": "#FFF",
-    "line-width": 4
-  },
-  "interactive": true
+    "line-width": [
+      "case",
+      ["boolean", ["get", "active"], false],
+      6,
+      4
+    ],
+    "line-offset": ["get", "offset"]
+  }
 },
 {
-  "id": "trails-selected",
+  "id": "trails-selected-core-line",
   "source": "trails-selected",
   "type": "line",
   "line": {
-    "line-cap": "round",
-    "line-join": "bevel"
+    "line-cap": "round"
   },
   "paint": {
     "line-color": ["string", ["get", "fill"]],
-    "line-width": 2
-  },
-  "interactive": true
+    "line-width": [
+      "case",
+      ["boolean", ["get", "active"], false],
+      3,
+      2
+    ],
+    "line-offset": ["get", "offset"]
+  }
 },
 {
   "id": "trail-labels",
@@ -259,6 +277,7 @@
     "icon-image": "handle-{index}",
     "icon-size": 0.75,
     "icon-allow-overlap": true,
-    "icon-rotate": ["number", ["get", "rotation"]]
+    "icon-rotate": ["number", ["get", "rotation"]],
+    "icon-offset": ["get", "offset"]
   }
 }]}
