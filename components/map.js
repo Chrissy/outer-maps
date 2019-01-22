@@ -4,7 +4,6 @@ import pointOnLine from "@turf/point-on-line";
 import nearest from "@turf/nearest";
 import bearing from "@turf/bearing";
 import lineIntersect from "@turf/line-intersect";
-import distance from "@turf/distance";
 import { point, featureCollection } from "@turf/helpers";
 import {
   pointToPoint,
@@ -225,28 +224,6 @@ export default class Map extends React.Component {
     return rotatedPoints;
   }
 
-  applyHandleOffsets(handles) {
-    return handles.map(handle => {
-      const overlappingHandles = handles.filter(h2 => {
-        return (
-          distance(h2.geometry.coordinates, handle.geometry.coordinates) < 1
-        );
-      });
-
-      if (overlappingHandles.length <= 1) {
-        handle.properties.offset = [0, 0];
-        return handle;
-      }
-
-      const index = overlappingHandles.findIndex(
-        t2 => handle.properties.id == t2.properties.id
-      );
-      const offset = index % 2 == 0 ? [-5, 0] : [5, 0];
-      handle.properties.offset = offset || [0, 0];
-      return handle;
-    });
-  }
-
   getOffset(trails, i) {
     /*
       get an offset integer if segments overlap
@@ -292,12 +269,10 @@ export default class Map extends React.Component {
         id: "handles",
         data: featureCollection(
           this.applyRotation(
-            this.applyHandleOffsets(
-              this.props.handles.map((p, i) => {
-                const group = Math.ceil((i + 1) / 2);
-                return pointToPoint({ ...p, index: group % 4 });
-              })
-            )
+            this.props.handles.map((p, i) => {
+              const group = Math.ceil((i + 1) / 2);
+              return pointToPoint({ ...p, index: group % 4 });
+            })
           )
         )
       }
