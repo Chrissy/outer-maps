@@ -239,7 +239,7 @@ export default class Map extends React.Component {
     const index = overlappingSegments.findIndex(
       t2 => t1.uniqueId == t2.uniqueId
     );
-    return index % 2 == 0 ? -2 : 2;
+    return index % 2 == 0 ? -1 : 1;
   }
 
   applyStyleAttributes(trails) {
