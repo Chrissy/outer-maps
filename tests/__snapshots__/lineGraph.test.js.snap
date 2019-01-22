@@ -15,8 +15,8 @@ exports[`renders 1`] = `
 }
 
 .emotion-0 {
-  fill: #FF5500;
-  stroke: #FF5500;
+  fill: #555;
+  stroke: #555;
   stroke-width: 1px;
 }
 
@@ -131,6 +131,7 @@ exports[`renders 1`] = `
     <g />
     <polyline
       className="emotion-0 emotion-1"
+      color="#555"
       points="0,110 0,99.49583625965687 1.3681592039800994,25 275,107.5 275,110"
     />
   </svg>

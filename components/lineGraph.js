@@ -48,7 +48,7 @@ MileMarker.propTypes = {
   leftOver: PropTypes.number
 };
 
-const LineGraph = ({ elevations, className }) => {
+const LineGraph = ({ elevations, colors, className }) => {
   const getDistances = () => {
     return elevations
       .map(p => p.distanceFromPreviousPoint)
@@ -154,7 +154,11 @@ const LineGraph = ({ elevations, className }) => {
       <StyledSvg viewBox={viewBox()}>
         <g>{mileMarkers()}</g>
         {relativePointsArr.map((line, i) => (
-          <Polyline key={i} points={pointsToPathString(line)} index={i} />
+          <Polyline
+            key={i}
+            points={pointsToPathString(line)}
+            color={colors[i]}
+          />
         ))}
       </StyledSvg>
       <AltitudeOverlay>{altitudeMarkers}</AltitudeOverlay>
@@ -170,7 +174,8 @@ LineGraph.propTypes = {
       id: PropTypes.number
     })
   ),
-  className: PropTypes.string
+  className: PropTypes.string,
+  colors: PropTypes.arrayOf(PropTypes.string)
 };
 
 const Container = styled("div")`
@@ -235,8 +240,8 @@ const AltitudeOverlay = styled("div")`
 `;
 
 const Polyline = styled("polyline")`
-  fill: ${p => p.theme.trailColors[p.index % 4]};
-  stroke: ${p => p.theme.trailColors[p.index % 4]};
+  fill: ${p => p.color};
+  stroke: ${p => p.color};
   stroke-width: 1px;
 `;
 

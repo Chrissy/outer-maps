@@ -4,7 +4,7 @@ import styled from "react-emotion";
 import ElevationTotals from "./elevationTotals";
 import TrailListContainer from "./trailListContainer";
 import ImportantWeather from "./importantWeather";
-import connectPaths from "../modules/connectPaths";
+import theme from "../styles/theme";
 
 const TrailSidebar = ({ firstTrail, trails, terrain }) => {
   const cumulativeElevations = () => {
@@ -13,14 +13,18 @@ const TrailSidebar = ({ firstTrail, trails, terrain }) => {
       .reduce((accumulator, trail) => {
         const points = trail.points;
         if (accumulator.length == 0) return points;
-        if (trail.reversed !== undefined) return [...accumulator, ...points];
-        return connectPaths(accumulator, points);
+        return [...accumulator, ...points];
       }, []);
   };
 
   const elevationTotals = () => {
     if (firstTrail.hasElevationData)
-      return <ElevationTotals elevations={cumulativeElevations()} />;
+      return (
+        <ElevationTotals
+          elevations={cumulativeElevations()}
+          colors={trails.map(t => theme.trailColor(t.uniqueId - 1))}
+        />
+      );
   };
 
   const importantWeather = () => {
