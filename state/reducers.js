@@ -253,8 +253,8 @@ const boundary = (state = {}, action) => {
   case "ADD_BOUNDARY":
     return {
       ...state,
-      id: action.properties.id,
-      name: action.properties.name,
+      id: action.id,
+      name: action.name,
       hasBaseData: true,
       selected: true
     };
@@ -265,7 +265,10 @@ const boundary = (state = {}, action) => {
     if (action.id !== state.id) return state;
     return {
       ...state,
+      name: action.name,
       area: action.area,
+      bounds: action.bounds,
+      center: action.center,
       trailsCount: action.trailsCount,
       trailLengths: action.trailLengths,
       trailTypes: action.trailTypes,

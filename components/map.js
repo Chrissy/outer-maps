@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { fromJS, is } from "immutable";
 import pointOnLine from "@turf/point-on-line";
 import nearest from "@turf/nearest";
 import bearing from "@turf/bearing";
@@ -40,12 +41,8 @@ export default class Map extends React.Component {
     return this.props.trails.filter(t => t.selected && t.hasElevationData);
   }
 
-  selectedBoundary() {
-    return this.props.boundaries.find(boundary => boundary.selected);
-  }
-
   elementIsSelected() {
-    return !!(this.selectedBoundary() || this.selectedTrails().length);
+    return !!(this.props.boundary || this.selectedTrails().length);
   }
 
   activeHandle() {
@@ -148,23 +145,27 @@ export default class Map extends React.Component {
       type == "national-park-labels" ||
       type == "national-park-labels-active"
     ) {
-      this.sidebarAwareZoom(feature.geometry.coordinates);
-      props.onBoundaryClick(feature);
+      props.onBoundaryClick(feature.properties);
     }
   }
 
   sidebarAwareZoom(coordinates) {
     const sidebar = this.map.current.nextSibling; //probably wanna do something better here one day
+
+    const center = getOffsetCenter({
+      center: coordinates,
+      zoom: 10,
+      offsetX: window.innerWidth < 600 ? 0 : sidebar.offsetWidth * 0.5,
+      offsetY: window.innerWidth > 600 ? 0 : sidebar.offsetHeight * 0.5,
+      width: this.map.current.clientWidth,
+      height: this.map.current.clientHeight
+    });
+
+    if (this.state.flyTo && is(fromJS(this.state.flyTo.center), fromJS(center))) return;
+
     this.setState({
       flyTo: {
-        center: getOffsetCenter({
-          center: coordinates,
-          zoom: 10,
-          offsetX: window.innerWidth < 600 ? 0 : sidebar.offsetWidth * 0.5,
-          offsetY: window.innerWidth > 600 ? 0 : sidebar.offsetHeight * 0.5,
-          width: this.map.current.clientWidth,
-          height: this.map.current.clientHeight
-        }),
+        center,
         zoom: 10
       }
     });
@@ -287,15 +288,24 @@ export default class Map extends React.Component {
         state: { preview: true }
       });
 
-    if (this.selectedBoundary())
+    if (this.props.boundary)
       featureStates.push({
         source: "local",
         sourceLayer: "national-parks",
-        id: this.selectedBoundary().id,
+        id: this.props.boundary.id,
         state: { preview: true }
       });
 
     return featureStates;
+  }
+
+  componentDidUpdate(prevProps) {
+    const {boundary} = this.props;
+
+
+    if (boundary && boundary.hasElevationData) {
+      this.sidebarAwareZoom(boundary.center);
+    }
   }
 
   render() {
@@ -320,7 +330,7 @@ export default class Map extends React.Component {
 
 Map.propTypes = {
   trails: PropTypes.array,
-  boundaries: PropTypes.array,
+  boundary: PropTypes.object,
   handles: PropTypes.array,
   onTrailClick: PropTypes.func,
   onBoundaryClick: PropTypes.func,

@@ -58,24 +58,25 @@ const selectTrail = ({ properties }) => {
   };
 };
 
-const selectBoundary = ({ properties }) => {
+const selectBoundary = ({ id, name }) => {
   return (dispatch, getState) => {
     const cachedBoundary = getState().boundaries.find(
-      b => b.id == properties.id
+      b => b.id == id
     );
 
     if (!cachedBoundary)
-      dispatch({ type: "ADD_BOUNDARY", properties });
+      dispatch({ type: "ADD_BOUNDARY", id, name });
     if (!cachedBoundary || !cachedBoundary.elevationDataRequested)
-      dispatch(getElevationData({ id: properties.id, reducer: "boundary" }));
-    if (!cachedBoundary || !cachedBoundary.weatherDataRequested)
-      // dispatch(
-      //   getWeatherData({
-      //     ...properties,
-      //     center: geometry.coordinates,
-      //     reducer: "boundary"
-      //   })
-      // );
+      dispatch(getElevationData({ id, reducer: "boundary" })).then(response => {
+        if (!cachedBoundary || !cachedBoundary.weatherDataRequested)
+          dispatch(
+            getWeatherData({
+              id,
+              center: response.center,
+              reducer: "boundary"
+            })
+          );
+      });
     if (cachedBoundary)
       return dispatch({ type: "SELECT_BOUNDARY", id: properties.id });
   };
@@ -102,8 +103,7 @@ const getElevationData = ({ id, reducer, uniqueId }) => {
     return fetchWithCache({ path: `/api/${reducer}/${id}`, extension: "json" })
       .then(response => response.json())
       .then(response => {
-        console.log(response)
-        dispatch({
+        return dispatch({
           type: `SET_${reducer.toUpperCase()}_ELEVATION_DATA`,
           ...response,
           id,

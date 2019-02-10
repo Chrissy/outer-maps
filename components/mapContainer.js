@@ -5,7 +5,7 @@ import { selectTrail, selectBoundary, clearSelected } from "../state/actions";
 const mapStateToProps = state => {
   return {
     trails: state.trails,
-    boundaries: state.boundaries,
+    boundary: state.boundaries.find(boundary => boundary.selected),
     handles: state.handles
   };
 };

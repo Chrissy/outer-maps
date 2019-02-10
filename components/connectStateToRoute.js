@@ -10,7 +10,7 @@ class ConnectStateToRoute extends React.Component {
   componentDidMount() {
     this.history = createHistory();
     const query = parse(window.location.search);
-    //if (query.boundary) return this.props.selectBoundary(query.boundary);
+    if (query.boundary) return this.props.selectBoundary({ id: parseInt(query.boundary) });
   }
 
   shouldComponentUpdate(prevProps) {

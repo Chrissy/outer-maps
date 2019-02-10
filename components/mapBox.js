@@ -23,6 +23,14 @@ const WATCH_EVENTS = [
 ];
 
 export default class MapBox extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      initialized: false,
+    };
+  }
+
   updateSources(newSources = []) {
     newSources.forEach(
       function(source) {
@@ -57,9 +65,15 @@ export default class MapBox extends React.Component {
 
     this.mapEvents();
     this.mapboxed.addControl(new MapboxGL.NavigationControl());
+    this.mapboxed.on('load', () => {
+      if (this.props.flyTo) this.mapboxed.flyTo(this.props.flyTo);
+      this.setState({initialized: true});
+    });
   }
 
   componentDidUpdate(prevProps) {
+    if (!this.state.initialized) return;
+
     if (!is(fromJS(prevProps.sources), fromJS(this.props.sources))) {
       this.updateSources(this.props.sources);
     }
@@ -73,9 +87,9 @@ export default class MapBox extends React.Component {
       );
     }
 
-    if (this.props.flyTo && prevProps.flyTo !== this.props.flyTo) {
+    if (
+      this.props.flyTo && !is(fromJS(this.props.flyTo), fromJS(prevProps.flyTo)))
       this.mapboxed.flyTo(this.props.flyTo);
-    }
 
     this.mapboxed.getCanvas().style.cursor = this.props.pointer
       ? "pointer"

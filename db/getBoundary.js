@@ -5,7 +5,11 @@ const bbox = require("@turf/bbox");
 
 const sql = id => `
   WITH boundary AS (
-      SELECT ST_Area(geog) as area, id, ST_Simplify(geog::geometry, 0.05) as geom
+      SELECT
+        ST_Area(geog) as area,
+        id,
+        name,
+        ST_Simplify(geog::geometry, 0.05) as geom
       FROM boundaries
       WHERE id = ${id}
       GROUP BY geom, id
@@ -18,9 +22,15 @@ const sql = id => `
       AND ST_Intersects(ST_Envelope(boundary.geom), trails.geog)
       AND ST_Intersects(ST_Simplify(boundary.geom, 0.005), trails.geog) ORDER BY length DESC LIMIT 1000
     )
-    SELECT boundary.area, boundary.id, ST_AsGeoJSON(boundary.geom) as geom, to_json(ST_DumpValues(rast)) as dump,
-    to_json(array_agg(park_trails)) as trails
-    FROM boundary, raster, park_trails GROUP BY rast, area, boundary.id, boundary.geom;
+    SELECT
+      boundary.area,
+      boundary.id,
+      boundary.name,
+      ST_AsGeoJSON(boundary.geom) as geom,
+      ST_ASGeoJSON(ST_PointOnSurface(boundary.geom)) as center,
+      to_json(ST_DumpValues(rast)) as dump,
+      to_json(array_agg(park_trails)) as trails
+    FROM boundary, raster, park_trails GROUP BY rast, area, boundary.id, boundary.geom, boundary.name;
 `;
 
 const getBoundary = (id, pool) =>
@@ -44,7 +54,9 @@ const queryBoundary = (id, pool) =>
       resolve({
         area: parseInt(row.area),
         id: row.id,
+        name: row.name,
         bounds: bbox(JSON.parse(row.geom)),
+        center: JSON.parse(row.center).coordinates,
         trailsCount: trails.length,
         trails: trails.slice(0, 8),
         highPoint: Math.max(...flatVertices),
