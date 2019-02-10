@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 import distance from "@turf/distance";
 import { lineString } from "@turf/helpers";
+import { connectRouter } from "connected-react-router";
 
 const trail = (state = {}, action) => {
   switch (action.type) {
@@ -430,8 +431,10 @@ const handle = (state = {}, action) => {
   }
 };
 
-export default combineReducers({
-  trails,
-  boundaries,
-  handles
-});
+export default history =>
+  combineReducers({
+    router: connectRouter(history),
+    trails,
+    boundaries,
+    handles
+  });

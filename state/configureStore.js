@@ -1,5 +1,7 @@
-import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
-import reducers from '../state/reducers';
+import { createStore, applyMiddleware } from "redux";
+import { createBrowserHistory } from "history";
+import thunk from "redux-thunk";
+import reducers from "../state/reducers";
 
-export const store = createStore(reducers, applyMiddleware(thunk));
+export const history = createBrowserHistory();
+export const store = createStore(reducers(history), applyMiddleware(thunk));
