@@ -53,10 +53,12 @@ const Sidebar = ({ trails, boundary, handles, ...props }) => {
         <StyledTerrain points={pointsArr} paths zoom={zoom} center={center} />
       );
     } else if (boundary && boundary.selected) {
-      const { center, zoom } = GeoViewport.viewport(boundary.bounds, [
-        1024,
-        1024
-      ]);
+      // const { center, zoom } = GeoViewport.viewport(boundary.bounds, [
+      //   1024,
+      //   1024
+      // ]);
+      const zoom = 10;
+      const center = [124, 45];
       return <StyledTerrain shape zoom={zoom} center={center} />;
     }
   };

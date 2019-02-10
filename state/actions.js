@@ -3,7 +3,7 @@ import GeoViewport from "@mapbox/geo-viewport";
 import { getWeather } from "../services/getNOAAWeather";
 import fetchWithCache from "../services/fetchWithCache";
 
-const selectTrail = ({ properties, geometry, activeSegment }) => {
+const selectTrail = ({ properties }) => {
   return (dispatch, getState) => {
     const storedTrails = getState().trails;
     const cachedTrail = storedTrails.find(t => t.id == properties.id);
@@ -49,8 +49,6 @@ const selectTrail = ({ properties, geometry, activeSegment }) => {
       dispatch({
         ...properties,
         center,
-        bounds,
-        geometry,
         uniqueId,
         type: "ADD_TRAIL"
       });
@@ -60,25 +58,24 @@ const selectTrail = ({ properties, geometry, activeSegment }) => {
   };
 };
 
-const selectBoundary = ({ properties, geometry }) => {
+const selectBoundary = ({ properties }) => {
   return (dispatch, getState) => {
     const cachedBoundary = getState().boundaries.find(
       b => b.id == properties.id
     );
-    const bounds = bbox(JSON.parse(properties.bounds));
 
     if (!cachedBoundary)
-      dispatch({ type: "ADD_BOUNDARY", properties, geometry, bounds });
+      dispatch({ type: "ADD_BOUNDARY", properties });
     if (!cachedBoundary || !cachedBoundary.elevationDataRequested)
       dispatch(getElevationData({ id: properties.id, reducer: "boundary" }));
     if (!cachedBoundary || !cachedBoundary.weatherDataRequested)
-      dispatch(
-        getWeatherData({
-          ...properties,
-          center: geometry.coordinates,
-          reducer: "boundary"
-        })
-      );
+      // dispatch(
+      //   getWeatherData({
+      //     ...properties,
+      //     center: geometry.coordinates,
+      //     reducer: "boundary"
+      //   })
+      // );
     if (cachedBoundary)
       return dispatch({ type: "SELECT_BOUNDARY", id: properties.id });
   };
@@ -105,6 +102,7 @@ const getElevationData = ({ id, reducer, uniqueId }) => {
     return fetchWithCache({ path: `/api/${reducer}/${id}`, extension: "json" })
       .then(response => response.json())
       .then(response => {
+        console.log(response)
         dispatch({
           type: `SET_${reducer.toUpperCase()}_ELEVATION_DATA`,
           ...response,

@@ -3,10 +3,14 @@ import PropTypes from "prop-types";
 import createHistory from "history/createBrowserHistory";
 import { connect } from "react-redux";
 import { fromJS, is } from "immutable";
+import { parse } from "query-string";
+import { selectTrail, selectBoundary } from "../state/actions";
 
 class ConnectStateToRoute extends React.Component {
   componentDidMount() {
     this.history = createHistory();
+    const query = parse(window.location.search);
+    //if (query.boundary) return this.props.selectBoundary(query.boundary);
   }
 
   shouldComponentUpdate(prevProps) {
@@ -37,7 +41,6 @@ class ConnectStateToRoute extends React.Component {
 
     if (boundary) {
       if (prevProps.boundary && prevProps.boundary.id == boundary.id) return;
-      console.log("updating boundary...");
       return this.history.replace(`/?boundary=${boundary.id}`);
     }
 
@@ -45,7 +48,6 @@ class ConnectStateToRoute extends React.Component {
       const previousTrailIds = prevProps.trails.map(t => t.id);
       const trailIds = trails.map(t => t.id);
       if (is(fromJS(previousTrailIds), fromJS(trailIds))) return;
-      console.log("updating trails...");
       return this.history.replace(
         `?trails=${encodeURIComponent(JSON.stringify(trails.map(t => t.id)))}`
       );
@@ -77,4 +79,11 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(ConnectStateToRoute);
+const mapDispatchToProps = dispatch => {
+  return {
+    selectTrail: trail => dispatch(selectTrail(trail)),
+    selectBoundary: boundary => dispatch(selectBoundary(boundary))
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ConnectStateToRoute);

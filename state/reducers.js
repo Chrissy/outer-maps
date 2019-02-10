@@ -18,7 +18,6 @@ const trail = (state = {}, action) => {
       distance: action.distance,
       stationId: action.station1,
       center: action.center,
-      bounds: action.bounds,
       /*
         add trail also selects the trail. it fires
         the first time a trail is selected or when a
@@ -256,7 +255,6 @@ const boundary = (state = {}, action) => {
       ...state,
       id: action.properties.id,
       name: action.properties.name,
-      bounds: action.bounds,
       hasBaseData: true,
       selected: true
     };
