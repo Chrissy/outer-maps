@@ -27,7 +27,7 @@ export default class MapBox extends React.Component {
     super(props);
 
     this.state = {
-      initialized: false,
+      initialized: false
     };
   }
 
@@ -65,9 +65,9 @@ export default class MapBox extends React.Component {
 
     this.mapEvents();
     this.mapboxed.addControl(new MapboxGL.NavigationControl());
-    this.mapboxed.on('load', () => {
+    this.mapboxed.on("load", () => {
       if (this.props.flyTo) this.mapboxed.flyTo(this.props.flyTo);
-      this.setState({initialized: true});
+      this.setState({ initialized: true });
     });
   }
 
@@ -88,7 +88,9 @@ export default class MapBox extends React.Component {
     }
 
     if (
-      this.props.flyTo && !is(fromJS(this.props.flyTo), fromJS(prevProps.flyTo)))
+      this.props.flyTo &&
+      !is(fromJS(this.props.flyTo), fromJS(prevProps.flyTo))
+    )
       this.mapboxed.flyTo(this.props.flyTo);
 
     this.mapboxed.getCanvas().style.cursor = this.props.pointer

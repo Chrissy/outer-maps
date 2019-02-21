@@ -15,9 +15,8 @@ const trail = (state = {}, action) => {
       */
       uniqueId: action.uniqueId,
       name: action.name,
-      distance: action.distance,
       stationId: action.station1,
-      center: action.center,
+      bounds: action.bounds,
       /*
         add trail also selects the trail. it fires
         the first time a trail is selected or when a

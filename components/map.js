@@ -161,7 +161,8 @@ export default class Map extends React.Component {
       height: this.map.current.clientHeight
     });
 
-    if (this.state.flyTo && is(fromJS(this.state.flyTo.center), fromJS(center))) return;
+    if (this.state.flyTo && is(fromJS(this.state.flyTo.center), fromJS(center)))
+      return;
 
     this.setState({
       flyTo: {
@@ -299,9 +300,8 @@ export default class Map extends React.Component {
     return featureStates;
   }
 
-  componentDidUpdate(prevProps) {
-    const {boundary} = this.props;
-
+  componentDidUpdate() {
+    const { boundary } = this.props;
 
     if (boundary && boundary.hasElevationData) {
       this.sidebarAwareZoom(boundary.center);

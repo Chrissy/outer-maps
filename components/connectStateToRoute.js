@@ -3,14 +3,17 @@ import PropTypes from "prop-types";
 import createHistory from "history/createBrowserHistory";
 import { connect } from "react-redux";
 import { fromJS, is } from "immutable";
-import { parse } from "query-string";
+import { parse, stringify } from "query-string";
 import { selectTrail, selectBoundary } from "../state/actions";
 
 class ConnectStateToRoute extends React.Component {
   componentDidMount() {
     this.history = createHistory();
     const query = parse(window.location.search);
-    if (query.boundary) return this.props.selectBoundary({ id: parseInt(query.boundary) });
+    if (query.boundary)
+      return this.props.selectBoundary({ id: parseInt(query.boundary) });
+    //if (query.trails)
+    //return query.trails.map(({id, bounds}) => console.log(id, bounds));
   }
 
   shouldComponentUpdate(prevProps) {
@@ -41,7 +44,12 @@ class ConnectStateToRoute extends React.Component {
 
     if (boundary) {
       if (prevProps.boundary && prevProps.boundary.id == boundary.id) return;
-      return this.history.replace(`/?boundary=${boundary.id}`);
+      return this.history.replace(
+        "/?" +
+          stringify({
+            boundary: boundary.id
+          })
+      );
     }
 
     if (trails.length) {
@@ -49,7 +57,10 @@ class ConnectStateToRoute extends React.Component {
       const trailIds = trails.map(t => t.id);
       if (is(fromJS(previousTrailIds), fromJS(trailIds))) return;
       return this.history.replace(
-        `?trails=${encodeURIComponent(JSON.stringify(trails.map(t => t.id)))}`
+        "/?" +
+          stringify({
+            trails: trails.map(({ id, bounds }) => stringify({ id, bounds }))
+          })
       );
     }
   }
@@ -63,7 +74,9 @@ ConnectStateToRoute.propTypes = {
   trails: PropTypes.array,
   boundary: PropTypes.object,
   handles: PropTypes.array,
-  children: PropTypes.node
+  children: PropTypes.node,
+  selectBoundary: PropTypes.func,
+  selectTrail: PropTypes.func
 };
 
 const mapStateToProps = state => {
@@ -83,7 +96,10 @@ const mapDispatchToProps = dispatch => {
   return {
     selectTrail: trail => dispatch(selectTrail(trail)),
     selectBoundary: boundary => dispatch(selectBoundary(boundary))
-  }
+  };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ConnectStateToRoute);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ConnectStateToRoute);

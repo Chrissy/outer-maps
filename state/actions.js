@@ -3,7 +3,7 @@ import GeoViewport from "@mapbox/geo-viewport";
 import { getWeather } from "../services/getNOAAWeather";
 import fetchWithCache from "../services/fetchWithCache";
 
-const selectTrail = ({ properties }) => {
+const selectTrail = ({ properties, activeSegment }) => {
   return (dispatch, getState) => {
     const storedTrails = getState().trails;
     const cachedTrail = storedTrails.find(t => t.id == properties.id);
@@ -49,6 +49,7 @@ const selectTrail = ({ properties }) => {
       dispatch({
         ...properties,
         center,
+        bounds,
         uniqueId,
         type: "ADD_TRAIL"
       });
@@ -60,12 +61,9 @@ const selectTrail = ({ properties }) => {
 
 const selectBoundary = ({ id, name }) => {
   return (dispatch, getState) => {
-    const cachedBoundary = getState().boundaries.find(
-      b => b.id == id
-    );
+    const cachedBoundary = getState().boundaries.find(b => b.id == id);
 
-    if (!cachedBoundary)
-      dispatch({ type: "ADD_BOUNDARY", id, name });
+    if (!cachedBoundary) dispatch({ type: "ADD_BOUNDARY", id, name });
     if (!cachedBoundary || !cachedBoundary.elevationDataRequested)
       dispatch(getElevationData({ id, reducer: "boundary" })).then(response => {
         if (!cachedBoundary || !cachedBoundary.weatherDataRequested)
@@ -77,8 +75,7 @@ const selectBoundary = ({ id, name }) => {
             })
           );
       });
-    if (cachedBoundary)
-      return dispatch({ type: "SELECT_BOUNDARY", id: properties.id });
+    if (cachedBoundary) return dispatch({ type: "SELECT_BOUNDARY", id });
   };
 };
 
