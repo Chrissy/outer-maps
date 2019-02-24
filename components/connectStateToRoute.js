@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import GeoViewport from "@mapbox/geo-viewport";
 import createHistory from "history/createBrowserHistory";
 import { connect } from "react-redux";
 import { fromJS, is } from "immutable";
@@ -7,11 +8,23 @@ import { parse, stringify } from "query-string";
 import { selectTrail, selectBoundary } from "../state/actions";
 
 class ConnectStateToRoute extends React.Component {
-  componentDidMount() {
+  constructor(props) {
+    super(props);
+
     this.history = createHistory();
     const query = parse(window.location.search);
-    if (query.boundary)
-      return this.props.selectBoundary({ id: parseInt(query.boundary) });
+
+    this.state = {
+      center: query.center,
+      boundary: query.boundary,
+      lastSelectedTrail: null,
+      lastSelectedBoundary: null
+    };
+  }
+
+  componentDidMount() {
+    if (this.state.boundary)
+      return this.props.selectBoundary({ id: parseInt(this.state.boundary) });
     //if (query.trails)
     //return query.trails.map(({id, bounds}) => console.log(id, bounds));
   }
@@ -31,23 +44,27 @@ class ConnectStateToRoute extends React.Component {
 
   componentDidUpdate(prevProps) {
     const { trails, boundary, handles } = this.props;
+    const { lastSelectedTrail, lastSelectedBoundary } = this.state;
 
     if (
       !trails.length &&
       !boundary &&
       !handles.length &&
-      (prevProps.trails.length ||
-        prevProps.boundary ||
-        prevProps.handles.length)
+      (lastSelectedTrail || lastSelectedBoundary)
     )
       return this.history.replace("/");
 
-    if (boundary) {
-      if (prevProps.boundary && prevProps.boundary.id == boundary.id) return;
+    if (boundary && boundary.bounds) {
+      if (lastSelectedBoundary == boundary.id) return;
+
+      const { center } = GeoViewport.viewport(boundary.bounds, [1024, 800]);
+
+      this.setState({ lastSelectedBoundary: boundary.id });
       return this.history.replace(
         "/?" +
           stringify({
-            boundary: boundary.id
+            boundary: boundary.id,
+            center: center.map(b => parseFloat(b.toFixed(2)))
           })
       );
     }
@@ -66,7 +83,7 @@ class ConnectStateToRoute extends React.Component {
   }
 
   render() {
-    return this.props.children;
+    return this.props.children({ center: this.state.center });
   }
 }
 
@@ -74,7 +91,7 @@ ConnectStateToRoute.propTypes = {
   trails: PropTypes.array,
   boundary: PropTypes.object,
   handles: PropTypes.array,
-  children: PropTypes.node,
+  children: PropTypes.func,
   selectBoundary: PropTypes.func,
   selectTrail: PropTypes.func
 };

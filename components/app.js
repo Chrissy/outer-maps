@@ -30,11 +30,13 @@ ReactDOM.render(
       <ThemeProvider theme={theme}>
         <div>
           <ConnectStateToRoute>
-            <Body>
-              <Header />
-              <MapContainer />
-              <SidebarContainer />
-            </Body>
+            {({ center }) => (
+              <Body>
+                <Header />
+                <MapContainer center={center} />
+                <SidebarContainer />
+              </Body>
+            )}
           </ConnectStateToRoute>
         </div>
       </ThemeProvider>

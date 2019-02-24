@@ -55,10 +55,12 @@ export default class MapBox extends React.Component {
   componentDidMount() {
     MapboxGL.accessToken = accessToken;
 
+    console.log("map", this.props.initialCoordinates);
+
     this.mapboxed = new MapboxGL.Map({
       container: "mapbox-gl-element",
       style: mapboxStyles,
-      center: [-121.06, 48.35],
+      center: this.props.initialCoordinates || [-121.06, 48.35],
       zoom: 8.64205157956079,
       maxZoom: 14
     });
@@ -141,7 +143,8 @@ MapBox.propTypes = {
   ),
   flyTo: PropTypes.object,
   pointer: PropTypes.bool,
-  watchLayers: PropTypes.array
+  watchLayers: PropTypes.array,
+  initialCoordinates: PropTypes.array
 };
 
 const Body = styled("div")`

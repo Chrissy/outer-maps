@@ -81,9 +81,9 @@ const Container = styled("div")`
   font-family: ${p => p.theme.bodyFont};
   position: absolute;
   height: 100%;
-  width: 43vw;
-  min-width: 400px;
-  max-width: 500px;
+  width: ${p => p.theme.sidebarPercentageWidth}vw;
+  min-width: ${p => p.theme.sidebarMinWidth}px;
+  max-width: ${p => p.theme.sidebarMaxWidth}px;
   background: ${p => p.theme.gray2};
   color: ${p => p.theme.gray7};
   border-right: 1px solid ${p => p.theme.gray4};

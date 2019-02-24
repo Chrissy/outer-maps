@@ -149,17 +149,29 @@ export default class Map extends React.Component {
     }
   }
 
-  sidebarAwareZoom(coordinates) {
-    const sidebar = this.map.current.nextSibling; //probably wanna do something better here one day
+  getSidebarWidth() {
+    return Math.min(
+      theme.sidebarMaxWidth,
+      Math.max(
+        theme.sidebarMinWidth,
+        window.innerWidth * theme.sidebarPercentageWidth
+      )
+    );
+  }
 
-    const center = getOffsetCenter({
+  getCenter(coordinates) {
+    return getOffsetCenter({
       center: coordinates,
       zoom: 10,
-      offsetX: window.innerWidth < 600 ? 0 : sidebar.offsetWidth * 0.5,
-      offsetY: window.innerWidth > 600 ? 0 : sidebar.offsetHeight * 0.5,
-      width: this.map.current.clientWidth,
-      height: this.map.current.clientHeight
+      offsetX: window.innerWidth < 600 ? 0 : this.getSidebarWidth() * 0.5,
+      offsetY: window.innerWidth > 600 ? 0 : window.innerHeight * 0.5,
+      width: window.innerWidth - this.getSidebarWidth(),
+      height: window.innerHeight
     });
+  }
+
+  sidebarAwareZoom(coordinates) {
+    const center = this.getCenter(coordinates);
 
     if (this.state.flyTo && is(fromJS(this.state.flyTo.center), fromJS(center)))
       return;
@@ -308,6 +320,13 @@ export default class Map extends React.Component {
     }
   }
 
+  getInitialCoordinates() {
+    console.log(this.props.initialCoordinates);
+    return this.props.initialCoordinates
+      ? this.getCenter(this.props.initialCoordinates)
+      : null;
+  }
+
   render() {
     return (
       <Container innerRef={this.map} id="the-map">
@@ -315,6 +334,7 @@ export default class Map extends React.Component {
           sources={this.sources()}
           featureStates={this.featureStates()}
           flyTo={this.state.flyTo}
+          initialCoordinates={this.getInitialCoordinates()}
           pointer={!!this.state.previewElement}
           watchLayers={WATCH_LAYERS}
           click={this.onMapClick.bind(this)}
@@ -336,7 +356,8 @@ Map.propTypes = {
   onBoundaryClick: PropTypes.func,
   onNonFeatureClick: PropTypes.func,
   updateHandle: PropTypes.func,
-  setHandleIndex: PropTypes.func
+  setHandleIndex: PropTypes.func,
+  initialCoordinates: PropTypes.array
 };
 
 const Container = styled("div")`
