@@ -150,21 +150,10 @@ const setBothWays = id => {
   };
 };
 
-const setTrailSelectedId = (sourceIndex, destinationIndex) => {
-  return dispatch => {
-    return dispatch({
-      type: "SET_TRAIL_SELECTED_ID",
-      sourceIndex,
-      destinationIndex
-    });
-  };
-};
-
 export {
   selectTrail,
   selectBoundary,
   unselectTrail,
   clearSelected,
-  setBothWays,
-  setTrailSelectedId
+  setBothWays
 };
