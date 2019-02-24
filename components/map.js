@@ -1,9 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
+import GeoViewport from "@mapbox/geo-viewport";
 import { fromJS, is } from "immutable";
 import pointOnLine from "@turf/point-on-line";
 import nearest from "@turf/nearest";
+import destination from "@turf/destination";
 import bearing from "@turf/bearing";
+import distance from "@turf/distance";
 import lineIntersect from "@turf/line-intersect";
 import { point, featureCollection } from "@turf/helpers";
 import {
@@ -13,7 +16,6 @@ import {
 } from "../modules/stateToGeoJson";
 import MapBox from "./mapBox";
 import TrailControl from "./trailControlContainer";
-import getOffsetCenter from "../modules/getOffsetCenter";
 import sliceElevationsWithHandles from "../modules/sliceElevationsWithHandles";
 import styled from "react-emotion";
 import theme from "../styles/theme";
@@ -159,28 +161,35 @@ export default class Map extends React.Component {
     );
   }
 
-  getCenter(coordinates) {
-    return getOffsetCenter({
-      center: coordinates,
-      zoom: 10,
-      offsetX: window.innerWidth < 600 ? 0 : this.getSidebarWidth() * 0.5,
-      offsetY: window.innerWidth > 600 ? 0 : window.innerHeight * 0.5,
-      width: window.innerWidth - this.getSidebarWidth(),
-      height: window.innerHeight
-    });
+  getAdjustedViewport(bounds) {
+    const pt1 = point([bounds[0], bounds[1]]);
+    const pt2 = point([bounds[2], bounds[1]]);
+    const { center, zoom } = GeoViewport.viewport(bounds, [
+      window.innerWidth,
+      window.innerHeight
+    ]);
+
+    const percentageOfWidth = this.getSidebarWidth() / window.innerWidth;
+    const { geometry } = destination(
+      center,
+      distance(pt1, pt2) * percentageOfWidth * -1.5,
+      90
+    );
+
+    return {
+      center: geometry.coordinates,
+      zoom: zoom - 1
+    };
   }
 
-  sidebarAwareZoom(coordinates) {
-    const center = this.getCenter(coordinates);
+  sidebarAwareZoom(bounds) {
+    const viewport = this.getAdjustedViewport(bounds);
 
-    if (this.state.flyTo && is(fromJS(this.state.flyTo.center), fromJS(center)))
+    if (this.state.flyTo && is(fromJS(this.state.flyTo), fromJS(viewport)))
       return;
 
     this.setState({
-      flyTo: {
-        center,
-        zoom: 10
-      }
+      flyTo: viewport
     });
   }
 
@@ -315,16 +324,15 @@ export default class Map extends React.Component {
   componentDidUpdate() {
     const { boundary } = this.props;
 
-    if (boundary && boundary.hasElevationData) {
-      this.sidebarAwareZoom(boundary.center);
+    if (boundary && boundary.bounds) {
+      this.sidebarAwareZoom(boundary.bounds);
     }
   }
 
   getInitialCoordinates() {
-    console.log(this.props.initialCoordinates);
-    return this.props.initialCoordinates
-      ? this.getCenter(this.props.initialCoordinates)
-      : null;
+    // return this.props.initialCoordinates
+    //   ? this.getCenter(this.props.initialCoordinates)
+    //   : null;
   }
 
   render() {
