@@ -162,19 +162,17 @@ export default class Map extends React.Component {
   }
 
   getAdjustedViewport(bounds) {
-    const pt1 = point([bounds[0], bounds[1]]);
-    const pt2 = point([bounds[2], bounds[1]]);
     const { center, zoom } = GeoViewport.viewport(bounds, [
       window.innerWidth,
       window.innerHeight
     ]);
 
     const percentageOfWidth = this.getSidebarWidth() / window.innerWidth;
-    const { geometry } = destination(
-      center,
-      distance(pt1, pt2) * percentageOfWidth * -1.5,
-      90
-    );
+    const startPoint = [bounds[0], bounds[1]];
+    const endPoint = [bounds[2], bounds[1]];
+    console.log(distance(startPoint, endPoint), percentageOfWidth);
+    const shift = distance(startPoint, endPoint) * percentageOfWidth * -1.5;
+    const { geometry } = destination(center, shift, 90);
 
     return {
       center: geometry.coordinates,
