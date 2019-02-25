@@ -7,7 +7,7 @@ const mapStateToProps = (state, props) => {
     trails: state.trails,
     boundary: state.boundaries.find(boundary => boundary.selected),
     handles: state.handles,
-    initialCoordinates: props.center
+    ...props
   };
 };
 

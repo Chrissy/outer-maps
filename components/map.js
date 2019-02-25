@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import GeoViewport from "@mapbox/geo-viewport";
 import { fromJS, is } from "immutable";
+import { parse } from "query-string";
 import pointOnLine from "@turf/point-on-line";
 import nearest from "@turf/nearest";
 import destination from "@turf/destination";
@@ -170,8 +171,7 @@ export default class Map extends React.Component {
     const percentageOfWidth = this.getSidebarWidth() / window.innerWidth;
     const startPoint = [bounds[0], bounds[1]];
     const endPoint = [bounds[2], bounds[1]];
-    console.log(distance(startPoint, endPoint), percentageOfWidth);
-    const shift = distance(startPoint, endPoint) * percentageOfWidth * -1.5;
+    const shift = distance(startPoint, endPoint) * percentageOfWidth * -1;
     const { geometry } = destination(center, shift, 90);
 
     return {
@@ -327,10 +327,12 @@ export default class Map extends React.Component {
     }
   }
 
-  getInitialCoordinates() {
-    // return this.props.initialCoordinates
-    //   ? this.getCenter(this.props.initialCoordinates)
-    //   : null;
+  getInitialViewport() {
+    const query = parse(window.location.search);
+
+    return query.bounds
+      ? this.getAdjustedViewport(query.bounds.map(b => parseFloat(b)))
+      : null;
   }
 
   render() {
@@ -340,7 +342,7 @@ export default class Map extends React.Component {
           sources={this.sources()}
           featureStates={this.featureStates()}
           flyTo={this.state.flyTo}
-          initialCoordinates={this.getInitialCoordinates()}
+          initialViewport={this.getInitialViewport()}
           pointer={!!this.state.previewElement}
           watchLayers={WATCH_LAYERS}
           click={this.onMapClick.bind(this)}
@@ -363,7 +365,7 @@ Map.propTypes = {
   onNonFeatureClick: PropTypes.func,
   updateHandle: PropTypes.func,
   setHandleIndex: PropTypes.func,
-  initialCoordinates: PropTypes.array
+  initialBounds: PropTypes.array
 };
 
 const Container = styled("div")`

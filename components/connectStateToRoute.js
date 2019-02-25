@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import GeoViewport from "@mapbox/geo-viewport";
 import createHistory from "history/createBrowserHistory";
 import { connect } from "react-redux";
 import { fromJS, is } from "immutable";
@@ -15,7 +14,6 @@ class ConnectStateToRoute extends React.Component {
     const query = parse(window.location.search);
 
     this.state = {
-      center: query.center,
       boundary: query.boundary,
       lastSelectedTrail: null,
       lastSelectedBoundary: null
@@ -57,14 +55,12 @@ class ConnectStateToRoute extends React.Component {
     if (boundary && boundary.bounds) {
       if (lastSelectedBoundary == boundary.id) return;
 
-      const { center } = GeoViewport.viewport(boundary.bounds, [1024, 800]);
-
       this.setState({ lastSelectedBoundary: boundary.id });
       return this.history.replace(
         "/?" +
           stringify({
             boundary: boundary.id,
-            center: center.map(b => parseFloat(b.toFixed(2)))
+            bounds: boundary.bounds.map(b => parseFloat(b.toFixed(2)))
           })
       );
     }

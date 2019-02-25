@@ -30,10 +30,10 @@ ReactDOM.render(
       <ThemeProvider theme={theme}>
         <div>
           <ConnectStateToRoute>
-            {({ center }) => (
+            {({ initialBounds }) => (
               <Body>
                 <Header />
-                <MapContainer center={center} />
+                <MapContainer initialBounds={initialBounds} />
                 <SidebarContainer />
               </Body>
             )}
