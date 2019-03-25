@@ -163,16 +163,28 @@ export default class Map extends React.Component {
   }
 
   getAdjustedViewport(bounds) {
-    const { center, zoom } = GeoViewport.viewport(bounds, [
+    const sidebarWidth = this.getSidebarWidth();
+    const dimensions = [window.innerWidth - sidebarWidth, window.innerHeight];
+    const { center, zoom } = GeoViewport.viewport(bounds, dimensions);
+
+    /*
+      we measure the length of the viewport to get an adjustment value.
+      we have to add one to the zoom, otherwise it gets off.
+    */
+    const viewBounds = GeoViewport.bounds(center, zoom, [
       window.innerWidth,
       window.innerHeight
     ]);
+    const startPoint = [viewBounds[0], viewBounds[1]];
+    const endPoint = [viewBounds[2], viewBounds[1]];
+    const viewportDistance = distance(startPoint, endPoint);
 
-    const percentageOfWidth = this.getSidebarWidth() / window.innerWidth;
-    const startPoint = [bounds[0], bounds[1]];
-    const endPoint = [bounds[2], bounds[1]];
-    const shift = distance(startPoint, endPoint) * percentageOfWidth * -1;
-    const { geometry } = destination(center, shift, 90);
+    /* once we know the viewport width, we can get the sidebar width */
+    const percentageOfWidth = sidebarWidth / window.innerWidth;
+    const shift = (viewportDistance * percentageOfWidth) / 2;
+
+    /* once we know the width of the sidebar in kilemeters, we adjust the center */
+    const { geometry } = destination(center, -shift, 90);
 
     return {
       center: geometry.coordinates,
@@ -328,7 +340,7 @@ export default class Map extends React.Component {
   }
 
   getInitialViewport() {
-    const query = parse(window.location.search);
+    const query = parse(window.location.search, { arrayFormat: "bracket" });
 
     return query.bounds
       ? this.getAdjustedViewport(query.bounds.map(b => parseFloat(b)))

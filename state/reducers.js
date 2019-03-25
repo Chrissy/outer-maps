@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import distance from "@turf/distance";
 import { lineString } from "@turf/helpers";
 import { connectRouter } from "connected-react-router";
+import bbox from "@turf/bbox";
 
 const trail = (state = {}, action) => {
   switch (action.type) {
@@ -16,7 +17,7 @@ const trail = (state = {}, action) => {
       uniqueId: action.uniqueId,
       name: action.name,
       stationId: action.station1,
-      bounds: action.bounds,
+      bounds: action.bounds && bbox(JSON.parse(action.bounds)),
       /*
         add trail also selects the trail. it fires
         the first time a trail is selected or when a
@@ -126,6 +127,9 @@ const trail = (state = {}, action) => {
       ...state,
       hasElevationData: true,
       geometry: lineString(action.points.map(p => p.coordinates)).geometry,
+      name: state.name || action.name,
+      stationId: state.station1 || action.station1,
+      bounds: action.bounds || state.bounds,
       points: action.points.map((e, i) => {
         const p = action.points[i - 1];
         return {

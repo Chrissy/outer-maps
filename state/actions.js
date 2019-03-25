@@ -1,5 +1,3 @@
-import bbox from "@turf/bbox";
-import GeoViewport from "@mapbox/geo-viewport";
 import { getWeather } from "../services/getNOAAWeather";
 import fetchWithCache from "../services/fetchWithCache";
 
@@ -43,18 +41,13 @@ const selectTrail = ({ properties, activeSegment }) => {
         uniqueId
       });
     } else {
-      const bounds = bbox(JSON.parse(properties.bounds));
-      const { center } = GeoViewport.viewport(bounds, [1024, 800]);
-
       dispatch({
         ...properties,
-        center,
-        bounds,
         uniqueId,
         type: "ADD_TRAIL"
       });
       dispatch(getElevationData({ ...properties, reducer: "trail", uniqueId }));
-      dispatch(getWeatherData({ ...properties, center, reducer: "trail" }));
+      //dispatch(getWeatherData({ ...properties, center, reducer: "trail" }));
     }
   };
 };

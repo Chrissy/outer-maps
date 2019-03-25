@@ -1,5 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
+import bbox from "@turf/bbox";
+import bboxPolygon from "@turf/bbox-polygon";
+import { featureCollection } from "@turf/helpers";
 import createHistory from "history/createBrowserHistory";
 import { connect } from "react-redux";
 import { fromJS, is } from "immutable";
@@ -11,20 +14,31 @@ class ConnectStateToRoute extends React.Component {
     super(props);
 
     this.history = createHistory();
-    const query = parse(window.location.search);
+    const query = parse(window.location.search, { arrayFormat: "bracket" });
 
     this.state = {
       boundary: query.boundary,
+      trails: query.trails ? query.trails.map(id => parseInt(id)) : [],
+      bounds: query.bounds,
       lastSelectedTrail: null,
       lastSelectedBoundary: null
     };
   }
 
   componentDidMount() {
-    if (this.state.boundary)
+    const { boundary, trails } = this.state;
+
+    if (boundary)
       return this.props.selectBoundary({ id: parseInt(this.state.boundary) });
-    //if (query.trails)
-    //return query.trails.map(({id, bounds}) => console.log(id, bounds));
+    if (trails.length) {
+      trails.forEach(id => {
+        this.props.selectTrail({
+          properties: {
+            id: parseInt(id)
+          }
+        });
+      });
+    }
   }
 
   shouldComponentUpdate(prevProps) {
@@ -56,12 +70,16 @@ class ConnectStateToRoute extends React.Component {
       if (lastSelectedBoundary == boundary.id) return;
 
       this.setState({ lastSelectedBoundary: boundary.id });
+
       return this.history.replace(
         "/?" +
-          stringify({
-            boundary: boundary.id,
-            bounds: boundary.bounds.map(b => parseFloat(b.toFixed(2)))
-          })
+          stringify(
+            {
+              boundary: boundary.id,
+              bounds: boundary.bounds.map(b => parseFloat(b.toFixed(2)))
+            },
+            { arrayFormat: "bracket" }
+          )
       );
     }
 
@@ -69,11 +87,26 @@ class ConnectStateToRoute extends React.Component {
       const previousTrailIds = prevProps.trails.map(t => t.id);
       const trailIds = trails.map(t => t.id);
       if (is(fromJS(previousTrailIds), fromJS(trailIds))) return;
+
+      const readyTrails = trails.filter(t => t.bounds);
+
+      const bounds = readyTrails.length
+        ? bbox(
+          featureCollection(
+            readyTrails.map(({ bounds }) => bboxPolygon(bounds))
+          )
+        )
+        : this.state.bounds;
+
       return this.history.replace(
         "/?" +
-          stringify({
-            trails: trails.map(({ id, bounds }) => stringify({ id, bounds }))
-          })
+          stringify(
+            {
+              trails: trailIds,
+              bounds: bounds.map(b => parseFloat(b).toFixed(2))
+            },
+            { arrayFormat: "bracket" }
+          )
       );
     }
   }

@@ -40,12 +40,13 @@ export default class MapBox extends React.Component {
   }
 
   updateFeatureStates(featureStates, oldFeatureStates) {
-    oldFeatureStates.forEach(feature => {
-      const nullifyObject = Object.keys(feature.state).reduce((obj, val) => {
-        return { ...obj, [val]: null };
-      }, {});
-      this.mapboxed.setFeatureState(feature, nullifyObject);
-    });
+    if (oldFeatureStates)
+      oldFeatureStates.forEach(feature => {
+        const nullifyObject = Object.keys(feature.state).reduce((obj, val) => {
+          return { ...obj, [val]: null };
+        }, {});
+        this.mapboxed.setFeatureState(feature, nullifyObject);
+      });
 
     featureStates.forEach(feature => {
       this.mapboxed.setFeatureState(feature, feature.state);
@@ -70,6 +71,9 @@ export default class MapBox extends React.Component {
     this.mapboxed.on("load", () => {
       if (this.props.flyTo) this.mapboxed.flyTo(this.props.flyTo);
       this.setState({ initialized: true });
+      this.updateSources(this.props.sources);
+      this.updateFeatureStates(this.props.featureStates);
+      if (this.props.flyTo) this.mapboxed.flyTo(this.props.flyTo);
     });
   }
 
