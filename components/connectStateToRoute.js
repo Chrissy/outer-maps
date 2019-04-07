@@ -60,7 +60,8 @@ class ConnectStateToRoute extends React.Component {
     const { trails, boundary, handles } = this.props;
     const { lastSelectedBoundary } = this.state;
 
-    if (!boundary && !trails.length) return this.history.replace("/");
+    if (!boundary && !trails.length && window.location.search)
+      return this.history.replace("/");
 
     if (boundary && boundary.bounds) {
       if (lastSelectedBoundary == boundary.id) return;
