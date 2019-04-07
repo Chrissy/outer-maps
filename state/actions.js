@@ -1,7 +1,7 @@
 import { getWeather } from "../services/getNOAAWeather";
 import fetchWithCache from "../services/fetchWithCache";
 
-const selectTrail = ({ properties, activeSegment }) => {
+const selectTrail = ({ properties, activeSegment, withHandles }) => {
   return (dispatch, getState) => {
     const storedTrails = getState().trails;
     const cachedTrail = storedTrails.find(t => t.id == properties.id);
@@ -46,7 +46,14 @@ const selectTrail = ({ properties, activeSegment }) => {
         uniqueId,
         type: "ADD_TRAIL"
       });
-      dispatch(getElevationData({ ...properties, reducer: "trail", uniqueId }));
+      dispatch(
+        getElevationData({
+          ...properties,
+          reducer: "trail",
+          uniqueId,
+          withHandles
+        })
+      );
       //dispatch(getWeatherData({ ...properties, center, reducer: "trail" }));
     }
   };
@@ -59,7 +66,7 @@ const selectBoundary = ({ id, name }) => {
     if (!cachedBoundary) dispatch({ type: "ADD_BOUNDARY", id, name });
     if (!cachedBoundary || !cachedBoundary.elevationDataRequested)
       dispatch(getElevationData({ id, reducer: "boundary" })).then(response => {
-        if (!cachedBoundary || !cachedBoundary.weatherDataRequested)
+        if (!cachedBoundary || !cachedBoundary.weatherDataRequested) {
           dispatch(
             getWeatherData({
               id,
@@ -67,6 +74,7 @@ const selectBoundary = ({ id, name }) => {
               reducer: "boundary"
             })
           );
+        }
       });
     if (cachedBoundary) return dispatch({ type: "SELECT_BOUNDARY", id });
   };
@@ -83,7 +91,7 @@ const clearSelected = () => {
   return dispatch => dispatch({ type: "CLEAR_SELECTED" });
 };
 
-const getElevationData = ({ id, reducer, uniqueId }) => {
+const getElevationData = ({ id, reducer, uniqueId, withHandles }) => {
   return dispatch => {
     dispatch({
       type: `SET_${reducer.toUpperCase()}_ELEVATION_DATA_REQUESTED`,
@@ -93,12 +101,22 @@ const getElevationData = ({ id, reducer, uniqueId }) => {
     return fetchWithCache({ path: `/api/${reducer}/${id}`, extension: "json" })
       .then(response => response.json())
       .then(response => {
-        return dispatch({
+        dispatch({
           type: `SET_${reducer.toUpperCase()}_ELEVATION_DATA`,
           ...response,
           id,
           uniqueId
         });
+        if (withHandles && withHandles.length) {
+          withHandles.forEach((index, i) => {
+            dispatch({
+              type: "SET_HANDLE_INDEX",
+              id: uniqueId + "-" + i,
+              index,
+              coordinates: response.points[index].coordinates
+            });
+          });
+        }
       });
   };
 };

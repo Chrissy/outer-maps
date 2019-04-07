@@ -325,14 +325,12 @@ const handles = (state = [], action) => {
         type: "ADD_HANDLE",
         point: action.points[0].coordinates,
         handleId: 0,
-        totalPoints: action.points.length,
         index: 0
       }),
       handle(null, {
         ...action,
         type: "ADD_HANDLE",
         point: action.points[action.points.length - 1].coordinates,
-        totalPoints: action.points.length,
         handleId: 1,
         index: action.points.length
       })
@@ -364,7 +362,6 @@ const handle = (state = {}, action) => {
       id: action.uniqueId + "-" + action.handleId,
       handleId: action.handleId,
       index: action.index,
-      totalPoints: action.totalPoints,
       trailId: action.id,
       uniqueId: action.uniqueId
     };
@@ -422,7 +419,8 @@ const handle = (state = {}, action) => {
       index: action.index,
       activelyCutting: false,
       previousCoordinates: null,
-      originalCoordinates: state.previousCoordinates
+      originalCoordinates: state.previousCoordinates,
+      coordinates: action.coordinates || state.coordinates
     };
   case "REVERSE_TRAIL":
     if (action.uniqueId !== state.uniqueId) return state;

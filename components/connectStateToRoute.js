@@ -20,22 +20,24 @@ class ConnectStateToRoute extends React.Component {
       boundary: query.boundary,
       trails: query.trails ? query.trails.map(id => parseInt(id)) : [],
       bounds: query.bounds,
+      handles: query.handles,
       lastSelectedTrail: null,
       lastSelectedBoundary: null
     };
   }
 
   componentDidMount() {
-    const { boundary, trails } = this.state;
+    const { boundary, trails, handles } = this.state;
 
     if (boundary)
       return this.props.selectBoundary({ id: parseInt(this.state.boundary) });
     if (trails.length) {
-      trails.forEach(id => {
+      trails.forEach((id, index) => {
         this.props.selectTrail({
           properties: {
             id: parseInt(id)
-          }
+          },
+          withHandles: handles.slice(index * 2, index * 2 + 2)
         });
       });
     }
@@ -61,7 +63,6 @@ class ConnectStateToRoute extends React.Component {
     if (
       !trails.length &&
       !boundary &&
-      !handles.length &&
       (lastSelectedTrail || lastSelectedBoundary)
     )
       return this.history.replace("/");
@@ -86,7 +87,14 @@ class ConnectStateToRoute extends React.Component {
     if (trails.length) {
       const previousTrailIds = prevProps.trails.map(t => t.id);
       const trailIds = trails.map(t => t.id);
-      if (is(fromJS(previousTrailIds), fromJS(trailIds))) return;
+      const previousHandleIndeces = prevProps.handles.map(h => h.index);
+      const handleIndeces = handles.map(h => h.index);
+
+      if (
+        is(fromJS(previousTrailIds), fromJS(trailIds)) &&
+        is(fromJS(previousHandleIndeces), fromJS(handleIndeces))
+      )
+        return;
 
       const readyTrails = trails.filter(t => t.bounds);
 
@@ -103,7 +111,8 @@ class ConnectStateToRoute extends React.Component {
           stringify(
             {
               trails: trailIds,
-              bounds: bounds.map(b => parseFloat(b).toFixed(2))
+              bounds: bounds.map(b => parseFloat(b).toFixed(2)),
+              handles: handleIndeces
             },
             { arrayFormat: "bracket" }
           )
@@ -130,11 +139,17 @@ const mapStateToProps = state => {
     .filter(t => t.selected)
     .sort((a, b) => a.selectedId - b.selectedId);
   const boundary = state.boundaries.find(t => t.selected);
+  const handles = sortedTrails.reduce((handles, trail) => {
+    return [
+      ...handles,
+      ...state.handles.filter(h => h.uniqueId == trail.uniqueId)
+    ];
+  }, []);
 
   return {
     trails: sortedTrails,
     boundary: boundary,
-    handles: state.handles
+    handles: handles
   };
 };
 
