@@ -1,7 +1,6 @@
 import { combineReducers } from "redux";
 import distance from "@turf/distance";
 import { lineString } from "@turf/helpers";
-import { connectRouter } from "connected-react-router";
 import bbox from "@turf/bbox";
 
 const trail = (state = {}, action) => {
@@ -332,7 +331,7 @@ const handles = (state = [], action) => {
         type: "ADD_HANDLE",
         point: action.points[action.points.length - 1].coordinates,
         handleId: 1,
-        index: action.points.length
+        index: action.points.length - 1
       })
     ];
   case "CLEAR_TRAIL_SELECTED":
@@ -433,10 +432,8 @@ const handle = (state = {}, action) => {
   }
 };
 
-export default history =>
-  combineReducers({
-    router: connectRouter(history),
-    trails,
-    boundaries,
-    handles
-  });
+export default combineReducers({
+  trails,
+  boundaries,
+  handles
+});

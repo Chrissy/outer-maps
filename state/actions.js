@@ -109,6 +109,7 @@ const getElevationData = ({ id, reducer, uniqueId, withHandles }) => {
         });
         if (withHandles && withHandles.length) {
           withHandles.forEach((index, i) => {
+            index = parseInt(index);
             dispatch({
               type: "SET_HANDLE_INDEX",
               id: uniqueId + "-" + i,
