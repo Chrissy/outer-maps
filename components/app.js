@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import { ThemeProvider } from "emotion-theming";
 import MapContainer from "./mapContainer";
 import SidebarContainer from "./sidebarContainer";
+import ConnectStateToRoute from "./connectStateToRoute";
 import Header from "./header";
 import styled from "react-emotion";
 import theme from "../styles/theme";
@@ -26,11 +27,15 @@ ReactDOM.render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>
       <div>
-        <Body>
-          <Header />
-          <MapContainer />
-          <SidebarContainer />
-        </Body>
+        <ConnectStateToRoute>
+          {({ initialBounds }) => (
+            <Body>
+              <Header />
+              <MapContainer initialBounds={initialBounds} />
+              <SidebarContainer />
+            </Body>
+          )}
+        </ConnectStateToRoute>
       </div>
     </ThemeProvider>
   </Provider>,

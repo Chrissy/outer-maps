@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 import distance from "@turf/distance";
 import { lineString } from "@turf/helpers";
+import bbox from "@turf/bbox";
 
 const trail = (state = {}, action) => {
   switch (action.type) {
@@ -14,10 +15,8 @@ const trail = (state = {}, action) => {
       */
       uniqueId: action.uniqueId,
       name: action.name,
-      distance: action.distance,
       stationId: action.station1,
-      center: action.center,
-      bounds: action.bounds,
+      bounds: action.bounds && bbox(JSON.parse(action.bounds)),
       /*
         add trail also selects the trail. it fires
         the first time a trail is selected or when a
@@ -127,6 +126,9 @@ const trail = (state = {}, action) => {
       ...state,
       hasElevationData: true,
       geometry: lineString(action.points.map(p => p.coordinates)).geometry,
+      name: state.name || action.name,
+      stationId: state.station1 || action.station1,
+      bounds: action.bounds || state.bounds,
       points: action.points.map((e, i) => {
         const p = action.points[i - 1];
         return {
@@ -253,9 +255,8 @@ const boundary = (state = {}, action) => {
   case "ADD_BOUNDARY":
     return {
       ...state,
-      id: action.properties.id,
-      name: action.properties.name,
-      bounds: action.bounds,
+      id: action.id,
+      name: action.name,
       hasBaseData: true,
       selected: true
     };
@@ -266,7 +267,10 @@ const boundary = (state = {}, action) => {
     if (action.id !== state.id) return state;
     return {
       ...state,
+      name: action.name,
       area: action.area,
+      bounds: action.bounds,
+      center: action.center,
       trailsCount: action.trailsCount,
       trailLengths: action.trailLengths,
       trailTypes: action.trailTypes,
@@ -320,16 +324,14 @@ const handles = (state = [], action) => {
         type: "ADD_HANDLE",
         point: action.points[0].coordinates,
         handleId: 0,
-        totalPoints: action.points.length,
         index: 0
       }),
       handle(null, {
         ...action,
         type: "ADD_HANDLE",
         point: action.points[action.points.length - 1].coordinates,
-        totalPoints: action.points.length,
         handleId: 1,
-        index: action.points.length
+        index: action.points.length - 1
       })
     ];
   case "CLEAR_TRAIL_SELECTED":
@@ -359,7 +361,6 @@ const handle = (state = {}, action) => {
       id: action.uniqueId + "-" + action.handleId,
       handleId: action.handleId,
       index: action.index,
-      totalPoints: action.totalPoints,
       trailId: action.id,
       uniqueId: action.uniqueId
     };
@@ -417,7 +418,8 @@ const handle = (state = {}, action) => {
       index: action.index,
       activelyCutting: false,
       previousCoordinates: null,
-      originalCoordinates: state.previousCoordinates
+      originalCoordinates: state.previousCoordinates,
+      coordinates: action.coordinates || state.coordinates
     };
   case "REVERSE_TRAIL":
     if (action.uniqueId !== state.uniqueId) return state;

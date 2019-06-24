@@ -123,7 +123,7 @@ const queries = [
       SELECT
         name,
         id,
-        type, 
+        type,
         ST_Area(geog) as area,
         ST_AsGeoJson(ST_Envelope(geog::geometry)) as bounds,
         station1, ST_PointOnSurface(geog::geometry) as geom

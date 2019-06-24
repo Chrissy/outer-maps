@@ -52,7 +52,7 @@ const Sidebar = ({ trails, boundary, handles, ...props }) => {
       return (
         <StyledTerrain points={pointsArr} paths zoom={zoom} center={center} />
       );
-    } else if (boundary && boundary.selected) {
+    } else if (boundary && boundary.selected && boundary.bounds) {
       const { center, zoom } = GeoViewport.viewport(boundary.bounds, [
         1024,
         1024
@@ -81,9 +81,9 @@ const Container = styled("div")`
   font-family: ${p => p.theme.bodyFont};
   position: absolute;
   height: 100%;
-  width: 43vw;
-  min-width: 400px;
-  max-width: 500px;
+  width: ${p => p.theme.sidebarPercentageWidth}vw;
+  min-width: ${p => p.theme.sidebarMinWidth}px;
+  max-width: ${p => p.theme.sidebarMaxWidth}px;
   background: ${p => p.theme.gray2};
   color: ${p => p.theme.gray7};
   border-right: 1px solid ${p => p.theme.gray4};

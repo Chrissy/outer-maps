@@ -22,6 +22,9 @@ const theme = {
   red: "#D0011B",
   ss: spacingScale,
   ts: typeScale,
+  sidebarPercentageWidth: 43,
+  sidebarMaxWidth: 500,
+  sidebarMinWidth: 300,
   headlineFont: "\"Hoefler Text A\", \"Hoefler Text B\"",
   bodyFont:
     "\"Din\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\""

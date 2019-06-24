@@ -1,9 +1,7 @@
-import bbox from "@turf/bbox";
-import GeoViewport from "@mapbox/geo-viewport";
 import { getWeather } from "../services/getNOAAWeather";
 import fetchWithCache from "../services/fetchWithCache";
 
-const selectTrail = ({ properties, geometry, activeSegment }) => {
+const selectTrail = ({ properties, activeSegment, withHandles }) => {
   return (dispatch, getState) => {
     const storedTrails = getState().trails;
     const cachedTrail = storedTrails.find(t => t.id == properties.id);
@@ -43,44 +41,42 @@ const selectTrail = ({ properties, geometry, activeSegment }) => {
         uniqueId
       });
     } else {
-      const bounds = bbox(JSON.parse(properties.bounds));
-      const { center } = GeoViewport.viewport(bounds, [1024, 800]);
-
       dispatch({
         ...properties,
-        center,
-        bounds,
-        geometry,
         uniqueId,
         type: "ADD_TRAIL"
       });
-      dispatch(getElevationData({ ...properties, reducer: "trail", uniqueId }));
-      dispatch(getWeatherData({ ...properties, center, reducer: "trail" }));
+      dispatch(
+        getElevationData({
+          ...properties,
+          reducer: "trail",
+          uniqueId,
+          withHandles
+        })
+      );
+      //dispatch(getWeatherData({ ...properties, center, reducer: "trail" }));
     }
   };
 };
 
-const selectBoundary = ({ properties, geometry }) => {
+const selectBoundary = ({ id, name }) => {
   return (dispatch, getState) => {
-    const cachedBoundary = getState().boundaries.find(
-      b => b.id == properties.id
-    );
-    const bounds = bbox(JSON.parse(properties.bounds));
+    const cachedBoundary = getState().boundaries.find(b => b.id == id);
 
-    if (!cachedBoundary)
-      dispatch({ type: "ADD_BOUNDARY", properties, geometry, bounds });
+    if (!cachedBoundary) dispatch({ type: "ADD_BOUNDARY", id, name });
     if (!cachedBoundary || !cachedBoundary.elevationDataRequested)
-      dispatch(getElevationData({ id: properties.id, reducer: "boundary" }));
-    if (!cachedBoundary || !cachedBoundary.weatherDataRequested)
-      dispatch(
-        getWeatherData({
-          ...properties,
-          center: geometry.coordinates,
-          reducer: "boundary"
-        })
-      );
-    if (cachedBoundary)
-      return dispatch({ type: "SELECT_BOUNDARY", id: properties.id });
+      dispatch(getElevationData({ id, reducer: "boundary" })).then(response => {
+        if (!cachedBoundary || !cachedBoundary.weatherDataRequested) {
+          dispatch(
+            getWeatherData({
+              id,
+              center: response.center,
+              reducer: "boundary"
+            })
+          );
+        }
+      });
+    if (cachedBoundary) return dispatch({ type: "SELECT_BOUNDARY", id });
   };
 };
 
@@ -95,7 +91,7 @@ const clearSelected = () => {
   return dispatch => dispatch({ type: "CLEAR_SELECTED" });
 };
 
-const getElevationData = ({ id, reducer, uniqueId }) => {
+const getElevationData = ({ id, reducer, uniqueId, withHandles }) => {
   return dispatch => {
     dispatch({
       type: `SET_${reducer.toUpperCase()}_ELEVATION_DATA_REQUESTED`,
@@ -111,6 +107,17 @@ const getElevationData = ({ id, reducer, uniqueId }) => {
           id,
           uniqueId
         });
+        if (withHandles && withHandles.length) {
+          withHandles.forEach((index, i) => {
+            index = parseInt(index);
+            dispatch({
+              type: "SET_HANDLE_INDEX",
+              id: uniqueId + "-" + i,
+              index,
+              coordinates: response.points[index].coordinates
+            });
+          });
+        }
       });
   };
 };

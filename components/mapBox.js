@@ -23,6 +23,14 @@ const WATCH_EVENTS = [
 ];
 
 export default class MapBox extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      initialized: false
+    };
+  }
+
   updateSources(newSources = []) {
     newSources.forEach(
       function(source) {
@@ -32,12 +40,13 @@ export default class MapBox extends React.Component {
   }
 
   updateFeatureStates(featureStates, oldFeatureStates) {
-    oldFeatureStates.forEach(feature => {
-      const nullifyObject = Object.keys(feature.state).reduce((obj, val) => {
-        return { ...obj, [val]: null };
-      }, {});
-      this.mapboxed.setFeatureState(feature, nullifyObject);
-    });
+    if (oldFeatureStates)
+      oldFeatureStates.forEach(feature => {
+        const nullifyObject = Object.keys(feature.state).reduce((obj, val) => {
+          return { ...obj, [val]: null };
+        }, {});
+        this.mapboxed.setFeatureState(feature, nullifyObject);
+      });
 
     featureStates.forEach(feature => {
       this.mapboxed.setFeatureState(feature, feature.state);
@@ -47,19 +56,30 @@ export default class MapBox extends React.Component {
   componentDidMount() {
     MapboxGL.accessToken = accessToken;
 
+    const { initialViewport } = this.props;
+
     this.mapboxed = new MapboxGL.Map({
       container: "mapbox-gl-element",
       style: mapboxStyles,
-      center: [-121.06, 48.35],
-      zoom: 8.64205157956079,
+      center: initialViewport ? initialViewport.center : [-121.06, 48.35],
+      zoom: initialViewport ? initialViewport.zoom : 8.64205157956079,
       maxZoom: 14
     });
 
     this.mapEvents();
     this.mapboxed.addControl(new MapboxGL.NavigationControl());
+    this.mapboxed.on("load", () => {
+      if (this.props.flyTo) this.mapboxed.flyTo(this.props.flyTo);
+      this.setState({ initialized: true });
+      this.updateSources(this.props.sources);
+      this.updateFeatureStates(this.props.featureStates);
+      if (this.props.flyTo) this.mapboxed.flyTo(this.props.flyTo);
+    });
   }
 
   componentDidUpdate(prevProps) {
+    if (!this.state.initialized) return;
+
     if (!is(fromJS(prevProps.sources), fromJS(this.props.sources))) {
       this.updateSources(this.props.sources);
     }
@@ -73,9 +93,11 @@ export default class MapBox extends React.Component {
       );
     }
 
-    if (this.props.flyTo && prevProps.flyTo !== this.props.flyTo) {
+    if (
+      this.props.flyTo &&
+      !is(fromJS(this.props.flyTo), fromJS(prevProps.flyTo))
+    )
       this.mapboxed.flyTo(this.props.flyTo);
-    }
 
     this.mapboxed.getCanvas().style.cursor = this.props.pointer
       ? "pointer"
@@ -125,7 +147,11 @@ MapBox.propTypes = {
   ),
   flyTo: PropTypes.object,
   pointer: PropTypes.bool,
-  watchLayers: PropTypes.array
+  watchLayers: PropTypes.array,
+  initialViewport: PropTypes.shape({
+    center: PropTypes.array,
+    zoom: PropTypes.number
+  })
 };
 
 const Body = styled("div")`

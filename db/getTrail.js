@@ -4,7 +4,7 @@ const uploadFileToS3 = require("../services/uploadFileToS3");
 
 const sql = id => `
   WITH trail AS (
-      SELECT geog::geometry AS path
+      SELECT name, station1, geog::geometry AS path
       FROM trails
       WHERE id = ${id}
     ),
@@ -23,7 +23,7 @@ const sql = id => `
       FROM raster, trail
       CROSS JOIN points
     )
-    SELECT to_json(array_agg(elevations)) as points from trail, raster, elevations GROUP BY rast;
+    SELECT name, station1, to_json(array_agg(elevations)) as points from trail, raster, elevations GROUP BY name, station1, rast;
 `;
 
 const getTrail = (id, pool) =>
@@ -40,16 +40,19 @@ const getTrail = (id, pool) =>
 const queryTrail = ({ id, pool }) =>
   new Promise(resolve => {
     query(sql(id), pool, ({ rows }) => {
+      const { name, station1, points } = rows[0];
+
       const elevations = statUtils.rollingAverage(
-        statUtils.glitchDetector(rows[0].points.map(r => r.elevation)),
+        statUtils.glitchDetector(points.map(r => r.elevation)),
         40
       );
-      const points = elevations.map((r, i) => ({
+
+      const pointsWithElevations = elevations.map((r, i) => ({
         elevation: r,
-        coordinates: [rows[0].points[i].x, rows[0].points[i].y]
+        coordinates: [points[i].x, points[i].y]
       }));
 
-      resolve({ points });
+      resolve({ name, station1, points: pointsWithElevations });
     });
   });
 

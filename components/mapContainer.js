@@ -2,11 +2,12 @@ import { connect } from "react-redux";
 import Map from "../components/map";
 import { selectTrail, selectBoundary, clearSelected } from "../state/actions";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, props) => {
   return {
     trails: state.trails,
-    boundaries: state.boundaries,
-    handles: state.handles
+    boundary: state.boundaries.find(boundary => boundary.selected),
+    handles: state.handles,
+    ...props
   };
 };
 
