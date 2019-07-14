@@ -46,6 +46,7 @@ exports.up = function(db, next) {
       })}
   `, (err) => {
     if (err) console.log(err);
+    console.log("done with utah")
     next();
   });
 };
