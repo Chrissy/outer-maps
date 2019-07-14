@@ -32,8 +32,10 @@ exports.insertElevationRasters = function(
 
   execSync(
     `raster2pgsql -s ${srid} -t "auto" -C *.tif public.${tableName} | psql -d ${databaseName} ${user}`,
-    { cwd: pathStr }
+    { cwd: pathStr, maxBuffer: 1024 * 4096 }  // Value for maxBuffer must be increment of 1024
   );
+
+  console.log("done with rasters")
 
   if (cb) cb();
 };
